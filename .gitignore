@@ -36,3 +36,9 @@ yarn-error.log*
 # Temporary files
 tmp/
 temp/
+
+# Integration test responses
+tests/integration/api-responses/
+
+# Environment variables
+.env

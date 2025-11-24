@@ -51,9 +51,10 @@
     "axios": "^1.7.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.0",
+    "@types/node": "^20.19.25",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
+    "dotenv": "^17.2.3",
     "eslint": "^8.57.0",
     "prettier": "^3.3.0",
     "typescript": "^5.5.0",

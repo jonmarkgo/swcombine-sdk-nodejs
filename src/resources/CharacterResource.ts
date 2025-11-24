@@ -199,6 +199,15 @@ export class CharacterResource extends BaseResource {
   }
 
   /**
+   * Get the currently authenticated user's character
+   * Requires authentication
+   * @returns The authenticated character's full profile
+   */
+  async me(): Promise<Character> {
+    return this.request<Character>('GET', '/character/');
+  }
+
+  /**
    * Get character by UID
    */
   async get(options: GetCharacterOptions): Promise<Character> {

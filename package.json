@@ -31,6 +31,7 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "get-token": "tsx scripts/get-oauth-token.ts",
     "get-character-uid": "tsx scripts/get-character-uid.ts",
+    "refresh-token": "tsx scripts/refresh-token.ts",
     "prepublishOnly": "npm run build && npm test"
   },
   "keywords": [

@@ -60,14 +60,34 @@ export class HttpClient {
       async (config: InternalAxiosRequestConfig) => {
         // Add access token if available
         if (this.tokenManager) {
-          const token = await this.tokenManager.getAccessToken();
-          if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+          try {
+            const token = await this.tokenManager.getAccessToken();
+            if (token) {
+              // Try query parameter method instead of header
+              // SW Combine API docs say: "Access tokens are sent to a Resource in the HTTP
+              // Authorization header, or as a query string parameter"
+              config.params = config.params || {};
+              config.params.access_token = token;
+
+              if (this.debug) {
+                console.log(`[SWC SDK] Added auth token as query param: ${token.substring(0, 20)}...`);
+              }
+            } else {
+              if (this.debug) {
+                console.log(`[SWC SDK] No token available from TokenManager`);
+              }
+            }
+          } catch (error: any) {
+            if (this.debug) {
+              console.log(`[SWC SDK] Error getting token: ${error.message}`);
+            }
+            // Don't fail the request, just proceed without token
           }
         }
 
         if (this.debug) {
           console.log(`[SWC SDK] ${config.method?.toUpperCase()} ${config.url}`);
+          console.log(`[SWC SDK] Query params:`, config.params);
         }
 
         return config;
@@ -83,7 +103,21 @@ export class HttpClient {
    */
   private setupResponseInterceptor(): void {
     this.axios.interceptors.response.use(
-      (response) => response,
+      (response) => {
+        // Extract data from swcapi wrapper if present
+        if (response.data && typeof response.data === 'object' && 'swcapi' in response.data) {
+          const swcapiData = response.data.swcapi;
+          // Get the first key's value (e.g., swcapi.character -> character data)
+          const keys = Object.keys(swcapiData);
+          if (keys.length === 1) {
+            response.data = swcapiData[keys[0]];
+          } else {
+            // If multiple keys or no keys, return the swcapi object itself
+            response.data = swcapiData;
+          }
+        }
+        return response;
+      },
       async (error: AxiosError) => {
         const config = error.config as InternalAxiosRequestConfig & { _retryCount?: number };
 

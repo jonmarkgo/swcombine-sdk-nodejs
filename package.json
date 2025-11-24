@@ -22,6 +22,7 @@
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:types": "tsc -p tsconfig.types.json",
+    "build:watch": "tsc -p tsconfig.esm.json --watch",
     "test": "vitest",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:watch": "vitest watch",

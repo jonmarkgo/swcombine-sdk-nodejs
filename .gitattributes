@@ -1,0 +1,10 @@
+# Exclude development files from npm package
+scripts/ export-ignore
+examples/ export-ignore
+tests/ export-ignore
+docs/ export-ignore
+.github/ export-ignore
+*.test.ts export-ignore
+*.spec.ts export-ignore
+vitest.*.ts export-ignore
+.env.example export-ignore

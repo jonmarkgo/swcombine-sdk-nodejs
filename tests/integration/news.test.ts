@@ -25,6 +25,13 @@ describe('News Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document GNS structure
+      if (response.length > 0) {
+        console.log(`\n📊 GNS array structure:`);
+        console.log(`   Total items: ${response.length}`);
+        console.log(`   First item fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('GNS List Error:', error.message, error.statusCode);
       saveResponse('news-gns-list-error', { error: error.message, statusCode: error.statusCode });
@@ -50,6 +57,9 @@ describe('News Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(response.uid).toBe(itemId);
+
+      // Document GNS item structure
+      console.log(`\n📊 GNS item fields:`, Object.keys(response).join(', '));
     } catch (error: any) {
       console.log('GNS Get Error:', error.message, error.statusCode);
       saveResponse('news-gns-get-error', { error: error.message, statusCode: error.statusCode });
@@ -70,6 +80,13 @@ describe('News Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document SimNews structure
+      if (response.length > 0) {
+        console.log(`\n📊 SimNews array structure:`);
+        console.log(`   Total items: ${response.length}`);
+        console.log(`   First item fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('SimNews List Error:', error.message, error.statusCode);
       saveResponse('news-simnews-list-error', { error: error.message, statusCode: error.statusCode });
@@ -95,6 +112,9 @@ describe('News Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(response.uid).toBe(itemId);
+
+      // Document SimNews item structure
+      console.log(`\n📊 SimNews item fields:`, Object.keys(response).join(', '));
     } catch (error: any) {
       console.log('SimNews Get Error:', error.message, error.statusCode);
       saveResponse('news-simnews-get-error', { error: error.message, statusCode: error.statusCode });

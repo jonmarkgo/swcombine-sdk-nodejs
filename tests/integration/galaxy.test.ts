@@ -5,6 +5,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
 import { createTestClient, saveResponse, delay, TEST_CONFIG } from './setup.js';
+import { validatePlanet, validateArray } from './validators.js';
 
 describe('Galaxy Resource Integration Tests', () => {
   let client: SWCombine;
@@ -24,6 +25,9 @@ describe('Galaxy Resource Integration Tests', () => {
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
       expect(response.length).toBeGreaterThan(0);
+
+      // Validate array structure
+      validateArray(response, validatePlanet, 'Planet', 1);
     } catch (error: any) {
       console.log('Planets List Error:', error.message, error.statusCode);
       saveResponse('galaxy-planets-list-error', { error: error.message, statusCode: error.statusCode });
@@ -41,6 +45,9 @@ describe('Galaxy Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(response.uid).toBe(TEST_CONFIG.planetUid);
+
+      // Validate type structure
+      validatePlanet(response);
     } catch (error: any) {
       console.log('Planet Get Error:', error.message, error.statusCode);
       saveResponse('galaxy-planet-get-error', { error: error.message, statusCode: error.statusCode });
@@ -60,6 +67,13 @@ describe('Galaxy Resource Integration Tests', () => {
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
       expect(response.length).toBeGreaterThan(0);
+
+      // Document sectors structure
+      if (response.length > 0) {
+        console.log(`\n📊 Sectors array structure:`);
+        console.log(`   Total sectors: ${response.length}`);
+        console.log(`   First sector fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Sectors List Error:', error.message, error.statusCode);
       saveResponse('galaxy-sectors-list-error', { error: error.message, statusCode: error.statusCode });
@@ -77,6 +91,9 @@ describe('Galaxy Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(response.uid).toBe(TEST_CONFIG.sectorUid);
+
+      // Document sector structure
+      console.log(`\n📊 Sector fields:`, Object.keys(response).join(', '));
     } catch (error: any) {
       console.log('Sector Get Error:', error.message, error.statusCode);
       saveResponse('galaxy-sector-get-error', { error: error.message, statusCode: error.statusCode });
@@ -96,6 +113,13 @@ describe('Galaxy Resource Integration Tests', () => {
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
       expect(response.length).toBeGreaterThan(0);
+
+      // Document systems structure
+      if (response.length > 0) {
+        console.log(`\n📊 Systems array structure:`);
+        console.log(`   Total systems: ${response.length}`);
+        console.log(`   First system fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Systems List Error:', error.message, error.statusCode);
       saveResponse('galaxy-systems-list-error', { error: error.message, statusCode: error.statusCode });
@@ -113,6 +137,9 @@ describe('Galaxy Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(response.uid).toBe(TEST_CONFIG.systemUid);
+
+      // Document system structure
+      console.log(`\n📊 System fields:`, Object.keys(response).join(', '));
     } catch (error: any) {
       console.log('System Get Error:', error.message, error.statusCode);
       saveResponse('galaxy-system-get-error', { error: error.message, statusCode: error.statusCode });
@@ -133,6 +160,13 @@ describe('Galaxy Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document stations structure
+      if (response.length > 0) {
+        console.log(`\n📊 Stations array structure:`);
+        console.log(`   Total stations: ${response.length}`);
+        console.log(`   First station fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Stations List Error:', error.message, error.statusCode);
       saveResponse('galaxy-stations-list-error', { error: error.message, statusCode: error.statusCode });
@@ -153,6 +187,13 @@ describe('Galaxy Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document cities structure
+      if (response.length > 0) {
+        console.log(`\n📊 Cities array structure:`);
+        console.log(`   Total cities: ${response.length}`);
+        console.log(`   First city fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Cities List Error:', error.message, error.statusCode);
       saveResponse('galaxy-cities-list-error', { error: error.message, statusCode: error.statusCode });

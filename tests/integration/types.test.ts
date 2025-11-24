@@ -24,6 +24,13 @@ describe('Types Resource Integration Tests', () => {
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
       expect(response.length).toBeGreaterThan(0);
+
+      // Document entity types structure
+      if (response.length > 0) {
+        console.log(`\n📊 Entity types array structure:`);
+        console.log(`   Total types: ${response.length}`);
+        console.log(`   Type of first element:`, typeof response[0]);
+      }
     } catch (error: any) {
       console.log('Entity Types Error:', error.message, error.statusCode);
       saveResponse('types-entitytypes-error', { error: error.message, statusCode: error.statusCode });
@@ -43,6 +50,13 @@ describe('Types Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document entity classes structure
+      if (response.length > 0) {
+        console.log(`\n📊 Entity classes array structure:`);
+        console.log(`   Total classes: ${response.length}`);
+        console.log(`   Type of first element:`, typeof response[0]);
+      }
     } catch (error: any) {
       console.log('Entity Classes Error:', error.message, error.statusCode);
       saveResponse('types-classes-error', { error: error.message, statusCode: error.statusCode });
@@ -64,6 +78,13 @@ describe('Types Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document entities structure
+      if (response.length > 0) {
+        console.log(`\n📊 Entities array structure:`);
+        console.log(`   Total entities: ${response.length}`);
+        console.log(`   First entity fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Entities List Error:', error.message, error.statusCode);
       saveResponse('types-entities-error', { error: error.message, statusCode: error.statusCode });
@@ -88,6 +109,13 @@ describe('Types Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document entities by class structure
+      if (response.length > 0) {
+        console.log(`\n📊 Entities by class array structure:`);
+        console.log(`   Total entities: ${response.length}`);
+        console.log(`   First entity fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Entities by Class Error:', error.message, error.statusCode);
       saveResponse('types-entities-class-error', { error: error.message, statusCode: error.statusCode });

@@ -34,6 +34,13 @@ describe('Events Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document events structure
+      if (response.length > 0) {
+        console.log(`\n📊 Events array structure:`);
+        console.log(`   Total events: ${response.length}`);
+        console.log(`   First event fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Events List Error:', error.message, error.statusCode);
       saveResponse('events-list-error', { error: error.message, statusCode: error.statusCode });
@@ -67,6 +74,9 @@ describe('Events Resource Integration Tests', () => {
       saveResponse('event-get', response);
 
       expect(response).toBeDefined();
+
+      // Document event structure
+      console.log(`\n📊 Event fields:`, Object.keys(response).join(', '));
     } catch (error: any) {
       console.log('Event Get Error:', error.message, error.statusCode);
       saveResponse('event-get-error', { error: error.message, statusCode: error.statusCode });
@@ -99,6 +109,9 @@ describe('Location Resource Integration Tests', () => {
       saveResponse('location-character', response);
 
       expect(response).toBeDefined();
+
+      // Document location structure
+      console.log(`\n📊 Location fields:`, Object.keys(response).join(', '));
     } catch (error: any) {
       console.log('Location Get Error:', error.message, error.statusCode);
       saveResponse('location-get-error', { error: error.message, statusCode: error.statusCode });
@@ -132,6 +145,13 @@ describe('Datacard Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document datacards structure
+      if (response.length > 0) {
+        console.log(`\n📊 Datacards array structure:`);
+        console.log(`   Total datacards: ${response.length}`);
+        console.log(`   First datacard fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Datacards List Error:', error.message, error.statusCode);
       saveResponse('datacard-list-error', { error: error.message, statusCode: error.statusCode });
@@ -161,6 +181,9 @@ describe('Inventory Resource Integration Tests', () => {
       saveResponse('inventory-get', response);
 
       expect(response).toBeDefined();
+
+      // Document inventory structure
+      console.log(`\n📊 Inventory fields:`, Object.keys(response).join(', '));
     } catch (error: any) {
       console.log('Inventory Get Error:', error.message, error.statusCode);
       saveResponse('inventory-get-error', { error: error.message, statusCode: error.statusCode });
@@ -191,6 +214,13 @@ describe('Inventory Resource Integration Tests', () => {
 
       expect(response).toBeDefined();
       expect(Array.isArray(response)).toBe(true);
+
+      // Document inventory entities structure
+      if (response.length > 0) {
+        console.log(`\n📊 Inventory entities array structure:`);
+        console.log(`   Total entities: ${response.length}`);
+        console.log(`   First entity fields:`, Object.keys(response[0]).join(', '));
+      }
     } catch (error: any) {
       console.log('Inventory Entities Error:', error.message, error.statusCode);
       saveResponse('inventory-entities-error', { error: error.message, statusCode: error.statusCode });

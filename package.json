@@ -1,6 +1,6 @@
 {
   "name": "swcombine-sdk",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Comprehensive TypeScript SDK for Star Wars Combine API v2.0",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",

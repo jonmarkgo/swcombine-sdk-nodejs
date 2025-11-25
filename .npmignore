@@ -1,0 +1,43 @@
+# Source files (only publish dist/)
+src/
+tsconfig*.json
+
+# Tests
+tests/
+*.test.ts
+*.spec.ts
+vitest.config.ts
+vitest.integration.config.ts
+
+# Scripts and examples
+scripts/
+examples/
+
+# Documentation (except README)
+docs/
+
+# Development files
+.env
+.env.*
+.gitattributes
+.gitignore
+.eslintrc*
+.prettierrc*
+.vscode/
+.idea/
+
+# CI/CD
+.github/
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp

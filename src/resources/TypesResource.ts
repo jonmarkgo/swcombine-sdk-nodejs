@@ -22,10 +22,23 @@ export interface EntityClass {
  */
 export class TypesClassesResource extends BaseResource {
   /**
-   * Get all classes for an entity type
+   * Get all classes for an entity type (paginated)
+   * @param options - Entity type and optional pagination parameters
+   * @example
+   * const classes = await client.types.classes.list({ entityType: 'vehicle' });
+   * const moreClasses = await client.types.classes.list({ entityType: 'vehicle', start_index: 51, item_count: 50 });
    */
-  async list(options: { entityType: string }): Promise<EntityClass[]> {
-    return this.request<EntityClass[]>('GET', `/types/classes/${options.entityType}`);
+  async list(options: {
+    entityType: string;
+    start_index?: number;
+    item_count?: number;
+  }): Promise<EntityClass[]> {
+    const params = {
+      start_index: options.start_index || 1,
+      item_count: options.item_count || 50,
+    };
+
+    return this.http.get<EntityClass[]>(`/types/classes/${options.entityType}`, { params });
   }
 }
 

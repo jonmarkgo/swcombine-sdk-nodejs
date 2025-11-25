@@ -63,7 +63,7 @@ describe('Types Resource Integration Tests', () => {
     }
 
     await delay(100);
-  });
+  }, 15000);
 
   it('should list entities of a type', async () => {
     try {

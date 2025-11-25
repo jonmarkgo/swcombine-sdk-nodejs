@@ -118,7 +118,7 @@ describe('Location Resource Integration Tests', () => {
     }
 
     await delay(100);
-  });
+  }, 15000);
 });
 
 describe('Datacard Resource Integration Tests', () => {

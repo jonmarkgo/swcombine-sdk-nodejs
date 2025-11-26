@@ -1,10 +1,18 @@
 /**
  * Integration tests for Events, Location, Datacard, and Inventory resources
+ * Tests all read-only endpoints for these resources
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import { createTestClient, saveResponse, delay, hasAuthToken, TEST_CONFIG } from './setup.js';
+import {
+  createTestClient,
+  saveResponse,
+  hasAuthToken,
+  TEST_CONFIG,
+  expectArray,
+  expectFields,
+} from './setup.js';
 
 describe('Events Resource Integration Tests', () => {
   let client: SWCombine;
@@ -13,76 +21,57 @@ describe('Events Resource Integration Tests', () => {
     client = createTestClient();
   });
 
-  it('should list events', async () => {
+  it('should list personal events', async () => {
     if (!hasAuthToken()) {
       console.log('⊘ Skipping Events: No auth token');
       return;
     }
 
-    try {
-      // Try to get character events
-      const response = await client.events.list({
-        eventMode: 'character',
-        eventType: 'all',
-      });
+    const response = await client.events.list({ eventMode: 'personal' });
+    saveResponse('events-list', response);
 
-      console.log('Events List Response (count):', response.length);
-      if (response.length > 0) {
-        console.log('First event:', response[0]);
-      }
-      saveResponse('events-list', response);
-
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
-
-      // Document events structure
-      if (response.length > 0) {
-        console.log(`\n📊 Events array structure:`);
-        console.log(`   Total events: ${response.length}`);
-        console.log(`   First event fields:`, Object.keys(response[0]).join(', '));
-      }
-    } catch (error: any) {
-      console.log('Events List Error:', error.message, error.statusCode);
-      saveResponse('events-list-error', { error: error.message, statusCode: error.statusCode });
-    }
-
-    await delay(100);
+    expectArray(response);
   });
 
-  it('should get specific event', async () => {
+  it('should list events with pagination', async () => {
+    if (!hasAuthToken()) {
+      console.log('⊘ Skipping Events: No auth token');
+      return;
+    }
+
+    const response = await client.events.list({
+      eventMode: 'personal',
+      start_index: 0,
+      item_count: 10,
+    });
+    saveResponse('events-list-paginated', response);
+
+    expectArray(response);
+    expect((response as any[]).length).toBeLessThanOrEqual(10);
+  });
+
+  it('should get specific event if available', async () => {
     if (!hasAuthToken()) {
       console.log('⊘ Skipping Event Get: No auth token');
       return;
     }
 
-    try {
-      // First try to get events list
-      const events = await client.events.list({
-        eventMode: 'character',
-        eventType: 'all',
-      });
-
-      if (events.length === 0) {
-        console.log('⊘ Skipping: No events available');
-        return;
-      }
-
-      const eventUid = events[0].uid;
-      const response = await client.events.get({ uid: eventUid });
-
-      console.log('Event Get Response:', response);
-      saveResponse('event-get', response);
-
-      expect(response).toBeDefined();
-
-      // Document event structure
-      console.log(`\n📊 Event fields:`, Object.keys(response).join(', '));
-    } catch (error: any) {
-      console.log('Event Get Error:', error.message, error.statusCode);
-      saveResponse('event-get-error', { error: error.message, statusCode: error.statusCode });
+    const events = await client.events.list({ eventMode: 'personal' });
+    if ((events as any[]).length === 0) {
+      console.log('⊘ Skipping: No events available');
+      return;
     }
 
-    await delay(100);
+    const eventUid = (events as any[])[0].uid || (events as any[])[0].attributes?.uid;
+    if (!eventUid) {
+      console.log('⊘ Skipping: No event UID found');
+      return;
+    }
+
+    const response = await client.events.get({ uid: eventUid });
+    saveResponse('event-get', response);
+
+    expectFields(response, ['uid']);
   });
 });
 
@@ -93,32 +82,22 @@ describe('Location Resource Integration Tests', () => {
     client = createTestClient();
   });
 
-  it('should get entity location', async () => {
+  it('should get character location', async () => {
     if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
       console.log('⊘ Skipping Location: No auth token or character UID');
       return;
     }
 
-    try {
-      const response = await client.location.get({
-        entityType: 'character',
-        uid: TEST_CONFIG.characterUid,
-      });
+    // API expects plural entity types (e.g., 'characters' not 'character')
+    const response = await client.location.get({
+      entityType: 'characters',
+      uid: TEST_CONFIG.characterUid,
+    });
+    saveResponse('location-character', response);
 
-      console.log('Location Get Response:', response);
-      saveResponse('location-character', response);
-
-      expect(response).toBeDefined();
-
-      // Document location structure
-      console.log(`\n📊 Location fields:`, Object.keys(response).join(', '));
-    } catch (error: any) {
-      console.log('Location Get Error:', error.message, error.statusCode);
-      saveResponse('location-get-error', { error: error.message, statusCode: error.statusCode });
-    }
-
-    await delay(100);
-  }, 15000);
+    expect(response).toBeDefined();
+    expect(typeof response).toBe('object');
+  });
 });
 
 describe('Datacard Resource Integration Tests', () => {
@@ -134,30 +113,34 @@ describe('Datacard Resource Integration Tests', () => {
       return;
     }
 
-    try {
-      const response = await client.datacard.list({ factionId: TEST_CONFIG.factionUid });
+    const response = await client.datacard.list({ factionId: TEST_CONFIG.factionUid });
+    saveResponse('datacard-list', response);
 
-      console.log('Datacards List Response (count):', response.length);
-      if (response.length > 0) {
-        console.log('First datacard:', response[0]);
-      }
-      saveResponse('datacard-list', response);
+    expectArray(response);
+  });
 
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
-
-      // Document datacards structure
-      if (response.length > 0) {
-        console.log(`\n📊 Datacards array structure:`);
-        console.log(`   Total datacards: ${response.length}`);
-        console.log(`   First datacard fields:`, Object.keys(response[0]).join(', '));
-      }
-    } catch (error: any) {
-      console.log('Datacards List Error:', error.message, error.statusCode);
-      saveResponse('datacard-list-error', { error: error.message, statusCode: error.statusCode });
+  it('should get specific datacard if available', async () => {
+    if (!hasAuthToken() || !TEST_CONFIG.factionUid) {
+      console.log('⊘ Skipping Datacard Get: No auth token or faction UID');
+      return;
     }
 
-    await delay(100);
+    const datacards = await client.datacard.list({ factionId: TEST_CONFIG.factionUid });
+    if ((datacards as any[]).length === 0) {
+      console.log('⊘ Skipping: No datacards available');
+      return;
+    }
+
+    const datacardUid = (datacards as any[])[0].uid || (datacards as any[])[0].attributes?.uid;
+    if (!datacardUid) {
+      console.log('⊘ Skipping: No datacard UID found');
+      return;
+    }
+
+    const response = await client.datacard.get({ uid: datacardUid });
+    saveResponse('datacard-get', response);
+
+    expectFields(response, ['uid']);
   });
 });
 
@@ -174,58 +157,61 @@ describe('Inventory Resource Integration Tests', () => {
       return;
     }
 
-    try {
-      const response = await client.inventory.get({ uid: TEST_CONFIG.characterUid });
+    const response = await client.inventory.get({ uid: TEST_CONFIG.characterUid });
+    saveResponse('inventory-get', response);
 
-      console.log('Inventory Get Response:', response);
-      saveResponse('inventory-get', response);
-
-      expect(response).toBeDefined();
-
-      // Document inventory structure
-      console.log(`\n📊 Inventory fields:`, Object.keys(response).join(', '));
-    } catch (error: any) {
-      console.log('Inventory Get Error:', error.message, error.statusCode);
-      saveResponse('inventory-get-error', { error: error.message, statusCode: error.statusCode });
-    }
-
-    await delay(100);
+    expect(response).toBeDefined();
+    expect(typeof response).toBe('object');
   });
 
-  it('should list inventory entities', async () => {
+  it('should list inventory entities (vehicles)', async () => {
     if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
       console.log('⊘ Skipping Inventory Entities: No auth token or character UID');
       return;
     }
 
-    try {
-      // Try to get vehicles in inventory
-      const response = await client.inventory.entities.list({
-        uid: TEST_CONFIG.characterUid,
-        entityType: 'vehicle',
-        assignType: 'pilot',
-      });
+    const response = await client.inventory.entities.list({
+      uid: TEST_CONFIG.characterUid,
+      entityType: 'vehicles',
+      assignType: 'pilot',
+    });
+    saveResponse('inventory-entities-vehicles', response);
 
-      console.log('Inventory Entities Response (count):', response.length);
-      if (response.length > 0) {
-        console.log('First entity:', response[0]);
-      }
-      saveResponse('inventory-entities-vehicles', response);
+    expectArray(response);
+  });
 
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
-
-      // Document inventory entities structure
-      if (response.length > 0) {
-        console.log(`\n📊 Inventory entities array structure:`);
-        console.log(`   Total entities: ${response.length}`);
-        console.log(`   First entity fields:`, Object.keys(response[0]).join(', '));
-      }
-    } catch (error: any) {
-      console.log('Inventory Entities Error:', error.message, error.statusCode);
-      saveResponse('inventory-entities-error', { error: error.message, statusCode: error.statusCode });
+  it('should list inventory entities (ships)', async () => {
+    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+      console.log('⊘ Skipping Inventory Entities: No auth token or character UID');
+      return;
     }
 
-    await delay(100);
+    const response = await client.inventory.entities.list({
+      uid: TEST_CONFIG.characterUid,
+      entityType: 'ships',
+      assignType: 'owner',
+    });
+    saveResponse('inventory-entities-ships', response);
+
+    expectArray(response);
+  });
+
+  it('should list inventory entities with pagination', async () => {
+    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+      console.log('⊘ Skipping Inventory Entities: No auth token or character UID');
+      return;
+    }
+
+    const response = await client.inventory.entities.list({
+      uid: TEST_CONFIG.characterUid,
+      entityType: 'ships',
+      assignType: 'owner',
+      start_index: 1,
+      item_count: 10,
+    });
+    saveResponse('inventory-entities-ships-paginated', response);
+
+    expectArray(response);
+    expect((response as any[]).length).toBeLessThanOrEqual(10);
   });
 });

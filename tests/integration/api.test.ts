@@ -1,11 +1,11 @@
 /**
  * Integration tests for API resource
+ * Tests all read-only API endpoints
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import { createTestClient, saveResponse, delay } from './setup.js';
-import { validateRateLimitInfo, validateArray } from './validators.js';
+import { createTestClient, saveResponse, expectFields, hasAuthToken } from './setup.js';
 
 describe('API Resource Integration Tests', () => {
   let client: SWCombine;
@@ -14,92 +14,87 @@ describe('API Resource Integration Tests', () => {
     client = createTestClient();
   });
 
+  it('should get list of available resources', async () => {
+    const response = await client.api.getResources();
+    saveResponse('api-get-resources', response);
+
+    expect(response).toBeDefined();
+    expect(typeof response).toBe('object');
+  });
+
   it('should call HelloWorld endpoint', async () => {
     const response = await client.api.helloWorld();
-
-    console.log('HelloWorld Response:', response);
     saveResponse('api-helloworld', response);
 
     expect(response).toBeDefined();
-
-    // Document the response type
-    console.log(`\n📊 HelloWorld response type: ${typeof response}`);
-    if (typeof response === 'object') {
-      console.log(`   Top-level fields:`, Object.keys(response).join(', '));
-    }
-
-    await delay(100); // Rate limiting
+    // HelloWorld returns a string message
+    expect(typeof response).toBe('string');
+    expect(response).toContain('Hello');
   });
 
   it('should call HelloAuth endpoint', async () => {
-    try {
-      const response = await client.api.helloAuth();
-
-      console.log('HelloAuth Response:', JSON.stringify(response, null, 2));
-      saveResponse('api-helloauth', response);
-
-      expect(response).toBeDefined();
-      expect(typeof response).toBe('object');
-
-      // Document the structure
-      console.log(`\n📊 HelloAuth response structure:`);
-      console.log(`   Top-level fields:`, Object.keys(response).join(', '));
-    } catch (error: any) {
-      console.log('HelloAuth Error:', error.message);
-      // This might fail if not authenticated - that's okay for discovery
-      if (error.statusCode !== 401) {
-        throw error;
-      }
+    if (!hasAuthToken()) {
+      console.log('⊘ Skipping HelloAuth: No auth token');
+      return;
     }
 
-    await delay(100);
+    const response = await client.api.helloAuth();
+    saveResponse('api-helloauth', response);
+
+    expect(response).toBeDefined();
+    expect(typeof response).toBe('object');
+    // HelloAuth returns a message and client ID
+    expectFields(response, ['message', 'client']);
   });
 
   it('should get permissions list', async () => {
     const response = await client.api.permissions();
-
-    console.log('Permissions Response:', JSON.stringify(response, null, 2).substring(0, 500));
     saveResponse('api-permissions', response);
 
     expect(response).toBeDefined();
     expect(typeof response).toBe('object');
-
-    // Document the structure
-    console.log(`\n📊 Permissions response structure:`);
-    console.log(`   Top-level fields:`, Object.keys(response).join(', '));
-
-    await delay(100);
+    // Permissions returns a list of available permissions
+    expectFields(response, ['permission']);
   });
 
   it('should get rate limit status', async () => {
     const response = await client.api.rateLimits();
-
-    console.log('RateLimits Response:', JSON.stringify(response, null, 2));
     saveResponse('api-ratelimits', response);
 
     expect(response).toBeDefined();
     expect(typeof response).toBe('object');
-
-    // Document the structure
-    console.log(`\n📊 RateLimits response structure:`);
-    console.log(`   Top-level fields:`, Object.keys(response).join(', '));
-
-    await delay(100);
   });
 
   it('should get current time', async () => {
     const response = await client.api.time();
-
-    console.log('Time Response:', JSON.stringify(response, null, 2));
     saveResponse('api-time', response);
 
     expect(response).toBeDefined();
     expect(typeof response).toBe('object');
+    // Current time response has years, days, hours, mins, secs (no timestamp)
+    expectFields(response, ['years', 'days', 'hours']);
+  });
 
-    // Document the structure
-    console.log(`\n📊 Time response structure:`);
-    console.log(`   Top-level fields:`, Object.keys(response).join(', '));
+  it('should convert unix timestamp to CGT', async () => {
+    const unixTime = Math.floor(Date.now() / 1000);
+    const response = await client.api.time({ time: unixTime });
+    saveResponse('api-time-convert-unix', response);
 
-    await delay(100);
+    expect(response).toBeDefined();
+    expect(typeof response).toBe('object');
+    // Response has years, days, hours, mins, secs, timestamp
+    expectFields(response, ['years', 'days', 'timestamp']);
+  });
+
+  it('should convert CGT to unix timestamp', async () => {
+    // CGT format: "Y##D###" e.g., "Y26D100" for Year 26, Day 100
+    const cgtTime = 'Y26D100';
+    const response = await client.api.time({ cgt: cgtTime });
+    saveResponse('api-time-convert-cgt', response);
+
+    expect(response).toBeDefined();
+    expect(typeof response).toBe('object');
+    // Response has years, days, hours, mins, secs, timestamp
+    expectFields(response, ['years', 'days', 'timestamp']);
   });
 });

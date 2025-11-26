@@ -24,10 +24,15 @@ export interface EntityClass {
 export class TypesClassesResource extends BaseResource {
   /**
    * Get all classes for an entity type (paginated)
-   * @param options - Entity type and optional pagination parameters
+   *
+   * NOTE: Official API documentation states "Query String: N/A" and "Parameters: N/A",
+   * but empirical testing suggests pagination parameters may be required to avoid 404 errors.
+   * The SDK includes pagination parameters by default for safety.
+   *
+   * @param options - Entity type (plural, e.g., 'vehicles', 'ships') and optional pagination parameters
    * @example
-   * const classes = await client.types.classes.list({ entityType: 'vehicle' });
-   * const moreClasses = await client.types.classes.list({ entityType: 'vehicle', start_index: 51, item_count: 50 });
+   * const classes = await client.types.classes.list({ entityType: 'vehicles' });
+   * const moreClasses = await client.types.classes.list({ entityType: 'vehicles', start_index: 51, item_count: 50 });
    */
   async list(options: {
     entityType: string;
@@ -39,7 +44,15 @@ export class TypesClassesResource extends BaseResource {
       item_count: options.item_count || 50,
     };
 
-    return this.http.get<EntityClass[]>(`/types/classes/${options.entityType}`, { params });
+    const response = await this.http.get<Record<string, unknown>>(`/types/classes/${options.entityType}`, { params });
+    // API returns { attributes: {...}, classname: [...] }, extract the array
+    // Key name varies based on entity type, so find the array
+    for (const key of Object.keys(response)) {
+      if (key !== 'attributes' && Array.isArray(response[key])) {
+        return response[key] as EntityClass[];
+      }
+    }
+    return [];
   }
 }
 
@@ -49,7 +62,7 @@ export class TypesClassesResource extends BaseResource {
 export class TypesEntitiesResource extends BaseResource {
   /**
    * Get all entities of a type (paginated)
-   * @param options - Entity type, optional class filter, and optional pagination parameters
+   * @param options - Entity type (plural, e.g., 'vehicles', 'ships'), optional class filter, and optional pagination parameters
    * @example
    * const ships = await client.types.entities.list({ entityType: 'ships' });
    * const moreShips = await client.types.entities.list({ entityType: 'ships', start_index: 51, item_count: 50 });
@@ -70,7 +83,15 @@ export class TypesEntitiesResource extends BaseResource {
       item_count: options.item_count || 50,
     };
 
-    return this.http.get<Entity[]>(path, { params });
+    const response = await this.http.get<Record<string, unknown>>(path, { params });
+    // API returns { attributes: {...}, entitytype: [...] } (e.g., vehicletype, shiptype)
+    // Key name varies based on entity type, so find the array
+    for (const key of Object.keys(response)) {
+      if (key !== 'attributes' && Array.isArray(response[key])) {
+        return response[key] as Entity[];
+      }
+    }
+    return [];
   }
 
   /**
@@ -98,6 +119,17 @@ export class TypesResource extends BaseResource {
    * Get all entity types
    */
   async listEntityTypes(): Promise<EntityType[]> {
-    return this.request<EntityType[]>('GET', '/types/entitytypes');
+    const response = await this.http.get<Record<string, unknown>>('/types/entitytypes');
+    // API returns { entitytype: [...], count: 76 }, extract just the array
+    if (response.entitytype && Array.isArray(response.entitytype)) {
+      return response.entitytype as EntityType[];
+    }
+    // Fallback: find any array in the response
+    for (const key of Object.keys(response)) {
+      if (Array.isArray(response[key])) {
+        return response[key] as EntityType[];
+      }
+    }
+    return [];
   }
 }

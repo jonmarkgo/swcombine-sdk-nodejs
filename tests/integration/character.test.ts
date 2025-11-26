@@ -1,11 +1,19 @@
 /**
  * Integration tests for Character resource
+ * Tests all read-only Character endpoints
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import { createTestClient, saveResponse, delay, hasAuthToken, TEST_CONFIG } from './setup.js';
-import { validateCharacter, validateArray } from './validators.js';
+import {
+  createTestClient,
+  saveResponse,
+  hasAuthToken,
+  TEST_CONFIG,
+  expectFields,
+  expectArray,
+  expectUid,
+} from './setup.js';
 
 describe('Character Resource Integration Tests', () => {
   let client: SWCombine;
@@ -14,155 +22,134 @@ describe('Character Resource Integration Tests', () => {
     client = createTestClient();
   });
 
-  it('should get character by handle check', async () => {
-    if (!TEST_CONFIG.characterHandle) {
-      console.log('⊘ Skipping: No TEST_CHARACTER_HANDLE provided');
-      return;
-    }
+  describe('Public endpoints (no auth required)', () => {
+    it('should get character UID by handle', async () => {
+      if (!TEST_CONFIG.characterHandle) {
+        console.log('⊘ Skipping: No TEST_CHARACTER_HANDLE provided');
+        return;
+      }
 
-    try {
       const response = await client.character.getByHandle({
         handle: TEST_CONFIG.characterHandle,
       });
-
-      console.log('Character HandleCheck Response:', response);
       saveResponse('character-handlecheck', response);
 
-      expect(response).toBeDefined();
-      expect(response.uid).toBeDefined();
-    } catch (error: any) {
-      console.log('HandleCheck Error:', error.message, error.statusCode);
-      saveResponse('character-handlecheck-error', { error: error.message, statusCode: error.statusCode });
-    }
-
-    await delay(100);
+      expectFields(response, ['uid', 'handle']);
+      expectUid(response.uid);
+      expect(response.handle).toBe(TEST_CONFIG.characterHandle);
+    });
   });
 
-  it('should get character by UID', async () => {
-    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
-      console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
-      return;
-    }
+  describe('Authenticated endpoints', () => {
+    it('should get character by UID', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+        console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
+        return;
+      }
 
-    const response = await client.character.get({ uid: TEST_CONFIG.characterUid });
+      const response = await client.character.get({ uid: TEST_CONFIG.characterUid });
+      saveResponse('character-get', response);
 
-    console.log('Character Get Response:', response);
-    saveResponse('character-get', response);
-
-    expect(response).toBeDefined();
-    expect(response.uid).toBe(TEST_CONFIG.characterUid);
-
-    // Validate type structure
-    validateCharacter(response);
-
-    await delay(100);
-  });
-
-  it('should get character skills', async () => {
-    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
-      console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
-      return;
-    }
-
-    const response = await client.character.skills.list({ uid: TEST_CONFIG.characterUid });
-
-    console.log('Character Skills Response:', JSON.stringify(response, null, 2).substring(0, 500));
-    saveResponse('character-skills', response);
-
-    expect(response).toBeDefined();
-    expect(typeof response).toBe('object');
-
-    // Document skills structure
-    console.log(`\n📊 Skills response structure:`);
-    console.log(`   Top-level fields:`, Object.keys(response).join(', '));
-
-    await delay(100);
-  });
-
-  it('should get character privileges', async () => {
-    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
-      console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
-      return;
-    }
-
-    const response = await client.character.privileges.list({ uid: TEST_CONFIG.characterUid });
-
-    console.log('Character Privileges Response:', JSON.stringify(response, null, 2).substring(0, 500));
-    saveResponse('character-privileges', response);
-
-    expect(response).toBeDefined();
-    expect(typeof response).toBe('object');
-
-    // Document privileges structure
-    console.log(`\n📊 Privileges response structure:`);
-    console.log(`   Top-level fields:`, Object.keys(response).join(', '));
-
-    await delay(100);
-  });
-
-  it('should get character credits', async () => {
-    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
-      console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
-      return;
-    }
-
-    const response = await client.character.credits.get({ uid: TEST_CONFIG.characterUid });
-
-    console.log('Character Credits Response:', response);
-    saveResponse('character-credits', response);
-
-    expect(response).toBeDefined();
-
-    await delay(100);
-  });
-
-  it('should list character messages', async () => {
-    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
-      console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
-      return;
-    }
-
-    const response = await client.character.messages.list({
-      uid: TEST_CONFIG.characterUid,
-      mode: 'received',
+      expectFields(response, ['uid', 'name']);
+      expectUid(response.uid);
     });
 
-    console.log('Character Messages Response:', JSON.stringify(response, null, 2).substring(0, 500));
-    saveResponse('character-messages', response);
+    it('should get character skills', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+        console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
+        return;
+      }
 
-    expect(response).toBeDefined();
-    expect(typeof response).toBe('object');
+      const response = await client.character.skills.list({ uid: TEST_CONFIG.characterUid });
+      saveResponse('character-skills', response);
 
-    // Check if it has pagination metadata and message array
-    if ('attributes' in response && 'message' in response) {
-      const messagesData = response as any;
-      console.log(`\n📊 Messages response structure:`);
-      console.log(`   Total messages: ${messagesData.attributes.total}`);
-      console.log(`   Messages in this page: ${messagesData.attributes.count}`);
-      expect(Array.isArray(messagesData.message)).toBe(true);
-    }
+      expect(response).toBeDefined();
+      expect(typeof response).toBe('object');
+      // Skills endpoint returns an object with skill categories
+    });
 
-    await delay(100);
-  });
+    it('should get character privileges', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+        console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
+        return;
+      }
 
-  it('should get character permissions', async () => {
-    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
-      console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
-      return;
-    }
+      const response = await client.character.privileges.list({ uid: TEST_CONFIG.characterUid });
+      saveResponse('character-privileges', response);
 
-    const response = await client.character.permissions.list({ uid: TEST_CONFIG.characterUid });
+      expect(response).toBeDefined();
+      expect(typeof response).toBe('object');
+    });
 
-    console.log('Character Permissions Response:', JSON.stringify(response, null, 2).substring(0, 500));
-    saveResponse('character-permissions', response);
+    it('should get character credits', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+        console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
+        return;
+      }
 
-    expect(response).toBeDefined();
-    expect(typeof response).toBe('object');
+      const response = await client.character.credits.get({ uid: TEST_CONFIG.characterUid });
+      saveResponse('character-credits', response);
 
-    // Document permissions structure
-    console.log(`\n📊 Permissions response structure:`);
-    console.log(`   Top-level fields:`, Object.keys(response).join(', '));
+      expect(response).toBeDefined();
+      // Credits response is a number (the credit amount directly)
+      expect(typeof response).toBe('number');
+      expect(response).toBeGreaterThanOrEqual(0);
+    });
 
-    await delay(100);
+    it('should get character credit log', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+        console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
+        return;
+      }
+
+      const response = await client.character.creditlog.list({ uid: TEST_CONFIG.characterUid });
+      saveResponse('character-creditlog', response);
+
+      expectArray(response);
+      // Credit log is an array of transactions
+    });
+
+    it('should list character messages (received)', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+        console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
+        return;
+      }
+
+      const response = await client.character.messages.list({
+        uid: TEST_CONFIG.characterUid,
+        mode: 'received',
+      });
+      saveResponse('character-messages-received', response);
+
+      expectArray(response);
+    });
+
+    it('should list character messages (sent)', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+        console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
+        return;
+      }
+
+      const response = await client.character.messages.list({
+        uid: TEST_CONFIG.characterUid,
+        mode: 'sent',
+      });
+      saveResponse('character-messages-sent', response);
+
+      expectArray(response);
+    });
+
+    it('should get character permissions', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+        console.log('⊘ Skipping: No auth token or TEST_CHARACTER_UID');
+        return;
+      }
+
+      const response = await client.character.permissions.list({ uid: TEST_CONFIG.characterUid });
+      saveResponse('character-permissions', response);
+
+      expect(response).toBeDefined();
+      expect(typeof response).toBe('object');
+    });
   });
 });

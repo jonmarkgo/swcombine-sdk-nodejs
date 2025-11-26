@@ -22,7 +22,9 @@ export class MarketVendorsResource extends BaseResource {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    return this.http.get<Vendor[]>('/market/vendors', { params });
+    const response = await this.http.get<{ vendor?: Vendor[]; attributes?: unknown }>('/market/vendors', { params });
+    // API returns { attributes: {...}, vendor: [...] }, extract just the array
+    return response.vendor || [];
   }
 
   /**

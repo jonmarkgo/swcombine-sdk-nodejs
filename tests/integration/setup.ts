@@ -6,6 +6,7 @@ import { config } from 'dotenv';
 import { SWCombine } from '../../src/index.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { expect } from 'vitest';
 
 // Load environment variables
 config();
@@ -18,9 +19,10 @@ export const TEST_CONFIG = {
   characterUid: process.env.TEST_CHARACTER_UID || '',
   characterHandle: process.env.TEST_CHARACTER_HANDLE || '',
   factionUid: process.env.TEST_FACTION_UID || '',
-  planetUid: process.env.TEST_PLANET_UID || '1',
-  sectorUid: process.env.TEST_SECTOR_UID || '1',
-  systemUid: process.env.TEST_SYSTEM_UID || '1',
+  // Use sector/system/planet names or UIDs - the API accepts lowercase names
+  planetUid: process.env.TEST_PLANET_UID || 'coruscant',
+  sectorUid: process.env.TEST_SECTOR_UID || 'bakura',
+  systemUid: process.env.TEST_SYSTEM_UID || 'bakura',
 };
 
 // Directory for saving API responses
@@ -79,4 +81,48 @@ export function skipIfNoAuth(test: any): void {
  */
 export function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Validate that a response is a non-empty array
+ */
+export function expectArray(response: unknown, minLength = 0): asserts response is unknown[] {
+  expect(response).toBeDefined();
+  expect(Array.isArray(response)).toBe(true);
+  if (minLength > 0) {
+    expect((response as unknown[]).length).toBeGreaterThanOrEqual(minLength);
+  }
+}
+
+/**
+ * Validate that an object has required fields
+ */
+export function expectFields(obj: unknown, fields: string[]): void {
+  expect(obj).toBeDefined();
+  expect(typeof obj).toBe('object');
+  expect(obj).not.toBeNull();
+  for (const field of fields) {
+    expect(obj).toHaveProperty(field);
+  }
+}
+
+/**
+ * Validate array items have required fields
+ */
+export function expectArrayWithFields(response: unknown, fields: string[], minLength = 1): void {
+  expectArray(response, minLength);
+  const arr = response as Record<string, unknown>[];
+  if (arr.length > 0) {
+    expectFields(arr[0], fields);
+  }
+}
+
+/**
+ * Validate a UID format (e.g., "1:12345" or "20:123")
+ */
+export function expectUid(uid: unknown): void {
+  expect(uid).toBeDefined();
+  expect(typeof uid).toBe('string');
+  // UIDs can be numeric IDs or "type:id" format
+  expect(uid).toBeTruthy();
 }

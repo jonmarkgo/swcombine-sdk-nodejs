@@ -1,11 +1,17 @@
 /**
  * Integration test for character.me() endpoint
+ * Tests the authenticated user's character info
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import { createTestClient, saveResponse, hasAuthToken } from './setup.js';
-import { validateCharacter } from './validators.js';
+import {
+  createTestClient,
+  saveResponse,
+  hasAuthToken,
+  expectFields,
+  expectUid,
+} from './setup.js';
 
 describe('Character Me Integration Test', () => {
   let client: SWCombine;
@@ -21,21 +27,10 @@ describe('Character Me Integration Test', () => {
     }
 
     const character = await client.character.me();
-
-    console.log('Current Character:', {
-      uid: character.uid,
-      name: character.name,
-      handle: (character as any).handle,
-    });
-
     saveResponse('character-me', character);
 
-    expect(character).toBeDefined();
-    expect(character.uid).toBeDefined();
-    expect(character.name).toBeDefined();
-
-    // Validate type structure
-    validateCharacter(character);
+    expectFields(character, ['uid', 'name']);
+    expectUid(character.uid);
 
     console.log(`✓ Authenticated as: ${character.name} (${character.uid})`);
   });

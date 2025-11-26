@@ -47,7 +47,9 @@ export class GNSResource extends BaseResource {
       params.faction_type = options.faction_type;
     }
 
-    return this.http.get<NewsItem[]>(path, { params });
+    const response = await this.http.get<{ newsitem?: NewsItem[]; attributes?: unknown }>(path, { params });
+    // API returns { attributes: {...}, newsitem: [...] }, extract just the array
+    return response.newsitem || [];
   }
 
   /**
@@ -93,7 +95,9 @@ export class SimNewsResource extends BaseResource {
     }
     // Note: faction and faction_type are GNS-only parameters, not used for SimNews
 
-    return this.http.get<NewsItem[]>(path, { params });
+    const response = await this.http.get<{ newsitem?: NewsItem[]; attributes?: unknown }>(path, { params });
+    // API returns { attributes: {...}, newsitem: [...] }, extract just the array
+    return response.newsitem || [];
   }
 
   /**

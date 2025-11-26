@@ -12,10 +12,23 @@ import { Entity, GetEntityOptions, ListInventoryEntitiesOptions, QueryParams } f
 export class InventoryEntitiesResource extends BaseResource {
   /**
    * List entities in inventory (paginated with optional filtering)
+   *
+   * Supports filtering by various entity properties. Filter arrays must have matching lengths.
+   *
    * @param options - Inventory UID, entity type, assign type, and optional pagination/filtering parameters
+   * @param options.uid - Character or Faction UID
+   * @param options.entityType - Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials'
+   * @param options.assignType - Assignment type: 'owner', 'commander', or 'pilot'
+   * @param options.start_index - Starting position (1-based). Default: 1
+   * @param options.item_count - Number of items to retrieve. Default: 50, Max: 200
+   * @param options.filter_type - Array of filter types (e.g., 'class', 'name', 'hp', 'tags')
+   * @param options.filter_value - Array of values corresponding to each filter type
+   * @param options.filter_inclusion - Array specifying 'includes' or 'excludes' for each filter
    * @example
    * const entities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot' });
-   * const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot', start_index: 51, item_count: 100 });
+   * // Fetch up to 200 entities at once
+   * const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot', start_index: 1, item_count: 200 });
+   * // Filter by HP
    * const filteredEntities = await client.inventory.entities.list({
    *   uid: '1:12345',
    *   entityType: 'vehicle',
@@ -23,6 +36,15 @@ export class InventoryEntitiesResource extends BaseResource {
    *   filter_type: ['hp'],
    *   filter_value: ['100'],
    *   filter_inclusion: ['includes']
+   * });
+   * // Filter by multiple criteria
+   * const multiFiltered = await client.inventory.entities.list({
+   *   uid: '1:12345',
+   *   entityType: 'ships',
+   *   assignType: 'owner',
+   *   filter_type: ['class', 'powered'],
+   *   filter_value: ['Fighter', '1'],
+   *   filter_inclusion: ['includes', 'includes']
    * });
    */
   async list(options: ListInventoryEntitiesOptions): Promise<Entity[]> {
@@ -42,10 +64,18 @@ export class InventoryEntitiesResource extends BaseResource {
       params.filter_inclusion = options.filter_inclusion;
     }
 
-    return this.http.get<Entity[]>(
+    const response = await this.http.get<Record<string, unknown>>(
       `/inventory/${options.uid}/${options.entityType}/${options.assignType}`,
       { params }
     );
+    // API returns { attributes: {...}, entitytype: [...] }, extract just the array
+    // Key name varies based on entity type, so find the array
+    for (const key of Object.keys(response)) {
+      if (key !== 'attributes' && Array.isArray(response[key])) {
+        return response[key] as Entity[];
+      }
+    }
+    return [];
   }
 
   /**
@@ -57,20 +87,40 @@ export class InventoryEntitiesResource extends BaseResource {
 
   /**
    * Update entity property
+   * @param options.entityType - Entity type (ships, vehicles, stations, etc.)
+   * @param options.uid - Entity UID
+   * @param options.property - Property to update
+   * @param options.new_value - New value for the property
+   * @param options.reason - Optional reason for the change
    */
   async updateProperty(options: {
     entityType: string;
     uid: string;
-    property: string;
-    value: any;
+    property:
+      | 'name'
+      | 'open-to'
+      | 'owner'
+      | 'commander'
+      | 'pilot'
+      | 'infotext'
+      | 'action'
+      | 'crewlist-add'
+      | 'crewlist-remove'
+      | 'crewlist-clear';
+    new_value: string;
+    reason?: string;
   }): Promise<Entity> {
+    const data: any = {
+      new_value: options.new_value,
+    };
+    if (options.reason) {
+      data.reason = options.reason;
+    }
+
     return this.request<Entity>(
       'POST',
-      `/inventory/${options.entityType}/${options.uid}/property`,
-      {
-        property: options.property,
-        value: options.value,
-      }
+      `/inventory/${options.entityType}/${options.uid}/${options.property}`,
+      data
     );
   }
 

@@ -60,21 +60,33 @@ export class FactionMembersResource extends BaseResource {
       start_index: options.start_index || 1,
       item_count: options.item_count || 50,
     };
-    return this.http.get<FactionMember[]>(`/faction/${options.factionId}/members`, { params });
+    const response = await this.http.get<{ member?: FactionMember[]; attributes?: unknown }>(`/faction/${options.factionId}/members`, { params });
+    // API returns { attributes: {...}, member: [...] }, extract just the array
+    return response.member || [];
   }
 
   /**
-   * Add or update faction member
+   * Update faction member info field
+   * @param options.factionId - Faction UID
+   * @param options.uid - Character UID to update
+   * @param options.property - Which info field to update (info1, info2, or info3)
+   * @param options.new_value - New value for the info field
    */
-  async update(options: {
+  async updateMemberInfo(options: {
     factionId: string;
-    characterId: string;
-    rank?: string;
-  }): Promise<FactionMember> {
-    return this.request<FactionMember>('POST', `/faction/${options.factionId}/members`, {
-      characterId: options.characterId,
-      rank: options.rank,
-    });
+    uid: string;
+    property: 'info1' | 'info2' | 'info3';
+    new_value: string;
+  }): Promise<any> {
+    return this.request(
+      'POST',
+      `/faction/${options.factionId}/members`,
+      {
+        uid: options.uid,
+        property: options.property,
+        new_value: options.new_value,
+      }
+    );
   }
 }
 
@@ -98,7 +110,9 @@ export class FactionBudgetsResource extends BaseResource {
       start_index: options.start_index || 1,
       item_count: options.item_count || 50,
     };
-    return this.http.get<Budget[]>(`/faction/${options.factionId}/budgets`, { params });
+    const response = await this.http.get<{ budget?: Budget[]; attributes?: unknown }>(`/faction/${options.factionId}/budgets`, { params });
+    // API returns { attributes: {...}, budget: [...] }, extract just the array
+    return response.budget || [];
   }
 
   /**
@@ -129,7 +143,9 @@ export class FactionStockholdersResource extends BaseResource {
       start_index: options.start_index || 1,
       item_count: options.item_count || 50,
     };
-    return this.http.get<Stockholder[]>(`/faction/${options.factionId}/stockholders`, { params });
+    const response = await this.http.get<{ stockholder?: Stockholder[]; attributes?: unknown }>(`/faction/${options.factionId}/stockholders`, { params });
+    // API returns { attributes: {...}, stockholder: [...] }, extract just the array
+    return response.stockholder || [];
   }
 }
 
@@ -146,16 +162,34 @@ export class FactionCreditsResource extends BaseResource {
 
   /**
    * Transfer faction credits
+   * @param options.factionId - Faction UID
+   * @param options.amount - Amount to transfer
+   * @param options.recipient - Recipient character or faction UID (optional)
+   * @param options.budget - Budget UID to transfer from (optional)
+   * @param options.reason - Reason for transfer (optional, API will auto-append client name)
    */
   async update(options: {
     factionId: string;
     amount: number;
     recipient?: string;
+    budget?: string;
+    reason?: string;
   }): Promise<FactionCredits> {
-    return this.request<FactionCredits>('POST', `/faction/${options.factionId}/credits`, {
+    const data: any = {
       amount: options.amount,
-      recipient: options.recipient,
-    });
+    };
+
+    if (options.recipient) {
+      data.recipient = options.recipient;
+    }
+    if (options.budget) {
+      data.budget = options.budget;
+    }
+    if (options.reason) {
+      data.reason = options.reason;
+    }
+
+    return this.request<FactionCredits>('POST', `/faction/${options.factionId}/credits`, data);
   }
 }
 
@@ -165,16 +199,26 @@ export class FactionCreditsResource extends BaseResource {
 export class FactionCreditlogResource extends BaseResource {
   /**
    * Get faction credit log (paginated)
+   *
    * @param options - Faction ID and optional pagination/filtering parameters
+   * @param options.factionId - Faction UID
+   * @param options.start_index - Starting position (1-based). Default: 1
+   * @param options.item_count - Number of items to retrieve. Default: 50, Max: 1000
+   * @param options.start_id - Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000)
    * @example
    * const creditlog = await client.faction.creditlog.list({ factionId: '20:123' });
    * const moreLogs = await client.faction.creditlog.list({ factionId: '20:123', start_index: 51, item_count: 100 });
    * const oldestLogs = await client.faction.creditlog.list({ factionId: '20:123', start_id: 1 });
+   * // Fetch up to 1000 credit log entries at once
+   * const manyLogs = await client.faction.creditlog.list({ factionId: '20:123', item_count: 1000 });
    */
   async list(options: {
     factionId: string;
+    /** Starting position (1-based). Default: 1 */
     start_index?: number;
+    /** Number of items to retrieve. Default: 50, Max: 1000 */
     item_count?: number;
+    /** Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000) */
     start_id?: number;
   }): Promise<CreditLogEntry[]> {
     const params: Record<string, number> = {
@@ -184,7 +228,9 @@ export class FactionCreditlogResource extends BaseResource {
     if (options.start_id !== undefined) {
       params.start_id = options.start_id;
     }
-    return this.http.get<CreditLogEntry[]>(`/faction/${options.factionId}/creditlog`, { params });
+    const response = await this.http.get<{ creditlog?: CreditLogEntry[]; attributes?: unknown }>(`/faction/${options.factionId}/creditlog`, { params });
+    // API returns { attributes: {...}, creditlog: [...] }, extract just the array
+    return response.creditlog || [];
   }
 }
 
@@ -209,6 +255,11 @@ export class FactionResource extends BaseResource {
 
   /**
    * Get faction by UID
+   * @requires_auth Yes
+   * @requires_scope FACTION_READ
+   * @param options - Faction UID
+   * @example
+   * const faction = await client.faction.get({ uid: '20:123' });
    */
   async get(options: GetFactionOptions): Promise<Faction> {
     return this.request<Faction>('GET', `/faction/${options.uid}`);
@@ -216,6 +267,7 @@ export class FactionResource extends BaseResource {
 
   /**
    * List all factions (paginated)
+   * @requires_auth No
    * @param options - Optional pagination parameters
    * @example
    * const factions = await client.faction.list();
@@ -226,6 +278,8 @@ export class FactionResource extends BaseResource {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    return this.http.get<Faction[]>('/factions', { params });
+    const response = await this.http.get<{ faction?: Faction[]; attributes?: unknown }>('/factions', { params });
+    // API returns { attributes: {...}, faction: [...] }, extract just the array
+    return response.faction || [];
   }
 }

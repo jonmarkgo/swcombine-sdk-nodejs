@@ -61,9 +61,12 @@ export class HttpClient {
           try {
             const token = await this.tokenManager.getAccessToken();
             if (token) {
-              // Try query parameter method instead of header
-              // SW Combine API docs say: "Access tokens are sent to a Resource in the HTTP
-              // Authorization header, or as a query string parameter"
+              // SW Combine API supports two methods for sending access tokens:
+              // 1. Authorization header: "Authorization: OAuth TOKEN"
+              // 2. Query parameter: "?access_token=TOKEN"
+              //
+              // This SDK uses query parameters as the primary method based on empirical testing
+              // and project documentation (see CLAUDE.md). Both methods are valid per official docs.
               config.params = config.params || {};
               config.params.access_token = token;
 
@@ -102,6 +105,23 @@ export class HttpClient {
   private setupResponseInterceptor(): void {
     this.axios.interceptors.response.use(
       (response) => {
+        // Log rate limit headers if available
+        if (response.headers && this.debug) {
+          const rateLimitInfo = {
+            limit: response.headers['x-ratelimit-limit'],
+            remaining: response.headers['x-ratelimit-remaining'],
+            reset: response.headers['x-ratelimit-reset'],
+            resetTime: response.headers['x-ratelimit-resettime'],
+          };
+
+          if (rateLimitInfo.limit) {
+            console.log(
+              `[SWC SDK] Rate Limit: ${rateLimitInfo.remaining}/${rateLimitInfo.limit} remaining` +
+                ` (resets at ${rateLimitInfo.resetTime || new Date(parseInt(rateLimitInfo.reset) * 1000).toISOString()})`
+            );
+          }
+        }
+
         // Extract data from swcapi wrapper if present
         if (response.data && typeof response.data === 'object' && 'swcapi' in response.data) {
           const swcapiData = response.data.swcapi;

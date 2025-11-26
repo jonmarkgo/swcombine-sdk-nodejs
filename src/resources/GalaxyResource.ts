@@ -33,7 +33,9 @@ export class GalaxyPlanetsResource extends BaseResource {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    return this.http.get<Planet[]>('/galaxy/planets/', { params });
+    const response = await this.http.get<{ planet?: Planet[]; attributes?: unknown }>('/galaxy/planets/', { params });
+    // API returns { attributes: {...}, planet: [...] }, extract just the array
+    return response.planet || [];
   }
 
   /**
@@ -60,7 +62,9 @@ export class GalaxySectorsResource extends BaseResource {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    return this.http.get<Sector[]>('/galaxy/sectors/', { params });
+    const response = await this.http.get<{ sector?: Sector[]; attributes?: unknown }>('/galaxy/sectors/', { params });
+    // API returns { attributes: {...}, sector: [...] }, extract just the array
+    return response.sector || [];
   }
 
   /**
@@ -90,7 +94,9 @@ export class GalaxySystemsResource extends BaseResource {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    return this.http.get<System[]>('/galaxy/systems/', { params });
+    const response = await this.http.get<{ system?: System[]; attributes?: unknown }>('/galaxy/systems/', { params });
+    // API returns { attributes: {...}, system: [...] }, extract just the array
+    return response.system || [];
   }
 
   /**
@@ -117,7 +123,9 @@ export class GalaxyStationsResource extends BaseResource {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    return this.http.get<Station[]>('/galaxy/stations/', { params });
+    const response = await this.http.get<{ station?: Station[]; attributes?: unknown }>('/galaxy/stations/', { params });
+    // API returns { attributes: {...}, station: [...] }, extract just the array
+    return response.station || [];
   }
 
   /**
@@ -144,7 +152,9 @@ export class GalaxyCitiesResource extends BaseResource {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    return this.http.get<City[]>('/galaxy/cities/', { params });
+    const response = await this.http.get<{ city?: City[]; attributes?: unknown }>('/galaxy/cities/', { params });
+    // API returns { attributes: {...}, city: [...] }, extract just the array
+    return response.city || [];
   }
 
   /**
@@ -175,8 +185,9 @@ export class GalaxyResource extends BaseResource {
   }
 
   /**
-   * Extract unique sectors from systems list
-   * This is a helper method since the API doesn't provide a direct sectors list endpoint
+   * Client-side helper method to extract unique sectors from systems list
+   * Note: The API provides a direct sectors list endpoint via galaxy.sectors.list()
+   * This method is an alternative that derives sector information from the systems endpoint
    * @returns Array of unique sector information extracted from systems
    * @example
    * const sectorsData = await client.galaxy.getSectorsFromSystems();

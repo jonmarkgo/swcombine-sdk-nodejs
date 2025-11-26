@@ -1,11 +1,19 @@
 /**
  * Integration tests for Faction resource
+ * Tests all read-only Faction endpoints
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import { createTestClient, saveResponse, delay, TEST_CONFIG } from './setup.js';
-import { validateFaction, validateArray } from './validators.js';
+import {
+  createTestClient,
+  saveResponse,
+  TEST_CONFIG,
+  hasAuthToken,
+  expectArray,
+  expectFields,
+  expectUid,
+} from './setup.js';
 
 describe('Faction Resource Integration Tests', () => {
   let client: SWCombine;
@@ -14,150 +22,91 @@ describe('Faction Resource Integration Tests', () => {
     client = createTestClient();
   });
 
-  it('should list all factions', async () => {
-    try {
+  describe('Public endpoints', () => {
+    it('should list all factions', async () => {
       const response = await client.faction.list();
-
-      console.log('Factions List Response:', JSON.stringify(response, null, 2).substring(0, 500));
       saveResponse('faction-list', response);
 
-      expect(response).toBeDefined();
-      expect(typeof response).toBe('object');
-
-      // Check if it has pagination metadata and faction array
-      if ('attributes' in response && 'faction' in response) {
-        const factionsData = response as any;
-        console.log(`\n📊 Factions response structure:`);
-        console.log(`   Total factions: ${factionsData.attributes.total}`);
-        console.log(`   Factions in this page: ${factionsData.attributes.count}`);
-        expect(Array.isArray(factionsData.faction)).toBe(true);
-        expect(factionsData.faction.length).toBeGreaterThan(0);
-
-        // Validate first faction
-        if (factionsData.faction.length > 0) {
-          validateFaction(factionsData.faction[0]);
-        }
-      }
-    } catch (error: any) {
-      console.log('Factions List Error:', error.message, error.statusCode);
-      saveResponse('faction-list-error', { error: error.message, statusCode: error.statusCode });
-    }
-
-    await delay(100);
+      expectArray(response, 1);
+      // First faction should have uid and name
+      const faction = (response as any[])[0];
+      expectFields(faction, ['attributes']);
+    });
   });
 
-  it('should get specific faction', async () => {
-    if (!TEST_CONFIG.factionUid) {
-      console.log('⊘ Skipping: No TEST_FACTION_UID provided');
-      return;
-    }
+  describe('Authenticated faction endpoints', () => {
+    it('should get specific faction by UID', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.factionUid) {
+        console.log('⊘ Skipping: No auth token or TEST_FACTION_UID');
+        return;
+      }
 
-    try {
       const response = await client.faction.get({ uid: TEST_CONFIG.factionUid });
-
-      console.log('Faction Get Response:', response);
       saveResponse('faction-get', response);
 
-      expect(response).toBeDefined();
-      expect(response.uid).toBe(TEST_CONFIG.factionUid);
+      expectFields(response, ['uid', 'name']);
+      expectUid(response.uid);
+    });
 
-      // Validate type structure
-      validateFaction(response);
-    } catch (error: any) {
-      console.log('Faction Get Error:', error.message, error.statusCode);
-      saveResponse('faction-get-error', { error: error.message, statusCode: error.statusCode });
-    }
+    it('should list faction members', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.factionUid) {
+        console.log('⊘ Skipping: No auth token or TEST_FACTION_UID');
+        return;
+      }
 
-    await delay(100);
-  });
-
-  it('should list faction members', async () => {
-    if (!TEST_CONFIG.factionUid) {
-      console.log('⊘ Skipping: No TEST_FACTION_UID provided');
-      return;
-    }
-
-    try {
       const response = await client.faction.members.list({ factionId: TEST_CONFIG.factionUid });
-
-      console.log('Faction Members Response (count):', response.length);
       saveResponse('faction-members', response);
 
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
+      expectArray(response);
+    });
 
-      // Document members structure
-      if (response.length > 0) {
-        console.log(`\n📊 Members array structure:`);
-        console.log(`   Total members: ${response.length}`);
-        console.log(`   First member fields:`, Object.keys(response[0]).join(', '));
-        console.log(`   First member:`, response[0]);
+    it('should list faction budgets', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.factionUid) {
+        console.log('⊘ Skipping: No auth token or TEST_FACTION_UID');
+        return;
       }
-    } catch (error: any) {
-      console.log('Faction Members Error:', error.message, error.statusCode);
-      saveResponse('faction-members-error', { error: error.message, statusCode: error.statusCode });
-    }
 
-    await delay(100);
-  });
-
-  it('should list faction budgets', async () => {
-    if (!TEST_CONFIG.factionUid) {
-      console.log('⊘ Skipping: No TEST_FACTION_UID provided');
-      return;
-    }
-
-    try {
       const response = await client.faction.budgets.list({ factionId: TEST_CONFIG.factionUid });
-
-      console.log('Faction Budgets Response:', response);
       saveResponse('faction-budgets', response);
 
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
+      expectArray(response);
+    });
 
-      // Document budgets structure
-      if (response.length > 0) {
-        console.log(`\n📊 Budgets array structure:`);
-        console.log(`   Total budgets: ${response.length}`);
-        console.log(`   First budget fields:`, Object.keys(response[0]).join(', '));
-        console.log(`   First budget:`, response[0]);
+    it('should list faction stockholders', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.factionUid) {
+        console.log('⊘ Skipping: No auth token or TEST_FACTION_UID');
+        return;
       }
-    } catch (error: any) {
-      console.log('Faction Budgets Error:', error.message, error.statusCode);
-      saveResponse('faction-budgets-error', { error: error.message, statusCode: error.statusCode });
-    }
 
-    await delay(100);
-  });
-
-  it('should list faction stockholders', async () => {
-    if (!TEST_CONFIG.factionUid) {
-      console.log('⊘ Skipping: No TEST_FACTION_UID provided');
-      return;
-    }
-
-    try {
       const response = await client.faction.stockholders.list({ factionId: TEST_CONFIG.factionUid });
-
-      console.log('Faction Stockholders Response:', response);
       saveResponse('faction-stockholders', response);
 
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
+      expectArray(response);
+    });
 
-      // Document stockholders structure
-      if (response.length > 0) {
-        console.log(`\n📊 Stockholders array structure:`);
-        console.log(`   Total stockholders: ${response.length}`);
-        console.log(`   First stockholder fields:`, Object.keys(response[0]).join(', '));
-        console.log(`   First stockholder:`, response[0]);
+    it('should get faction credits', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.factionUid) {
+        console.log('⊘ Skipping: No auth token or TEST_FACTION_UID');
+        return;
       }
-    } catch (error: any) {
-      console.log('Faction Stockholders Error:', error.message, error.statusCode);
-      saveResponse('faction-stockholders-error', { error: error.message, statusCode: error.statusCode });
-    }
 
-    await delay(100);
+      const response = await client.faction.credits.get({ factionId: TEST_CONFIG.factionUid });
+      saveResponse('faction-credits', response);
+
+      expect(response).toBeDefined();
+      expectFields(response, ['credits']);
+    });
+
+    it('should list faction credit log', async () => {
+      if (!hasAuthToken() || !TEST_CONFIG.factionUid) {
+        console.log('⊘ Skipping: No auth token or TEST_FACTION_UID');
+        return;
+      }
+
+      const response = await client.faction.creditlog.list({ factionId: TEST_CONFIG.factionUid });
+      saveResponse('faction-creditlog', response);
+
+      expectArray(response);
+    });
   });
 });

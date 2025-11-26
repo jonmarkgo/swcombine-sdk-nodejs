@@ -245,6 +245,49 @@ export interface APIErrorResponse {
 }
 
 // ============================================================================
+// Inventory Filter Types
+// ============================================================================
+
+/**
+ * Valid filter types for inventory entity queries.
+ * These can be used with filter_type parameter when listing inventory entities.
+ */
+export type InventoryFilterType =
+  | 'class'
+  | 'city'
+  | 'name'
+  | 'planet'
+  | 'sector'
+  | 'system'
+  | 'type'
+  | 'underconstruction'
+  | 'opento'
+  | 'protected'
+  | 'infotext'
+  | 'wreck'
+  | 'owner'
+  | 'commander'
+  | 'pilot'
+  | 'id'
+  | 'powered'
+  | 'debt'
+  | 'deposit'
+  | 'cargocontaineritems'
+  | 'cargocontainerdroids'
+  | 'container'
+  | 'gender'
+  | 'working'
+  | 'level'
+  | 'race'
+  | 'tags'
+  | 'hp';
+
+/**
+ * Filter inclusion mode for inventory queries.
+ */
+export type InventoryFilterInclusion = 'includes' | 'excludes';
+
+// ============================================================================
 // Request Options Types
 // ============================================================================
 
@@ -275,9 +318,10 @@ export interface DeleteMessageOptions {
 
 export interface CreateMessageOptions {
   uid: string;
-  recipient: string;
-  subject: string;
-  body: string;
+  /** Semicolon-separated list of recipient character names/UIDs (max 25) */
+  receivers: string;
+  /** Message text content */
+  communication: string;
 }
 
 export interface GetCharacterSkillsOptions {
@@ -294,8 +338,11 @@ export interface GetCharacterCreditsOptions {
 
 export interface GetCharacterCreditlogOptions {
   uid: string;
+  /** Starting position for pagination (1-based). Default: 1 */
   start_index?: number;
+  /** Number of items to retrieve. Default: 50, Max: 1000 */
   item_count?: number;
+  /** Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000) */
   start_id?: number;
 }
 
@@ -369,9 +416,14 @@ export interface ListInventoryEntitiesOptions {
   uid: string;
   entityType: string;
   assignType: string;
+  /** Starting position for pagination (1-based). Default: 1 */
   start_index?: number;
+  /** Number of items to retrieve. Default: 50, Max: 200 */
   item_count?: number;
-  filter_type?: string[];
+  /** Filter types to apply to the query */
+  filter_type?: InventoryFilterType[];
+  /** Values corresponding to each filter type */
   filter_value?: string[];
-  filter_inclusion?: ('includes' | 'excludes')[];
+  /** Whether each filter should include or exclude matches. Default: 'includes' */
+  filter_inclusion?: InventoryFilterInclusion[];
 }

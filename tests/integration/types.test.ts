@@ -1,10 +1,16 @@
 /**
  * Integration tests for Types resource
+ * Tests all read-only Types endpoints
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import { createTestClient, saveResponse, delay } from './setup.js';
+import {
+  createTestClient,
+  saveResponse,
+  expectArray,
+  expectFields,
+} from './setup.js';
 
 describe('Types Resource Integration Tests', () => {
   let client: SWCombine;
@@ -13,114 +19,94 @@ describe('Types Resource Integration Tests', () => {
     client = createTestClient();
   });
 
-  it('should list all entity types', async () => {
-    try {
+  describe('Entity Types', () => {
+    it('should list all entity types', async () => {
       const response = await client.types.listEntityTypes();
-
-      console.log('Entity Types Response (count):', response.length);
-      console.log('First few entity types:', response.slice(0, 5));
       saveResponse('types-entitytypes', response);
 
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
-      expect(response.length).toBeGreaterThan(0);
-
-      // Document entity types structure
-      if (response.length > 0) {
-        console.log(`\n📊 Entity types array structure:`);
-        console.log(`   Total types: ${response.length}`);
-        console.log(`   Type of first element:`, typeof response[0]);
-      }
-    } catch (error: any) {
-      console.log('Entity Types Error:', error.message, error.statusCode);
-      saveResponse('types-entitytypes-error', { error: error.message, statusCode: error.statusCode });
-    }
-
-    await delay(100);
+      expectArray(response, 1);
+      // Should have many entity types (ships, vehicles, etc.)
+      expect((response as any[]).length).toBeGreaterThan(10);
+    });
   });
 
-  it('should list classes for an entity type', async () => {
-    try {
-      // Try with 'vehicle' entity type
-      const response = await client.types.classes.list({ entityType: 'vehicle' });
+  describe('Classes', () => {
+    it('should list classes for ships', async () => {
+      const response = await client.types.classes.list({ entityType: 'ships' });
+      saveResponse('types-classes-ships', response);
 
-      console.log('Entity Classes Response (count):', response.length);
-      console.log('First few classes:', response.slice(0, 5));
-      saveResponse('types-classes-vehicle', response);
+      expectArray(response);
+      // Ships should have classes
+    });
 
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
+    it('should list classes for vehicles', async () => {
+      const response = await client.types.classes.list({ entityType: 'vehicles' });
+      saveResponse('types-classes-vehicles', response);
 
-      // Document entity classes structure
-      if (response.length > 0) {
-        console.log(`\n📊 Entity classes array structure:`);
-        console.log(`   Total classes: ${response.length}`);
-        console.log(`   Type of first element:`, typeof response[0]);
-      }
-    } catch (error: any) {
-      console.log('Entity Classes Error:', error.message, error.statusCode);
-      saveResponse('types-classes-error', { error: error.message, statusCode: error.statusCode });
-    }
+      expectArray(response);
+    });
 
-    await delay(100);
-  }, 15000);
-
-  it('should list entities of a type', async () => {
-    try {
-      // Try with 'vehicle' entity type
-      const response = await client.types.entities.list({ entityType: 'vehicle' });
-
-      console.log('Entities List Response (count):', response.length);
-      if (response.length > 0) {
-        console.log('First entity:', response[0]);
-      }
-      saveResponse('types-entities-vehicle', response);
-
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
-
-      // Document entities structure
-      if (response.length > 0) {
-        console.log(`\n📊 Entities array structure:`);
-        console.log(`   Total entities: ${response.length}`);
-        console.log(`   First entity fields:`, Object.keys(response[0]).join(', '));
-      }
-    } catch (error: any) {
-      console.log('Entities List Error:', error.message, error.statusCode);
-      saveResponse('types-entities-error', { error: error.message, statusCode: error.statusCode });
-    }
-
-    await delay(100);
-  });
-
-  it('should list entities of a type and class', async () => {
-    try {
-      // Try with 'vehicle' type and a class
-      const response = await client.types.entities.list({
-        entityType: 'vehicle',
-        class: 'wheeled',
+    it('should list classes with pagination', async () => {
+      const response = await client.types.classes.list({
+        entityType: 'ships',
+        start_index: 1,
+        item_count: 10,
       });
+      saveResponse('types-classes-ships-paginated', response);
 
-      console.log('Entities by Class Response (count):', response.length);
-      if (response.length > 0) {
-        console.log('First entity:', response[0]);
+      expectArray(response);
+      expect((response as any[]).length).toBeLessThanOrEqual(10);
+    });
+  });
+
+  describe('Entities by Type', () => {
+    it('should list entities of type ships', async () => {
+      const response = await client.types.entities.list({ entityType: 'ships' });
+      saveResponse('types-entities-ships', response);
+
+      expectArray(response, 1);
+      // Each entity should have attributes
+      const entity = (response as any[])[0];
+      expectFields(entity, ['attributes']);
+    });
+
+    it('should list entities of type vehicles', async () => {
+      const response = await client.types.entities.list({ entityType: 'vehicles' });
+      saveResponse('types-entities-vehicles', response);
+
+      expectArray(response, 1);
+    });
+
+    it('should list entities with pagination', async () => {
+      const response = await client.types.entities.list({
+        entityType: 'ships',
+        start_index: 1,
+        item_count: 10,
+      });
+      saveResponse('types-entities-ships-paginated', response);
+
+      expectArray(response);
+      expect((response as any[]).length).toBeLessThanOrEqual(10);
+    });
+
+    it('should get specific entity type info', async () => {
+      // First get the list to find a valid entity
+      const entities = await client.types.entities.list({ entityType: 'ships' });
+      expect((entities as any[]).length).toBeGreaterThan(0);
+
+      const entityUid = (entities as any[])[0].attributes?.uid;
+      if (!entityUid) {
+        console.log('⊘ Skipping: No entity UID found in list response');
+        return;
       }
-      saveResponse('types-entities-vehicle-wheeled', response);
 
-      expect(response).toBeDefined();
-      expect(Array.isArray(response)).toBe(true);
+      const response = await client.types.entities.get({
+        entityType: 'ships',
+        uid: entityUid,
+      });
+      saveResponse('types-entity-get', response);
 
-      // Document entities by class structure
-      if (response.length > 0) {
-        console.log(`\n📊 Entities by class array structure:`);
-        console.log(`   Total entities: ${response.length}`);
-        console.log(`   First entity fields:`, Object.keys(response[0]).join(', '));
-      }
-    } catch (error: any) {
-      console.log('Entities by Class Error:', error.message, error.statusCode);
-      saveResponse('types-entities-class-error', { error: error.message, statusCode: error.statusCode });
-    }
-
-    await delay(100);
+      expectFields(response, ['uid', 'name']);
+    });
   });
 });

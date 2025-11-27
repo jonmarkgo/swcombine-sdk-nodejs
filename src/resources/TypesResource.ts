@@ -45,8 +45,14 @@ export class TypesClassesResource extends BaseResource {
     };
 
     const response = await this.http.get<Record<string, unknown>>(`/types/classes/${options.entityType}`, { params });
-    // API returns { attributes: {...}, classname: [...] }, extract the array
-    // Key name varies based on entity type, so find the array
+    // API returns { swcapi: { classes: { vehicles: { attributes: {...}, class: [...] } } } }
+    // HttpClient unwraps swcapi.classes, so we get { vehicles: { attributes: {...}, class: [...] } }
+    // Extract the class array from the entity type object
+    const entityTypeData = response[options.entityType] as Record<string, unknown> | undefined;
+    if (entityTypeData && Array.isArray(entityTypeData.class)) {
+      return entityTypeData.class as EntityClass[];
+    }
+    // Fallback: look for any array in the response
     for (const key of Object.keys(response)) {
       if (key !== 'attributes' && Array.isArray(response[key])) {
         return response[key] as EntityClass[];
@@ -75,8 +81,8 @@ export class TypesEntitiesResource extends BaseResource {
     item_count?: number;
   }): Promise<Entity[]> {
     const path = options.class
-      ? `/types/${options.entityType}/class/${options.class}`
-      : `/types/${options.entityType}`;
+      ? `/types/${options.entityType}/class/${options.class}/`
+      : `/types/${options.entityType}/`;
 
     const params = {
       start_index: options.start_index || 1,
@@ -84,8 +90,14 @@ export class TypesEntitiesResource extends BaseResource {
     };
 
     const response = await this.http.get<Record<string, unknown>>(path, { params });
-    // API returns { attributes: {...}, entitytype: [...] } (e.g., vehicletype, shiptype)
-    // Key name varies based on entity type, so find the array
+    // API returns { swcapi: { shiptypes: { attributes: {...}, shiptype: [...] } } }
+    // HttpClient unwraps swcapi AND the first key (shiptypes), so we get { attributes: {...}, shiptype: [...] }
+    // The array key is singular (e.g., shiptype, vehicletype)
+    const arrayKey = options.entityType.slice(0, -1) + 'type'; // ships -> shiptype
+    if (Array.isArray(response[arrayKey])) {
+      return response[arrayKey] as Entity[];
+    }
+    // Fallback: look for any array in the response (excluding 'attributes')
     for (const key of Object.keys(response)) {
       if (key !== 'attributes' && Array.isArray(response[key])) {
         return response[key] as Entity[];

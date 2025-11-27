@@ -176,6 +176,9 @@ The SDK provides access to all SW Combine API resources:
 ### API Utilities
 
 ```typescript
+// Get list of available API resources
+await client.api.getResources();
+
 // Test connectivity
 await client.api.helloWorld();
 await client.api.helloAuth(); // Requires authentication
@@ -276,14 +279,15 @@ await client.galaxy.cities.get({ uid: '22:101' });
 ```typescript
 // Note: Events uses 0-based indexing unlike other endpoints
 await client.events.list({ eventMode: 'personal' }); // personal, faction, inventory, combat
-await client.events.list({ eventMode: 'personal', eventType: 'all', start_index: 0, item_count: 100 });
+await client.events.list({ eventMode: 'personal', start_index: 0, item_count: 100 }); // omit eventType to get all
+await client.events.list({ eventMode: 'personal', eventType: 'xp' }); // filter by specific type
 await client.events.get({ uid: 'event-uid' });
 ```
 
 ### Location
 
 ```typescript
-await client.location.get({ entityType: 'character', uid: '1:12345' });
+await client.location.get({ entityType: 'characters', uid: '1:12345' });
 await client.location.get({ entityType: 'ships', uid: '5:12345' });
 ```
 

@@ -59,8 +59,14 @@ export class InventoryEntitiesResource extends BaseResource {
       `/inventory/${options.uid}/${options.entityType}/${options.assignType}`,
       { params }
     );
-    // API returns { attributes: {...}, entitytype: [...] }, extract just the array
-    // Key name varies based on entity type, so find the array
+    // API returns { swcapi: { filters: {...}, entities: { attributes: {...}, entity: [...] } } }
+    // HttpClient unwraps swcapi but since there are multiple keys (filters, entities),
+    // it returns the whole object. Extract entities.entity array.
+    const entities = response.entities as Record<string, unknown> | undefined;
+    if (entities && Array.isArray(entities.entity)) {
+      return entities.entity as Entity[];
+    }
+    // Fallback: look for any array in the response
     for (const key of Object.keys(response)) {
       if (key !== 'attributes' && Array.isArray(response[key])) {
         return response[key] as Entity[];
@@ -110,7 +116,7 @@ export class InventoryEntitiesResource extends BaseResource {
 
     return this.request<Entity>(
       'POST',
-      `/inventory/${options.entityType}/${options.uid}/${options.property}`,
+      `/inventory/${options.entityType}/${options.uid}/${options.property}/`,
       data
     );
   }

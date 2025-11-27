@@ -25,10 +25,33 @@ import {
 // Note: Character credits endpoint returns a plain number, not an object
 
 export interface CreditLogEntry {
-  timestamp: string;
+  attributes: {
+    transaction_id: number;
+  };
+  time: {
+    years: number;
+    days: number;
+    hours: number;
+    mins: number;
+    secs: number;
+    timestamp: string;
+  };
   amount: number;
-  balance: number;
-  description?: string;
+  sender: {
+    attributes?: {
+      uid: string;
+      href?: string;
+    };
+    value?: string;
+  };
+  receiver: {
+    attributes?: {
+      uid: string;
+      href?: string;
+    };
+    value?: string;
+  };
+  communication: string;
   [key: string]: unknown;
 }
 
@@ -352,9 +375,10 @@ export class CharacterCreditlogResource extends BaseResource {
     if (options.start_id !== undefined) {
       params.start_id = options.start_id;
     }
-    const response = await this.http.get<{ creditlog?: CreditLogEntry[]; attributes?: unknown }>(`/character/${options.uid}/creditlog`, { params });
-    // API returns { attributes: {...}, creditlog: [...] }, extract just the array
-    return response.creditlog || [];
+    const response = await this.http.get<{ transaction?: CreditLogEntry[]; attributes?: unknown }>(`/character/${options.uid}/creditlog`, { params });
+    // API returns { swcapi: { transactions: { attributes: {...}, transaction: [...] } } }
+    // HttpClient unwraps to { attributes: {...}, transaction: [...] }
+    return response.transaction || [];
   }
 }
 

@@ -228,9 +228,10 @@ export class FactionCreditlogResource extends BaseResource {
     if (options.start_id !== undefined) {
       params.start_id = options.start_id;
     }
-    const response = await this.http.get<{ creditlog?: CreditLogEntry[]; attributes?: unknown }>(`/faction/${options.factionId}/creditlog`, { params });
-    // API returns { attributes: {...}, creditlog: [...] }, extract just the array
-    return response.creditlog || [];
+    const response = await this.http.get<{ transaction?: CreditLogEntry[]; attributes?: unknown }>(`/faction/${options.factionId}/creditlog`, { params });
+    // API returns { swcapi: { transactions: { attributes: {...}, transaction: [...] } } }
+    // HttpClient unwraps to { attributes: {...}, transaction: [...] }
+    return response.transaction || [];
   }
 }
 

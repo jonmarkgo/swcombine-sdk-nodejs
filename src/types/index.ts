@@ -142,6 +142,37 @@ export interface Skill {
   [key: string]: unknown;
 }
 
+export interface CreditLogEntry {
+  attributes: {
+    transaction_id: number;
+  };
+  time: {
+    years: number;
+    days: number;
+    hours: number;
+    mins: number;
+    secs: number;
+    timestamp: string;
+  };
+  amount: number;
+  sender: {
+    attributes?: {
+      uid: string;
+      href?: string;
+    };
+    value?: string;
+  };
+  receiver: {
+    attributes?: {
+      uid: string;
+      href?: string;
+    };
+    value?: string;
+  };
+  communication: string;
+  [key: string]: unknown;
+}
+
 export interface Planet {
   uid: string;
   name: string;

@@ -7,6 +7,7 @@ import { BaseResource } from './BaseResource.js';
 import {
   Character,
   Message,
+  CreditLogEntry,
   GetCharacterOptions,
   GetCharacterByHandleOptions,
   ListMessagesOptions,
@@ -23,37 +24,6 @@ import {
 // Note: Privilege interface moved to CharacterPrivilegesResource section with correct structure
 
 // Note: Character credits endpoint returns a plain number, not an object
-
-export interface CreditLogEntry {
-  attributes: {
-    transaction_id: number;
-  };
-  time: {
-    years: number;
-    days: number;
-    hours: number;
-    mins: number;
-    secs: number;
-    timestamp: string;
-  };
-  amount: number;
-  sender: {
-    attributes?: {
-      uid: string;
-      href?: string;
-    };
-    value?: string;
-  };
-  receiver: {
-    attributes?: {
-      uid: string;
-      href?: string;
-    };
-    value?: string;
-  };
-  communication: string;
-  [key: string]: unknown;
-}
 
 /**
  * Character messages resource

@@ -497,6 +497,93 @@ export interface DroidEntity {
 }
 
 /**
+ * Facility entity value (inner data)
+ * Most fields are optional to guard against unpredictable API responses.
+ */
+export interface FacilityEntityValue {
+  uid: string;
+  entitytype?: 'Facility';
+  name?: string;
+  owner?: EntityReference;
+  commander?: EntityReference;
+  pilot?: EntityReference;
+  infotext?: string;
+  images?: EntityImages;
+  opento?: string;
+  protected?: 'yes' | 'no';
+  wrecked?: 'yes' | 'no';
+  hull?: EntityStat;
+  shield?: EntityStat;
+  ionic?: EntityStat;
+  location?: EntityLocation;
+  type?: EntityTypeRef;
+  ispowered?: string;
+  poweredby?: { pg?: EntityReference[] };
+  orientation?: string;
+  underconstruction?: 'yes' | 'no';
+  tags?: EntityTags;
+}
+
+/**
+ * Facility entity (wrapper with href attribute)
+ */
+export interface FacilityEntity {
+  attributes: { href: string };
+  value: FacilityEntityValue;
+}
+
+/**
+ * Item entity value (inner data)
+ * Most fields are optional to guard against unpredictable API responses.
+ */
+export interface ItemEntityValue {
+  uid: string;
+  entitytype?: 'Item';
+  name?: string;
+  owner?: EntityReference;
+  infotext?: string;
+  images?: EntityImages;
+  protected?: 'yes' | 'no';
+  location?: EntityLocation;
+  type?: EntityTypeRef;
+  tags?: EntityTags;
+}
+
+/**
+ * Item entity (wrapper with href attribute)
+ */
+export interface ItemEntity {
+  attributes: { href: string };
+  value: ItemEntityValue;
+}
+
+/**
+ * Material entity value (inner data)
+ * Most fields are optional to guard against unpredictable API responses.
+ */
+export interface MaterialEntityValue {
+  uid: string;
+  entitytype?: 'Material';
+  name?: string;
+  owner?: EntityReference;
+  infotext?: string;
+  images?: EntityImages;
+  protected?: 'yes' | 'no';
+  location?: EntityLocation;
+  quantity?: number;
+  type?: EntityTypeRef;
+  tags?: EntityTags;
+}
+
+/**
+ * Material entity (wrapper with href attribute)
+ */
+export interface MaterialEntity {
+  attributes: { href: string };
+  value: MaterialEntityValue;
+}
+
+/**
  * Generic inventory entity value (fallback for untyped entity types)
  */
 export interface GenericInventoryEntityValue {
@@ -521,15 +608,15 @@ export interface GenericInventoryEntity {
 export interface InventoryEntityTypeMap {
   ships: ShipEntity;
   droids: DroidEntity;
+  facilities: FacilityEntity;
+  items: ItemEntity;
+  materials: MaterialEntity;
   vehicles: GenericInventoryEntity;
   stations: GenericInventoryEntity;
   cities: GenericInventoryEntity;
-  facilities: GenericInventoryEntity;
   planets: GenericInventoryEntity;
-  items: GenericInventoryEntity;
   npcs: GenericInventoryEntity;
   creatures: GenericInventoryEntity;
-  materials: GenericInventoryEntity;
 }
 
 // ============================================================================

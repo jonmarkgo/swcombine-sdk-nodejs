@@ -173,12 +173,193 @@ export interface CreditLogEntry {
   [key: string]: unknown;
 }
 
+export interface GalaxyAttributes {
+  uid: string;
+  name: string;
+  href: string;
+}
+
+export interface GalaxyReferenceAttributes {
+  uid: string;
+  href: string;
+  type?: string;
+}
+
+export interface GalaxyReference {
+  value: string;
+  attributes?: GalaxyReferenceAttributes;
+}
+
+export interface GalaxyCoordinatePoint {
+  attributes?: {
+    x: number | string;
+    y: number | string;
+  } | null;
+}
+
+export interface GalaxyCoordinates {
+  galaxy?: GalaxyCoordinatePoint;
+  system?: GalaxyCoordinatePoint;
+  surface?: GalaxyCoordinatePoint;
+  ground?: GalaxyCoordinatePoint;
+}
+
+export interface GalaxyLocation {
+  container?: GalaxyReference | Record<string, never>;
+  sector?: GalaxyReference | Record<string, never>;
+  system?: GalaxyReference | Record<string, never>;
+  planet?: GalaxyReference | Record<string, never>;
+  city?: GalaxyReference | Record<string, never>;
+  coordinates?: GalaxyCoordinates;
+}
+
+export interface GalaxySectorListItem {
+  attributes: GalaxyAttributes;
+  controlledby?: GalaxyReference;
+  knownsystems?: number;
+  population?: number;
+  [key: string]: unknown;
+}
+
+export interface GalaxySystemListItem {
+  attributes: GalaxyAttributes;
+  controlledby?: GalaxyReference;
+  population?: number;
+  location?: GalaxyLocation;
+  [key: string]: unknown;
+}
+
+export interface GalaxyPlanetListItem {
+  attributes: GalaxyAttributes;
+  controlledby?: GalaxyReference;
+  location?: GalaxyLocation;
+  cities?: number;
+  population?: number;
+  [key: string]: unknown;
+}
+
+export interface GalaxyCityListItem {
+  attributes: GalaxyAttributes;
+  location?: GalaxyLocation;
+  [key: string]: unknown;
+}
+
+export interface GalaxyStationListItem {
+  attributes: GalaxyAttributes;
+  location?: GalaxyLocation;
+  [key: string]: unknown;
+}
+
+export interface GalaxyColour {
+  r: number;
+  g: number;
+  b: number;
+}
+
+export interface GalaxySystemSummary {
+  attributes: GalaxyAttributes;
+}
+
+export interface GalaxySystemsCollection {
+  system?: GalaxySystemSummary[];
+}
+
+export interface GalaxyPlanetsCollection {
+  planet?: GalaxySystemSummary[];
+}
+
+export interface GalaxyStationsCollection {
+  station?: GalaxySystemSummary[];
+}
+
+export interface GalaxyCoordinatePointCollection {
+  point?: GalaxyCoordinatePoint[];
+}
+
+export interface GalaxyCitySummaryAttributes extends GalaxyAttributes {
+  x?: number | string;
+  y?: number | string;
+}
+
+export interface GalaxyCitySummary {
+  attributes: GalaxyCitySummaryAttributes;
+}
+
+export interface GalaxyCitiesCollection {
+  city?: GalaxyCitySummary[];
+}
+
+export interface GalaxyHyperlaneAttributes {
+  destination?: string;
+  destinationX?: number | string;
+  destinationY?: number | string;
+  blocks?: number;
+  modifier?: number;
+  owner?: string;
+  [key: string]: unknown;
+}
+
+export interface GalaxyHyperlane {
+  value: string;
+  attributes?: GalaxyHyperlaneAttributes;
+}
+
+export interface GalaxyHyperlanesCollection {
+  hyperlane?: GalaxyHyperlane[];
+}
+
+export interface GalaxyGridPointAttributes {
+  uid: string;
+  code: string;
+  href: string;
+  x: number | string;
+  y: number | string;
+}
+
+export interface GalaxyGridPoint {
+  attributes: GalaxyGridPointAttributes;
+  value: string;
+}
+
+export interface GalaxyGridCollection {
+  point?: GalaxyGridPoint[];
+}
+
+export interface GalaxyPlanetImages {
+  small?: string;
+  large?: string;
+  atmosphere?: string;
+  stratosphere?: string;
+  loworbit?: string;
+  [key: string]: unknown;
+}
+
+export interface GalaxyCityImages {
+  small?: string;
+  large?: string;
+  [key: string]: unknown;
+}
+
 export interface Planet {
   uid: string;
   name: string;
+  description?: string;
+  controlledby?: GalaxyReference;
+  governor?: GalaxyReference | Record<string, never>;
+  magistrate?: GalaxyReference | Record<string, never>;
+  type?: GalaxyReference;
+  size?: number | string;
+  cities?: GalaxyCitiesCollection | number;
+  location?: GalaxyLocation;
+  population?: number;
+  hireablepopulation?: number;
+  civilisationlevel?: number;
+  taxlevel?: number;
+  terrainmap?: string;
+  grid?: GalaxyGridCollection;
+  images?: GalaxyPlanetImages;
   sector?: Sector | string;
   system?: System | string;
-  size?: string;
   terrain?: string;
   [key: string]: unknown;
 }
@@ -186,12 +367,24 @@ export interface Planet {
 export interface Sector {
   uid: string;
   name: string;
+  controlledby?: GalaxyReference;
+  population?: number;
+  colour?: GalaxyColour;
+  systems?: GalaxySystemsCollection;
+  coordinates?: GalaxyCoordinatePointCollection;
   [key: string]: unknown;
 }
 
 export interface System {
   uid: string;
   name: string;
+  description?: string;
+  controlledby?: GalaxyReference;
+  planets?: GalaxyPlanetsCollection;
+  stations?: GalaxyStationsCollection;
+  location?: GalaxyLocation;
+  population?: number;
+  hyperlanes?: GalaxyHyperlanesCollection;
   sector?: Sector | string;
   [key: string]: unknown;
 }
@@ -199,6 +392,10 @@ export interface System {
 export interface Station {
   uid: string;
   name: string;
+  type?: string;
+  owner?: GalaxyReference;
+  location?: GalaxyLocation;
+  underconstruction?: string;
   system?: System | string;
   [key: string]: unknown;
 }
@@ -207,6 +404,8 @@ export interface City {
   uid: string;
   name: string;
   planet?: Planet | string;
+  location?: GalaxyLocation;
+  images?: GalaxyCityImages;
   [key: string]: unknown;
 }
 

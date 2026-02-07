@@ -5,6 +5,11 @@
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
 import {
+  GalaxyPlanetListItem,
+  GalaxySectorListItem,
+  GalaxySystemListItem,
+  GalaxyStationListItem,
+  GalaxyCityListItem,
   Planet,
   Sector,
   System,
@@ -28,12 +33,15 @@ export class GalaxyPlanetsResource extends BaseResource {
    * const planets = await client.galaxy.planets.list();
    * const morePlanets = await client.galaxy.planets.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Planet[]> {
+  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxyPlanetListItem[]> {
     const params = {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    const response = await this.http.get<{ planet?: Planet[]; attributes?: unknown }>('/galaxy/planets/', { params });
+    const response = await this.http.get<{ planet?: GalaxyPlanetListItem[]; attributes?: unknown }>(
+      '/galaxy/planets/',
+      { params }
+    );
     // API returns { attributes: {...}, planet: [...] }, extract just the array
     return response.planet || [];
   }
@@ -57,12 +65,15 @@ export class GalaxySectorsResource extends BaseResource {
    * const sectors = await client.galaxy.sectors.list();
    * const moreSectors = await client.galaxy.sectors.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Sector[]> {
+  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxySectorListItem[]> {
     const params = {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    const response = await this.http.get<{ sector?: Sector[]; attributes?: unknown }>('/galaxy/sectors/', { params });
+    const response = await this.http.get<{ sector?: GalaxySectorListItem[]; attributes?: unknown }>(
+      '/galaxy/sectors/',
+      { params }
+    );
     // API returns { attributes: {...}, sector: [...] }, extract just the array
     return response.sector || [];
   }
@@ -89,12 +100,15 @@ export class GalaxySystemsResource extends BaseResource {
    * const systems = await client.galaxy.systems.list();
    * const moreSystems = await client.galaxy.systems.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<System[]> {
+  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxySystemListItem[]> {
     const params = {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    const response = await this.http.get<{ system?: System[]; attributes?: unknown }>('/galaxy/systems/', { params });
+    const response = await this.http.get<{ system?: GalaxySystemListItem[]; attributes?: unknown }>(
+      '/galaxy/systems/',
+      { params }
+    );
     // API returns { attributes: {...}, system: [...] }, extract just the array
     return response.system || [];
   }
@@ -118,12 +132,15 @@ export class GalaxyStationsResource extends BaseResource {
    * const stations = await client.galaxy.stations.list();
    * const moreStations = await client.galaxy.stations.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Station[]> {
+  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxyStationListItem[]> {
     const params = {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    const response = await this.http.get<{ station?: Station[]; attributes?: unknown }>('/galaxy/stations/', { params });
+    const response = await this.http.get<{ station?: GalaxyStationListItem[]; attributes?: unknown }>(
+      '/galaxy/stations/',
+      { params }
+    );
     // API returns { attributes: {...}, station: [...] }, extract just the array
     return response.station || [];
   }
@@ -147,12 +164,15 @@ export class GalaxyCitiesResource extends BaseResource {
    * const cities = await client.galaxy.cities.list();
    * const moreCities = await client.galaxy.cities.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<City[]> {
+  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxyCityListItem[]> {
     const params = {
       start_index: options?.start_index || 1,
       item_count: options?.item_count || 50,
     };
-    const response = await this.http.get<{ city?: City[]; attributes?: unknown }>('/galaxy/cities/', { params });
+    const response = await this.http.get<{ city?: GalaxyCityListItem[]; attributes?: unknown }>(
+      '/galaxy/cities/',
+      { params }
+    );
     // API returns { attributes: {...}, city: [...] }, extract just the array
     return response.city || [];
   }

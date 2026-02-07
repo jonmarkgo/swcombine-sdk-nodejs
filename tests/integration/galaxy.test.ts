@@ -13,6 +13,13 @@ import {
   expectFields,
 } from './setup.js';
 
+function expectListItemAttributes(items: unknown[]): void {
+  if (items.length > 0) {
+    expect(items[0]).toHaveProperty('attributes.uid');
+    expect(items[0]).toHaveProperty('attributes.name');
+  }
+}
+
 describe('Galaxy Resource Integration Tests', () => {
   let client: SWCombine;
 
@@ -26,6 +33,7 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-planets-list', response);
 
       expectArray(response, 1);
+      expectListItemAttributes(response);
     });
 
     it('should get specific planet by name', async () => {
@@ -42,6 +50,7 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-sectors-list', response);
 
       expectArray(response, 1);
+      expectListItemAttributes(response);
     });
 
     it('should get specific sector by name', async () => {
@@ -58,6 +67,7 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-systems-list', response);
 
       expectArray(response, 1);
+      expectListItemAttributes(response);
     });
 
     it('should get specific system by name', async () => {
@@ -74,6 +84,7 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-stations-list', response);
 
       expectArray(response);
+      expectListItemAttributes(response);
       // Stations list may be empty
     });
 
@@ -98,6 +109,7 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-cities-list', response);
 
       expectArray(response);
+      expectListItemAttributes(response);
       // Cities list may be empty
     });
 

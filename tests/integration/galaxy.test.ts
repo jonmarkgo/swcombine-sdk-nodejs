@@ -13,6 +13,31 @@ import {
   expectFields,
 } from './setup.js';
 
+function expectListItemAttributes(items: unknown[]): void {
+  if (items.length > 0) {
+    expect(items[0]).toHaveProperty('attributes.uid');
+    expect(items[0]).toHaveProperty('attributes.name');
+  }
+}
+
+function expectRawListShape(
+  response: unknown,
+  itemKey: 'planet' | 'sector' | 'system' | 'station' | 'city'
+): void {
+  expect(response).toBeDefined();
+  expect(typeof response).toBe('object');
+  expect(response).not.toBeNull();
+  const raw = response as Record<string, unknown>;
+
+  if ('attributes' in raw) {
+    expect(typeof raw.attributes).toBe('object');
+  }
+
+  if (itemKey in raw && raw[itemKey] !== undefined) {
+    expect(Array.isArray(raw[itemKey])).toBe(true);
+  }
+}
+
 describe('Galaxy Resource Integration Tests', () => {
   let client: SWCombine;
 
@@ -26,6 +51,13 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-planets-list', response);
 
       expectArray(response, 1);
+      expectListItemAttributes(response);
+    });
+
+    it('should list planets with raw metadata', async () => {
+      const response = await client.galaxy.planets.listRaw();
+      saveResponse('galaxy-planets-list-raw', response);
+      expectRawListShape(response, 'planet');
     });
 
     it('should get specific planet by name', async () => {
@@ -42,6 +74,13 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-sectors-list', response);
 
       expectArray(response, 1);
+      expectListItemAttributes(response);
+    });
+
+    it('should list sectors with raw metadata', async () => {
+      const response = await client.galaxy.sectors.listRaw();
+      saveResponse('galaxy-sectors-list-raw', response);
+      expectRawListShape(response, 'sector');
     });
 
     it('should get specific sector by name', async () => {
@@ -58,6 +97,13 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-systems-list', response);
 
       expectArray(response, 1);
+      expectListItemAttributes(response);
+    });
+
+    it('should list systems with raw metadata', async () => {
+      const response = await client.galaxy.systems.listRaw();
+      saveResponse('galaxy-systems-list-raw', response);
+      expectRawListShape(response, 'system');
     });
 
     it('should get specific system by name', async () => {
@@ -74,7 +120,14 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-stations-list', response);
 
       expectArray(response);
+      expectListItemAttributes(response);
       // Stations list may be empty
+    });
+
+    it('should list stations with raw metadata', async () => {
+      const response = await client.galaxy.stations.listRaw();
+      saveResponse('galaxy-stations-list-raw', response);
+      expectRawListShape(response, 'station');
     });
 
     it('should get specific station if available', async () => {
@@ -98,7 +151,14 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-cities-list', response);
 
       expectArray(response);
+      expectListItemAttributes(response);
       // Cities list may be empty
+    });
+
+    it('should list cities with raw metadata', async () => {
+      const response = await client.galaxy.cities.listRaw();
+      saveResponse('galaxy-cities-list-raw', response);
+      expectRawListShape(response, 'city');
     });
 
     it('should get specific city if available', async () => {

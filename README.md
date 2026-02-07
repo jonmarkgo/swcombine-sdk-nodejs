@@ -260,7 +260,10 @@ await client.inventory.entities.removeTag({ entityType: 'ships', uid: '5:12345',
 
 ```typescript
 // Systems, planets, sectors
-await client.galaxy.systems.list();
+const systems = await client.galaxy.systems.list();
+if (systems.length > 0) {
+  console.log(systems[0].attributes.uid, systems[0].attributes.name);
+}
 await client.galaxy.systems.get({ uid: '24:123' });
 await client.galaxy.planets.list();
 await client.galaxy.planets.get({ uid: '23:456' });

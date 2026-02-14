@@ -73,10 +73,18 @@ describe('Types Resource Integration Tests', () => {
       saveResponse('types-entities-ships-raw', response);
 
       expect(response.attributes).toBeDefined();
-      expect(Array.isArray(response.shiptype)).toBe(true);
-      if (Array.isArray(response.shiptype)) {
-        expect(response.shiptype.length).toBeGreaterThan(0);
-      }
+      expect(Array.isArray(response.items)).toBe(true);
+      expect(response.items.length).toBeGreaterThan(0);
+    });
+
+    it('should list raw entities payload for faction modules', async () => {
+      const response = await client.types.entities.listRaw({ entityType: 'factionmodules' });
+      saveResponse('types-entities-factionmodules-raw', response);
+
+      expect(response.attributes).toBeDefined();
+      expect(Array.isArray(response.items)).toBe(true);
+      expect(response.items.length).toBeGreaterThan(0);
+      expect(response.items[0]?.attributes?.uid).toBeDefined();
     });
 
     it('should list entities of type vehicles', async () => {

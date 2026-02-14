@@ -379,6 +379,18 @@ await client.types.classes.list({ entityType: 'ships' });
 await client.types.entities.list({ entityType: 'ships' });
 await client.types.entities.list({ entityType: 'ships', class: 'fighter' });
 await client.types.entities.get({ entityType: 'ships', uid: 'type-uid' });
+
+// Get entities by type with pagination metadata
+const rawVehicles = await client.types.entities.listRaw({
+  entityType: 'vehicles',
+  start_index: 1,
+  item_count: 50,
+});
+
+// listRaw() is normalized for all entity types:
+// { attributes?: { start, total, count }, items: TypesEntityListItem[] }
+console.log(rawVehicles.attributes?.start, rawVehicles.attributes?.count, rawVehicles.attributes?.total);
+console.log(rawVehicles.items[0]?.attributes.uid, rawVehicles.items[0]?.value);
 ```
 
 See [API Documentation](docs/API.md) for complete reference.

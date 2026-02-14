@@ -1181,6 +1181,14 @@ export interface TypesShipsListRawResponse extends TypesEntitiesListRawResponse 
 }
 
 /**
+ * Normalized /types/:entityType list response with pagination metadata and items.
+ */
+export interface TypesEntitiesListMetaResponse {
+  attributes?: TypesEntityListAttributes;
+  items: TypesEntityListItem[];
+}
+
+/**
  * Fallback response shape for non-ship /types/:entityType/:uid endpoints.
  */
 export interface TypesEntityGenericDetail {

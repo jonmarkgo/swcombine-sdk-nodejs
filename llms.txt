@@ -1,0 +1,86 @@
+# swcombine-sdk
+
+> Comprehensive TypeScript SDK for Star Wars Combine API v2.0
+
+- Full SDK reference: llms-full.txt
+- npm: https://www.npmjs.com/package/swcombine-sdk
+- GitHub: https://github.com/jonmarkgo/swcombine-sdk-nodejs
+- API Docs: https://jonmarkgo.github.io/swcombine-sdk-nodejs/
+- SW Combine API: https://www.swcombine.com/ws/v2.0/developers/index.php
+
+## Client
+- [SWCombine](docs/api/SWCombine/classes/SWCombine.md)
+
+## Api
+- [ApiResource](docs/api/resources/ApiResource/classes/ApiResource.md)
+
+## Character
+- [CharacterCreditlogResource](docs/api/resources/CharacterResource/classes/CharacterCreditlogResource.md)
+- [CharacterCreditsResource](docs/api/resources/CharacterResource/classes/CharacterCreditsResource.md)
+- [CharacterMessagesResource](docs/api/resources/CharacterResource/classes/CharacterMessagesResource.md)
+- [CharacterPermissionsResource](docs/api/resources/CharacterResource/classes/CharacterPermissionsResource.md)
+- [CharacterPrivilegesResource](docs/api/resources/CharacterResource/classes/CharacterPrivilegesResource.md)
+- [CharacterResource](docs/api/resources/CharacterResource/classes/CharacterResource.md)
+- [CharacterSkillsResource](docs/api/resources/CharacterResource/classes/CharacterSkillsResource.md)
+
+## Faction
+- [FactionBudgetsResource](docs/api/resources/FactionResource/classes/FactionBudgetsResource.md)
+- [FactionCreditlogResource](docs/api/resources/FactionResource/classes/FactionCreditlogResource.md)
+- [FactionCreditsResource](docs/api/resources/FactionResource/classes/FactionCreditsResource.md)
+- [FactionMembersResource](docs/api/resources/FactionResource/classes/FactionMembersResource.md)
+- [FactionResource](docs/api/resources/FactionResource/classes/FactionResource.md)
+- [FactionStockholdersResource](docs/api/resources/FactionResource/classes/FactionStockholdersResource.md)
+
+## Galaxy
+- [GalaxyCitiesResource](docs/api/resources/GalaxyResource/classes/GalaxyCitiesResource.md)
+- [GalaxyPlanetsResource](docs/api/resources/GalaxyResource/classes/GalaxyPlanetsResource.md)
+- [GalaxyResource](docs/api/resources/GalaxyResource/classes/GalaxyResource.md)
+- [GalaxySectorsResource](docs/api/resources/GalaxyResource/classes/GalaxySectorsResource.md)
+- [GalaxyStationsResource](docs/api/resources/GalaxyResource/classes/GalaxyStationsResource.md)
+- [GalaxySystemsResource](docs/api/resources/GalaxyResource/classes/GalaxySystemsResource.md)
+
+## Inventory
+- [InventoryEntitiesResource](docs/api/resources/InventoryResource/classes/InventoryEntitiesResource.md)
+- [InventoryResource](docs/api/resources/InventoryResource/classes/InventoryResource.md)
+
+## Market
+- [MarketResource](docs/api/resources/MarketResource/classes/MarketResource.md)
+- [MarketVendorsResource](docs/api/resources/MarketResource/classes/MarketVendorsResource.md)
+
+## News
+- [GNSResource](docs/api/resources/NewsResource/classes/GNSResource.md)
+- [NewsResource](docs/api/resources/NewsResource/classes/NewsResource.md)
+- [SimNewsResource](docs/api/resources/NewsResource/classes/SimNewsResource.md)
+
+## Types
+- [TypesClassesResource](docs/api/resources/TypesResource/classes/TypesClassesResource.md)
+- [TypesEntitiesResource](docs/api/resources/TypesResource/classes/TypesEntitiesResource.md)
+- [TypesResource](docs/api/resources/TypesResource/classes/TypesResource.md)
+
+## Events
+- [EventsResource](docs/api/resources/EventsResource/classes/EventsResource.md)
+
+## Location
+- [LocationResource](docs/api/resources/LocationResource/classes/LocationResource.md)
+
+## Datacard
+- [DatacardResource](docs/api/resources/DatacardResource/classes/DatacardResource.md)
+
+## Utilities
+- [Timestamp](docs/api/Timestamp/classes/Timestamp.md)
+- [SWCError](docs/api/http/errors/classes/SWCError.md)
+
+## Configuration Types
+- [ClientConfig](docs/api/types/interfaces/ClientConfig.md)
+- [OAuthToken](docs/api/types/interfaces/OAuthToken.md)
+- [OAuthAuthorizationOptions](docs/api/types/interfaces/OAuthAuthorizationOptions.md)
+- [OAuthCallbackQuery](docs/api/types/interfaces/OAuthCallbackQuery.md)
+
+## OAuth Scopes
+- [CharacterScopes](docs/api/auth/scopes/variables/CharacterScopes.md)
+- [MessageScopes](docs/api/auth/scopes/variables/MessageScopes.md)
+- [FactionScopes](docs/api/auth/scopes/variables/FactionScopes.md)
+- [Scopes](docs/api/auth/scopes/variables/Scopes.md)
+- [getAllScopes](docs/api/auth/scopes/functions/getAllScopes.md)
+- [getReadOnlyScopes](docs/api/auth/scopes/functions/getReadOnlyScopes.md)
+- [getMinimalScopes](docs/api/auth/scopes/functions/getMinimalScopes.md)

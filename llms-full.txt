@@ -1,0 +1,5048 @@
+# swcombine-sdk v2.0.1
+
+> Comprehensive TypeScript SDK for Star Wars Combine API v2.0
+
+## Installation
+
+```bash
+npm install swcombine-sdk
+```
+
+---
+
+## Client
+
+# Class: SWCombine
+
+Main SW Combine SDK client
+
+**Warning:** Integration tests (`npm run test:integration`) make real API calls
+to the SW Combine servers. Run `npm test` for unit tests instead.
+
+## See
+
+https://www.swcombine.com/ws/v2.0/developers/index.php SW Combine API Documentation
+
+## Constructors
+
+### Constructor
+
+> **new SWCombine**(`config?`): `SWCombine`
+
+#### Parameters
+
+##### config?
+
+`ClientConfig` = `{}`
+
+#### Returns
+
+`SWCombine`
+
+## Properties
+
+### api
+
+> `readonly` **api**: `ApiResource`
+
+***
+
+### auth
+
+> `readonly` **auth**: `object`
+
+#### getAuthorizationUrl()
+
+> **getAuthorizationUrl**: (`options`) => `string`
+
+##### Parameters
+
+###### options
+
+`OAuthAuthorizationOptions`
+
+##### Returns
+
+`string`
+
+#### handleCallback()
+
+> **handleCallback**: (`query`) => `Promise`\<`AuthorizationResult`\>
+
+##### Parameters
+
+###### query
+
+`OAuthCallbackQuery`
+
+##### Returns
+
+`Promise`\<`AuthorizationResult`\>
+
+#### revokeToken()
+
+> **revokeToken**: (`refreshToken`) => `Promise`\<`void`\>
+
+##### Parameters
+
+###### refreshToken
+
+`string`
+
+##### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### character
+
+> `readonly` **character**: `CharacterResource`
+
+***
+
+### datacard
+
+> `readonly` **datacard**: `DatacardResource`
+
+***
+
+### events
+
+> `readonly` **events**: `EventsResource`
+
+***
+
+### faction
+
+> `readonly` **faction**: `FactionResource`
+
+***
+
+### galaxy
+
+> `readonly` **galaxy**: `GalaxyResource`
+
+***
+
+### inventory
+
+> `readonly` **inventory**: `InventoryResource`
+
+***
+
+### location
+
+> `readonly` **location**: `LocationResource`
+
+***
+
+### market
+
+> `readonly` **market**: `MarketResource`
+
+***
+
+### news
+
+> `readonly` **news**: `NewsResource`
+
+***
+
+### types
+
+> `readonly` **types**: `TypesResource`
+
+## Methods
+
+### clearToken()
+
+> **clearToken**(): `void`
+
+Clear the token
+
+#### Returns
+
+`void`
+
+***
+
+### getRateLimitInfo()
+
+> **getRateLimitInfo**(): `RateLimitInfo` \| `null`
+
+Get the current rate limit information.
+Returns the last known rate limit info from API response headers.
+Returns null if no API calls have been made yet.
+
+Note: The SW Combine API has a default limit of 600 requests per hour.
+
+#### Returns
+
+`RateLimitInfo` \| `null`
+
+#### Example
+
+```typescript
+const rateLimit = client.getRateLimitInfo();
+if (rateLimit) {
+  console.log(`${rateLimit.remaining}/${rateLimit.limit} requests remaining`);
+  console.log(`Resets at: ${rateLimit.resetTime}`);
+}
+```
+
+***
+
+### getToken()
+
+> **getToken**(): `OAuthToken` \| `null`
+
+Get the current token
+
+#### Returns
+
+`OAuthToken` \| `null`
+
+***
+
+### hasRefreshToken()
+
+> **hasRefreshToken**(): `boolean`
+
+Check if refresh token is available
+
+#### Returns
+
+`boolean`
+
+***
+
+### isTokenExpired()
+
+> **isTokenExpired**(): `boolean`
+
+Check if token is expired
+
+#### Returns
+
+`boolean`
+
+***
+
+### onRateLimitUpdate()
+
+> **onRateLimitUpdate**(`callback`): `void`
+
+Set a callback to be notified when rate limit info is updated after each API call.
+Useful for monitoring rate limit consumption in real-time.
+
+#### Parameters
+
+##### callback
+
+(`info`) => `void`
+
+#### Returns
+
+`void`
+
+#### Example
+
+```typescript
+client.onRateLimitUpdate((info) => {
+  if (info.remaining < 100) {
+    console.warn(`Warning: Only ${info.remaining} API requests remaining!`);
+  }
+});
+```
+
+***
+
+### refreshToken()
+
+> **refreshToken**(): `Promise`\<`void`\>
+
+Manually refresh the token
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### setToken()
+
+> **setToken**(`token`): `void`
+
+Set the access token
+
+#### Parameters
+
+##### token
+
+`string` | `OAuthToken`
+
+#### Returns
+
+`void`
+
+---
+
+## Api
+
+# Class: ApiResource
+
+API resource for utility endpoints
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/api/helloworld/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new ApiResource**(`http`): `ApiResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`ApiResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### getResources()
+
+> **getResources**(): `Promise`\<`ResourceInfo`[]\>
+
+Get list of available API resources
+
+#### Returns
+
+`Promise`\<`ResourceInfo`[]\>
+
+List of available API resources
+
+#### Example
+
+```ts
+const resources = await client.api.getResources();
+```
+
+***
+
+### helloAuth()
+
+> **helloAuth**(): `Promise`\<`HelloAuthResponse`\>
+
+Print a HelloWorld message for authorized clients
+@requires_auth Yes
+@requires_scope Any valid scope (used for testing authentication)
+
+#### Returns
+
+`Promise`\<`HelloAuthResponse`\>
+
+#### Example
+
+```ts
+const response = await client.api.helloAuth();
+```
+
+***
+
+### helloWorld()
+
+> **helloWorld**(): `Promise`\<`string`\>
+
+Print a HelloWorld message
+@requires_auth No
+
+#### Returns
+
+`Promise`\<`string`\>
+
+Plain string "Hello World"
+
+#### Example
+
+```ts
+const message = await client.api.helloWorld();
+console.log(message); // "Hello World"
+```
+
+***
+
+### permissions()
+
+> **permissions**(): `Promise`\<`Permission`[]\>
+
+Get list of available web services permissions
+@requires_auth No
+
+#### Returns
+
+`Promise`\<`Permission`[]\>
+
+#### Example
+
+```ts
+const permissions = await client.api.permissions();
+permissions.forEach(p => console.log(p.attributes.name, p.attributes.description));
+```
+
+***
+
+### rateLimits()
+
+> **rateLimits**(): `Promise`\<`RateLimitEntry`[]\>
+
+Get current rate limit status for all endpoint patterns
+@requires_auth No (shows public IP rate limits)
+
+#### Returns
+
+`Promise`\<`RateLimitEntry`[]\>
+
+Array of rate limit entries, one per endpoint pattern
+
+#### Example
+
+```ts
+const rateLimits = await client.api.rateLimits();
+rateLimits.forEach(rl => {
+  console.log(`${rl.attributes.pattern}: ${rl.attributes.remaining}/${rl.attributes.limit}`);
+});
+```
+
+***
+
+### time()
+
+> **time**(`options?`): `Promise`\<`TimeResponse`\>
+
+Get current time or convert times
+
+#### Parameters
+
+##### options?
+
+Optional conversion parameters
+
+###### cgt?
+
+`string`
+
+CGT format time to convert
+
+###### time?
+
+`number`
+
+Unix timestamp to convert
+
+#### Returns
+
+`Promise`\<`TimeResponse`\>
+
+#### Example
+
+```ts
+// Get current time
+const current = await client.api.time();
+// Convert CGT to unix
+const converted = await client.api.time({ cgt: '2023-12-01 12:00:00' });
+// Convert unix to CGT
+const converted = await client.api.time({ time: 1701432000 });
+```
+
+---
+
+## Character
+
+# Class: CharacterCreditlogResource
+
+Character credit log resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/character/uid/creditlog/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new CharacterCreditlogResource**(`http`): `CharacterCreditlogResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`CharacterCreditlogResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### list()
+
+> **list**(`options`): `Promise`\<`CreditLogEntry`[]\>
+
+Get character's credit log (paginated)
+
+@requires_auth Yes
+@requires_scope CHARACTER_CREDITS
+
+#### Parameters
+
+##### options
+
+`GetCharacterCreditlogOptions`
+
+Character UID and optional pagination/filtering parameters
+
+#### Returns
+
+`Promise`\<`CreditLogEntry`[]\>
+
+#### Example
+
+```ts
+const creditlog = await client.character.creditlog.list({ uid: '1:12345' });
+const moreLogs = await client.character.creditlog.list({ uid: '1:12345', start_index: 51, item_count: 100 });
+const oldestLogs = await client.character.creditlog.list({ uid: '1:12345', start_id: 1 });
+// Fetch up to 1000 credit log entries at once
+const manyLogs = await client.character.creditlog.list({ uid: '1:12345', item_count: 1000 });
+```
+
+# Class: CharacterCreditsResource
+
+Character credits resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/character/uid/credits/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new CharacterCreditsResource**(`http`): `CharacterCreditsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`CharacterCreditsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`number`\>
+
+Get character's credit balance
+@requires_auth Yes
+@requires_scope CHARACTER_CREDITS
+
+#### Parameters
+
+##### options
+
+`GetCharacterCreditsOptions`
+
+#### Returns
+
+`Promise`\<`number`\>
+
+Credit balance as a plain number
+
+#### Example
+
+```ts
+const credits = await client.character.credits.get({ uid: '1:12345' });
+console.log(`Credits: ${credits}`); // Credits: 320089347
+```
+
+***
+
+### transfer()
+
+> **transfer**(`options`): `Promise`\<`unknown`\>
+
+Transfer credits from character to another character or faction
+
+#### Parameters
+
+##### options
+
+###### amount
+
+`number`
+
+Amount to transfer
+
+###### reason?
+
+`string`
+
+Reason for transfer (optional, API will auto-append client name)
+@requires_auth Yes
+@requires_scope CHARACTER_CREDITS_WRITE
+
+###### recipient
+
+`string`
+
+Recipient character or faction name/UID (REQUIRED)
+
+###### uid
+
+`string`
+
+Character UID
+
+#### Returns
+
+`Promise`\<`unknown`\>
+
+# Class: CharacterMessagesResource
+
+Character messages resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/character/uid/messages/mode/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new CharacterMessagesResource**(`http`): `CharacterMessagesResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`CharacterMessagesResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### create()
+
+> **create**(`options`): `Promise`\<`Message`\>
+
+Send a message
+@requires_auth Yes
+@requires_scope MESSAGES_SEND
+
+#### Parameters
+
+##### options
+
+`CreateMessageOptions`
+
+#### Returns
+
+`Promise`\<`Message`\>
+
+#### Example
+
+```ts
+await client.character.messages.create({
+  uid: '1:12345',
+  receivers: 'recipient1;recipient2',
+  communication: 'Hello from the SDK!'
+});
+```
+
+***
+
+### delete()
+
+> **delete**(`options`): `Promise`\<`void`\>
+
+Delete a message
+@requires_auth Yes
+@requires_scope MESSAGES_DELETE
+
+#### Parameters
+
+##### options
+
+`DeleteMessageOptions`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### get()
+
+> **get**(`options`): `Promise`\<`Message`\>
+
+Get a specific message
+@requires_auth Yes
+@requires_scope MESSAGES_READ
+
+#### Parameters
+
+##### options
+
+`GetMessageOptions`
+
+#### Returns
+
+`Promise`\<`Message`\>
+
+***
+
+### list()
+
+> **list**(`options`): `Promise`\<`Message`[]\>
+
+List messages sent or received by character (paginated)
+@requires_auth Yes
+@requires_scope MESSAGES_READ
+
+#### Parameters
+
+##### options
+
+`ListMessagesOptions`
+
+Character UID, optional message mode, and optional pagination parameters
+
+#### Returns
+
+`Promise`\<`Message`[]\>
+
+#### Example
+
+```ts
+const allMessages = await client.character.messages.list({ uid: '1:12345' });
+const received = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
+const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: 'received', start_index: 51, item_count: 50 });
+```
+
+# Class: CharacterPermissionsResource
+
+Character permissions resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/character/uid/permissions/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new CharacterPermissionsResource**(`http`): `CharacterPermissionsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`CharacterPermissionsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### getScopes()
+
+> **getScopes**(`options`): `Promise`\<`string`[]\>
+
+Get flat list of granted scope names
+
+#### Parameters
+
+##### options
+
+`GetCharacterPermissionsOptions`
+
+#### Returns
+
+`Promise`\<`string`[]\>
+
+Array of scope strings (e.g., ['CHARACTER_READ', 'MESSAGES_SEND'])
+
+***
+
+### list()
+
+> **list**(`options`): `Promise`\<`CharacterPermissionsResponse`\>
+
+Get permissions granted to API client for this character
+
+#### Parameters
+
+##### options
+
+`GetCharacterPermissionsOptions`
+
+#### Returns
+
+`Promise`\<`CharacterPermissionsResponse`\>
+
+Full permissions response with scopes and expiration
+
+#### Example
+
+```ts
+const perms = await client.character.permissions.list({ uid: '1:12345' });
+const scopes = perms.permission[0]?.scopes.scope || [];
+console.log('Granted scopes:', scopes.join(', '));
+```
+
+# Class: CharacterPrivilegesResource
+
+Character privileges resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/character/uid/privileges/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new CharacterPrivilegesResource**(`http`): `CharacterPrivilegesResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`CharacterPrivilegesResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`PrivilegeDetail`\>
+
+Get a specific privilege
+@requires_auth Yes
+@requires_scope CHARACTER_PRIVILEGES
+
+#### Parameters
+
+##### options
+
+###### faction_id?
+
+`number`
+
+Optional faction ID to view privileges for (defaults to token owner's primary faction)
+
+###### privilege
+
+`string`
+
+Privilege name
+
+###### privilegeGroup
+
+`string`
+
+Privilege group name
+
+###### uid
+
+`string`
+
+Character UID
+
+#### Returns
+
+`Promise`\<`PrivilegeDetail`\>
+
+***
+
+### list()
+
+> **list**(`options`): `Promise`\<`PrivilegesResponse`\>
+
+Get character's privileges organized by group
+@requires_auth Yes
+@requires_scope CHARACTER_PRIVILEGES
+
+#### Parameters
+
+##### options
+
+`GetCharacterPrivilegesOptions` & `object`
+
+#### Returns
+
+`Promise`\<`PrivilegesResponse`\>
+
+Privileges response with groups and metadata
+
+#### Example
+
+```ts
+const privs = await client.character.privileges.list({ uid: '1:12345' });
+privs.privilegegroup.forEach(g => {
+  console.log(`${g.attributes.name}: ${g.attributes.count} privileges`);
+});
+```
+
+***
+
+### update()
+
+> **update**(`options`): `Promise`\<`unknown`\>
+
+Update a specific privilege (grant or revoke)
+
+#### Parameters
+
+##### options
+
+###### faction_id?
+
+`number`
+
+Optional faction ID to view privileges for (defaults to token owner's primary faction)
+
+###### privilege
+
+`string`
+
+Privilege name
+
+###### privilegeGroup
+
+`string`
+
+Privilege group name
+
+###### revoke?
+
+`boolean`
+
+Set to true to revoke the privilege, false/undefined to grant it
+
+###### uid
+
+`string`
+
+Character UID
+
+#### Returns
+
+`Promise`\<`unknown`\>
+
+# Class: CharacterResource
+
+Character resource for managing characters
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/character/uid/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new CharacterResource**(`http`): `CharacterResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`CharacterResource`
+
+#### Overrides
+
+`BaseResource`.`constructor`
+
+## Properties
+
+### creditlog
+
+> `readonly` **creditlog**: `CharacterCreditlogResource`
+
+***
+
+### credits
+
+> `readonly` **credits**: `CharacterCreditsResource`
+
+***
+
+### messages
+
+> `readonly` **messages**: `CharacterMessagesResource`
+
+***
+
+### permissions
+
+> `readonly` **permissions**: `CharacterPermissionsResource`
+
+***
+
+### privileges
+
+> `readonly` **privileges**: `CharacterPrivilegesResource`
+
+***
+
+### skills
+
+> `readonly` **skills**: `CharacterSkillsResource`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`Character`\>
+
+Get character by UID
+@requires_auth Yes
+@requires_scope CHARACTER_READ
+
+#### Parameters
+
+##### options
+
+`GetCharacterOptions`
+
+Character UID
+
+#### Returns
+
+`Promise`\<`Character`\>
+
+#### Example
+
+```ts
+const character = await client.character.get({ uid: '1:12345' });
+```
+
+***
+
+### getByHandle()
+
+> **getByHandle**(`options`): `Promise`\<\{ `uid`: `string`; \}\>
+
+Get character UID by handle (username)
+
+#### Parameters
+
+##### options
+
+`GetCharacterByHandleOptions`
+
+#### Returns
+
+`Promise`\<\{ `uid`: `string`; \}\>
+
+***
+
+### hasPermission()
+
+> **hasPermission**(`options`): `Promise`\<`boolean`\>
+
+Check if the API client has a specific permission for this character
+
+#### Parameters
+
+##### options
+
+###### permission
+
+`string`
+
+Permission scope to check (e.g., 'CHARACTER_READ', 'MESSAGES_SEND')
+
+###### uid
+
+`string`
+
+Character UID
+
+#### Returns
+
+`Promise`\<`boolean`\>
+
+True if the permission is granted, false otherwise
+
+#### Example
+
+```ts
+const canRead = await client.character.hasPermission({ uid: '1:12345', permission: 'CHARACTER_READ' });
+if (canRead) {
+  const character = await client.character.get({ uid: '1:12345' });
+}
+```
+
+***
+
+### me()
+
+> **me**(): `Promise`\<`CharacterMe`\>
+
+Get the currently authenticated user's character
+@requires_auth Yes
+@requires_scope CHARACTER_READ
+
+#### Returns
+
+`Promise`\<`CharacterMe`\>
+
+The authenticated character's full profile
+
+#### Example
+
+```ts
+const myCharacter = await client.character.me();
+```
+
+# Class: CharacterSkillsResource
+
+Character skills resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/character/uid/skills/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new CharacterSkillsResource**(`http`): `CharacterSkillsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`CharacterSkillsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### list()
+
+> **list**(`options`): `Promise`\<`CharacterSkills`\>
+
+Get character's skills organized by category
+@requires_auth Yes
+@requires_scope CHARACTER_SKILLS
+
+#### Parameters
+
+##### options
+
+`GetCharacterSkillsOptions`
+
+#### Returns
+
+`Promise`\<`CharacterSkills`\>
+
+Skills object with categories: general, space, ground, social, science, light, dark, neutral
+
+#### Example
+
+```ts
+const skills = await client.character.skills.list({ uid: '1:12345' });
+skills.general?.[0].skill.forEach(s => console.log(s.attributes.type, s.value));
+```
+
+---
+
+## Faction
+
+# Class: FactionBudgetsResource
+
+Faction budgets resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/faction/uid/budgets/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new FactionBudgetsResource**(`http`): `FactionBudgetsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`FactionBudgetsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`Budget`\>
+
+Get specific budget
+
+#### Parameters
+
+##### options
+
+###### budgetId
+
+`string`
+
+###### factionId
+
+`string`
+
+#### Returns
+
+`Promise`\<`Budget`\>
+
+***
+
+### list()
+
+> **list**(`options`): `Promise`\<`Budget`[]\>
+
+List faction budgets (paginated)
+
+#### Parameters
+
+##### options
+
+Faction ID and optional pagination parameters
+
+###### factionId
+
+`string`
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`Budget`[]\>
+
+#### Example
+
+```ts
+const budgets = await client.faction.budgets.list({ factionId: '20:123' });
+const moreBudgets = await client.faction.budgets.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+```
+
+# Class: FactionCreditlogResource
+
+Faction credit log resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/faction/uid/creditlog/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new FactionCreditlogResource**(`http`): `FactionCreditlogResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`FactionCreditlogResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### list()
+
+> **list**(`options`): `Promise`\<`CreditLogEntry`[]\>
+
+Get faction credit log (paginated)
+
+#### Parameters
+
+##### options
+
+Faction ID and optional pagination/filtering parameters
+
+###### factionId
+
+`string`
+
+Faction UID
+
+###### item_count?
+
+`number`
+
+Number of items to retrieve. Default: 50, Max: 1000
+
+###### start_id?
+
+`number`
+
+Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000)
+
+###### start_index?
+
+`number`
+
+Starting position (1-based). Default: 1
+
+#### Returns
+
+`Promise`\<`CreditLogEntry`[]\>
+
+#### Example
+
+```ts
+const creditlog = await client.faction.creditlog.list({ factionId: '20:123' });
+const moreLogs = await client.faction.creditlog.list({ factionId: '20:123', start_index: 51, item_count: 100 });
+const oldestLogs = await client.faction.creditlog.list({ factionId: '20:123', start_id: 1 });
+// Fetch up to 1000 credit log entries at once
+const manyLogs = await client.faction.creditlog.list({ factionId: '20:123', item_count: 1000 });
+```
+
+# Class: FactionCreditsResource
+
+Faction credits resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/faction/uid/credits/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new FactionCreditsResource**(`http`): `FactionCreditsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`FactionCreditsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`FactionCredits`\>
+
+Get faction credits
+
+#### Parameters
+
+##### options
+
+###### factionId
+
+`string`
+
+#### Returns
+
+`Promise`\<`FactionCredits`\>
+
+***
+
+### update()
+
+> **update**(`options`): `Promise`\<`FactionCredits`\>
+
+Transfer faction credits
+
+#### Parameters
+
+##### options
+
+###### amount
+
+`number`
+
+Amount to transfer
+
+###### budget?
+
+`string`
+
+Budget UID to transfer from (optional)
+
+###### factionId
+
+`string`
+
+Faction UID
+
+###### reason?
+
+`string`
+
+Reason for transfer (optional, API will auto-append client name)
+
+###### recipient?
+
+`string`
+
+Recipient character or faction UID (optional)
+
+#### Returns
+
+`Promise`\<`FactionCredits`\>
+
+# Class: FactionMembersResource
+
+Faction members resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/faction/fuid/members/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new FactionMembersResource**(`http`): `FactionMembersResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`FactionMembersResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### list()
+
+> **list**(`options`): `Promise`\<`FactionMember`[]\>
+
+List faction members (paginated)
+
+#### Parameters
+
+##### options
+
+Faction ID and optional pagination parameters
+
+###### factionId
+
+`string`
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`FactionMember`[]\>
+
+#### Example
+
+```ts
+const members = await client.faction.members.list({ factionId: '20:123' });
+const moreMembers = await client.faction.members.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+```
+
+***
+
+### updateMemberInfo()
+
+> **updateMemberInfo**(`options`): `Promise`\<`any`\>
+
+Update faction member info field
+
+#### Parameters
+
+##### options
+
+###### factionId
+
+`string`
+
+Faction UID
+
+###### new_value
+
+`string`
+
+New value for the info field
+
+###### property
+
+`"info1"` \| `"info2"` \| `"info3"`
+
+Which info field to update (info1, info2, or info3)
+
+###### uid
+
+`string`
+
+Character UID to update
+
+#### Returns
+
+`Promise`\<`any`\>
+
+# Class: FactionResource
+
+Faction resource for managing factions
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/faction/uid/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new FactionResource**(`http`): `FactionResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`FactionResource`
+
+#### Overrides
+
+`BaseResource`.`constructor`
+
+## Properties
+
+### budgets
+
+> `readonly` **budgets**: `FactionBudgetsResource`
+
+***
+
+### creditlog
+
+> `readonly` **creditlog**: `FactionCreditlogResource`
+
+***
+
+### credits
+
+> `readonly` **credits**: `FactionCreditsResource`
+
+***
+
+### members
+
+> `readonly` **members**: `FactionMembersResource`
+
+***
+
+### stockholders
+
+> `readonly` **stockholders**: `FactionStockholdersResource`
+
+## Methods
+
+### get()
+
+> **get**(`options?`): `Promise`\<`Faction`\>
+
+Get faction by UID
+@requires_auth Yes
+@requires_scope FACTION_READ
+
+#### Parameters
+
+##### options?
+
+`GetFactionOptions`
+
+Optional faction UID. If omitted or uid not provided, returns the authenticated user's primary faction.
+
+#### Returns
+
+`Promise`\<`Faction`\>
+
+#### Example
+
+```ts
+// Get a specific faction
+const faction = await client.faction.get({ uid: '20:123' });
+// Get the authenticated user's faction
+const myFaction = await client.faction.get();
+```
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`Faction`[]\>
+
+List all factions (paginated)
+@requires_auth No
+
+#### Parameters
+
+##### options?
+
+Optional pagination parameters
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`Faction`[]\>
+
+#### Example
+
+```ts
+const factions = await client.faction.list();
+const moreFactions = await client.faction.list({ start_index: 51, item_count: 50 });
+```
+
+# Class: FactionStockholdersResource
+
+Faction stockholders resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/faction/uid/stockholders/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new FactionStockholdersResource**(`http`): `FactionStockholdersResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`FactionStockholdersResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### list()
+
+> **list**(`options`): `Promise`\<`Stockholder`[]\>
+
+List faction stockholders (paginated)
+
+#### Parameters
+
+##### options
+
+Faction ID and optional pagination parameters
+
+###### factionId
+
+`string`
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`Stockholder`[]\>
+
+#### Example
+
+```ts
+const stockholders = await client.faction.stockholders.list({ factionId: '20:123' });
+const moreStockholders = await client.faction.stockholders.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+```
+
+---
+
+## Galaxy
+
+# Class: GalaxyCitiesResource
+
+Galaxy cities resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/galaxy/cities/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new GalaxyCitiesResource**(`http`): `GalaxyCitiesResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`GalaxyCitiesResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`City`\>
+
+Get city by UID
+
+#### Parameters
+
+##### options
+
+`GetCityOptions`
+
+#### Returns
+
+`Promise`\<`City`\>
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`GalaxyCityListItem`[]\>
+
+List all cities (paginated)
+
+#### Parameters
+
+##### options?
+
+Optional pagination parameters
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxyCityListItem`[]\>
+
+#### Example
+
+```ts
+const cities = await client.galaxy.cities.list();
+const moreCities = await client.galaxy.cities.list({ start_index: 51, item_count: 50 });
+```
+
+***
+
+### listRaw()
+
+> **listRaw**(`options?`): `Promise`\<`GalaxyCityListRawResponse`\>
+
+#### Parameters
+
+##### options?
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxyCityListRawResponse`\>
+
+# Class: GalaxyPlanetsResource
+
+Galaxy planets resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/galaxy/planets/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new GalaxyPlanetsResource**(`http`): `GalaxyPlanetsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`GalaxyPlanetsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`Planet`\>
+
+Get planet by UID
+
+#### Parameters
+
+##### options
+
+`GetPlanetOptions`
+
+#### Returns
+
+`Promise`\<`Planet`\>
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`GalaxyPlanetListItem`[]\>
+
+List all planets (paginated)
+
+#### Parameters
+
+##### options?
+
+Optional pagination parameters
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxyPlanetListItem`[]\>
+
+#### Example
+
+```ts
+const planets = await client.galaxy.planets.list();
+const morePlanets = await client.galaxy.planets.list({ start_index: 51, item_count: 50 });
+```
+
+***
+
+### listRaw()
+
+> **listRaw**(`options?`): `Promise`\<`GalaxyPlanetListRawResponse`\>
+
+#### Parameters
+
+##### options?
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxyPlanetListRawResponse`\>
+
+# Class: GalaxyResource
+
+Galaxy resource for accessing galactic information
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/galaxy/systems/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new GalaxyResource**(`http`): `GalaxyResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`GalaxyResource`
+
+#### Overrides
+
+`BaseResource`.`constructor`
+
+## Properties
+
+### cities
+
+> `readonly` **cities**: `GalaxyCitiesResource`
+
+***
+
+### planets
+
+> `readonly` **planets**: `GalaxyPlanetsResource`
+
+***
+
+### sectors
+
+> `readonly` **sectors**: `GalaxySectorsResource`
+
+***
+
+### stations
+
+> `readonly` **stations**: `GalaxyStationsResource`
+
+***
+
+### systems
+
+> `readonly` **systems**: `GalaxySystemsResource`
+
+## Methods
+
+### getSectorsFromSystems()
+
+> **getSectorsFromSystems**(): `Promise`\<`object`[]\>
+
+Client-side helper method to extract unique sectors from systems list
+Note: The API provides a direct sectors list endpoint via galaxy.sectors.list()
+This method is an alternative that derives sector information from the systems endpoint
+
+#### Returns
+
+`Promise`\<`object`[]\>
+
+Array of unique sector information extracted from systems
+
+#### Example
+
+```ts
+const sectorsData = await client.galaxy.getSectorsFromSystems();
+// Returns: [{ uid: '25:160', name: 'Seswenna', href: '...' }, ...]
+```
+
+# Class: GalaxySectorsResource
+
+Galaxy sectors resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/galaxy/sectors/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new GalaxySectorsResource**(`http`): `GalaxySectorsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`GalaxySectorsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`Sector`\>
+
+Get sector by name or UID
+
+#### Parameters
+
+##### options
+
+`GetSectorOptions`
+
+Sector identifier (use lowercase sector name, e.g., 'seswenna')
+
+#### Returns
+
+`Promise`\<`Sector`\>
+
+#### Example
+
+```ts
+const sector = await client.galaxy.sectors.get({ uid: 'seswenna' });
+```
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`GalaxySectorListItem`[]\>
+
+List all sectors (paginated)
+
+#### Parameters
+
+##### options?
+
+Optional pagination parameters
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxySectorListItem`[]\>
+
+#### Example
+
+```ts
+const sectors = await client.galaxy.sectors.list();
+const moreSectors = await client.galaxy.sectors.list({ start_index: 51, item_count: 50 });
+```
+
+***
+
+### listRaw()
+
+> **listRaw**(`options?`): `Promise`\<`GalaxySectorListRawResponse`\>
+
+#### Parameters
+
+##### options?
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxySectorListRawResponse`\>
+
+# Class: GalaxyStationsResource
+
+Galaxy stations resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/galaxy/stations/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new GalaxyStationsResource**(`http`): `GalaxyStationsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`GalaxyStationsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`Station`\>
+
+Get station by UID
+
+#### Parameters
+
+##### options
+
+`GetStationOptions`
+
+#### Returns
+
+`Promise`\<`Station`\>
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`GalaxyStationListItem`[]\>
+
+List all stations in named systems with no ECM (paginated)
+
+#### Parameters
+
+##### options?
+
+Optional pagination parameters
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxyStationListItem`[]\>
+
+#### Example
+
+```ts
+const stations = await client.galaxy.stations.list();
+const moreStations = await client.galaxy.stations.list({ start_index: 51, item_count: 50 });
+```
+
+***
+
+### listRaw()
+
+> **listRaw**(`options?`): `Promise`\<`GalaxyStationListRawResponse`\>
+
+#### Parameters
+
+##### options?
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxyStationListRawResponse`\>
+
+# Class: GalaxySystemsResource
+
+Galaxy systems resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/galaxy/systems/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new GalaxySystemsResource**(`http`): `GalaxySystemsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`GalaxySystemsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`System`\>
+
+Get system by UID
+
+#### Parameters
+
+##### options
+
+`GetSystemOptions`
+
+#### Returns
+
+`Promise`\<`System`\>
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`GalaxySystemListItem`[]\>
+
+List all systems (paginated)
+
+#### Parameters
+
+##### options?
+
+Optional pagination parameters
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxySystemListItem`[]\>
+
+#### Example
+
+```ts
+const systems = await client.galaxy.systems.list();
+const moreSystems = await client.galaxy.systems.list({ start_index: 51, item_count: 50 });
+```
+
+***
+
+### listRaw()
+
+> **listRaw**(`options?`): `Promise`\<`GalaxySystemListRawResponse`\>
+
+#### Parameters
+
+##### options?
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`GalaxySystemListRawResponse`\>
+
+---
+
+## Inventory
+
+# Class: InventoryEntitiesResource
+
+Inventory entities resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/inventory/uid/entity_type/assign_type/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new InventoryEntitiesResource**(`http`): `InventoryEntitiesResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`InventoryEntitiesResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### addTag()
+
+> **addTag**(`options`): `Promise`\<`void`\>
+
+Add tag to entity
+
+#### Parameters
+
+##### options
+
+###### entityType
+
+`string`
+
+###### tag
+
+`string`
+
+###### uid
+
+`string`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### get()
+
+> **get**(`options`): `Promise`\<`Entity`\>
+
+Get specific entity
+
+#### Parameters
+
+##### options
+
+`GetEntityOptions`
+
+#### Returns
+
+`Promise`\<`Entity`\>
+
+***
+
+### list()
+
+> **list**\<`T`\>(`options`): `Promise`\<`InventoryEntityTypeMap`\[`T`\][]\>
+
+List entities in inventory (paginated with optional filtering)
+
+Supports filtering by various entity properties. Filter arrays must have matching lengths.
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `InventoryEntityType`
+
+#### Parameters
+
+##### options
+
+`ListInventoryEntitiesOptions`\<`T`\>
+
+Inventory UID, entity type, assign type, and optional pagination/filtering parameters
+
+#### Returns
+
+`Promise`\<`InventoryEntityTypeMap`\[`T`\][]\>
+
+#### Example
+
+```ts
+const entities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot' });
+// Fetch up to 200 entities at once
+const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot', start_index: 1, item_count: 200 });
+// Filter by multiple criteria
+const multiFiltered = await client.inventory.entities.list({
+  uid: '1:12345',
+  entityType: 'ships',
+  assignType: 'owner',
+  filter_type: ['class', 'powered'],
+  filter_value: ['Fighter', '1'],
+  filter_inclusion: ['includes', 'includes']
+});
+```
+
+***
+
+### removeAllTags()
+
+> **removeAllTags**(`options`): `Promise`\<`void`\>
+
+Remove all tags from entity
+
+#### Parameters
+
+##### options
+
+###### entityType
+
+`string`
+
+###### uid
+
+`string`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### removeTag()
+
+> **removeTag**(`options`): `Promise`\<`void`\>
+
+Remove tag from entity
+
+#### Parameters
+
+##### options
+
+###### entityType
+
+`string`
+
+###### tag
+
+`string`
+
+###### uid
+
+`string`
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### updateProperty()
+
+> **updateProperty**(`options`): `Promise`\<`Entity`\>
+
+Update entity property
+
+#### Parameters
+
+##### options
+
+###### entityType
+
+`string`
+
+Entity type (ships, vehicles, stations, etc.)
+
+###### new_value
+
+`string`
+
+New value for the property
+
+###### property
+
+`"name"` \| `"owner"` \| `"infotext"` \| `"commander"` \| `"pilot"` \| `"open-to"` \| `"action"` \| `"crewlist-add"` \| `"crewlist-remove"` \| `"crewlist-clear"`
+
+Property to update
+
+###### reason?
+
+`string`
+
+Optional reason for the change
+
+###### uid
+
+`string`
+
+Entity UID
+
+#### Returns
+
+`Promise`\<`Entity`\>
+
+# Class: InventoryResource
+
+Inventory resource for managing inventories
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/inventory/uid/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new InventoryResource**(`http`): `InventoryResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`InventoryResource`
+
+#### Overrides
+
+`BaseResource`.`constructor`
+
+## Properties
+
+### entities
+
+> `readonly` **entities**: `InventoryEntitiesResource`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`any`\>
+
+Get inventory by UID
+
+#### Parameters
+
+##### options
+
+###### uid
+
+`string`
+
+#### Returns
+
+`Promise`\<`any`\>
+
+---
+
+## Market
+
+# Class: MarketResource
+
+Market resource for accessing market data
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/market/vendors/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new MarketResource**(`http`): `MarketResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`MarketResource`
+
+#### Overrides
+
+`BaseResource`.`constructor`
+
+## Properties
+
+### vendors
+
+> `readonly` **vendors**: `MarketVendorsResource`
+
+# Class: MarketVendorsResource
+
+Market vendors resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/market/vendors/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new MarketVendorsResource**(`http`): `MarketVendorsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`MarketVendorsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`Vendor`\>
+
+Get vendor by UID
+
+#### Parameters
+
+##### options
+
+`GetVendorOptions`
+
+#### Returns
+
+`Promise`\<`Vendor`\>
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`Vendor`[]\>
+
+List all public vendors (paginated)
+
+#### Parameters
+
+##### options?
+
+Optional pagination parameters
+
+###### item_count?
+
+`number`
+
+###### start_index?
+
+`number`
+
+#### Returns
+
+`Promise`\<`Vendor`[]\>
+
+#### Example
+
+```ts
+const vendors = await client.market.vendors.list();
+const moreVendors = await client.market.vendors.list({ start_index: 51, item_count: 50 });
+```
+
+---
+
+## News
+
+# Class: GNSResource
+
+Galactic News Service (GNS) resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/news/gns/category/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new GNSResource**(`http`): `GNSResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`GNSResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`NewsItem`\>
+
+Get specific GNS news item
+
+#### Parameters
+
+##### options
+
+`GetNewsItemOptions`
+
+#### Returns
+
+`Promise`\<`NewsItem`\>
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`NewsItem`[]\>
+
+List GNS news items (paginated with optional filtering)
+@requires_auth No
+
+#### Parameters
+
+##### options?
+
+`ListGNSOptions`
+
+Optional category, pagination, and filtering parameters
+
+#### Returns
+
+`Promise`\<`NewsItem`[]\>
+
+#### Example
+
+```ts
+const news = await client.news.gns.list();
+const economyNews = await client.news.gns.list({ category: 'economy' });
+const moreNews = await client.news.gns.list({ start_index: 51, item_count: 50 });
+const searchNews = await client.news.gns.list({ search: 'battle', author: 'John Doe' });
+const factionNews = await client.news.gns.list({ faction: 'Empire', faction_type: 'government' });
+```
+
+# Class: NewsResource
+
+News resource for accessing news feeds
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/news/gns/category/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new NewsResource**(`http`): `NewsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`NewsResource`
+
+#### Overrides
+
+`BaseResource`.`constructor`
+
+## Properties
+
+### gns
+
+> `readonly` **gns**: `GNSResource`
+
+***
+
+### simNews
+
+> `readonly` **simNews**: `SimNewsResource`
+
+# Class: SimNewsResource
+
+Sim News resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/news/simnews/category/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new SimNewsResource**(`http`): `SimNewsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`SimNewsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`NewsItem`\>
+
+Get specific Sim News item
+
+#### Parameters
+
+##### options
+
+`GetNewsItemOptions`
+
+#### Returns
+
+`Promise`\<`NewsItem`\>
+
+***
+
+### list()
+
+> **list**(`options?`): `Promise`\<`NewsItem`[]\>
+
+List Sim News items (paginated with optional filtering)
+@requires_auth No
+
+#### Parameters
+
+##### options?
+
+`ListSimNewsOptions`
+
+Optional category, pagination, and filtering parameters
+
+#### Returns
+
+`Promise`\<`NewsItem`[]\>
+
+#### Example
+
+```ts
+const news = await client.news.simNews.list();
+const playerNews = await client.news.simNews.list({ category: 'player' });
+const moreNews = await client.news.simNews.list({ start_index: 51, item_count: 50 });
+const searchNews = await client.news.simNews.list({ search: 'update', author: 'Admin' });
+```
+
+---
+
+## Types
+
+# Class: TypesClassesResource
+
+Entity classes resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/types/classes/entity_type/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new TypesClassesResource**(`http`): `TypesClassesResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`TypesClassesResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### list()
+
+> **list**\<`T`\>(`options`): `Promise`\<`EntityClass`[]\>
+
+Get all classes for a specific entity type (paginated)
+
+NOTE: Official API documentation states "Query String: N/A" and "Parameters: N/A",
+but empirical testing suggests pagination parameters may be required to avoid 404 errors.
+The SDK includes pagination parameters by default for safety.
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `TypesEntityType`
+
+#### Parameters
+
+##### options
+
+`ListTypesClassesOptions`\<`T`\>
+
+Entity type (plural, e.g., 'vehicles', 'ships') and optional pagination parameters
+
+#### Returns
+
+`Promise`\<`EntityClass`[]\>
+
+#### Example
+
+```ts
+const classes = await client.types.classes.list({ entityType: 'vehicles' });
+const moreClasses = await client.types.classes.list({ entityType: 'vehicles', start_index: 51, item_count: 50 });
+```
+
+# Class: TypesEntitiesResource
+
+Entities by type resource
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/types/entity_type/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new TypesEntitiesResource**(`http`): `TypesEntitiesResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`TypesEntitiesResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**\<`T`\>(`options`): `Promise`\<`TypesEntityGetResponseMap`\[`T`\]\>
+
+Get specific entity type information
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `TypesEntityType`
+
+#### Parameters
+
+##### options
+
+`GetTypesEntityOptions`\<`T`\>
+
+#### Returns
+
+`Promise`\<`TypesEntityGetResponseMap`\[`T`\]\>
+
+***
+
+### list()
+
+> **list**\<`T`\>(`options`): `Promise`\<`TypesEntityListItem`[]\>
+
+Get all entities of a type (paginated)
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `TypesEntityType`
+
+#### Parameters
+
+##### options
+
+`ListTypesEntitiesOptions`\<`T`\>
+
+Entity type (plural, e.g., 'vehicles', 'ships'), optional class filter, and optional pagination parameters
+
+#### Returns
+
+`Promise`\<`TypesEntityListItem`[]\>
+
+#### Example
+
+```ts
+const ships = await client.types.entities.list({ entityType: 'ships' });
+const moreShips = await client.types.entities.list({ entityType: 'ships', start_index: 51, item_count: 50 });
+const fighters = await client.types.entities.list({ entityType: 'ships', class: 'fighter', start_index: 1, item_count: 50 });
+```
+
+***
+
+### listRaw()
+
+> **listRaw**\<`T`\>(`options`): `Promise`\<`TypesEntitiesListMetaResponse`\>
+
+Get normalized entities list response for a type (paginated)
+Example shape: { attributes: {...}, items: [...] }
+
+#### Type Parameters
+
+##### T
+
+`T` *extends* `TypesEntityType`
+
+#### Parameters
+
+##### options
+
+`ListTypesEntitiesOptions`\<`T`\>
+
+#### Returns
+
+`Promise`\<`TypesEntitiesListMetaResponse`\>
+
+# Class: TypesResource
+
+Types resource for accessing type information
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/types/entitytypes/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new TypesResource**(`http`): `TypesResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`TypesResource`
+
+#### Overrides
+
+`BaseResource`.`constructor`
+
+## Properties
+
+### classes
+
+> `readonly` **classes**: `TypesClassesResource`
+
+***
+
+### entities
+
+> `readonly` **entities**: `TypesEntitiesResource`
+
+## Methods
+
+### listEntityTypes()
+
+> **listEntityTypes**(): `Promise`\<`EntityType`[]\>
+
+Get all entity types
+
+#### Returns
+
+`Promise`\<`EntityType`[]\>
+
+---
+
+## Events
+
+# Class: EventsResource
+
+Events resource for querying events
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/events/event_mode/event_type/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new EventsResource**(`http`): `EventsResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`EventsResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`Event`\>
+
+Get specific event
+
+#### Parameters
+
+##### options
+
+###### uid
+
+`string`
+
+#### Returns
+
+`Promise`\<`Event`\>
+
+***
+
+### list()
+
+> **list**(`options`): `Promise`\<`Event`[]\>
+
+List events by type and mode (paginated)
+
+**Note:** This endpoint uses 0-based indexing (unlike most other endpoints which use 1-based).
+
+#### Parameters
+
+##### options
+
+Event mode, event type, and optional pagination/filtering parameters
+
+###### eventMode
+
+`string`
+
+Event mode: 'personal', 'faction', 'inventory', or 'combat'
+
+###### eventType?
+
+`string`
+
+Event type filter (optional, only for personal/faction modes)
+
+###### faction_id?
+
+`string`
+
+Faction ID for faction mode
+
+###### item_count?
+
+`number`
+
+Number of items to retrieve. Default: 50, Max: 1000
+
+###### start_index?
+
+`number`
+
+Starting position (0-based). Default: 0
+
+###### start_time?
+
+`number`
+
+Unix timestamp to filter events after this time
+
+#### Returns
+
+`Promise`\<`Event`[]\>
+
+#### Example
+
+```ts
+const events = await client.events.list({ eventMode: 'personal' });
+const moreEvents = await client.events.list({ eventMode: 'personal', start_index: 50, item_count: 100 });
+const recentEvents = await client.events.list({ eventMode: 'personal', start_time: 1640000000 });
+const factionEvents = await client.events.list({ eventMode: 'faction', faction_id: '20:123' });
+// Fetch up to 1000 events at once
+const manyEvents = await client.events.list({ eventMode: 'personal', item_count: 1000 });
+```
+
+---
+
+## Location
+
+# Class: LocationResource
+
+Location resource for querying entity locations
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/location/entity_type/uid/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new LocationResource**(`http`): `LocationResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`LocationResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### get()
+
+> **get**(`options`): `Promise`\<`Location`\>
+
+Get entity location
+
+#### Parameters
+
+##### options
+
+###### entityType
+
+`string`
+
+###### uid
+
+`string`
+
+#### Returns
+
+`Promise`\<`Location`\>
+
+---
+
+## Datacard
+
+# Class: DatacardResource
+
+Datacard resource for managing datacards
+
+## See
+
+https://www.swcombine.com/ws/v2.0/documentation/datacard/uid/ SW Combine API Documentation
+
+## Extends
+
+- `BaseResource`
+
+## Constructors
+
+### Constructor
+
+> **new DatacardResource**(`http`): `DatacardResource`
+
+#### Parameters
+
+##### http
+
+`HttpClient`
+
+#### Returns
+
+`DatacardResource`
+
+#### Inherited from
+
+`BaseResource`.`constructor`
+
+## Methods
+
+### create()
+
+> **create**(`options`): `Promise`\<`Datacard`\>
+
+Create/assign datacard to production entity
+
+#### Parameters
+
+##### options
+
+###### production_entity_uid
+
+`string`
+
+The entity UID to assign this datacard to
+
+###### uid
+
+`string`
+
+Datacard UID
+
+###### unlimited?
+
+`boolean`
+
+Set to true for unlimited uses (optional, use this OR uses)
+
+###### uses?
+
+`number`
+
+Number of uses (optional, use this OR unlimited)
+
+#### Returns
+
+`Promise`\<`Datacard`\>
+
+***
+
+### delete()
+
+> **delete**(`options`): `Promise`\<`void`\>
+
+Delete datacard assignment
+
+#### Parameters
+
+##### options
+
+###### production_entity_uid
+
+`string`
+
+Production entity UID to revoke from (required)
+
+###### uid
+
+`string`
+
+Datacard UID
+
+#### Returns
+
+`Promise`\<`void`\>
+
+***
+
+### get()
+
+> **get**(`options`): `Promise`\<`Datacard`\>
+
+Get specific datacard
+
+#### Parameters
+
+##### options
+
+###### uid
+
+`string`
+
+#### Returns
+
+`Promise`\<`Datacard`\>
+
+***
+
+### list()
+
+> **list**(`options`): `Promise`\<`Datacard`[]\>
+
+List datacards owned by faction
+
+#### Parameters
+
+##### options
+
+###### factionId
+
+`string`
+
+#### Returns
+
+`Promise`\<`Datacard`[]\>
+
+---
+
+## Utilities
+
+# Class: Timestamp
+
+Utility class for working with Star Wars Combine timestamps.
+Represents Combine Galactic Time and can convert unix timestamps
+and Date objects to/from CGT.
+
+## Constructors
+
+### Constructor
+
+> **new Timestamp**(`source`): `Timestamp`
+
+Create a new Timestamp object for a specific moment in Combine Galactic Time
+
+#### Parameters
+
+##### source
+
+`TimestampMoment`
+
+Moment in CGT (year, day, and optionally hour, minute, second)
+
+#### Returns
+
+`Timestamp`
+
+## Methods
+
+### add()
+
+> **add**(`duration`): `Timestamp`
+
+Calculate a new timestamp by adding time to this timestamp
+
+#### Parameters
+
+##### duration
+
+`Partial`\<`Duration`\>
+
+Duration to add (partial duration allowed)
+
+#### Returns
+
+`Timestamp`
+
+New Timestamp with added duration
+
+***
+
+### asMoment()
+
+> **asMoment**(): `TimestampMoment`
+
+Get the timestamp as a TimestampMoment object
+
+#### Returns
+
+`TimestampMoment`
+
+TimestampMoment representation
+
+***
+
+### getDay()
+
+> **getDay**(): `number`
+
+Get the day component
+
+#### Returns
+
+`number`
+
+Day of the year (1-365)
+
+***
+
+### getDurationTo()
+
+> **getDurationTo**(`otherTimestamp`): `Duration`
+
+Calculate the duration from this timestamp to another timestamp
+
+#### Parameters
+
+##### otherTimestamp
+
+`Timestamp`
+
+Target timestamp
+
+#### Returns
+
+`Duration`
+
+Duration between timestamps (positive if other is in future)
+
+***
+
+### getHour()
+
+> **getHour**(): `number`
+
+Get the hour component
+
+#### Returns
+
+`number`
+
+Hour of the day (0-23)
+
+***
+
+### getMinute()
+
+> **getMinute**(): `number`
+
+Get the minute component
+
+#### Returns
+
+`number`
+
+Minute of the hour (0-59)
+
+***
+
+### getSecond()
+
+> **getSecond**(): `number`
+
+Get the second component
+
+#### Returns
+
+`number`
+
+Second of the minute (0-59)
+
+***
+
+### getYear()
+
+> **getYear**(): `number`
+
+Get the year component
+
+#### Returns
+
+`number`
+
+Year in CGT
+
+***
+
+### subtract()
+
+> **subtract**(`duration`): `Timestamp`
+
+Calculate a new timestamp by subtracting time from this timestamp
+
+#### Parameters
+
+##### duration
+
+`Partial`\<`Duration`\>
+
+Duration to subtract (partial duration allowed)
+
+#### Returns
+
+`Timestamp`
+
+New Timestamp with subtracted duration (won't go before SWC start)
+
+***
+
+### toDate()
+
+> **toDate**(): `Date`
+
+Convert the CGT timestamp into a Date object
+
+#### Returns
+
+`Date`
+
+JavaScript Date object
+
+***
+
+### toString()
+
+> **toString**(`format?`): `string`
+
+Convert the CGT timestamp to a string
+
+You can either pass in a preset name, or a custom format string.
+
+**Preset formats:**
+- `'full'`: Year 25 Day 60, 6:03:12
+- `'minute'`: Year 25 Day 60, 6:03
+- `'day'`: Year 25 Day 60
+- `'shortFull'`: Y25 D60, 6:03:12
+- `'shortMinute'`: Y25 D60, 6:03
+- `'shortDay'`: Y26 D60
+
+**Custom format tags:**
+- `{y}`: year
+- `{d}`: day
+- `{h}`: hour
+- `{m}`: minute
+- `{s}`: second
+- Double the tag for leading zeroes (e.g., `{hh}` = 08)
+- `{hms}`: shorthand for `{hh}:{mm}:{ss}`
+
+#### Parameters
+
+##### format?
+
+`string` = `'full'`
+
+Preset format name or custom format string
+
+#### Returns
+
+`string`
+
+Formatted timestamp string
+
+***
+
+### toUnixTimestamp()
+
+> **toUnixTimestamp**(`unit`): `number`
+
+Convert the CGT timestamp into a unix timestamp
+
+#### Parameters
+
+##### unit
+
+`TimestampUnit`
+
+Output unit (seconds or milliseconds)
+
+#### Returns
+
+`number`
+
+Unix timestamp
+
+***
+
+### fromDate()
+
+> `static` **fromDate**(`date`): `Timestamp`
+
+Convert a Date object into Combine Galactic Time
+
+#### Parameters
+
+##### date
+
+`Date`
+
+JavaScript Date object
+
+#### Returns
+
+`Timestamp`
+
+Timestamp instance representing the CGT moment
+
+***
+
+### fromUnixTimestamp()
+
+> `static` **fromUnixTimestamp**(`unixTimestamp`): `Timestamp`
+
+Convert a unix timestamp to Combine Galactic Time
+
+#### Parameters
+
+##### unixTimestamp
+
+`number`
+
+Unix timestamp (seconds or milliseconds, auto-detected)
+
+#### Returns
+
+`Timestamp`
+
+Timestamp instance representing the CGT moment
+
+***
+
+### now()
+
+> `static` **now**(): `Timestamp`
+
+Get the current Combine Galactic Time
+
+#### Returns
+
+`Timestamp`
+
+Timestamp instance representing the current CGT moment
+
+# Class: SWCError
+
+Custom error class for SW Combine API errors
+
+## Extends
+
+- `Error`
+
+## Constructors
+
+### Constructor
+
+> **new SWCError**(`message`, `options`): `SWCError`
+
+#### Parameters
+
+##### message
+
+`string`
+
+##### options
+
+`SWCErrorOptions`
+
+#### Returns
+
+`SWCError`
+
+#### Overrides
+
+`Error.constructor`
+
+## Properties
+
+### cause?
+
+> `readonly` `optional` **cause**: `Error`
+
+Original error that caused this error
+
+***
+
+### message
+
+> **message**: `string`
+
+#### Inherited from
+
+`Error.message`
+
+***
+
+### name
+
+> **name**: `string`
+
+#### Inherited from
+
+`Error.name`
+
+***
+
+### requestId?
+
+> `readonly` `optional` **requestId**: `string`
+
+Request ID from API response
+
+***
+
+### response?
+
+> `readonly` `optional` **response**: `any`
+
+Original API error response
+
+***
+
+### retryable
+
+> `readonly` **retryable**: `boolean`
+
+Whether this error can be retried
+
+***
+
+### retryAfter?
+
+> `readonly` `optional` **retryAfter**: `number`
+
+Seconds to wait before retrying (for rate limit errors)
+
+***
+
+### stack?
+
+> `optional` **stack**: `string`
+
+#### Inherited from
+
+`Error.stack`
+
+***
+
+### statusCode?
+
+> `readonly` `optional` **statusCode**: `number`
+
+HTTP status code if applicable
+
+***
+
+### type
+
+> `readonly` **type**: `SWCErrorType`
+
+Error type discriminator
+
+***
+
+### stackTraceLimit
+
+> `static` **stackTraceLimit**: `number`
+
+The `Error.stackTraceLimit` property specifies the number of stack frames
+collected by a stack trace (whether generated by `new Error().stack` or
+`Error.captureStackTrace(obj)`).
+
+The default value is `10` but may be set to any valid JavaScript number. Changes
+will affect any stack trace captured _after_ the value has been changed.
+
+If set to a non-number value, or set to a negative number, stack traces will
+not capture any frames.
+
+#### Inherited from
+
+`Error.stackTraceLimit`
+
+## Methods
+
+### toUserFriendlyMessage()
+
+> **toUserFriendlyMessage**(): `string`
+
+Get a user-friendly error message
+
+#### Returns
+
+`string`
+
+***
+
+### captureStackTrace()
+
+> `static` **captureStackTrace**(`targetObject`, `constructorOpt?`): `void`
+
+Creates a `.stack` property on `targetObject`, which when accessed returns
+a string representing the location in the code at which
+`Error.captureStackTrace()` was called.
+
+```js
+const myObject = {};
+Error.captureStackTrace(myObject);
+myObject.stack;  // Similar to `new Error().stack`
+```
+
+The first line of the trace will be prefixed with
+`${myObject.name}: ${myObject.message}`.
+
+The optional `constructorOpt` argument accepts a function. If given, all frames
+above `constructorOpt`, including `constructorOpt`, will be omitted from the
+generated stack trace.
+
+The `constructorOpt` argument is useful for hiding implementation
+details of error generation from the user. For instance:
+
+```js
+function a() {
+  b();
+}
+
+function b() {
+  c();
+}
+
+function c() {
+  // Create an error without stack trace to avoid calculating the stack trace twice.
+  const { stackTraceLimit } = Error;
+  Error.stackTraceLimit = 0;
+  const error = new Error();
+  Error.stackTraceLimit = stackTraceLimit;
+
+  // Capture the stack trace above function b
+  Error.captureStackTrace(error, b); // Neither function c, nor b is included in the stack trace
+  throw error;
+}
+
+a();
+```
+
+#### Parameters
+
+##### targetObject
+
+`object`
+
+##### constructorOpt?
+
+`Function`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+`Error.captureStackTrace`
+
+***
+
+### fromHttpResponse()
+
+> `static` **fromHttpResponse**(`statusCode`, `response`, `requestId?`): `SWCError`
+
+Create an error from an HTTP status code and response
+
+#### Parameters
+
+##### statusCode
+
+`number`
+
+##### response
+
+`any`
+
+##### requestId?
+
+`string`
+
+#### Returns
+
+`SWCError`
+
+***
+
+### fromNetworkError()
+
+> `static` **fromNetworkError**(`error`): `SWCError`
+
+Create an error from a network failure
+
+#### Parameters
+
+##### error
+
+`Error`
+
+#### Returns
+
+`SWCError`
+
+***
+
+### isSWCError()
+
+> `static` **isSWCError**(`error`): `error is SWCError`
+
+Check if an error is a SWCError
+
+#### Parameters
+
+##### error
+
+`unknown`
+
+#### Returns
+
+`error is SWCError`
+
+***
+
+### prepareStackTrace()
+
+> `static` **prepareStackTrace**(`err`, `stackTraces`): `any`
+
+#### Parameters
+
+##### err
+
+`Error`
+
+##### stackTraces
+
+`CallSite`[]
+
+#### Returns
+
+`any`
+
+#### See
+
+https://v8.dev/docs/stack-trace-api#customizing-stack-traces
+
+#### Inherited from
+
+`Error.prepareStackTrace`
+
+---
+
+## Configuration Types
+
+# Interface: ClientConfig
+
+## Properties
+
+### accessType?
+
+> `optional` **accessType**: `AccessType`
+
+Access type: online or offline (offline provides refresh token)
+
+***
+
+### baseURL?
+
+> `optional` **baseURL**: `string`
+
+Base URL for API (default: https://www.swcombine.com/ws/v2.0/)
+
+***
+
+### clientId?
+
+> `optional` **clientId**: `string`
+
+OAuth client ID
+
+***
+
+### clientSecret?
+
+> `optional` **clientSecret**: `string`
+
+OAuth client secret
+
+***
+
+### debug?
+
+> `optional` **debug**: `boolean`
+
+Enable debug logging
+
+***
+
+### maxRetries?
+
+> `optional` **maxRetries**: `number`
+
+Maximum number of retry attempts (default: 3)
+
+***
+
+### redirectUri?
+
+> `optional` **redirectUri**: `string`
+
+OAuth redirect URI
+
+***
+
+### retryDelay?
+
+> `optional` **retryDelay**: `number`
+
+Delay between retries in milliseconds (default: 1000)
+
+***
+
+### timeout?
+
+> `optional` **timeout**: `number`
+
+Request timeout in milliseconds (default: 30000)
+
+***
+
+### token?
+
+> `optional` **token**: `string` \| `OAuthToken`
+
+Existing token to initialize with
+
+# Interface: OAuthToken
+
+## Properties
+
+### accessToken
+
+> **accessToken**: `string`
+
+Access token for API requests
+
+***
+
+### expiresAt
+
+> **expiresAt**: `number`
+
+Token expiration timestamp (milliseconds since epoch)
+
+***
+
+### refreshToken?
+
+> `optional` **refreshToken**: `string`
+
+Refresh token for getting new access token
+
+# Interface: OAuthAuthorizationOptions
+
+## Properties
+
+### scopes
+
+> **scopes**: `string`[]
+
+OAuth scopes to request
+
+***
+
+### state
+
+> **state**: `string`
+
+State parameter for CSRF protection
+
+# Interface: OAuthCallbackQuery
+
+## Properties
+
+### code?
+
+> `optional` **code**: `string`
+
+Authorization code from callback
+
+***
+
+### error?
+
+> `optional` **error**: `string`
+
+Error from callback
+
+***
+
+### error\_description?
+
+> `optional` **error\_description**: `string`
+
+Error description
+
+***
+
+### state?
+
+> `optional` **state**: `string`
+
+State parameter echoed back
+
+---
+
+## OAuth Scopes
+
+# Variable: CharacterScopes
+
+> `const` **CharacterScopes**: `object`
+
+Character-related scopes
+
+## Type Declaration
+
+### ALL
+
+> `readonly` **ALL**: `"character_all"` = `'character_all'`
+
+Access all character information (includes all above)
+
+### AUTH
+
+> `readonly` **AUTH**: `"character_auth"` = `'character_auth'`
+
+Solely provides the character name and ID for use by clients who want to verify a character's identity
+
+### CREDITS
+
+> `readonly` **CREDITS**: `"character_credits"` = `'character_credits'`
+
+Read character credit information
+
+### CREDITS\_WRITE
+
+> `readonly` **CREDITS\_WRITE**: `"character_credits_write"` = `'character_credits_write'`
+
+Transfer character credits
+
+### EVENTS
+
+> `readonly` **EVENTS**: `"character_events"` = `'character_events'`
+
+Read character events
+
+### FORCE
+
+> `readonly` **FORCE**: `"character_force"` = `'character_force'`
+
+Read character force-related information (FP, FXP, regen rate, Force Meter)
+
+### LOCATION
+
+> `readonly` **LOCATION**: `"character_location"` = `'character_location'`
+
+Read location information in-game
+
+### PRIVILEGES
+
+> `readonly` **PRIVILEGES**: `"character_privileges"` = `'character_privileges'`
+
+Read character privileges
+
+### READ
+
+> `readonly` **READ**: `"character_read"` = `'character_read'`
+
+Read basic character information (UID, handle, image, race, gender, etc.)
+
+### SKILLS
+
+> `readonly` **SKILLS**: `"character_skills"` = `'character_skills'`
+
+Read character skills
+
+### STATS
+
+> `readonly` **STATS**: `"character_stats"` = `'character_stats'`
+
+Read character HP and XP
+
+# Variable: MessageScopes
+
+> `const` **MessageScopes**: `object`
+
+Message-related scopes
+
+## Type Declaration
+
+### ALL
+
+> `readonly` **ALL**: `"messages_all"` = `'messages_all'`
+
+All message permissions
+
+### DELETE
+
+> `readonly` **DELETE**: `"messages_delete"` = `'messages_delete'`
+
+Delete messages
+
+### READ
+
+> `readonly` **READ**: `"messages_read"` = `'messages_read'`
+
+Read messages
+
+### SEND
+
+> `readonly` **SEND**: `"messages_send"` = `'messages_send'`
+
+Send messages
+
+# Variable: FactionScopes
+
+> `const` **FactionScopes**: `object`
+
+Faction management scopes
+
+## Type Declaration
+
+### ALL
+
+> `readonly` **ALL**: `"faction_all"` = `'faction_all'`
+
+All faction permissions
+
+### BUDGETS\_READ
+
+> `readonly` **BUDGETS\_READ**: `"faction_budgets_read"` = `'faction_budgets_read'`
+
+Read faction budgets
+
+### BUDGETS\_WRITE
+
+> `readonly` **BUDGETS\_WRITE**: `"faction_budgets_write"` = `'faction_budgets_write'`
+
+Write faction budgets
+
+### CREDITS\_READ
+
+> `readonly` **CREDITS\_READ**: `"faction_credits_read"` = `'faction_credits_read'`
+
+Read faction credits
+
+### CREDITS\_WRITE
+
+> `readonly` **CREDITS\_WRITE**: `"faction_credits_write"` = `'faction_credits_write'`
+
+Write/transfer faction credits
+
+### DATACARDS\_READ
+
+> `readonly` **DATACARDS\_READ**: `"faction_datacards_read"` = `'faction_datacards_read'`
+
+Read faction datacards
+
+### DATACARDS\_WRITE
+
+> `readonly` **DATACARDS\_WRITE**: `"faction_datacards_write"` = `'faction_datacards_write'`
+
+Write faction datacards
+
+### MEMBERS
+
+> `readonly` **MEMBERS**: `"faction_members"` = `'faction_members'`
+
+Read faction members
+
+### READ
+
+> `readonly` **READ**: `"faction_read"` = `'faction_read'`
+
+Read faction information
+
+### STOCKS
+
+> `readonly` **STOCKS**: `"faction_stocks"` = `'faction_stocks'`
+
+Read faction stocks
+
+# Variable: Scopes
+
+> `const` **Scopes**: `object`
+
+All available scopes organized by category
+
+## Type Declaration
+
+### Character
+
+> `readonly` **Character**: `object` = `CharacterScopes`
+
+#### Character.ALL
+
+> `readonly` **ALL**: `"character_all"` = `'character_all'`
+
+Access all character information (includes all above)
+
+#### Character.AUTH
+
+> `readonly` **AUTH**: `"character_auth"` = `'character_auth'`
+
+Solely provides the character name and ID for use by clients who want to verify a character's identity
+
+#### Character.CREDITS
+
+> `readonly` **CREDITS**: `"character_credits"` = `'character_credits'`
+
+Read character credit information
+
+#### Character.CREDITS\_WRITE
+
+> `readonly` **CREDITS\_WRITE**: `"character_credits_write"` = `'character_credits_write'`
+
+Transfer character credits
+
+#### Character.EVENTS
+
+> `readonly` **EVENTS**: `"character_events"` = `'character_events'`
+
+Read character events
+
+#### Character.FORCE
+
+> `readonly` **FORCE**: `"character_force"` = `'character_force'`
+
+Read character force-related information (FP, FXP, regen rate, Force Meter)
+
+#### Character.LOCATION
+
+> `readonly` **LOCATION**: `"character_location"` = `'character_location'`
+
+Read location information in-game
+
+#### Character.PRIVILEGES
+
+> `readonly` **PRIVILEGES**: `"character_privileges"` = `'character_privileges'`
+
+Read character privileges
+
+#### Character.READ
+
+> `readonly` **READ**: `"character_read"` = `'character_read'`
+
+Read basic character information (UID, handle, image, race, gender, etc.)
+
+#### Character.SKILLS
+
+> `readonly` **SKILLS**: `"character_skills"` = `'character_skills'`
+
+Read character skills
+
+#### Character.STATS
+
+> `readonly` **STATS**: `"character_stats"` = `'character_stats'`
+
+Read character HP and XP
+
+### Faction
+
+> `readonly` **Faction**: `object` = `FactionScopes`
+
+#### Faction.ALL
+
+> `readonly` **ALL**: `"faction_all"` = `'faction_all'`
+
+All faction permissions
+
+#### Faction.BUDGETS\_READ
+
+> `readonly` **BUDGETS\_READ**: `"faction_budgets_read"` = `'faction_budgets_read'`
+
+Read faction budgets
+
+#### Faction.BUDGETS\_WRITE
+
+> `readonly` **BUDGETS\_WRITE**: `"faction_budgets_write"` = `'faction_budgets_write'`
+
+Write faction budgets
+
+#### Faction.CREDITS\_READ
+
+> `readonly` **CREDITS\_READ**: `"faction_credits_read"` = `'faction_credits_read'`
+
+Read faction credits
+
+#### Faction.CREDITS\_WRITE
+
+> `readonly` **CREDITS\_WRITE**: `"faction_credits_write"` = `'faction_credits_write'`
+
+Write/transfer faction credits
+
+#### Faction.DATACARDS\_READ
+
+> `readonly` **DATACARDS\_READ**: `"faction_datacards_read"` = `'faction_datacards_read'`
+
+Read faction datacards
+
+#### Faction.DATACARDS\_WRITE
+
+> `readonly` **DATACARDS\_WRITE**: `"faction_datacards_write"` = `'faction_datacards_write'`
+
+Write faction datacards
+
+#### Faction.MEMBERS
+
+> `readonly` **MEMBERS**: `"faction_members"` = `'faction_members'`
+
+Read faction members
+
+#### Faction.READ
+
+> `readonly` **READ**: `"faction_read"` = `'faction_read'`
+
+Read faction information
+
+#### Faction.STOCKS
+
+> `readonly` **STOCKS**: `"faction_stocks"` = `'faction_stocks'`
+
+Read faction stocks
+
+### FactionInventory
+
+> `readonly` **FactionInventory**: `object` = `FactionInventoryScopes`
+
+#### FactionInventory.CITIES
+
+> `readonly` **CITIES**: `Record`\<`string`, `string`\>
+
+Faction city scopes
+
+#### FactionInventory.CREATURES
+
+> `readonly` **CREATURES**: `Record`\<`string`, `string`\>
+
+Faction creature scopes
+
+#### FactionInventory.DROIDS
+
+> `readonly` **DROIDS**: `Record`\<`string`, `string`\>
+
+Faction droid scopes
+
+#### FactionInventory.FACILITIES
+
+> `readonly` **FACILITIES**: `Record`\<`string`, `string`\>
+
+Faction facility scopes
+
+#### FactionInventory.ITEMS
+
+> `readonly` **ITEMS**: `Record`\<`string`, `string`\>
+
+Faction item scopes
+
+#### FactionInventory.MATERIALS
+
+> `readonly` **MATERIALS**: `object`
+
+Faction material scopes (no ASSIGN)
+
+#### FactionInventory.MATERIALS.ALL
+
+> `readonly` **ALL**: `"faction_inv_materials_all"` = `'faction_inv_materials_all'`
+
+#### FactionInventory.MATERIALS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_materials_makeover"` = `'faction_inv_materials_makeover'`
+
+#### FactionInventory.MATERIALS.READ
+
+> `readonly` **READ**: `"faction_inv_materials_read"` = `'faction_inv_materials_read'`
+
+#### FactionInventory.MATERIALS.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_materials_rename"` = `'faction_inv_materials_rename'`
+
+#### FactionInventory.MATERIALS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_materials_tags_read"` = `'faction_inv_materials_tags_read'`
+
+#### FactionInventory.MATERIALS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_materials_tags_write"` = `'faction_inv_materials_tags_write'`
+
+#### FactionInventory.NPCS
+
+> `readonly` **NPCS**: `object`
+
+Faction NPC scopes (has MAKEOVER but no RENAME)
+
+#### FactionInventory.NPCS.ALL
+
+> `readonly` **ALL**: `"faction_inv_npcs_all"` = `'faction_inv_npcs_all'`
+
+#### FactionInventory.NPCS.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_npcs_assign"` = `'faction_inv_npcs_assign'`
+
+#### FactionInventory.NPCS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_npcs_makeover"` = `'faction_inv_npcs_makeover'`
+
+#### FactionInventory.NPCS.READ
+
+> `readonly` **READ**: `"faction_inv_npcs_read"` = `'faction_inv_npcs_read'`
+
+#### FactionInventory.NPCS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_npcs_tags_read"` = `'faction_inv_npcs_tags_read'`
+
+#### FactionInventory.NPCS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_npcs_tags_write"` = `'faction_inv_npcs_tags_write'`
+
+#### FactionInventory.OVERVIEW
+
+> `readonly` **OVERVIEW**: `"faction_inv_overview"` = `'faction_inv_overview'`
+
+Overview of faction inventory
+
+#### FactionInventory.PLANETS
+
+> `readonly` **PLANETS**: `Record`\<`string`, `string`\>
+
+Faction planet scopes (no RENAME/MAKEOVER)
+
+#### FactionInventory.SHIPS
+
+> `readonly` **SHIPS**: `Record`\<`string`, `string`\>
+
+Faction ship scopes
+
+#### FactionInventory.STATIONS
+
+> `readonly` **STATIONS**: `Record`\<`string`, `string`\>
+
+Faction station scopes
+
+#### FactionInventory.VEHICLES
+
+> `readonly` **VEHICLES**: `Record`\<`string`, `string`\>
+
+Faction vehicle scopes
+
+### Messages
+
+> `readonly` **Messages**: `object` = `MessageScopes`
+
+#### Messages.ALL
+
+> `readonly` **ALL**: `"messages_all"` = `'messages_all'`
+
+All message permissions
+
+#### Messages.DELETE
+
+> `readonly` **DELETE**: `"messages_delete"` = `'messages_delete'`
+
+Delete messages
+
+#### Messages.READ
+
+> `readonly` **READ**: `"messages_read"` = `'messages_read'`
+
+Read messages
+
+#### Messages.SEND
+
+> `readonly` **SEND**: `"messages_send"` = `'messages_send'`
+
+Send messages
+
+### PersonalInventory
+
+> `readonly` **PersonalInventory**: `object` = `PersonalInventoryScopes`
+
+#### PersonalInventory.CITIES
+
+> `readonly` **CITIES**: `Record`\<`string`, `string`\>
+
+Personal city scopes
+
+#### PersonalInventory.CREATURES
+
+> `readonly` **CREATURES**: `Record`\<`string`, `string`\>
+
+Personal creature scopes
+
+#### PersonalInventory.DROIDS
+
+> `readonly` **DROIDS**: `Record`\<`string`, `string`\>
+
+Personal droid scopes
+
+#### PersonalInventory.FACILITIES
+
+> `readonly` **FACILITIES**: `Record`\<`string`, `string`\>
+
+Personal facility scopes
+
+#### PersonalInventory.ITEMS
+
+> `readonly` **ITEMS**: `Record`\<`string`, `string`\>
+
+Personal item scopes
+
+#### PersonalInventory.MATERIALS
+
+> `readonly` **MATERIALS**: `object`
+
+Personal material scopes (no ASSIGN)
+
+#### PersonalInventory.MATERIALS.ALL
+
+> `readonly` **ALL**: `"personal_inv_materials_all"` = `'personal_inv_materials_all'`
+
+#### PersonalInventory.MATERIALS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_materials_makeover"` = `'personal_inv_materials_makeover'`
+
+#### PersonalInventory.MATERIALS.READ
+
+> `readonly` **READ**: `"personal_inv_materials_read"` = `'personal_inv_materials_read'`
+
+#### PersonalInventory.MATERIALS.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_materials_rename"` = `'personal_inv_materials_rename'`
+
+#### PersonalInventory.MATERIALS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_materials_tags_read"` = `'personal_inv_materials_tags_read'`
+
+#### PersonalInventory.MATERIALS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_materials_tags_write"` = `'personal_inv_materials_tags_write'`
+
+#### PersonalInventory.NPCS
+
+> `readonly` **NPCS**: `object`
+
+Personal NPC scopes (has MAKEOVER but no RENAME)
+
+#### PersonalInventory.NPCS.ALL
+
+> `readonly` **ALL**: `"personal_inv_npcs_all"` = `'personal_inv_npcs_all'`
+
+#### PersonalInventory.NPCS.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_npcs_assign"` = `'personal_inv_npcs_assign'`
+
+#### PersonalInventory.NPCS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_npcs_makeover"` = `'personal_inv_npcs_makeover'`
+
+#### PersonalInventory.NPCS.READ
+
+> `readonly` **READ**: `"personal_inv_npcs_read"` = `'personal_inv_npcs_read'`
+
+#### PersonalInventory.NPCS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_npcs_tags_read"` = `'personal_inv_npcs_tags_read'`
+
+#### PersonalInventory.NPCS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_npcs_tags_write"` = `'personal_inv_npcs_tags_write'`
+
+#### PersonalInventory.OVERVIEW
+
+> `readonly` **OVERVIEW**: `"personal_inv_overview"` = `'personal_inv_overview'`
+
+Overview of personal inventory
+
+#### PersonalInventory.PLANETS
+
+> `readonly` **PLANETS**: `Record`\<`string`, `string`\>
+
+Personal planet scopes (no RENAME/MAKEOVER)
+
+#### PersonalInventory.SHIPS
+
+> `readonly` **SHIPS**: `Record`\<`string`, `string`\>
+
+Personal ship scopes
+
+#### PersonalInventory.STATIONS
+
+> `readonly` **STATIONS**: `Record`\<`string`, `string`\>
+
+Personal station scopes
+
+#### PersonalInventory.VEHICLES
+
+> `readonly` **VEHICLES**: `Record`\<`string`, `string`\>
+
+Personal vehicle scopes
+
+# Function: getAllScopes()
+
+> **getAllScopes**(): `string`[]
+
+Get all available scopes (for comprehensive testing)
+
+## Returns
+
+`string`[]
+
+# Function: getReadOnlyScopes()
+
+> **getReadOnlyScopes**(): `string`[]
+
+Get basic read-only scopes (good for read-only integrations)
+
+## Returns
+
+`string`[]
+
+# Function: getMinimalScopes()
+
+> **getMinimalScopes**(): `string`[]
+
+Get minimal scopes for basic character info (authentication only)
+
+## Returns
+
+`string`[]

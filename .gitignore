@@ -25,6 +25,7 @@ build/
 
 # Generated API docs
 docs/api/
+docs/html/
 
 # Test coverage
 coverage/

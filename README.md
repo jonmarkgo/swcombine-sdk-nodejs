@@ -7,6 +7,7 @@
 [![npm version](https://img.shields.io/npm/v/swcombine-sdk.svg)](https://www.npmjs.com/package/swcombine-sdk)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5+-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![API Docs](https://img.shields.io/badge/API_Docs-TypeDoc-blue.svg)](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)
 
 [Features](#features) •
 [Installation](#installation) •

@@ -39,6 +39,7 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "docs:api": "typedoc",
     "docs:api:watch": "typedoc --watch",
+    "docs:html": "typedoc --options typedoc.html.json",
     "get-token": "tsx scripts/get-oauth-token.ts",
     "get-character-uid": "tsx scripts/get-character-uid.ts",
     "refresh-token": "tsx scripts/refresh-token.ts",

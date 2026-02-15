@@ -23,6 +23,10 @@ build/
 *~
 .DS_Store
 
+# Generated API docs
+docs/api/
+docs/html/
+
 # Test coverage
 coverage/
 .nyc_output/

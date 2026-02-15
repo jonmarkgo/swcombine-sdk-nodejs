@@ -393,6 +393,8 @@ console.log(rawVehicles.attributes?.start, rawVehicles.attributes?.count, rawVeh
 console.log(rawVehicles.items[0]?.attributes.uid, rawVehicles.items[0]?.value);
 ```
 
+See [API Documentation](docs/api/README.md) for complete reference (run `npm run docs:api` to generate).
+
 ## Rate Limiting
 
 The SW Combine API has a rate limit of **600 requests per hour**. The SDK provides tools to monitor and handle rate limits:
@@ -536,6 +538,7 @@ npm run test:integration
 - **[Getting Started Guide](docs/GETTING_STARTED.md)** - Detailed setup and usage
 - **[Authentication Guide](docs/AUTHENTICATION.md)** - OAuth 2.0 setup and token management
 - **[OAuth Scopes Reference](docs/SCOPES.md)** - Complete scope documentation
+- **[API Reference](docs/api/README.md)** - Detailed API endpoint documentation (run `npm run docs:api` to generate)
 - **[Getting an OAuth Token](docs/getting-oauth-token.md)** - Step-by-step token guide
 - **[Local Development](docs/LOCAL_DEVELOPMENT.md)** - Development environment setup
 - **[Publishing](docs/PUBLISHING.md)** - NPM publishing guide

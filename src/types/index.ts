@@ -1181,7 +1181,9 @@ export interface TypesShipsListRawResponse extends TypesEntitiesListRawResponse 
 }
 
 /**
- * Normalized /types/:entityType list response with pagination metadata and items.
+ * Normalized /types/:entityType list response.
+ * `attributes` contains pagination metadata (`start`, `total`, `count`) and
+ * `items` contains the normalized entity rows for all type endpoints.
  */
 export interface TypesEntitiesListMetaResponse {
   attributes?: TypesEntityListAttributes;

@@ -5,7 +5,7 @@
 **Comprehensive TypeScript SDK for the Star Wars Combine API v2.0**
 
 [![npm version](https://img.shields.io/npm/v/swcombine-sdk.svg)](https://www.npmjs.com/package/swcombine-sdk)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5+-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [Features](#features) •
@@ -356,7 +356,7 @@ await client.market.vendors.get({ uid: 'vendor-uid' });
 ```typescript
 // Galactic News Service (GNS)
 await client.news.gns.list();
-await client.news.gns.list({ category: 'economy', search: 'battle', author: 'John Doe' });
+await client.news.gns.list({ category: 'economy', search: 'battle', author: 'John Doe', faction: 'Empire' });
 await client.news.gns.get({ id: 'news-id' });
 
 // Sim News
@@ -392,8 +392,6 @@ const rawVehicles = await client.types.entities.listRaw({
 console.log(rawVehicles.attributes?.start, rawVehicles.attributes?.count, rawVehicles.attributes?.total);
 console.log(rawVehicles.items[0]?.attributes.uid, rawVehicles.items[0]?.value);
 ```
-
-See [API Documentation](docs/API.md) for complete reference.
 
 ## Rate Limiting
 
@@ -489,7 +487,10 @@ interface OAuthToken {
 
 See the [examples](examples/) directory for complete working examples:
 
-- **[OAuth Scopes](examples/oauth-scopes-example.ts)** - 10 examples of scope usage
+- **[Basic Usage](examples/basic-usage.ts)** - Getting started with the SDK
+- **[OAuth Flow](examples/oauth-flow.ts)** - Complete OAuth 2.0 authentication flow
+- **[OAuth Scopes](examples/oauth-scopes-example.ts)** - Scope usage examples
+- **[Error Handling](examples/error-handling.ts)** - Error handling patterns
 
 ### Basic Usage
 
@@ -535,7 +536,9 @@ npm run test:integration
 - **[Getting Started Guide](docs/GETTING_STARTED.md)** - Detailed setup and usage
 - **[Authentication Guide](docs/AUTHENTICATION.md)** - OAuth 2.0 setup and token management
 - **[OAuth Scopes Reference](docs/SCOPES.md)** - Complete scope documentation
-- **[API Reference](docs/API.md)** - Detailed API endpoint documentation
+- **[Getting an OAuth Token](docs/getting-oauth-token.md)** - Step-by-step token guide
+- **[Local Development](docs/LOCAL_DEVELOPMENT.md)** - Development environment setup
+- **[Publishing](docs/PUBLISHING.md)** - NPM publishing guide
 - **[Examples](examples/)** - Working code examples
 
 ## Development
@@ -547,11 +550,21 @@ npm install
 # Build
 npm run build
 
-# Run tests
+# Run unit tests (fast, no API calls)
 npm test
 
-# Run integration tests
+# Run unit tests in watch mode
+npm run test:watch
+
+# Run all integration tests (requires .env with API credentials)
 npm run test:integration
+
+# Run integration tests for a specific resource
+npm run test:integration:character
+npm run test:integration:galaxy
+npm run test:integration:faction
+# Also: test:integration:api, test:integration:market, test:integration:news,
+#        test:integration:types, test:integration:misc
 
 # Lint
 npm run lint
@@ -563,13 +576,13 @@ npm run format
 ## Requirements
 
 - Node.js 18 or higher
-- TypeScript 5.0 or higher (for TypeScript projects)
+- TypeScript 5.5 or higher (for TypeScript projects)
 
 ## Links
 
 - [SW Combine API Documentation](https://www.swcombine.com/ws/developers/)
 - [npm Package](https://www.npmjs.com/package/swcombine-sdk)
-- [GitHub Repository](https://github.com/yourusername/swcombine-sdk-nodejs)
+- [GitHub Repository](https://github.com/jonmarkgo/swcombine-sdk-nodejs)
 
 ## License
 
@@ -588,7 +601,7 @@ Contributions are welcome! Please:
 ## Support
 
 - Check the [documentation](docs/)
-- Submit issues on [GitHub](https://github.com/yourusername/swcombine-sdk-nodejs/issues)
+- Submit issues on [GitHub](https://github.com/jonmarkgo/swcombine-sdk-nodejs/issues)
 - Contact support
 
 ---

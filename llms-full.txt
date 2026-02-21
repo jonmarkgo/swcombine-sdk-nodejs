@@ -693,13 +693,25 @@ Send a message
 
 `Promise`\<`Message`\>
 
-#### Example
+Message response typed as `Message`
+
+#### Examples
 
 ```ts
+// Valid: handles
 await client.character.messages.create({
   uid: '1:12345',
-  receivers: 'recipient1;recipient2',
+  receivers: 'recipient_handle_1;recipient_handle_2',
   communication: 'Hello from the SDK!'
+});
+```
+
+```ts
+// Invalid: UIDs are rejected by the API and pre-validated by this SDK
+await client.character.messages.create({
+  uid: '1:12345',
+  receivers: '1:12345',
+  communication: 'Test'
 });
 ```
 
@@ -739,17 +751,37 @@ Get a specific message
 
 `GetMessageOptions`
 
+Character UID and message UID
+
 #### Returns
 
 `Promise`\<`Message`\>
+
+Full message details including `communication`
+
+#### Example
+
+```ts
+const messages = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
+const messageId = messages[0]?.attributes.uid;
+
+if (messageId) {
+  const message = await client.character.messages.get({ uid: '1:12345', messageId });
+  console.log(message.communication);
+}
+```
 
 ***
 
 ### list()
 
-> **list**(`options`): `Promise`\<`Message`[]\>
+> **list**(`options`): `Promise`\<`MessageListItem`[]\>
 
 List messages sent or received by character (paginated)
+
+Note: list responses return `MessageListItem[]` metadata objects and do not
+guarantee a `communication` field. Use `get()` for full message content.
+
 @requires_auth Yes
 @requires_scope MESSAGES_READ
 
@@ -763,7 +795,9 @@ Character UID, optional message mode, and optional pagination parameters
 
 #### Returns
 
-`Promise`\<`Message`[]\>
+`Promise`\<`MessageListItem`[]\>
+
+Array of message metadata items (`MessageListItem[]`)
 
 #### Example
 
@@ -771,6 +805,12 @@ Character UID, optional message mode, and optional pagination parameters
 const allMessages = await client.character.messages.list({ uid: '1:12345' });
 const received = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
 const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: 'received', start_index: 51, item_count: 50 });
+
+const firstMessageId = received[0]?.attributes.uid;
+if (firstMessageId) {
+  const detail = await client.character.messages.get({ uid: '1:12345', messageId: firstMessageId });
+  console.log(detail.communication);
+}
 ```
 
 # Class: CharacterPermissionsResource
@@ -3232,8 +3272,7 @@ const fighters = await client.types.entities.list({ entityType: 'ships', class: 
 
 > **listRaw**\<`T`\>(`options`): `Promise`\<`TypesEntitiesListMetaResponse`\>
 
-Get normalized entities list response for a type (paginated)
-Example shape: { attributes: {...}, items: [...] }
+Returns normalized pagination metadata and items for any `TypesEntityType`.
 
 #### Type Parameters
 
@@ -3247,9 +3286,39 @@ Example shape: { attributes: {...}, items: [...] }
 
 `ListTypesEntitiesOptions`\<`T`\>
 
+Entity list options. `start_index` defaults to `1`, `item_count` defaults to `50`,
+and `class` is optional for class-filtered results.
+
 #### Returns
 
 `Promise`\<`TypesEntitiesListMetaResponse`\>
+
+`TypesEntitiesListMetaResponse` with pagination `attributes` and normalized `items`.
+
+#### Examples
+
+```ts
+const response = await client.types.entities.listRaw({
+  entityType: 'vehicles',
+  start_index: 1,
+  item_count: 50,
+});
+console.log(response.attributes?.total);
+console.log(response.items[0]?.attributes.uid);
+```
+
+```ts
+const response = await client.types.entities.listRaw({
+  entityType: 'ships',
+  class: 'fighter',
+  start_index: 1,
+  item_count: 25,
+});
+
+for (const item of response.items) {
+  console.log(item.attributes.uid, item.value);
+}
+```
 
 # Class: TypesResource
 

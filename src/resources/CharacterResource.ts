@@ -3,11 +3,13 @@
  */
 
 import { HttpClient } from '../http/HttpClient.js';
+import { SWCError } from '../http/errors.js';
 import { BaseResource } from './BaseResource.js';
 import {
   Character,
   CharacterMe,
   Message,
+  MessageListItem,
   CreditLogEntry,
   GetCharacterOptions,
   GetCharacterByHandleOptions,
@@ -32,8 +34,49 @@ import {
  * @see https://www.swcombine.com/ws/v2.0/documentation/character/uid/messages/mode/ SW Combine API Documentation
  */
 export class CharacterMessagesResource extends BaseResource {
+  private normalizeAndValidateReceivers(receivers: string): string {
+    const receiverHandles = receivers
+      .split(';')
+      .map((receiver) => receiver.trim())
+      .filter((receiver) => receiver.length > 0);
+
+    if (receiverHandles.length === 0) {
+      throw new SWCError(
+        'Invalid messages.create receivers: provide at least one receiver handle.',
+        {
+          type: 'validation',
+        }
+      );
+    }
+
+    if (receiverHandles.length > 25) {
+      throw new SWCError(
+        'Invalid messages.create receivers: maximum 25 receiver handles are allowed.',
+        {
+          type: 'validation',
+        }
+      );
+    }
+
+    const uidLikeReceiver = receiverHandles.find((receiver) => /^\d+:\d+$/.test(receiver));
+    if (uidLikeReceiver) {
+      throw new SWCError(
+        `Invalid messages.create receivers: "${uidLikeReceiver}" looks like a UID. Use receiver handles in the semicolon-separated receivers string.`,
+        {
+          type: 'validation',
+        }
+      );
+    }
+
+    return receiverHandles.join(';');
+  }
+
   /**
    * List messages sent or received by character (paginated)
+   *
+   * Note: list responses return `MessageListItem[]` metadata objects and do not
+   * guarantee a `communication` field. Use `get()` for full message content.
+   *
    * @requires_auth Yes
    * @requires_scope MESSAGES_READ
    * @param options - Character UID, optional message mode, and optional pagination parameters
@@ -41,12 +84,19 @@ export class CharacterMessagesResource extends BaseResource {
    * @param options.mode - 'sent' or 'received'. If omitted, returns both sent and received messages.
    * @param options.start_index - Starting position (1-based). Default: 1
    * @param options.item_count - Number of items to retrieve. Default: 50, Max: 50
+   * @returns Array of message metadata items (`MessageListItem[]`)
    * @example
    * const allMessages = await client.character.messages.list({ uid: '1:12345' });
    * const received = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
    * const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: 'received', start_index: 51, item_count: 50 });
+   *
+   * const firstMessageId = received[0]?.attributes.uid;
+   * if (firstMessageId) {
+   *   const detail = await client.character.messages.get({ uid: '1:12345', messageId: firstMessageId });
+   *   console.log(detail.communication);
+   * }
    */
-  async list(options: ListMessagesOptions): Promise<Message[]> {
+  async list(options: ListMessagesOptions): Promise<MessageListItem[]> {
     const params: Record<string, number> = {
       start_index: options.start_index || 1,
       item_count: options.item_count || 50,
@@ -55,7 +105,10 @@ export class CharacterMessagesResource extends BaseResource {
     const path = options.mode
       ? `/character/${options.uid}/messages/${options.mode}`
       : `/character/${options.uid}/messages`;
-    const response = await this.http.get<{ message?: Message[]; attributes?: unknown }>(path, { params });
+    const response = await this.http.get<{ message?: MessageListItem[]; attributes?: unknown }>(
+      path,
+      { params }
+    );
     // API returns { attributes: {...}, message: [...] }, extract just the array
     return response.message || [];
   }
@@ -64,6 +117,18 @@ export class CharacterMessagesResource extends BaseResource {
    * Get a specific message
    * @requires_auth Yes
    * @requires_scope MESSAGES_READ
+   * @param options - Character UID and message UID
+   * @param options.uid - Character UID
+   * @param options.messageId - Message UID (for example from `list()[i].attributes.uid`)
+   * @returns Full message details including `communication`
+   * @example
+   * const messages = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
+   * const messageId = messages[0]?.attributes.uid;
+   *
+   * if (messageId) {
+   *   const message = await client.character.messages.get({ uid: '1:12345', messageId });
+   *   console.log(message.communication);
+   * }
    */
   async get(options: GetMessageOptions): Promise<Message> {
     return this.request<Message>('GET', `/character/${options.uid}/messages/${options.messageId}`);
@@ -83,18 +148,30 @@ export class CharacterMessagesResource extends BaseResource {
    * @requires_auth Yes
    * @requires_scope MESSAGES_SEND
    * @param options.uid - Character UID sending the message
-   * @param options.receivers - Semicolon-separated list of recipient names/UIDs (max 25)
+   * @param options.receivers - Semicolon-separated list of receiver handles (max 25)
    * @param options.communication - Message text content
+   * @returns Message response typed as `Message`
    * @example
+   * // Valid: handles
    * await client.character.messages.create({
    *   uid: '1:12345',
-   *   receivers: 'recipient1;recipient2',
+   *   receivers: 'recipient_handle_1;recipient_handle_2',
    *   communication: 'Hello from the SDK!'
+   * });
+   *
+   * @example
+   * // Invalid: UIDs are rejected by the API and pre-validated by this SDK
+   * await client.character.messages.create({
+   *   uid: '1:12345',
+   *   receivers: '1:12345',
+   *   communication: 'Test'
    * });
    */
   async create(options: CreateMessageOptions): Promise<Message> {
-    return this.request<Message>('PUT', `/character/${options.uid}/messages/sent`, {
-      receivers: options.receivers,
+    const receivers = this.normalizeAndValidateReceivers(options.receivers);
+
+    return this.request<Message>('PUT', `/character/${options.uid}/messages`, {
+      receivers,
       communication: options.communication,
     });
   }

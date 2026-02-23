@@ -105,8 +105,32 @@ export class TypesEntitiesResource extends BaseResource {
   }
 
   /**
-   * Get normalized entities list response for a type (paginated)
-   * Example shape: { attributes: {...}, items: [...] }
+   * Returns normalized pagination metadata and items for any `TypesEntityType`.
+   *
+   * @param options - Entity list options. `start_index` defaults to `1`, `item_count` defaults to `50`,
+   * and `class` is optional for class-filtered results.
+   * @returns `TypesEntitiesListMetaResponse` with pagination `attributes` and normalized `items`.
+   *
+   * @example
+   * const response = await client.types.entities.listRaw({
+   *   entityType: 'vehicles',
+   *   start_index: 1,
+   *   item_count: 50,
+   * });
+   * console.log(response.attributes?.total);
+   * console.log(response.items[0]?.attributes.uid);
+   *
+   * @example
+   * const response = await client.types.entities.listRaw({
+   *   entityType: 'ships',
+   *   class: 'fighter',
+   *   start_index: 1,
+   *   item_count: 25,
+   * });
+   *
+   * for (const item of response.items) {
+   *   console.log(item.attributes.uid, item.value);
+   * }
    */
   async listRaw<T extends TypesEntityType>(
     options: ListTypesEntitiesOptions<T>

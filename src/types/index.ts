@@ -372,14 +372,101 @@ export interface Faction {
   [key: string]: unknown;
 }
 
-export interface Message {
+/**
+ * Metadata reference for a message participant.
+ * Used by both sender and receiver objects.
+ */
+export interface MessageParticipantAttributes {
+  /** Character UID (for example: `1:1467702`) */
   uid: string;
-  subject: string;
-  sender: Character | string;
-  recipient: Character | string;
+  /** API URL for the referenced character */
+  href?: string;
+}
+
+/**
+ * Message sender or receiver descriptor.
+ */
+export interface MessageParticipant {
+  /** Participant metadata containing UID/href */
+  attributes: MessageParticipantAttributes;
+  /** Display name of the participant */
+  value: string;
+}
+
+/**
+ * Combine Galactic Time timestamp structure returned for messages.
+ */
+export interface MessageTime {
+  /** Galactic year */
+  years: number;
+  /** Day of the galactic year */
+  days: number;
+  /** Hour component */
+  hours: number;
+  /** Minute component */
+  mins: number;
+  /** Second component */
+  secs: number;
+  /** Unix timestamp string */
   timestamp: string;
-  read: boolean;
-  body?: string;
+}
+
+/**
+ * Message item returned by `client.character.messages.list()`.
+ *
+ * List responses provide metadata only. To get full message content (`communication`),
+ * use `client.character.messages.get()` with the message UID.
+ *
+ * @example
+ * const listItem: MessageListItem = {
+ *   attributes: { uid: '38:105138990' },
+ *   sender: { attributes: { uid: '1:1467702' }, value: 'Marcinius Turelles' },
+ *   receiver: { attributes: { uid: '1:1467702' }, value: 'Marcinius Turelles' },
+ *   time: { years: 27, days: 88, hours: 5, mins: 12, secs: 14, timestamp: '1771675934' },
+ * };
+ */
+export interface MessageListItem {
+  /** Message reference metadata, including message UID */
+  attributes: {
+    /** Message UID (for example: `38:105138990`) */
+    uid: string;
+    /** API URL for this specific message */
+    href?: string;
+  };
+  /** Sender reference */
+  sender: MessageParticipant;
+  /** Receiver reference */
+  receiver: MessageParticipant;
+  /** Message timestamp */
+  time: MessageTime;
+  [key: string]: unknown;
+}
+
+/**
+ * Full message returned by `client.character.messages.get()`.
+ *
+ * This detail shape includes `communication`, unlike `MessageListItem`.
+ *
+ * @example
+ * const message: Message = {
+ *   uid: '38:105138990',
+ *   sender: { attributes: { uid: '1:1467702' }, value: 'Marcinius Turelles' },
+ *   receiver: { attributes: { uid: '1:1467702' }, value: 'Marcinius Turelles' },
+ *   time: { years: 27, days: 88, hours: 5, mins: 12, secs: 14, timestamp: '1771675934' },
+ *   communication: 'Test',
+ * };
+ */
+export interface Message {
+  /** Message UID */
+  uid: string;
+  /** Sender reference */
+  sender: MessageParticipant;
+  /** Receiver reference */
+  receiver: MessageParticipant;
+  /** Message timestamp */
+  time: MessageTime;
+  /** Message body content */
+  communication: string;
   [key: string]: unknown;
 }
 
@@ -1181,7 +1268,9 @@ export interface TypesShipsListRawResponse extends TypesEntitiesListRawResponse 
 }
 
 /**
- * Normalized /types/:entityType list response with pagination metadata and items.
+ * Normalized /types/:entityType list response.
+ * `attributes` contains pagination metadata (`start`, `total`, `count`) and
+ * `items` contains the normalized entity rows for all type endpoints.
  */
 export interface TypesEntitiesListMetaResponse {
   attributes?: TypesEntityListAttributes;
@@ -1955,7 +2044,10 @@ export interface DeleteMessageOptions {
 
 export interface CreateMessageOptions {
   uid: string;
-  /** Semicolon-separated list of recipient character names/UIDs (max 25) */
+  /**
+   * Semicolon-separated list of recipient character handles (max 25).
+   * Example: 'handle1;handle2'
+   */
   receivers: string;
   /** Message text content */
   communication: string;

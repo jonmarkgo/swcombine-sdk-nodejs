@@ -28,6 +28,8 @@ describe('News Resource Integration Tests', () => {
       // Each news item should have attributes with id
       const item = response[0];
       expectFields(item, ['attributes', 'value']);
+      expectFields(item.attributes as unknown as Record<string, unknown>, ['id', 'href', 'title']);
+      expectFields(response as unknown as Record<string, unknown>, ['attributes']);
     });
 
     it('should get specific GNS item', async () => {
@@ -39,11 +41,10 @@ describe('News Resource Integration Tests', () => {
       const response = await client.news.gns.get({ id: itemId });
       saveResponse('news-gns-get', response);
 
-      const firstItem = Array.isArray(response) ? response[0] : response;
       // GNS detail response has 'id' and 'title', not 'uid'
-      expectFields(firstItem, ['id', 'title']);
-      expectFields(firstItem, ['author', 'faction']);
-      expect(typeof (firstItem as Record<string, unknown>).author).toBe('object');
+      expectFields(response, ['id', 'title']);
+      expectFields(response, ['author', 'faction']);
+      expect(typeof (response as Record<string, unknown>).author).toBe('object');
     });
 
     it('should list GNS with pagination', async () => {
@@ -52,6 +53,7 @@ describe('News Resource Integration Tests', () => {
 
       expectArray(response);
       expect(response.length).toBeLessThanOrEqual(10);
+      expectFields(response as unknown as Record<string, unknown>, ['attributes']);
     });
   });
 
@@ -62,6 +64,10 @@ describe('News Resource Integration Tests', () => {
 
       expectArray(response);
       // SimNews may be empty
+      expectFields(response as unknown as Record<string, unknown>, ['attributes']);
+      if (response.length > 0) {
+        expectFields(response[0].attributes as unknown as Record<string, unknown>, ['id', 'href', 'title']);
+      }
     });
 
     it('should get specific SimNews item if available', async () => {
@@ -75,11 +81,10 @@ describe('News Resource Integration Tests', () => {
       const response = await client.news.simNews.get({ id: itemId });
       saveResponse('news-simnews-get', response);
 
-      const firstItem = Array.isArray(response) ? response[0] : response;
       // SimNews detail response has 'id' and 'title', not 'uid'
-      expectFields(firstItem, ['id', 'title']);
-      expectFields(firstItem, ['author', 'faction']);
-      expect(typeof (firstItem as Record<string, unknown>).author).toBe('object');
+      expectFields(response, ['id', 'title']);
+      expectFields(response, ['author', 'faction']);
+      expect(typeof (response as Record<string, unknown>).author).toBe('object');
     });
   });
 });

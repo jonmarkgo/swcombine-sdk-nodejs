@@ -810,10 +810,27 @@ export interface NewsListItem {
   attributes: {
     id: number;
     href: string;
+    /** Normalized title alias for the headline value (`value`) */
+    title: string;
   };
   value: string;
   [key: string]: unknown;
 }
+
+/**
+ * Pagination metadata returned by news list endpoints.
+ */
+export interface NewsListAttributes {
+  start?: number;
+  total?: number;
+  count?: number;
+  [key: string]: unknown;
+}
+
+/**
+ * News list result that preserves array behavior and exposes list metadata.
+ */
+export type NewsListResponse = NewsListItem[] & { attributes: NewsListAttributes };
 
 /**
  * Reference object used by detailed news responses.
@@ -859,9 +876,10 @@ export interface NewsItem {
 }
 
 /**
- * Some quick-news API responses can contain multiple entries.
+ * @deprecated `get()` now returns a single normalized `NewsItem`.
+ * Kept as an alias for compatibility.
  */
-export type NewsGetResponse = NewsItem | NewsItem[];
+export type NewsGetResponse = NewsItem;
 
 export interface Event {
   uid: string;

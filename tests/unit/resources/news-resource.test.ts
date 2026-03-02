@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { GNSResource, SimNewsResource } from '../../../src/resources/NewsResource.js';
 import { createMockHttpClient } from '../helpers/mock-http.js';
 import type { HttpClient } from '../../../src/http/HttpClient.js';
-import type { NewsItem } from '../../../src/types/index.js';
 
 describe('NewsResource', () => {
   function createGnsResource() {
@@ -30,11 +29,8 @@ describe('NewsResource', () => {
 
       const result = await resource.get({ id: 49100 });
       expect(mockHttp.get).toHaveBeenCalledWith('/news/gns/49100');
-      expect(Array.isArray(result)).toBe(false);
-
-      const post = result as NewsItem;
-      expect(post.author.value).toBe('Galactic News Reporter');
-      expect(post.faction.value).toBe('');
+      expect(result.author.value).toBe('Galactic News Reporter');
+      expect(result.faction.value).toBe('');
     });
 
     it('normalizes array responses and keeps object author references', async () => {
@@ -62,10 +58,37 @@ describe('NewsResource', () => {
       ]);
 
       const result = await resource.get({ id: 49108 });
-      expect(Array.isArray(result)).toBe(true);
-      const posts = result as NewsItem[];
-      expect(posts[0].author.value).toBe('Gwendoline von Nex');
-      expect(posts[0].faction.value).toBe('Black Sun');
+      expect(result.author.value).toBe('Gwendoline von Nex');
+      expect(result.faction.value).toBe('Black Sun');
+    });
+  });
+
+  describe('GNSResource.list()', () => {
+    it('returns array items with list pagination attributes', async () => {
+      const { resource, mockHttp } = createGnsResource();
+      mockHttp.get.mockResolvedValue({
+        attributes: { start: '1', total: '200', count: '50' },
+        newsitem: [
+          {
+            attributes: {
+              id: 49108,
+              href: 'https://www.swcombine.com/ws/v2.0/news/gns/49108/',
+            },
+            value: 'Headline',
+          },
+        ],
+      });
+
+      const result = await resource.list();
+      expect(mockHttp.get).toHaveBeenCalledWith('/news/gns', {
+        params: { start_index: 1, item_count: 50 },
+      });
+      expect(result.length).toBe(1);
+      expect(result[0].attributes.id).toBe(49108);
+      expect(result[0].attributes.title).toBe('Headline');
+      expect(result.attributes.start).toBe(1);
+      expect(result.attributes.total).toBe(200);
+      expect(result.attributes.count).toBe(50);
     });
   });
 
@@ -82,11 +105,27 @@ describe('NewsResource', () => {
 
       const result = await resource.get({ id: 10 });
       expect(mockHttp.get).toHaveBeenCalledWith('/news/simnews/10');
-      expect(Array.isArray(result)).toBe(false);
+      expect(result.author.value).toBe('Galactic News Reporter');
+      expect(result.faction.value).toBe('');
+    });
+  });
 
-      const post = result as NewsItem;
-      expect(post.author.value).toBe('Galactic News Reporter');
-      expect(post.faction.value).toBe('');
+  describe('SimNewsResource.list()', () => {
+    it('returns array items with list pagination attributes', async () => {
+      const { resource, mockHttp } = createSimNewsResource();
+      mockHttp.get.mockResolvedValue({
+        attributes: { start: 10, total: 42, count: 10 },
+        newsitem: [],
+      });
+
+      const result = await resource.list({ start_index: 10, item_count: 10 });
+      expect(mockHttp.get).toHaveBeenCalledWith('/news/simnews', {
+        params: { start_index: 10, item_count: 10 },
+      });
+      expect(result.length).toBe(0);
+      expect(result.attributes.start).toBe(10);
+      expect(result.attributes.total).toBe(42);
+      expect(result.attributes.count).toBe(10);
     });
   });
 });

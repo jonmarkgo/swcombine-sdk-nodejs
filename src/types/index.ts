@@ -803,14 +803,83 @@ export interface Vendor {
   [key: string]: unknown;
 }
 
-export interface NewsItem {
-  uid: string;
-  title: string;
-  category?: string;
-  timestamp: string;
-  content?: string;
+/**
+ * News list item returned by `/news/gns` and `/news/simnews` list endpoints.
+ */
+export interface NewsListItem {
+  attributes: {
+    id: number;
+    href: string;
+  };
+  value: string;
   [key: string]: unknown;
 }
+
+/**
+ * Reference object used by detailed news responses.
+ */
+export interface NewsReference {
+  attributes: {
+    uid: string;
+    href: string;
+  };
+  value: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Galactic timestamp object returned in detailed news responses.
+ */
+export interface NewsPostedTimestamp {
+  years: number;
+  days: number;
+  hours: number;
+  mins: number;
+  secs: number;
+  timestamp: number;
+}
+
+/**
+ * Common fields for detailed GNS/SimNews responses.
+ */
+export interface NewsDetailBase {
+  url: string;
+  logo: string;
+  hacked: number;
+  location: string;
+  title: string;
+  body: string;
+  posted: NewsPostedTimestamp;
+  id: number;
+  category: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Standard detailed news entry where author and faction are entity references.
+ */
+export interface NewsDetailStandard extends NewsDetailBase {
+  author: NewsReference;
+  faction: NewsReference;
+}
+
+/**
+ * Quick News ("Flash") entry where author is plain text and faction is empty.
+ */
+export interface NewsDetailFlash extends NewsDetailBase {
+  author: string;
+  faction: Record<string, never>;
+}
+
+/**
+ * Detailed news entry returned by `gns.get()` and `simNews.get()`.
+ */
+export type NewsItem = NewsDetailStandard | NewsDetailFlash;
+
+/**
+ * Some quick-news API responses can contain multiple entries.
+ */
+export type NewsGetResponse = NewsItem | NewsItem[];
 
 export interface Event {
   uid: string;
@@ -2122,7 +2191,8 @@ export interface GetVendorOptions {
 }
 
 export interface GetNewsItemOptions {
-  id: string;
+  /** News item ID from list results (`attributes.id`) */
+  id: string | number;
 }
 
 /**

@@ -4,7 +4,14 @@
 
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
-import { NewsItem, GetNewsItemOptions, ListGNSOptions, ListSimNewsOptions, QueryParams } from '../types/index.js';
+import {
+  GetNewsItemOptions,
+  ListGNSOptions,
+  ListSimNewsOptions,
+  NewsGetResponse,
+  NewsListItem,
+  QueryParams,
+} from '../types/index.js';
 
 /**
  * Galactic News Service (GNS) resource
@@ -14,6 +21,7 @@ import { NewsItem, GetNewsItemOptions, ListGNSOptions, ListSimNewsOptions, Query
 export class GNSResource extends BaseResource {
   /**
    * List GNS news items (paginated with optional filtering)
+   * Returns headline metadata entries (`attributes.id`, `attributes.href`, `value`).
    * @requires_auth No
    * @param options - Optional category, pagination, and filtering parameters
    * @param options.category - News category: 'auto', 'economy', 'military', 'political', 'social'
@@ -28,7 +36,7 @@ export class GNSResource extends BaseResource {
    * const searchNews = await client.news.gns.list({ search: 'battle', author: 'John Doe' });
    * const factionNews = await client.news.gns.list({ faction: 'Empire', faction_type: 'government' });
    */
-  async list(options?: ListGNSOptions): Promise<NewsItem[]> {
+  async list(options?: ListGNSOptions): Promise<NewsListItem[]> {
     const path = options?.category ? `/news/gns/${options.category}` : '/news/gns';
 
     const params: QueryParams = {
@@ -55,16 +63,20 @@ export class GNSResource extends BaseResource {
       params.faction_type = options.faction_type;
     }
 
-    const response = await this.http.get<{ newsitem?: NewsItem[]; attributes?: unknown }>(path, { params });
+    const response = await this.http.get<{ newsitem?: NewsListItem[]; attributes?: unknown }>(path, { params });
     // API returns { attributes: {...}, newsitem: [...] }, extract just the array
     return response.newsitem || [];
   }
 
   /**
-   * Get specific GNS news item
+   * Get a specific GNS news item by numeric ID.
+   * Some quick-news/flash responses can return an array instead of a single object.
+   * @example
+   * const item = await client.news.gns.get({ id: 49108 });
+   * const items = Array.isArray(item) ? item : [item];
    */
-  async get(options: GetNewsItemOptions): Promise<NewsItem> {
-    return this.request<NewsItem>('GET', `/news/gns/${options.id}`);
+  async get(options: GetNewsItemOptions): Promise<NewsGetResponse> {
+    return this.request<NewsGetResponse>('GET', `/news/gns/${options.id}`);
   }
 }
 
@@ -76,6 +88,7 @@ export class GNSResource extends BaseResource {
 export class SimNewsResource extends BaseResource {
   /**
    * List Sim News items (paginated with optional filtering)
+   * Returns headline metadata entries (`attributes.id`, `attributes.href`, `value`).
    * @requires_auth No
    * @param options - Optional category, pagination, and filtering parameters
    * @param options.category - News category: 'player', 'technical', 'community'
@@ -87,7 +100,7 @@ export class SimNewsResource extends BaseResource {
    * const moreNews = await client.news.simNews.list({ start_index: 51, item_count: 50 });
    * const searchNews = await client.news.simNews.list({ search: 'update', author: 'Admin' });
    */
-  async list(options?: ListSimNewsOptions): Promise<NewsItem[]> {
+  async list(options?: ListSimNewsOptions): Promise<NewsListItem[]> {
     const path = options?.category ? `/news/simnews/${options.category}` : '/news/simnews';
 
     const params: QueryParams = {
@@ -108,16 +121,17 @@ export class SimNewsResource extends BaseResource {
       params.author = options.author;
     }
 
-    const response = await this.http.get<{ newsitem?: NewsItem[]; attributes?: unknown }>(path, { params });
+    const response = await this.http.get<{ newsitem?: NewsListItem[]; attributes?: unknown }>(path, { params });
     // API returns { attributes: {...}, newsitem: [...] }, extract just the array
     return response.newsitem || [];
   }
 
   /**
-   * Get specific Sim News item
+   * Get a specific Sim News item by numeric ID.
+   * Some quick-news/flash responses can return an array instead of a single object.
    */
-  async get(options: GetNewsItemOptions): Promise<NewsItem> {
-    return this.request<NewsItem>('GET', `/news/simnews/${options.id}`);
+  async get(options: GetNewsItemOptions): Promise<NewsGetResponse> {
+    return this.request<NewsGetResponse>('GET', `/news/simnews/${options.id}`);
   }
 }
 

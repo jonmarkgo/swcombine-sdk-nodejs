@@ -9,9 +9,103 @@ import {
   ListGNSOptions,
   ListSimNewsOptions,
   NewsGetResponse,
+  NewsItem,
   NewsListItem,
+  NewsPostedTimestamp,
+  NewsReference,
   QueryParams,
 } from '../types/index.js';
+
+function normalizeNewsReference(reference: unknown): NewsReference {
+  if (typeof reference === 'string') {
+    return { value: reference };
+  }
+
+  if (reference && typeof reference === 'object') {
+    const raw = reference as Record<string, unknown>;
+    const normalized: NewsReference = {
+      ...raw,
+      value: typeof raw.value === 'string' ? raw.value : '',
+    };
+
+    if (raw.attributes && typeof raw.attributes === 'object') {
+      const attrs = raw.attributes as Record<string, unknown>;
+      normalized.attributes = {
+        uid: typeof attrs.uid === 'string' ? attrs.uid : undefined,
+        href: typeof attrs.href === 'string' ? attrs.href : undefined,
+      };
+    }
+
+    return normalized;
+  }
+
+  return { value: '' };
+}
+
+function normalizeNewsPostedTimestamp(posted: unknown): NewsPostedTimestamp | undefined {
+  if (!posted || typeof posted !== 'object') {
+    return undefined;
+  }
+
+  const raw = posted as Record<string, unknown>;
+  const normalized: NewsPostedTimestamp = {};
+
+  if (typeof raw.years === 'number') normalized.years = raw.years;
+  if (typeof raw.days === 'number') normalized.days = raw.days;
+  if (typeof raw.hours === 'number') normalized.hours = raw.hours;
+  if (typeof raw.mins === 'number') normalized.mins = raw.mins;
+  if (typeof raw.secs === 'number') normalized.secs = raw.secs;
+  if (typeof raw.timestamp === 'number') normalized.timestamp = raw.timestamp;
+
+  return Object.keys(normalized).length > 0 ? normalized : undefined;
+}
+
+function normalizeNewsId(id: unknown): number {
+  if (typeof id === 'number' && Number.isFinite(id)) {
+    return id;
+  }
+
+  if (typeof id === 'string') {
+    const parsed = Number(id);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  return 0;
+}
+
+function normalizeNewsItem(item: unknown): NewsItem {
+  const raw = item && typeof item === 'object' ? (item as Record<string, unknown>) : {};
+
+  const normalized: NewsItem = {
+    ...raw,
+    url: typeof raw.url === 'string' ? raw.url : '',
+    title: typeof raw.title === 'string' ? raw.title : '',
+    id: normalizeNewsId(raw.id),
+    author: normalizeNewsReference(raw.author),
+    faction: normalizeNewsReference(raw.faction),
+  };
+
+  if (typeof raw.logo === 'string') normalized.logo = raw.logo;
+  if (typeof raw.hacked === 'number') normalized.hacked = raw.hacked;
+  if (typeof raw.location === 'string') normalized.location = raw.location;
+  if (typeof raw.body === 'string') normalized.body = raw.body;
+  if (typeof raw.category === 'string') normalized.category = raw.category;
+
+  const posted = normalizeNewsPostedTimestamp(raw.posted);
+  if (posted) {
+    normalized.posted = posted;
+  }
+
+  return normalized;
+}
+
+function normalizeNewsGetResponse(response: unknown): NewsGetResponse {
+  if (Array.isArray(response)) {
+    return response.map(normalizeNewsItem);
+  }
+
+  return normalizeNewsItem(response);
+}
 
 /**
  * Galactic News Service (GNS) resource
@@ -71,12 +165,18 @@ export class GNSResource extends BaseResource {
   /**
    * Get a specific GNS news item by numeric ID.
    * Some quick-news/flash responses can return an array instead of a single object.
+   * Author and faction are normalized to object references with `value`.
    * @example
-   * const item = await client.news.gns.get({ id: 49108 });
-   * const items = Array.isArray(item) ? item : [item];
+   * const result = await client.news.gns.get({ id: 49108 });
+   * const posts = Array.isArray(result) ? result : [result];
+   * for (const post of posts) {
+   *   console.log(post.author.value);
+   *   console.log(post.faction.value);
+   * }
    */
   async get(options: GetNewsItemOptions): Promise<NewsGetResponse> {
-    return this.request<NewsGetResponse>('GET', `/news/gns/${options.id}`);
+    const response = await this.request<unknown>('GET', `/news/gns/${options.id}`);
+    return normalizeNewsGetResponse(response);
   }
 }
 
@@ -129,9 +229,18 @@ export class SimNewsResource extends BaseResource {
   /**
    * Get a specific Sim News item by numeric ID.
    * Some quick-news/flash responses can return an array instead of a single object.
+   * Author and faction are normalized to object references with `value`.
+   * @example
+   * const result = await client.news.simNews.get({ id: 49108 });
+   * const posts = Array.isArray(result) ? result : [result];
+   * for (const post of posts) {
+   *   console.log(post.author.value);
+   *   console.log(post.faction.value);
+   * }
    */
   async get(options: GetNewsItemOptions): Promise<NewsGetResponse> {
-    return this.request<NewsGetResponse>('GET', `/news/simnews/${options.id}`);
+    const response = await this.request<unknown>('GET', `/news/simnews/${options.id}`);
+    return normalizeNewsGetResponse(response);
   }
 }
 

@@ -819,9 +819,9 @@ export interface NewsListItem {
  * Reference object used by detailed news responses.
  */
 export interface NewsReference {
-  attributes: {
-    uid: string;
-    href: string;
+  attributes?: {
+    uid?: string;
+    href?: string;
   };
   value: string;
   [key: string]: unknown;
@@ -831,50 +831,32 @@ export interface NewsReference {
  * Galactic timestamp object returned in detailed news responses.
  */
 export interface NewsPostedTimestamp {
-  years: number;
-  days: number;
-  hours: number;
-  mins: number;
-  secs: number;
-  timestamp: number;
-}
-
-/**
- * Common fields for detailed GNS/SimNews responses.
- */
-export interface NewsDetailBase {
-  url: string;
-  logo: string;
-  hacked: number;
-  location: string;
-  title: string;
-  body: string;
-  posted: NewsPostedTimestamp;
-  id: number;
-  category: string;
-  [key: string]: unknown;
-}
-
-/**
- * Standard detailed news entry where author and faction are entity references.
- */
-export interface NewsDetailStandard extends NewsDetailBase {
-  author: NewsReference;
-  faction: NewsReference;
-}
-
-/**
- * Quick News ("Flash") entry where author is plain text and faction is empty.
- */
-export interface NewsDetailFlash extends NewsDetailBase {
-  author: string;
-  faction: Record<string, never>;
+  years?: number;
+  days?: number;
+  hours?: number;
+  mins?: number;
+  secs?: number;
+  timestamp?: number;
 }
 
 /**
  * Detailed news entry returned by `gns.get()` and `simNews.get()`.
+ * Uses a permissive object shape to accommodate API response variability.
  */
-export type NewsItem = NewsDetailStandard | NewsDetailFlash;
+export interface NewsItem {
+  url: string;
+  title: string;
+  id: number;
+  author: NewsReference;
+  faction: NewsReference;
+  logo?: string;
+  hacked?: number;
+  location?: string;
+  body?: string;
+  posted?: NewsPostedTimestamp;
+  category?: string;
+  [key: string]: unknown;
+}
 
 /**
  * Some quick-news API responses can contain multiple entries.

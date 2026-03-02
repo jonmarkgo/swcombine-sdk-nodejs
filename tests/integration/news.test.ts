@@ -42,6 +42,8 @@ describe('News Resource Integration Tests', () => {
       const firstItem = Array.isArray(response) ? response[0] : response;
       // GNS detail response has 'id' and 'title', not 'uid'
       expectFields(firstItem, ['id', 'title']);
+      expectFields(firstItem, ['author', 'faction']);
+      expect(typeof (firstItem as Record<string, unknown>).author).toBe('object');
     });
 
     it('should list GNS with pagination', async () => {
@@ -76,6 +78,8 @@ describe('News Resource Integration Tests', () => {
       const firstItem = Array.isArray(response) ? response[0] : response;
       // SimNews detail response has 'id' and 'title', not 'uid'
       expectFields(firstItem, ['id', 'title']);
+      expectFields(firstItem, ['author', 'faction']);
+      expect(typeof (firstItem as Record<string, unknown>).author).toBe('object');
     });
   });
 });

@@ -803,14 +803,83 @@ export interface Vendor {
   [key: string]: unknown;
 }
 
-export interface NewsItem {
-  uid: string;
-  title: string;
-  category?: string;
-  timestamp: string;
-  content?: string;
+/**
+ * News list item returned by `/news/gns` and `/news/simnews` list endpoints.
+ */
+export interface NewsListItem {
+  attributes: {
+    id: number;
+    href: string;
+    /** Normalized title alias for the headline value (`value`) */
+    title: string;
+  };
+  value: string;
   [key: string]: unknown;
 }
+
+/**
+ * Pagination metadata returned by news list endpoints.
+ */
+export interface NewsListAttributes {
+  start?: number;
+  total?: number;
+  count?: number;
+  [key: string]: unknown;
+}
+
+/**
+ * News list result that preserves array behavior and exposes list metadata.
+ */
+export type NewsListResponse = NewsListItem[] & { attributes: NewsListAttributes };
+
+/**
+ * Reference object used by detailed news responses.
+ */
+export interface NewsReference {
+  attributes?: {
+    uid?: string;
+    href?: string;
+  };
+  value: string;
+  [key: string]: unknown;
+}
+
+/**
+ * Galactic timestamp object returned in detailed news responses.
+ */
+export interface NewsPostedTimestamp {
+  years?: number;
+  days?: number;
+  hours?: number;
+  mins?: number;
+  secs?: number;
+  timestamp?: number;
+}
+
+/**
+ * Detailed news entry returned by `gns.get()` and `simNews.get()`.
+ * Uses a permissive object shape to accommodate API response variability.
+ */
+export interface NewsItem {
+  url: string;
+  title: string;
+  id: number;
+  author: NewsReference;
+  faction: NewsReference;
+  logo?: string;
+  hacked?: number;
+  location?: string;
+  body?: string;
+  posted?: NewsPostedTimestamp;
+  category?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * @deprecated `get()` now returns a single normalized `NewsItem`.
+ * Kept as an alias for compatibility.
+ */
+export type NewsGetResponse = NewsItem;
 
 export interface Event {
   uid: string;
@@ -2122,7 +2191,8 @@ export interface GetVendorOptions {
 }
 
 export interface GetNewsItemOptions {
-  id: string;
+  /** News item ID from list results (`attributes.id`) */
+  id: string | number;
 }
 
 /**

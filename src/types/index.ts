@@ -372,6 +372,40 @@ export interface Faction {
   [key: string]: unknown;
 }
 
+export interface FactionListAttributes {
+  start?: number;
+  total?: number;
+  count?: number;
+  [key: string]: unknown;
+}
+
+export interface FactionListReferenceAttributes {
+  uid?: string;
+  href?: string;
+  [key: string]: unknown;
+}
+
+export interface FactionListReference {
+  attributes?: FactionListReferenceAttributes;
+  value?: string;
+  [key: string]: unknown;
+}
+
+export type FactionListPersonReference = FactionListReference | Record<string, never>;
+
+export interface FactionListItem {
+  attributes: FactionListReferenceAttributes;
+  value: string;
+  leader: FactionListReference;
+  secondincommand: FactionListPersonReference;
+  [key: string]: unknown;
+}
+
+export interface FactionListResponse {
+  attributes?: FactionListAttributes;
+  faction?: FactionListItem[];
+}
+
 /**
  * Metadata reference for a message participant.
  * Used by both sender and receiver objects.
@@ -2151,6 +2185,13 @@ export interface GetCharacterPermissionsOptions {
 export interface GetFactionOptions {
   /** Faction UID. If omitted, defaults to the authenticated user's primary faction. */
   uid?: string;
+}
+
+export interface ListFactionsOptions {
+  /** Starting position for pagination (1-based). Default: 1 */
+  start_index?: number;
+  /** Number of items to retrieve. Default: 50 */
+  item_count?: number;
 }
 
 export interface ListFactionMembersOptions {

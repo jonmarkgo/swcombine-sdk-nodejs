@@ -27,10 +27,28 @@ describe('Faction Resource Integration Tests', () => {
       const response = await client.faction.list();
       saveResponse('faction-list', response);
 
+      expectFields(response, ['attributes', 'faction']);
+      expectArray(response.faction, 1);
+      const faction = response.faction?.[0];
+      expectFields(faction, ['attributes', 'value', 'leader']);
+    });
+
+    it('should list all factions across all pages', async () => {
+      const firstPage = await client.faction.list();
+      const response = await client.faction.listAll();
+      saveResponse('faction-list-all', response);
+
       expectArray(response, 1);
-      // First faction should have uid and name
-      const faction = (response as any[])[0];
-      expectFields(faction, ['attributes']);
+
+      const firstPageIds = (firstPage.faction ?? []).map((faction) => faction.attributes.uid);
+      const allIds = response.map((faction) => faction.attributes.uid);
+
+      for (const id of firstPageIds) {
+        expect(allIds).toContain(id);
+      }
+
+      const faction = response[0];
+      expectFields(faction, ['attributes', 'value', 'leader']);
     });
   });
 

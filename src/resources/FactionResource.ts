@@ -4,7 +4,15 @@
 
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
-import { Faction, Character, GetFactionOptions, CreditLogEntry } from '../types/index.js';
+import {
+  Faction,
+  Character,
+  GetFactionOptions,
+  CreditLogEntry,
+  FactionListItem,
+  FactionListResponse,
+  ListFactionsOptions,
+} from '../types/index.js';
 
 export interface FactionMember {
   character: Character | string;
@@ -279,16 +287,59 @@ export class FactionResource extends BaseResource {
    * @requires_auth No
    * @param options - Optional pagination parameters
    * @example
-   * const factions = await client.faction.list();
+   * const response = await client.faction.list();
+   * console.log(response.attributes?.total);
+   * console.log(response.faction?.[0]?.value);
+   *
    * const moreFactions = await client.faction.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Faction[]> {
+  async list(options?: ListFactionsOptions): Promise<FactionListResponse> {
     const params = {
-      start_index: options?.start_index || 1,
-      item_count: options?.item_count || 50,
+      start_index: options?.start_index ?? 1,
+      item_count: options?.item_count ?? 50,
     };
-    const response = await this.http.get<{ faction?: Faction[]; attributes?: unknown }>('/factions', { params });
-    // API returns { attributes: {...}, faction: [...] }, extract just the array
-    return response.faction || [];
+    return this.http.get<FactionListResponse>('/factions', { params });
+  }
+
+  /**
+   * List all factions across every page.
+   * @requires_auth No
+   * @param options - Optional pagination parameters for the page size and starting offset
+   * @example
+   * const factions = await client.faction.listAll();
+   * console.log(factions.length);
+   */
+  async listAll(options?: ListFactionsOptions): Promise<FactionListItem[]> {
+    const itemCount = options?.item_count ?? 50;
+    let startIndex = options?.start_index ?? 1;
+    const factions: FactionListItem[] = [];
+
+    while (true) {
+      const response = await this.list({
+        start_index: startIndex,
+        item_count: itemCount,
+      });
+      const pageItems = response.faction ?? [];
+      const pageStart = response.attributes?.start ?? startIndex;
+      const pageCount =
+        typeof response.attributes?.count === 'number' && response.attributes.count > 0
+          ? response.attributes.count
+          : pageItems.length;
+      const total = response.attributes?.total;
+
+      factions.push(...pageItems);
+
+      if (pageItems.length === 0 || pageItems.length < itemCount) {
+        break;
+      }
+
+      if (typeof total === 'number' && pageStart + pageCount - 1 >= total) {
+        break;
+      }
+
+      startIndex = pageStart + pageCount;
+    }
+
+    return factions;
   }
 }

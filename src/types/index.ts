@@ -372,6 +372,77 @@ export interface Faction {
   [key: string]: unknown;
 }
 
+export interface FactionDetailAttributes {
+  isbasic?: 'true' | 'false';
+  [key: string]: unknown;
+}
+
+export interface FactionDetailReferenceAttributes {
+  uid?: string;
+  href?: string;
+  [key: string]: unknown;
+}
+
+export interface FactionDetailReference {
+  attributes?: FactionDetailReferenceAttributes;
+  value?: string;
+  [key: string]: unknown;
+}
+
+export type FactionDetailPersonReference =
+  | FactionDetailReference
+  | Record<string, never>;
+
+export interface FactionDetailColour {
+  r: number;
+  g: number;
+  b: number;
+  [key: string]: unknown;
+}
+
+export interface FactionDetailTimestamp {
+  years: number;
+  days: number;
+  hours: number;
+  mins: number;
+  secs: number;
+  timestamp: string;
+  [key: string]: unknown;
+}
+
+export interface FactionDetailModules {
+  module?: FactionDetailReference[];
+  [key: string]: unknown;
+}
+
+export interface FactionDetailImages {
+  logo?: string;
+  horizontalbanner?: string;
+  verticalbanner?: string;
+  [key: string]: unknown;
+}
+
+export interface FactionDetail {
+  attributes: FactionDetailAttributes;
+  uid: string;
+  name: string;
+  parent: Record<string, unknown>;
+  description: string;
+  category: string;
+  colour: FactionDetailColour;
+  leader: FactionDetailReference;
+  secondincommand: FactionDetailPersonReference;
+  founded: FactionDetailTimestamp;
+  ircroom: string;
+  homepage: string;
+  recruitmentliaisons: FactionDetailReference[];
+  datacards: Record<string, unknown>;
+  subfactions: Record<string, unknown>;
+  modules: FactionDetailModules;
+  images: FactionDetailImages;
+  [key: string]: unknown;
+}
+
 export interface FactionListAttributes {
   start?: number;
   total?: number;

@@ -100,4 +100,77 @@ describe('FactionResource', () => {
       expect(result[0].attributes.uid).toBe('20:500');
     });
   });
+
+  describe('get()', () => {
+    it('returns the detailed faction payload without reshaping it', async () => {
+      const { resource, mockHttp } = createResource();
+      const faction = {
+        attributes: {
+          isbasic: 'true',
+        },
+        uid: '20:1840',
+        name: 'Unnamed Market',
+        parent: {},
+        description: '<p>::: This holocron is currently encrypted...</p>',
+        category: 'Modular',
+        colour: {
+          r: 0,
+          g: 0,
+          b: 0,
+        },
+        leader: {
+          attributes: {
+            uid: '1:1477410',
+            href: 'https://www.swcombine.com/ws/v2.0/character/lucifer%20von%20kaldreon/',
+          },
+          value: 'Lucifer Von Kaldreon',
+        },
+        secondincommand: {
+          attributes: {
+            uid: '1:1467702',
+            href: 'https://www.swcombine.com/ws/v2.0/character/marcinius%20turelles/',
+          },
+          value: 'Marcinius Turelles',
+        },
+        founded: {
+          years: 26,
+          days: 120,
+          hours: 10,
+          mins: 51,
+          secs: 3,
+          timestamp: '1742925063',
+        },
+        ircroom: 'https://discord.gg/ZPFU52MMCg',
+        homepage: 'https://unnamed.market',
+        recruitmentliaisons: [],
+        datacards: {},
+        subfactions: {},
+        modules: {
+          module: [
+            {
+              attributes: {
+                uid: '173:1',
+                href: 'https://www.swcombine.com/ws/v2.0/types/faction%20modules/faction/',
+              },
+              value: 'Faction',
+            },
+          ],
+        },
+        images: {
+          logo: 'https://custom.swcombine.com/static/20/1840-logo.png?1752687787',
+          horizontalbanner: 'https://custom.swcombine.com/static/20/1840-hbanner.png?1752687881',
+          verticalbanner: 'https://i.imgur.com/0l6YTAN.gif',
+        },
+      };
+
+      mockHttp.get.mockResolvedValue(faction);
+
+      const result = await resource.get({ uid: '20:1840' });
+
+      expect(mockHttp.get).toHaveBeenCalledWith('/faction/20:1840');
+      expect(result).toEqual(faction);
+      expect(result.modules.module?.[0]?.attributes?.uid).toBe('173:1');
+      expect(result.images.verticalbanner).toBe('https://i.imgur.com/0l6YTAN.gif');
+    });
+  });
 });

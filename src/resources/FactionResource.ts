@@ -5,7 +5,7 @@
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
 import {
-  Faction,
+  FactionDetail,
   Character,
   GetFactionOptions,
   CreditLogEntry,
@@ -277,9 +277,9 @@ export class FactionResource extends BaseResource {
    * // Get the authenticated user's faction
    * const myFaction = await client.faction.get();
    */
-  async get(options?: GetFactionOptions): Promise<Faction> {
+  async get(options?: GetFactionOptions): Promise<FactionDetail> {
     const path = options?.uid ? `/faction/${options.uid}` : '/faction/';
-    return this.request<Faction>('GET', path);
+    return this.request<FactionDetail>('GET', path);
   }
 
   /**

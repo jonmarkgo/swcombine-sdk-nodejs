@@ -173,4 +173,42 @@ describe('FactionResource', () => {
       expect(result.images.verticalbanner).toBe('https://i.imgur.com/0l6YTAN.gif');
     });
   });
+
+  describe('credits.transfer()', () => {
+    it('posts the required faction transfer payload', async () => {
+      const { resource, mockHttp } = createResource();
+      mockHttp.post.mockResolvedValue({ success: true });
+
+      await resource.credits.transfer({
+        factionId: '20:1840',
+        amount: 5000,
+        recipient: '1:12345',
+      });
+
+      expect(mockHttp.post).toHaveBeenCalledWith('/faction/20:1840/credits', {
+        amount: 5000,
+        recipient: '1:12345',
+      });
+    });
+
+    it('includes optional budget and reason when provided', async () => {
+      const { resource, mockHttp } = createResource();
+      mockHttp.post.mockResolvedValue({ success: true });
+
+      await resource.credits.transfer({
+        factionId: '20:1840',
+        amount: 5000,
+        recipient: 'Rebel Alliance',
+        budget: '21:99',
+        reason: 'Alliance transfer',
+      });
+
+      expect(mockHttp.post).toHaveBeenCalledWith('/faction/20:1840/credits', {
+        amount: 5000,
+        recipient: 'Rebel Alliance',
+        budget: '21:99',
+        reason: 'Alliance transfer',
+      });
+    });
+  });
 });

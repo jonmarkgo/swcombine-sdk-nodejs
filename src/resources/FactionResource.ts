@@ -8,6 +8,8 @@ import {
   FactionDetail,
   Character,
   GetFactionOptions,
+  GetFactionCreditsOptions,
+  TransferFactionCreditsOptions,
   CreditLogEntry,
   FactionListItem,
   FactionListResponse,
@@ -164,7 +166,7 @@ export class FactionCreditsResource extends BaseResource {
   /**
    * Get faction credits
    */
-  async get(options: { factionId: string }): Promise<FactionCredits> {
+  async get(options: GetFactionCreditsOptions): Promise<FactionCredits> {
     return this.request<FactionCredits>('GET', `/faction/${options.factionId}/credits`);
   }
 
@@ -172,24 +174,16 @@ export class FactionCreditsResource extends BaseResource {
    * Transfer faction credits
    * @param options.factionId - Faction UID
    * @param options.amount - Amount to transfer
-   * @param options.recipient - Recipient character or faction UID (optional)
+   * @param options.recipient - Recipient character or faction name/UID (REQUIRED)
    * @param options.budget - Budget UID to transfer from (optional)
    * @param options.reason - Reason for transfer (optional, API will auto-append client name)
    */
-  async update(options: {
-    factionId: string;
-    amount: number;
-    recipient?: string;
-    budget?: string;
-    reason?: string;
-  }): Promise<FactionCredits> {
-    const data: any = {
+  async transfer(options: TransferFactionCreditsOptions): Promise<unknown> {
+    const data: Record<string, unknown> = {
       amount: options.amount,
+      recipient: options.recipient,
     };
 
-    if (options.recipient) {
-      data.recipient = options.recipient;
-    }
     if (options.budget) {
       data.budget = options.budget;
     }
@@ -197,7 +191,7 @@ export class FactionCreditsResource extends BaseResource {
       data.reason = options.reason;
     }
 
-    return this.request<FactionCredits>('POST', `/faction/${options.factionId}/credits`, data);
+    return this.request<unknown>('POST', `/faction/${options.factionId}/credits`, data);
   }
 }
 

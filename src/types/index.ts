@@ -2275,7 +2275,15 @@ export interface GetFactionBudgetOptions {
 }
 
 export interface GetFactionCreditsOptions {
-  uid: string;
+  factionId: string;
+}
+
+export interface TransferFactionCreditsOptions {
+  factionId: string;
+  amount: number;
+  recipient: string;
+  budget?: string;
+  reason?: string;
 }
 
 export interface GetPlanetOptions {

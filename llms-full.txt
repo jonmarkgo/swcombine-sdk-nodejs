@@ -1,4 +1,4 @@
-# swcombine-sdk v2.0.1
+# swcombine-sdk v2.2.1
 
 > Comprehensive TypeScript SDK for Star Wars Combine API v2.0
 
@@ -1505,9 +1505,7 @@ Get faction credits
 
 ##### options
 
-###### factionId
-
-`string`
+`GetFactionCreditsOptions`
 
 #### Returns
 
@@ -1515,9 +1513,9 @@ Get faction credits
 
 ***
 
-### update()
+### transfer()
 
-> **update**(`options`): `Promise`\<`FactionCredits`\>
+> **transfer**(`options`): `Promise`\<`unknown`\>
 
 Transfer faction credits
 
@@ -1525,39 +1523,11 @@ Transfer faction credits
 
 ##### options
 
-###### amount
-
-`number`
-
-Amount to transfer
-
-###### budget?
-
-`string`
-
-Budget UID to transfer from (optional)
-
-###### factionId
-
-`string`
-
-Faction UID
-
-###### reason?
-
-`string`
-
-Reason for transfer (optional, API will auto-append client name)
-
-###### recipient?
-
-`string`
-
-Recipient character or faction UID (optional)
+`TransferFactionCreditsOptions`
 
 #### Returns
 
-`Promise`\<`FactionCredits`\>
+`Promise`\<`unknown`\>
 
 # Class: FactionMembersResource
 
@@ -1734,7 +1704,7 @@ https://www.swcombine.com/ws/v2.0/documentation/faction/uid/ SW Combine API Docu
 
 ### get()
 
-> **get**(`options?`): `Promise`\<`Faction`\>
+> **get**(`options?`): `Promise`\<`FactionDetail`\>
 
 Get faction by UID
 @requires_auth Yes
@@ -1750,7 +1720,7 @@ Optional faction UID. If omitted or uid not provided, returns the authenticated 
 
 #### Returns
 
-`Promise`\<`Faction`\>
+`Promise`\<`FactionDetail`\>
 
 #### Example
 
@@ -1765,7 +1735,7 @@ const myFaction = await client.faction.get();
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`Faction`[]\>
+> **list**(`options?`): `Promise`\<`FactionListResponse`\>
 
 List all factions (paginated)
 @requires_auth No
@@ -1774,25 +1744,50 @@ List all factions (paginated)
 
 ##### options?
 
+`ListFactionsOptions`
+
 Optional pagination parameters
-
-###### item_count?
-
-`number`
-
-###### start_index?
-
-`number`
 
 #### Returns
 
-`Promise`\<`Faction`[]\>
+`Promise`\<`FactionListResponse`\>
 
 #### Example
 
 ```ts
-const factions = await client.faction.list();
+const response = await client.faction.list();
+console.log(response.attributes?.total);
+console.log(response.faction?.[0]?.value);
+
 const moreFactions = await client.faction.list({ start_index: 51, item_count: 50 });
+```
+
+***
+
+### listAll()
+
+> **listAll**(`options?`): `Promise`\<`FactionListItem`[]\>
+
+List all factions across every page.
+@requires_auth No
+
+#### Parameters
+
+##### options?
+
+`ListFactionsOptions`
+
+Optional pagination parameters for the page size and starting offset
+
+#### Returns
+
+`Promise`\<`FactionListItem`[]\>
+
+#### Example
+
+```ts
+const factions = await client.faction.listAll();
+console.log(factions.length);
 ```
 
 # Class: FactionStockholdersResource
@@ -2936,7 +2931,9 @@ https://www.swcombine.com/ws/v2.0/documentation/news/gns/category/ SW Combine AP
 
 > **get**(`options`): `Promise`\<`NewsItem`\>
 
-Get specific GNS news item
+Get a specific GNS news item by numeric ID.
+Author and faction are normalized to object references with `value`.
+If the API returns an array, the SDK returns the first normalized item.
 
 #### Parameters
 
@@ -2948,13 +2945,24 @@ Get specific GNS news item
 
 `Promise`\<`NewsItem`\>
 
+#### Example
+
+```ts
+const post = await client.news.gns.get({ id: 49108 });
+console.log(post.author.value);
+console.log(post.faction.value);
+```
+
 ***
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`NewsItem`[]\>
+> **list**(`options?`): `Promise`\<`NewsListResponse`\>
 
 List GNS news items (paginated with optional filtering)
+Returns headline metadata entries (`attributes.id`, `attributes.href`, `attributes.title`, `value`).
+The returned array also includes pagination metadata at `result.attributes`
+(`start`, `total`, `count`) from the API response.
 @requires_auth No
 
 #### Parameters
@@ -2967,7 +2975,7 @@ Optional category, pagination, and filtering parameters
 
 #### Returns
 
-`Promise`\<`NewsItem`[]\>
+`Promise`\<`NewsListResponse`\>
 
 #### Example
 
@@ -2977,6 +2985,8 @@ const economyNews = await client.news.gns.list({ category: 'economy' });
 const moreNews = await client.news.gns.list({ start_index: 51, item_count: 50 });
 const searchNews = await client.news.gns.list({ search: 'battle', author: 'John Doe' });
 const factionNews = await client.news.gns.list({ faction: 'Empire', faction_type: 'government' });
+console.log(news[0].attributes.title);
+console.log(news.attributes.start, news.attributes.total, news.attributes.count);
 ```
 
 # Class: NewsResource
@@ -3061,7 +3071,9 @@ https://www.swcombine.com/ws/v2.0/documentation/news/simnews/category/ SW Combin
 
 > **get**(`options`): `Promise`\<`NewsItem`\>
 
-Get specific Sim News item
+Get a specific Sim News item by numeric ID.
+Author and faction are normalized to object references with `value`.
+If the API returns an array, the SDK returns the first normalized item.
 
 #### Parameters
 
@@ -3073,13 +3085,24 @@ Get specific Sim News item
 
 `Promise`\<`NewsItem`\>
 
+#### Example
+
+```ts
+const post = await client.news.simNews.get({ id: 49108 });
+console.log(post.author.value);
+console.log(post.faction.value);
+```
+
 ***
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`NewsItem`[]\>
+> **list**(`options?`): `Promise`\<`NewsListResponse`\>
 
 List Sim News items (paginated with optional filtering)
+Returns headline metadata entries (`attributes.id`, `attributes.href`, `attributes.title`, `value`).
+The returned array also includes pagination metadata at `result.attributes`
+(`start`, `total`, `count`) from the API response.
 @requires_auth No
 
 #### Parameters
@@ -3092,7 +3115,7 @@ Optional category, pagination, and filtering parameters
 
 #### Returns
 
-`Promise`\<`NewsItem`[]\>
+`Promise`\<`NewsListResponse`\>
 
 #### Example
 
@@ -3101,6 +3124,8 @@ const news = await client.news.simNews.list();
 const playerNews = await client.news.simNews.list({ category: 'player' });
 const moreNews = await client.news.simNews.list({ start_index: 51, item_count: 50 });
 const searchNews = await client.news.simNews.list({ search: 'update', author: 'Admin' });
+console.log(news[0].attributes.title);
+console.log(news.attributes.start, news.attributes.total, news.attributes.count);
 ```
 
 ---

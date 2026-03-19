@@ -1,0 +1,24 @@
+src/resources/CharacterResource.ts
+  57dc2993bb8762f4 135,139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "4a73ac6c8e4da9db0913240b5ff8b8c472dd82d2",
+  "prompts": {
+    "57dc2993bb8762f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6ea1cb3c-ec30-45ef-a37c-abeafff92d8e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 387,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/48e30533b4c320195a94f9598560b8499f7c5c66b10ac5bd8ee369bece10c99a"
+    }
+  }
+}

@@ -80,14 +80,14 @@ describe('HttpClient', () => {
   });
 
   describe('request interceptor - token injection', () => {
-    it('adds access_token as query param when TokenManager has token', async () => {
+    it('adds token as Authorization header when TokenManager has token', async () => {
       const tm = new TokenManager('test-token-abc');
       new HttpClient({}, tm);
       const interceptor = getRequestInterceptor();
 
-      const config = { params: {} } as any;
+      const config = { headers: {} } as any;
       const result = await interceptor(config);
-      expect(result.params.access_token).toBe('test-token-abc');
+      expect(result.headers['Authorization']).toBe('OAuth test-token-abc');
     });
 
     it('does not add token when TokenManager has no token', async () => {
@@ -95,29 +95,29 @@ describe('HttpClient', () => {
       new HttpClient({}, tm);
       const interceptor = getRequestInterceptor();
 
-      const config = { params: {} } as any;
+      const config = { headers: {} } as any;
       const result = await interceptor(config);
-      expect(result.params.access_token).toBeUndefined();
+      expect(result.headers?.['Authorization']).toBeUndefined();
     });
 
     it('does not fail when no TokenManager', async () => {
       new HttpClient({});
       const interceptor = getRequestInterceptor();
 
-      const config = { params: {} } as any;
+      const config = { headers: {} } as any;
       const result = await interceptor(config);
-      expect(result.params.access_token).toBeUndefined();
+      expect(result.headers?.['Authorization']).toBeUndefined();
     });
 
-    it('initializes params if undefined', async () => {
+    it('initializes headers if undefined', async () => {
       const tm = new TokenManager('token');
       new HttpClient({}, tm);
       const interceptor = getRequestInterceptor();
 
       const config = {} as any;
       const result = await interceptor(config);
-      expect(result.params).toBeDefined();
-      expect(result.params.access_token).toBe('token');
+      expect(result.headers).toBeDefined();
+      expect(result.headers['Authorization']).toBe('OAuth token');
     });
   });
 

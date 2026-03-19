@@ -107,7 +107,7 @@ All API resources extend `BaseResource` (src/resources/BaseResource.ts) which pr
 
 1. Resource method called → `BaseResource.request()` or direct `http.get/post()`
 2. `HttpClient` adds query params (pagination, filtering)
-3. **Request interceptor** injects `access_token` as query param (not header - API requirement)
+3. **Request interceptor** injects token via `Authorization: OAuth {token}` header
 4. **Response interceptor** handles errors, converts to `SWCError`, manages retries
 5. Automatic token refresh on 401 if refresh token available
 
@@ -236,7 +236,7 @@ The package exports both ESM and CJS via the `exports` field in package.json. On
 
 ### API Quirks
 
-1. **Token as query param**: Access tokens MUST be sent as `?access_token=...` query parameter, not Authorization header
+1. **Token via Authorization header**: Access tokens are sent as `Authorization: OAuth {token}` header (the API also supports `?access_token=...` query param, but headers are preferred to keep tokens out of logs)
 2. **0-based Events indexing**: Events endpoint uses `start_index: 0` while all others use `start_index: 1`
 3. **Inconsistent responses**: Some endpoints return arrays, others return wrapped objects with metadata
 4. **Required pagination**: Some endpoints (sectors, types/classes) return 404 without pagination params

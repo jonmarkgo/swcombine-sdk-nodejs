@@ -67,17 +67,14 @@ export class HttpClient {
           try {
             const token = await this.tokenManager.getAccessToken();
             if (token) {
-              // SW Combine API supports two methods for sending access tokens:
-              // 1. Authorization header: "Authorization: OAuth TOKEN"
-              // 2. Query parameter: "?access_token=TOKEN"
-              //
-              // This SDK uses query parameters as the primary method based on empirical testing
-              // and project documentation (see CLAUDE.md). Both methods are valid per official docs.
-              config.params = config.params || {};
-              config.params.access_token = token;
+              // Use Authorization header to keep tokens out of URLs, logs, and Referer headers.
+              // The SW Combine API supports both "Authorization: OAuth TOKEN" and query params,
+              // but headers are the more secure approach.
+              config.headers = config.headers || {};
+              config.headers['Authorization'] = `OAuth ${token}`;
 
               if (this.debug) {
-                console.log(`[SWC SDK] Added auth token as query param: ${token.substring(0, 20)}...`);
+                console.log(`[SWC SDK] Added auth token as Authorization header: ${token.substring(0, 8)}...`);
               }
             } else {
               if (this.debug) {

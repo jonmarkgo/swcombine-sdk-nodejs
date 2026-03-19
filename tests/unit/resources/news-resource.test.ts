@@ -83,12 +83,12 @@ describe('NewsResource', () => {
       expect(mockHttp.get).toHaveBeenCalledWith('/news/gns', {
         params: { start_index: 1, item_count: 50 },
       });
-      expect(result.length).toBe(1);
-      expect(result[0].attributes.id).toBe(49108);
-      expect(result[0].attributes.title).toBe('Headline');
-      expect(result.attributes.start).toBe(1);
-      expect(result.attributes.total).toBe(200);
-      expect(result.attributes.count).toBe(50);
+      expect(result.data.length).toBe(1);
+      expect(result.data[0].attributes.id).toBe(49108);
+      expect(result.data[0].attributes.title).toBe('Headline');
+      expect(result.start).toBe(1);
+      expect(result.total).toBe(200);
+      expect(result.count).toBe(50);
     });
   });
 
@@ -122,10 +122,10 @@ describe('NewsResource', () => {
       expect(mockHttp.get).toHaveBeenCalledWith('/news/simnews', {
         params: { start_index: 10, item_count: 10 },
       });
-      expect(result.length).toBe(0);
-      expect(result.attributes.start).toBe(10);
-      expect(result.attributes.total).toBe(42);
-      expect(result.attributes.count).toBe(10);
+      expect(result.data.length).toBe(0);
+      expect(result.start).toBe(10);
+      expect(result.total).toBe(42);
+      expect(result.count).toBe(10);
     });
   });
 });

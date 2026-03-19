@@ -443,13 +443,6 @@ export interface FactionDetail {
   [key: string]: unknown;
 }
 
-export interface FactionListAttributes {
-  start?: number;
-  total?: number;
-  count?: number;
-  [key: string]: unknown;
-}
-
 export interface FactionListReferenceAttributes {
   uid?: string;
   href?: string;
@@ -470,11 +463,6 @@ export interface FactionListItem {
   leader: FactionListReference;
   secondincommand: FactionListPersonReference;
   [key: string]: unknown;
-}
-
-export interface FactionListResponse {
-  attributes?: FactionListAttributes;
-  faction?: FactionListItem[];
 }
 
 /**
@@ -691,38 +679,6 @@ export interface GalaxyStationListItem {
   [key: string]: unknown;
 }
 
-export interface GalaxyListAttributes {
-  start?: number;
-  total?: number;
-  count?: number;
-  [key: string]: unknown;
-}
-
-export interface GalaxyPlanetListRawResponse {
-  attributes?: GalaxyListAttributes;
-  planet?: GalaxyPlanetListItem[];
-}
-
-export interface GalaxySectorListRawResponse {
-  attributes?: GalaxyListAttributes;
-  sector?: GalaxySectorListItem[];
-}
-
-export interface GalaxySystemListRawResponse {
-  attributes?: GalaxyListAttributes;
-  system?: GalaxySystemListItem[];
-}
-
-export interface GalaxyStationListRawResponse {
-  attributes?: GalaxyListAttributes;
-  station?: GalaxyStationListItem[];
-}
-
-export interface GalaxyCityListRawResponse {
-  attributes?: GalaxyListAttributes;
-  city?: GalaxyCityListItem[];
-}
-
 export interface GalaxyColour {
   r: number;
   g: number;
@@ -923,21 +879,6 @@ export interface NewsListItem {
 }
 
 /**
- * Pagination metadata returned by news list endpoints.
- */
-export interface NewsListAttributes {
-  start?: number;
-  total?: number;
-  count?: number;
-  [key: string]: unknown;
-}
-
-/**
- * News list result that preserves array behavior and exposes list metadata.
- */
-export type NewsListResponse = NewsListItem[] & { attributes: NewsListAttributes };
-
-/**
  * Reference object used by detailed news responses.
  */
 export interface NewsReference {
@@ -992,17 +933,6 @@ export interface Event {
   timestamp: string;
   description?: string;
   [key: string]: unknown;
-}
-
-// ============================================================================
-// List Response Wrapper
-// ============================================================================
-
-export interface ListResponse<T> {
-  data: T[];
-  total?: number;
-  page?: number;
-  hasMore?: boolean;
 }
 
 // ============================================================================
@@ -1412,43 +1342,6 @@ export interface TypesEntityListItem {
   };
   value: string;
   [key: string]: unknown;
-}
-
-/**
- * Pagination attributes returned by /types/:entityType list endpoints.
- */
-export interface TypesEntityListAttributes {
-  start?: number;
-  total?: number;
-  count?: number;
-  [key: string]: unknown;
-}
-
-/**
- * Generic wrapped response returned by /types/:entityType list endpoints.
- * Example: { attributes: {...}, vehicletype: [...] }
- */
-export interface TypesEntitiesListRawResponse {
-  attributes?: TypesEntityListAttributes;
-  [key: string]: unknown;
-}
-
-/**
- * Wrapped ships list response returned by /types/ships.
- * Example: { attributes: {...}, shiptype: [...] }
- */
-export interface TypesShipsListRawResponse extends TypesEntitiesListRawResponse {
-  shiptype?: TypesEntityListItem[];
-}
-
-/**
- * Normalized /types/:entityType list response.
- * `attributes` contains pagination metadata (`start`, `total`, `count`) and
- * `items` contains the normalized entity rows for all type endpoints.
- */
-export interface TypesEntitiesListMetaResponse {
-  attributes?: TypesEntityListAttributes;
-  items: TypesEntityListItem[];
 }
 
 /**

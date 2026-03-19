@@ -5,6 +5,7 @@
 import { HttpClient } from '../http/HttpClient.js';
 import { SWCError } from '../http/errors.js';
 import { BaseResource } from './BaseResource.js';
+import { Page } from '../pagination/Page.js';
 import {
   Character,
   CharacterMe,
@@ -84,33 +85,45 @@ export class CharacterMessagesResource extends BaseResource {
    * @param options.mode - 'sent' or 'received'. If omitted, returns both sent and received messages.
    * @param options.start_index - Starting position (1-based). Default: 1
    * @param options.item_count - Number of items to retrieve. Default: 50, Max: 50
-   * @returns Array of message metadata items (`MessageListItem[]`)
+   * @returns Page of message metadata items (`Page<MessageListItem>`)
    * @example
    * const allMessages = await client.character.messages.list({ uid: '1:12345' });
    * const received = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
    * const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: 'received', start_index: 51, item_count: 50 });
    *
-   * const firstMessageId = received[0]?.attributes.uid;
+   * const firstMessageId = received.data[0]?.attributes.uid;
    * if (firstMessageId) {
    *   const detail = await client.character.messages.get({ uid: '1:12345', messageId: firstMessageId });
    *   console.log(detail.communication);
    * }
+   *
+   * // Iterate through all pages automatically
+   * for await (const msg of allMessages) {
+   *   console.log(msg.attributes.uid);
+   * }
    */
-  async list(options: ListMessagesOptions): Promise<MessageListItem[]> {
-    const params: Record<string, number> = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
-    };
+  async list(options: ListMessagesOptions): Promise<Page<MessageListItem>> {
     // Build path - mode is optional, omitting it returns both sent and received
     const path = options.mode
       ? `/character/${options.uid}/messages/${options.mode}`
       : `/character/${options.uid}/messages`;
-    const response = await this.http.get<{ message?: MessageListItem[]; attributes?: unknown }>(
-      path,
-      { params }
-    );
-    // API returns { attributes: {...}, message: [...] }, extract just the array
-    return response.message || [];
+
+    const makeRequest = async (startIndex: number): Promise<Page<MessageListItem>> => {
+      const params: Record<string, number> = {
+        start_index: startIndex,
+        item_count: options.item_count ?? 50,
+      };
+      const response = await this.http.get<{ message?: MessageListItem[]; attributes?: Record<string, unknown> }>(
+        path,
+        { params }
+      );
+      // API returns { attributes: {...}, message: [...] }, extract array and attributes
+      const data = response.message ?? [];
+      const attrs = (response.attributes as Record<string, unknown>) ?? {};
+      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest });
+    };
+
+    return makeRequest(options.start_index ?? 1);
   }
 
   /**
@@ -424,19 +437,33 @@ export class CharacterCreditlogResource extends BaseResource {
    * const oldestLogs = await client.character.creditlog.list({ uid: '1:12345', start_id: 1 });
    * // Fetch up to 1000 credit log entries at once
    * const manyLogs = await client.character.creditlog.list({ uid: '1:12345', item_count: 1000 });
+   *
+   * // Iterate through all pages automatically
+   * for await (const entry of creditlog) {
+   *   console.log(entry);
+   * }
    */
-  async list(options: GetCharacterCreditlogOptions): Promise<CreditLogEntry[]> {
-    const params: Record<string, number> = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
+  async list(options: GetCharacterCreditlogOptions): Promise<Page<CreditLogEntry>> {
+    const makeRequest = async (startIndex: number): Promise<Page<CreditLogEntry>> => {
+      const params: Record<string, number> = {
+        start_index: startIndex,
+        item_count: options.item_count ?? 50,
+      };
+      if (options.start_id !== undefined) {
+        params.start_id = options.start_id;
+      }
+      const response = await this.http.get<{ transaction?: CreditLogEntry[]; attributes?: Record<string, unknown> }>(
+        `/character/${options.uid}/creditlog`,
+        { params }
+      );
+      // API returns { swcapi: { transactions: { attributes: {...}, transaction: [...] } } }
+      // HttpClient unwraps to { attributes: {...}, transaction: [...] }
+      const data = response.transaction ?? [];
+      const attrs = (response.attributes as Record<string, unknown>) ?? {};
+      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest });
     };
-    if (options.start_id !== undefined) {
-      params.start_id = options.start_id;
-    }
-    const response = await this.http.get<{ transaction?: CreditLogEntry[]; attributes?: unknown }>(`/character/${options.uid}/creditlog`, { params });
-    // API returns { swcapi: { transactions: { attributes: {...}, transaction: [...] } } }
-    // HttpClient unwraps to { attributes: {...}, transaction: [...] }
-    return response.transaction || [];
+
+    return makeRequest(options.start_index ?? 1);
   }
 }
 

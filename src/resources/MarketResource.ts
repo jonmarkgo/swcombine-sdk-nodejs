@@ -4,6 +4,7 @@
 
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
+import { Page } from '../pagination/Page.js';
 import { Vendor, GetVendorOptions } from '../types/index.js';
 
 /**
@@ -19,14 +20,26 @@ export class MarketVendorsResource extends BaseResource {
    * const vendors = await client.market.vendors.list();
    * const moreVendors = await client.market.vendors.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Vendor[]> {
-    const params = {
-      start_index: options?.start_index || 1,
-      item_count: options?.item_count || 50,
+  async list(options?: { start_index?: number; item_count?: number }): Promise<Page<Vendor>> {
+    const makeRequest = async (startIndex: number): Promise<Page<Vendor>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options?.item_count ?? 50,
+      };
+      const response = await this.http.get<{ vendor?: Vendor[]; attributes?: Record<string, unknown> }>('/market/vendors', { params });
+
+      const data: Vendor[] = response.vendor ?? [];
+      const attrs: Record<string, unknown> = response.attributes ?? {};
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+      });
     };
-    const response = await this.http.get<{ vendor?: Vendor[]; attributes?: unknown }>('/market/vendors', { params });
-    // API returns { attributes: {...}, vendor: [...] }, extract just the array
-    return response.vendor || [];
+
+    return makeRequest(options?.start_index ?? 1);
   }
 
   /**

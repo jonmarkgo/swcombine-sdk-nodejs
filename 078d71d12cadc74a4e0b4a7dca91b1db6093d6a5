@@ -1,0 +1,26 @@
+package.json
+  57dc2993bb8762f4 3
+README.md
+  57dc2993bb8762f4 23,92,98-101,124-135,137-150,307,313-314,319,419
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "078d71d12cadc74a4e0b4a7dca91b1db6093d6a5",
+  "prompts": {
+    "57dc2993bb8762f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6ea1cb3c-ec30-45ef-a37c-abeafff92d8e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>",
+      "messages": [],
+      "total_additions": 42,
+      "total_deletions": 11,
+      "accepted_lines": 426,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/df1dc4026b6a522b921aba78693f75cc4351418e0119961dafcb73476d63c71e"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+docs/MIGRATION-v3.md
+  57dc2993bb8762f4 1-206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "3de614b436da5d83cc3503be999cb7786e109c27",
+  "prompts": {
+    "57dc2993bb8762f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6ea1cb3c-ec30-45ef-a37c-abeafff92d8e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>",
+      "messages": [],
+      "total_additions": 206,
+      "total_deletions": 0,
+      "accepted_lines": 591,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/35d97ab6f4d3adf48260833495069f98b38bd6775a8d20bc27065d911c4773b8"
+    }
+  }
+}

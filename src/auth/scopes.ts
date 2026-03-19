@@ -2,7 +2,8 @@
  * OAuth Scopes for SW Combine API
  *
  * This module defines all available OAuth scopes and provides utilities
- * for requesting common scope combinations.
+ * for requesting common scope combinations. Scope values mirror the
+ * permission names returned by the API permissions catalog.
  *
  * @see https://www.swcombine.com/ws/developers/permissions/
  */
@@ -13,9 +14,9 @@
 export const CharacterScopes = {
   /** Solely provides the character name and ID for use by clients who want to verify a character's identity */
   AUTH: 'character_auth',
-  /** Read basic character information (UID, handle, image, race, gender, etc.) */
+  /** Read basic character information.<br/>If your profile is private, this will return unique ID, handle, and image.<br/>If your profile is not private, this will also return your race, gender, last login, description, and biography. */
   READ: 'character_read',
-  /** Read character HP and XP */
+  /** Read information about the character's HP and XP */
   STATS: 'character_stats',
   /** Read character privileges */
   PRIVILEGES: 'character_privileges',
@@ -25,13 +26,13 @@ export const CharacterScopes = {
   CREDITS: 'character_credits',
   /** Transfer character credits */
   CREDITS_WRITE: 'character_credits_write',
-  /** Read character force-related information (FP, FXP, regen rate, Force Meter) */
+  /** Read character force-related information.<br/>If you are Force-aware, this will return Master or Student where applicable, as well as FP, FXP, regen rate, and Force Meter. */
   FORCE: 'character_force',
-  /** Read location information in-game */
+  /** Read your location in-game */
   LOCATION: 'character_location',
-  /** Read character events */
+  /** Read the characters' events */
   EVENTS: 'character_events',
-  /** Access all character information (includes all above) */
+  /** Access all character information */
   ALL: 'character_all',
 } as const;
 
@@ -39,194 +40,436 @@ export const CharacterScopes = {
  * Message-related scopes
  */
 export const MessageScopes = {
-  /** Read messages */
+  /** Read messages sent to or by the character */
   READ: 'messages_read',
-  /** Send messages */
+  /** Send messages to or from the character */
   SEND: 'messages_send',
-  /** Delete messages */
+  /** Delete messages to or from the character */
   DELETE: 'messages_delete',
-  /** All message permissions */
+  /** Read, send and delete messages to or from the character */
   ALL: 'messages_all',
 } as const;
-
-/**
- * Generate personal inventory scopes for a specific entity type
- */
-function generatePersonalInventoryScopes(entityType: string, hasRename: boolean = true) {
-  const scopes: Record<string, string> = {};
-
-  scopes.READ = `personal_inv_${entityType}_read`;
-  if (hasRename) {
-    scopes.RENAME = `personal_inv_${entityType}_rename`;
-  }
-  scopes.ASSIGN = `personal_inv_${entityType}_assign`;
-  if (hasRename) {
-    scopes.MAKEOVER = `personal_inv_${entityType}_makeover`;
-  }
-  scopes.TAGS_READ = `personal_inv_${entityType}_tags_read`;
-  scopes.TAGS_WRITE = `personal_inv_${entityType}_tags_write`;
-  scopes.ALL = `personal_inv_${entityType}_all`;
-
-  return scopes;
-}
 
 /**
  * Personal inventory scopes
  */
 export const PersonalInventoryScopes = {
-  /** Overview of personal inventory */
+  /** Read basic information about your inventories */
   OVERVIEW: 'personal_inv_overview',
 
   /** Personal ship scopes */
-  SHIPS: generatePersonalInventoryScopes('ships'),
+  SHIPS: {
+    /** Read basic information about your ships */
+    READ: 'personal_inv_ships_read',
+    /** Rename your ships */
+    RENAME: 'personal_inv_ships_rename',
+    /** Assign your ships */
+    ASSIGN: 'personal_inv_ships_assign',
+    /** Make over your ships */
+    MAKEOVER: 'personal_inv_ships_makeover',
+    /** Read the tags assigned to your ships */
+    TAGS_READ: 'personal_inv_ships_tags_read',
+    /** Modify the tags assigned to your ships */
+    TAGS_WRITE: 'personal_inv_ships_tags_write',
+    /** Access and change anything in your ship inventory */
+    ALL: 'personal_inv_ships_all',
+  },
 
   /** Personal vehicle scopes */
-  VEHICLES: generatePersonalInventoryScopes('vehicles'),
+  VEHICLES: {
+    /** Read basic information about your vehicles */
+    READ: 'personal_inv_vehicles_read',
+    /** Rename your vehicles */
+    RENAME: 'personal_inv_vehicles_rename',
+    /** Assign your vehicles */
+    ASSIGN: 'personal_inv_vehicles_assign',
+    /** Make over your vehicles */
+    MAKEOVER: 'personal_inv_vehicles_makeover',
+    /** Read the tags assigned to your vehicles */
+    TAGS_READ: 'personal_inv_vehicles_tags_read',
+    /** Modify the tags assigned to your vehicles */
+    TAGS_WRITE: 'personal_inv_vehicles_tags_write',
+    /** Access and change anything in your vehicle inventory */
+    ALL: 'personal_inv_vehicles_all',
+  },
 
   /** Personal station scopes */
-  STATIONS: generatePersonalInventoryScopes('stations'),
+  STATIONS: {
+    /** Read basic information about your space stations */
+    READ: 'personal_inv_stations_read',
+    /** Rename your space stations */
+    RENAME: 'personal_inv_stations_rename',
+    /** Assign your space stations */
+    ASSIGN: 'personal_inv_stations_assign',
+    /** Make over your space stations */
+    MAKEOVER: 'personal_inv_stations_makeover',
+    /** Read the tags assigned to your space stations */
+    TAGS_READ: 'personal_inv_stations_tags_read',
+    /** Modify the tags assigned to your space stations */
+    TAGS_WRITE: 'personal_inv_stations_tags_write',
+    /** Access and change anything in your space station inventory */
+    ALL: 'personal_inv_stations_all',
+  },
 
   /** Personal city scopes */
-  CITIES: generatePersonalInventoryScopes('cities'),
+  CITIES: {
+    /** Read basic information about your cities */
+    READ: 'personal_inv_cities_read',
+    /** Rename your cities */
+    RENAME: 'personal_inv_cities_rename',
+    /** Assign your cities */
+    ASSIGN: 'personal_inv_cities_assign',
+    /** Make over your cities */
+    MAKEOVER: 'personal_inv_cities_makeover',
+    /** Read the tags assigned to your cities */
+    TAGS_READ: 'personal_inv_cities_tags_read',
+    /** Modify the tags assigned to your cities */
+    TAGS_WRITE: 'personal_inv_cities_tags_write',
+    /** Access and change anything in your city inventory */
+    ALL: 'personal_inv_cities_all',
+  },
 
   /** Personal facility scopes */
-  FACILITIES: generatePersonalInventoryScopes('facilities'),
+  FACILITIES: {
+    /** Read basic information about your facilities */
+    READ: 'personal_inv_facilities_read',
+    /** Rename your facilities */
+    RENAME: 'personal_inv_facilities_rename',
+    /** Assign your facilities */
+    ASSIGN: 'personal_inv_facilities_assign',
+    /** Make over your facilities */
+    MAKEOVER: 'personal_inv_facilities_makeover',
+    /** Read the tags assigned to your facilities */
+    TAGS_READ: 'personal_inv_facilities_tags_read',
+    /** Modify the tags assigned to your facilities */
+    TAGS_WRITE: 'personal_inv_facilities_tags_write',
+    /** Access and change anything in your facility inventory */
+    ALL: 'personal_inv_facilities_all',
+  },
 
   /** Personal planet scopes (no RENAME/MAKEOVER) */
-  PLANETS: generatePersonalInventoryScopes('planets', false),
+  PLANETS: {
+    /** Read basic information about your planets */
+    READ: 'personal_inv_planets_read',
+    /** Assign your planets */
+    ASSIGN: 'personal_inv_planets_assign',
+    /** Read the tags assigned to your planets */
+    TAGS_READ: 'personal_inv_planets_tags_read',
+    /** Modify the tags assigned to your planets */
+    TAGS_WRITE: 'personal_inv_planets_tags_write',
+    /** Access and change anything in your planet inventory */
+    ALL: 'personal_inv_planets_all',
+  },
 
   /** Personal item scopes */
-  ITEMS: generatePersonalInventoryScopes('items'),
+  ITEMS: {
+    /** Read basic information about your items */
+    READ: 'personal_inv_items_read',
+    /** Rename your items */
+    RENAME: 'personal_inv_items_rename',
+    /** Assign your items */
+    ASSIGN: 'personal_inv_items_assign',
+    /** Make over your items */
+    MAKEOVER: 'personal_inv_items_makeover',
+    /** Read the tags assigned to your items */
+    TAGS_READ: 'personal_inv_items_tags_read',
+    /** Modify the tags assigned to your items */
+    TAGS_WRITE: 'personal_inv_items_tags_write',
+    /** Access and change anything in your item inventory */
+    ALL: 'personal_inv_items_all',
+  },
 
   /** Personal NPC scopes (has MAKEOVER but no RENAME) */
   NPCS: {
+    /** Read basic information about your NPCs */
     READ: 'personal_inv_npcs_read',
+    /** Assign your NPCs */
     ASSIGN: 'personal_inv_npcs_assign',
+    /** Make over your NPCs */
     MAKEOVER: 'personal_inv_npcs_makeover',
-    // Note: NPCs do not have RENAME scope
+    /** Read the tags assigned to your NPCs */
     TAGS_READ: 'personal_inv_npcs_tags_read',
+    /** Modify the tags assigned to your NPCs */
     TAGS_WRITE: 'personal_inv_npcs_tags_write',
+    /** Access and change anything in your NPC inventory */
     ALL: 'personal_inv_npcs_all',
   },
 
   /** Personal droid scopes */
-  DROIDS: generatePersonalInventoryScopes('droids'),
+  DROIDS: {
+    /** Read basic information about your droids */
+    READ: 'personal_inv_droids_read',
+    /** Rename your droids */
+    RENAME: 'personal_inv_droids_rename',
+    /** Assign your droids */
+    ASSIGN: 'personal_inv_droids_assign',
+    /** Make over your droids */
+    MAKEOVER: 'personal_inv_droids_makeover',
+    /** Read the tags assigned to your droids */
+    TAGS_READ: 'personal_inv_droids_tags_read',
+    /** Modify the tags assigned to your droids */
+    TAGS_WRITE: 'personal_inv_droids_tags_write',
+    /** Access and change anything in your droid inventory */
+    ALL: 'personal_inv_droids_all',
+  },
 
   /** Personal material scopes (no ASSIGN) */
   MATERIALS: {
+    /** Read basic information about your materials */
     READ: 'personal_inv_materials_read',
+    /** Rename your materials */
     RENAME: 'personal_inv_materials_rename',
+    /** Make over your materials */
     MAKEOVER: 'personal_inv_materials_makeover',
+    /** Read the tags assigned to your materials */
     TAGS_READ: 'personal_inv_materials_tags_read',
+    /** Modify the tags assigned to your materials */
     TAGS_WRITE: 'personal_inv_materials_tags_write',
+    /** Access and change anything in your material inventory */
     ALL: 'personal_inv_materials_all',
   },
 
   /** Personal creature scopes */
-  CREATURES: generatePersonalInventoryScopes('creatures'),
+  CREATURES: {
+    /** Read basic information about your creatures */
+    READ: 'personal_inv_creatures_read',
+    /** Rename your creatures */
+    RENAME: 'personal_inv_creatures_rename',
+    /** Assign your creatures */
+    ASSIGN: 'personal_inv_creatures_assign',
+    /** Make over your creatures */
+    MAKEOVER: 'personal_inv_creatures_makeover',
+    /** Read the tags assigned to your creatures */
+    TAGS_READ: 'personal_inv_creatures_tags_read',
+    /** Modify the tags assigned to your creatures */
+    TAGS_WRITE: 'personal_inv_creatures_tags_write',
+    /** Access and change anything in your creature inventory */
+    ALL: 'personal_inv_creatures_all',
+  },
 } as const;
 
 /**
  * Faction management scopes
  */
 export const FactionScopes = {
-  /** Read faction information */
+  /** Read basic information about your faction */
   READ: 'faction_read',
-  /** Read faction members */
+  /** See your faction's members list */
   MEMBERS: 'faction_members',
-  /** Read faction stocks */
+  /** See the stocks your faction owns */
   STOCKS: 'faction_stocks',
-  /** Read faction credits */
+  /** See how many credits your faction owns */
   CREDITS_READ: 'faction_credits_read',
-  /** Write/transfer faction credits */
+  /** Transfer credits on behalf of your faction */
   CREDITS_WRITE: 'faction_credits_write',
-  /** Read faction budgets */
+  /** See your faction's budgets */
   BUDGETS_READ: 'faction_budgets_read',
-  /** Write faction budgets */
+  /** Change your faction's budgets */
   BUDGETS_WRITE: 'faction_budgets_write',
-  /** Read faction datacards */
+  /** See your faction's datacard assignments */
   DATACARDS_READ: 'faction_datacards_read',
-  /** Write faction datacards */
+  /** Assign or revoke your faction's datacard assignments */
   DATACARDS_WRITE: 'faction_datacards_write',
-  /** All faction permissions */
+  /** Access and change anything in your faction */
   ALL: 'faction_all',
 } as const;
-
-/**
- * Generate faction inventory scopes for a specific entity type
- */
-function generateFactionInventoryScopes(entityType: string, hasRename: boolean = true) {
-  const scopes: Record<string, string> = {};
-
-  scopes.READ = `faction_inv_${entityType}_read`;
-  if (hasRename) {
-    scopes.RENAME = `faction_inv_${entityType}_rename`;
-  }
-  scopes.ASSIGN = `faction_inv_${entityType}_assign`;
-  if (hasRename) {
-    scopes.MAKEOVER = `faction_inv_${entityType}_makeover`;
-  }
-  scopes.TAGS_READ = `faction_inv_${entityType}_tags_read`;
-  scopes.TAGS_WRITE = `faction_inv_${entityType}_tags_write`;
-  scopes.ALL = `faction_inv_${entityType}_all`;
-
-  return scopes;
-}
 
 /**
  * Faction inventory scopes
  */
 export const FactionInventoryScopes = {
-  /** Overview of faction inventory */
+  /** Read basic information about your faction's inventories */
   OVERVIEW: 'faction_inv_overview',
 
   /** Faction ship scopes */
-  SHIPS: generateFactionInventoryScopes('ships'),
+  SHIPS: {
+    /** Read basic information about your faction's ships */
+    READ: 'faction_inv_ships_read',
+    /** Rename your faction's ships */
+    RENAME: 'faction_inv_ships_rename',
+    /** Assign your faction's ships */
+    ASSIGN: 'faction_inv_ships_assign',
+    /** Make over your faction's ships */
+    MAKEOVER: 'faction_inv_ships_makeover',
+    /** Read the tags assigned to your faction's ships */
+    TAGS_READ: 'faction_inv_ships_tags_read',
+    /** Modify the tags assigned to your faction's ships */
+    TAGS_WRITE: 'faction_inv_ships_tags_write',
+    /** Access and change anything in your faction's ship inventory */
+    ALL: 'faction_inv_ships_all',
+  },
 
   /** Faction vehicle scopes */
-  VEHICLES: generateFactionInventoryScopes('vehicles'),
+  VEHICLES: {
+    /** Read basic information about your faction's vehicles */
+    READ: 'faction_inv_vehicles_read',
+    /** Rename your faction's vehicles */
+    RENAME: 'faction_inv_vehicles_rename',
+    /** Assign your faction's vehicles */
+    ASSIGN: 'faction_inv_vehicles_assign',
+    /** Make over your faction's vehicles */
+    MAKEOVER: 'faction_inv_vehicles_makeover',
+    /** Read the tags assigned to your faction's vehicles */
+    TAGS_READ: 'faction_inv_vehicles_tags_read',
+    /** Modify the tags assigned to your faction's vehicles */
+    TAGS_WRITE: 'faction_inv_vehicles_tags_write',
+    /** Access and change anything in your faction's vehicle inventory */
+    ALL: 'faction_inv_vehicles_all',
+  },
 
   /** Faction station scopes */
-  STATIONS: generateFactionInventoryScopes('stations'),
+  STATIONS: {
+    /** Read basic information about your faction's space stations */
+    READ: 'faction_inv_stations_read',
+    /** Rename your faction's space stations */
+    RENAME: 'faction_inv_stations_rename',
+    /** Assign your faction's space stations */
+    ASSIGN: 'faction_inv_stations_assign',
+    /** Make over your faction's space stations */
+    MAKEOVER: 'faction_inv_stations_makeover',
+    /** Read the tags assigned to your faction's space stations */
+    TAGS_READ: 'faction_inv_stations_tags_read',
+    /** Modify the tags assigned to your faction's space stations */
+    TAGS_WRITE: 'faction_inv_stations_tags_write',
+    /** Access and change anything in your faction's space station inventory */
+    ALL: 'faction_inv_stations_all',
+  },
 
   /** Faction city scopes */
-  CITIES: generateFactionInventoryScopes('cities'),
+  CITIES: {
+    /** Read basic information about your faction's cities */
+    READ: 'faction_inv_cities_read',
+    /** Rename your faction's cities */
+    RENAME: 'faction_inv_cities_rename',
+    /** Assign your faction's cities */
+    ASSIGN: 'faction_inv_cities_assign',
+    /** Make over your faction's cities */
+    MAKEOVER: 'faction_inv_cities_makeover',
+    /** Read the tags assigned to your faction's cities */
+    TAGS_READ: 'faction_inv_cities_tags_read',
+    /** Modify the tags assigned to your faction's cities */
+    TAGS_WRITE: 'faction_inv_cities_tags_write',
+    /** Access and change anything in your faction's city inventory */
+    ALL: 'faction_inv_cities_all',
+  },
 
   /** Faction facility scopes */
-  FACILITIES: generateFactionInventoryScopes('facilities'),
+  FACILITIES: {
+    /** Read basic information about your faction's facilities */
+    READ: 'faction_inv_facilities_read',
+    /** Rename your faction's facilities */
+    RENAME: 'faction_inv_facilities_rename',
+    /** Assign your faction's facilities */
+    ASSIGN: 'faction_inv_facilities_assign',
+    /** Make over your faction's facilities */
+    MAKEOVER: 'faction_inv_facilities_makeover',
+    /** Read the tags assigned to your faction's facilities */
+    TAGS_READ: 'faction_inv_facilities_tags_read',
+    /** Modify the tags assigned to your faction's facilities */
+    TAGS_WRITE: 'faction_inv_facilities_tags_write',
+    /** Access and change anything in your faction's facility inventory */
+    ALL: 'faction_inv_facilities_all',
+  },
 
   /** Faction planet scopes (no RENAME/MAKEOVER) */
-  PLANETS: generateFactionInventoryScopes('planets', false),
+  PLANETS: {
+    /** Read basic information about your faction's planets */
+    READ: 'faction_inv_planets_read',
+    /** Assign your faction's planets */
+    ASSIGN: 'faction_inv_planets_assign',
+    /** Read the tags assigned to your faction's planets */
+    TAGS_READ: 'faction_inv_planets_tags_read',
+    /** Modify the tags assigned to your faction's planets */
+    TAGS_WRITE: 'faction_inv_planets_tags_write',
+    /** Access and change anything in your faction's planet inventory */
+    ALL: 'faction_inv_planets_all',
+  },
 
   /** Faction item scopes */
-  ITEMS: generateFactionInventoryScopes('items'),
+  ITEMS: {
+    /** Read basic information about your faction's items */
+    READ: 'faction_inv_items_read',
+    /** Rename your faction's items */
+    RENAME: 'faction_inv_items_rename',
+    /** Assign your faction's items */
+    ASSIGN: 'faction_inv_items_assign',
+    /** Make over your faction's items */
+    MAKEOVER: 'faction_inv_items_makeover',
+    /** Read the tags assigned to your faction's items */
+    TAGS_READ: 'faction_inv_items_tags_read',
+    /** Modify the tags assigned to your faction's items */
+    TAGS_WRITE: 'faction_inv_items_tags_write',
+    /** Access and change anything in your faction's item inventory */
+    ALL: 'faction_inv_items_all',
+  },
 
   /** Faction NPC scopes (has MAKEOVER but no RENAME) */
   NPCS: {
+    /** Read basic information about your faction's NPCs */
     READ: 'faction_inv_npcs_read',
+    /** Assign your faction's NPCs */
     ASSIGN: 'faction_inv_npcs_assign',
+    /** Make over your faction's NPCs */
     MAKEOVER: 'faction_inv_npcs_makeover',
-    // Note: NPCs do not have RENAME scope
+    /** Read the tags assigned to your faction's NPCs */
     TAGS_READ: 'faction_inv_npcs_tags_read',
+    /** Modify the tags assigned to your faction's NPCs */
     TAGS_WRITE: 'faction_inv_npcs_tags_write',
+    /** Access and change anything in your faction's NPC inventory */
     ALL: 'faction_inv_npcs_all',
   },
 
   /** Faction droid scopes */
-  DROIDS: generateFactionInventoryScopes('droids'),
+  DROIDS: {
+    /** Read basic information about your faction's droids */
+    READ: 'faction_inv_droids_read',
+    /** Rename your faction's droids */
+    RENAME: 'faction_inv_droids_rename',
+    /** Assign your faction's droids */
+    ASSIGN: 'faction_inv_droids_assign',
+    /** Make over your faction's droids */
+    MAKEOVER: 'faction_inv_droids_makeover',
+    /** Read the tags assigned to your faction's droids */
+    TAGS_READ: 'faction_inv_droids_tags_read',
+    /** Modify the tags assigned to your faction's droids */
+    TAGS_WRITE: 'faction_inv_droids_tags_write',
+    /** Access and change anything in your faction's droid inventory */
+    ALL: 'faction_inv_droids_all',
+  },
 
   /** Faction material scopes (no ASSIGN) */
   MATERIALS: {
+    /** Read basic information about your faction's materials */
     READ: 'faction_inv_materials_read',
+    /** Rename your faction's materials */
     RENAME: 'faction_inv_materials_rename',
+    /** Make over your faction's materials */
     MAKEOVER: 'faction_inv_materials_makeover',
+    /** Read the tags assigned to your faction's materials */
     TAGS_READ: 'faction_inv_materials_tags_read',
+    /** Modify the tags assigned to your faction's materials */
     TAGS_WRITE: 'faction_inv_materials_tags_write',
+    /** Access and change anything in your faction's material inventory */
     ALL: 'faction_inv_materials_all',
   },
 
   /** Faction creature scopes */
-  CREATURES: generateFactionInventoryScopes('creatures'),
+  CREATURES: {
+    /** Read basic information about your faction's creatures */
+    READ: 'faction_inv_creatures_read',
+    /** Rename your faction's creatures */
+    RENAME: 'faction_inv_creatures_rename',
+    /** Assign your faction's creatures */
+    ASSIGN: 'faction_inv_creatures_assign',
+    /** Make over your faction's creatures */
+    MAKEOVER: 'faction_inv_creatures_makeover',
+    /** Read the tags assigned to your faction's creatures */
+    TAGS_READ: 'faction_inv_creatures_tags_read',
+    /** Modify the tags assigned to your faction's creatures */
+    TAGS_WRITE: 'faction_inv_creatures_tags_write',
+    /** Access and change anything in your faction's creature inventory */
+    ALL: 'faction_inv_creatures_all',
+  },
 } as const;
 
 /**

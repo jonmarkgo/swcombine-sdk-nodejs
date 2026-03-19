@@ -132,11 +132,11 @@ export class CharacterMessagesResource extends BaseResource {
    * @requires_scope MESSAGES_READ
    * @param options - Character UID and message UID
    * @param options.uid - Character UID
-   * @param options.messageId - Message UID (for example from `list()[i].attributes.uid`)
+   * @param options.messageId - Message UID (for example from `list().data[i].attributes.uid`)
    * @returns Full message details including `communication`
    * @example
    * const messages = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
-   * const messageId = messages[0]?.attributes.uid;
+   * const messageId = messages.data[0]?.attributes.uid;
    *
    * if (messageId) {
    *   const message = await client.character.messages.get({ uid: '1:12345', messageId });

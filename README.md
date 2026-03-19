@@ -20,6 +20,7 @@
 ## Features
 
 - **Full API Coverage** - All 60+ endpoints across 11 resource categories
+- **`Page<T>` Pagination** - Every list endpoint returns `Page<T>` with `hasMore`, `getNextPage()`, and `for await...of` auto-pagination
 - **OAuth 2.0 Built-in** - Complete OAuth flow with automatic token refresh
 - **TypeScript First** - Full type definitions with IntelliSense support
 - **Type-Safe Scopes** - 170+ OAuth scope constants with autocomplete
@@ -88,14 +89,16 @@ const character = await authenticatedClient.character.get({
   uid: '1:12345',
 });
 
-// Get character messages
+// Get character messages — list() returns Page<T>
 const messages = await authenticatedClient.character.messages.list({
   uid: '1:12345',
   mode: 'received',
 });
 
-// List returns metadata items (MessageListItem[])
-const firstMessageId = messages[0]?.attributes.uid;
+console.log(messages.total);           // total messages across all pages
+console.log(messages.data.length);     // items on this page
+
+const firstMessageId = messages.data[0]?.attributes.uid;
 if (firstMessageId) {
   const fullMessage = await authenticatedClient.character.messages.get({
     uid: '1:12345',
@@ -116,6 +119,35 @@ await authenticatedClient.character.messages.create({
 const faction = await authenticatedClient.faction.get({
   uid: '20:123',
 });
+```
+
+### 4. Pagination
+
+All `list()` methods return a `Page<T>` with built-in pagination support:
+
+```typescript
+import { Page } from 'swcombine-sdk';
+
+// Access page data and metadata
+const ships = await client.inventory.entities.list({
+  entityType: 'ships',
+  uid: '1:12345',
+  assignType: 'owner',
+});
+
+ships.data;     // Ship[] — items on this page
+ships.total;    // total ships across all pages
+ships.hasMore;  // boolean — are there more pages?
+
+// Fetch the next page (preserves your filters)
+if (ships.hasMore) {
+  const nextPage = await ships.getNextPage();
+}
+
+// Auto-paginate through everything with for-await
+for await (const ship of await client.inventory.entities.list({...})) {
+  console.log(ship.name); // yields every ship across all pages
+}
 ```
 
 ## OAuth Authentication
@@ -272,21 +304,19 @@ try {
 Full TypeScript support with intelligent type inference:
 
 ```typescript
-import { Message, MessageListItem } from 'swcombine-sdk';
+import { Page, Message, MessageListItem } from 'swcombine-sdk';
 
 // Types are automatically inferred
 const character = await client.character.get({ uid: '1:12345' });
 // character: Character
 
-// Request parameters are typed
-const listedMessages = await client.character.messages.list({
+// list() returns Page<T> with full type safety
+const messages: Page<MessageListItem> = await client.character.messages.list({
   uid: '1:12345',
-  mode: 'received', // Optional - TypeScript knows valid values: 'sent' | 'received'
-  // mode: 'invalid', // TypeScript error
+  mode: 'received', // TypeScript knows valid values: 'sent' | 'received'
 });
 
-const messageListItem: MessageListItem | undefined = listedMessages[0];
-const messageId = messageListItem?.attributes.uid;
+const messageId = messages.data[0]?.attributes.uid;
 
 if (messageId) {
   const messageDetail: Message = await client.character.messages.get({
@@ -386,6 +416,7 @@ npm run test:integration
 ## Documentation
 
 - **[API Reference](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)** - Full API reference with all methods, parameters, and examples
+- **[v2 → v3 Migration Guide](docs/MIGRATION-v3.md)** - Breaking changes and upgrade instructions
 - **[Getting Started Guide](docs/GETTING_STARTED.md)** - Detailed setup and usage
 - **[Authentication Guide](docs/AUTHENTICATION.md)** - OAuth 2.0 setup and token management
 - **[OAuth Scopes Reference](docs/SCOPES.md)** - Complete scope documentation

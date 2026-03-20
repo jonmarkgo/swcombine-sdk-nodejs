@@ -1,0 +1,48 @@
+src/pagination/Page.ts
+  57dc2993bb8762f4 16,25-26,34,39-41
+src/types/index.ts
+  57dc2993bb8762f4 1320-1321,1329-1330,2104-2105,2147-2148,2167-2168,2231-2232,2281-2282
+src/resources/BaseResource.ts
+  57dc2993bb8762f4 49-50,70
+src/resources/NewsResource.ts
+  57dc2993bb8762f4 189,259
+tests/unit/Page.test.ts
+  57dc2993bb8762f4 210-264
+src/resources/CharacterResource.ts
+  57dc2993bb8762f4 123,463
+src/resources/TypesResource.ts
+  57dc2993bb8762f4 58,90,125
+src/resources/MarketResource.ts
+  57dc2993bb8762f4 23,39
+src/resources/InventoryResource.ts
+  57dc2993bb8762f4 88
+src/resources/FactionResource.ts
+  57dc2993bb8762f4 64,80,131,147,181,197,272-273,294,366
+src/resources/DatacardResource.ts
+  57dc2993bb8762f4 24,44
+src/resources/GalaxyResource.ts
+  57dc2993bb8762f4 39,54,82,97,128,143,171,186,214,229
+src/resources/EventsResource.ts
+  57dc2993bb8762f4 47-48,86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "1e3b310fe6b3b996770cf9a641120c2ec35a60b2",
+  "prompts": {
+    "57dc2993bb8762f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6ea1cb3c-ec30-45ef-a37c-abeafff92d8e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>",
+      "messages": [],
+      "total_additions": 114,
+      "total_deletions": 11,
+      "accepted_lines": 499,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/05aad9f59239ab119a486ae41f661b812e951857bd2ded5e663dce604bf60758"
+    }
+  }
+}

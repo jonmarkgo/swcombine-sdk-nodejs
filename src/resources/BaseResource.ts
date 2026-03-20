@@ -46,6 +46,8 @@ export abstract class BaseResource {
     attributes: Record<string, unknown>;
     defaultStart: number;
     fetcher: (start: number) => Promise<Page<T>>;
+    /** Milliseconds to wait before fetching the next page. Default: 0. */
+    pageDelay?: number;
   }): Page<T> {
     const attrs = options.attributes ?? {};
     const total = attrs.total != null ? Number(attrs.total) : 0;
@@ -65,6 +67,7 @@ export abstract class BaseResource {
       count,
       hasMore,
       fetcher: options.fetcher,
+      pageDelay: options.pageDelay,
     });
   }
 }

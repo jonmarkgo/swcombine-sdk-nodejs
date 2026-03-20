@@ -120,7 +120,7 @@ export class CharacterMessagesResource extends BaseResource {
       // API returns { attributes: {...}, message: [...] }, extract array and attributes
       const data = response.message ?? [];
       const attrs = (response.attributes as Record<string, unknown>) ?? {};
-      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest });
+      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
     };
 
     return makeRequest(options.start_index ?? 1);
@@ -460,7 +460,7 @@ export class CharacterCreditlogResource extends BaseResource {
       // HttpClient unwraps to { attributes: {...}, transaction: [...] }
       const data = response.transaction ?? [];
       const attrs = (response.attributes as Record<string, unknown>) ?? {};
-      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest });
+      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
     };
 
     return makeRequest(options.start_index ?? 1);

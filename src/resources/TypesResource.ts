@@ -55,6 +55,7 @@ export class TypesClassesResource extends BaseResource {
     entityType: TypesEntityType;
     start_index?: number;
     item_count?: number;
+    pageDelay?: number;
   }): Promise<Page<EntityClass>> {
     const makeRequest = async (startIndex: number): Promise<Page<EntityClass>> => {
       const params = { start_index: startIndex, item_count: options.item_count ?? 50 };
@@ -86,7 +87,7 @@ export class TypesClassesResource extends BaseResource {
         attrs = (response.attributes ?? {}) as Record<string, unknown>;
       }
 
-      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest });
+      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
     };
 
     return makeRequest(options.start_index ?? 1);
@@ -121,7 +122,7 @@ export class TypesEntitiesResource extends BaseResource {
       const data = this.extractEntityArrayForType(response, options.entityType);
       const attrs = (response.attributes ?? {}) as Record<string, unknown>;
 
-      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest });
+      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
     };
 
     return makeRequest(options.start_index ?? 1);

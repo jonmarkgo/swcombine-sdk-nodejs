@@ -1317,6 +1317,8 @@ export interface ListTypesClassesOptions<T extends TypesEntityType = TypesEntity
   entityType: T;
   start_index?: number;
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
 }
 
 export interface ListTypesEntitiesOptions<T extends TypesEntityType = TypesEntityType> {
@@ -1324,6 +1326,8 @@ export interface ListTypesEntitiesOptions<T extends TypesEntityType = TypesEntit
   class?: string;
   start_index?: number;
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
 }
 
 export interface GetTypesEntityOptions<T extends TypesEntityType = TypesEntityType> {
@@ -2097,6 +2101,8 @@ export interface ListMessagesOptions {
   mode?: MessageMode;
   start_index?: number;
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
 }
 
 export interface GetMessageOptions {
@@ -2138,6 +2144,8 @@ export interface GetCharacterCreditlogOptions {
   start_index?: number;
   /** Number of items to retrieve. Default: 50, Max: 1000 */
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
   /** Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000) */
   start_id?: number;
 }
@@ -2156,6 +2164,8 @@ export interface ListFactionsOptions {
   start_index?: number;
   /** Number of items to retrieve. Default: 50 */
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
 }
 
 export interface ListFactionMembersOptions {
@@ -2218,6 +2228,8 @@ export interface ListNewsOptionsBase {
   start_index?: number;
   /** Number of items to retrieve. Default: 50, Max: 50 */
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
   /** Filter news starting from this Unix timestamp */
   start_date?: number;
   /** Filter news up to this Unix timestamp */
@@ -2266,6 +2278,8 @@ export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = In
   start_index?: number;
   /** Number of items to retrieve. Default: 50, Max: 200 */
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
   /** Filter types to apply to the query */
   filter_type?: InventoryFilterType[];
   /** Values corresponding to each filter type */

@@ -36,7 +36,7 @@ export class GalaxyPlanetsResource extends BaseResource {
    * const planets = await client.galaxy.planets.list();
    * const morePlanets = await client.galaxy.planets.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Page<GalaxyPlanetListItem>> {
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxyPlanetListItem>> {
     const makeRequest = async (startIndex: number): Promise<Page<GalaxyPlanetListItem>> => {
       const params = {
         start_index: startIndex,
@@ -51,6 +51,7 @@ export class GalaxyPlanetsResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
     };
 
@@ -78,7 +79,7 @@ export class GalaxySectorsResource extends BaseResource {
    * const sectors = await client.galaxy.sectors.list();
    * const moreSectors = await client.galaxy.sectors.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Page<GalaxySectorListItem>> {
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxySectorListItem>> {
     const makeRequest = async (startIndex: number): Promise<Page<GalaxySectorListItem>> => {
       const params = {
         start_index: startIndex,
@@ -93,6 +94,7 @@ export class GalaxySectorsResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
     };
 
@@ -123,7 +125,7 @@ export class GalaxySystemsResource extends BaseResource {
    * const systems = await client.galaxy.systems.list();
    * const moreSystems = await client.galaxy.systems.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Page<GalaxySystemListItem>> {
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxySystemListItem>> {
     const makeRequest = async (startIndex: number): Promise<Page<GalaxySystemListItem>> => {
       const params = {
         start_index: startIndex,
@@ -138,6 +140,7 @@ export class GalaxySystemsResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
     };
 
@@ -165,7 +168,7 @@ export class GalaxyStationsResource extends BaseResource {
    * const stations = await client.galaxy.stations.list();
    * const moreStations = await client.galaxy.stations.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Page<GalaxyStationListItem>> {
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxyStationListItem>> {
     const makeRequest = async (startIndex: number): Promise<Page<GalaxyStationListItem>> => {
       const params = {
         start_index: startIndex,
@@ -180,6 +183,7 @@ export class GalaxyStationsResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
     };
 
@@ -207,7 +211,7 @@ export class GalaxyCitiesResource extends BaseResource {
    * const cities = await client.galaxy.cities.list();
    * const moreCities = await client.galaxy.cities.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<Page<GalaxyCityListItem>> {
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxyCityListItem>> {
     const makeRequest = async (startIndex: number): Promise<Page<GalaxyCityListItem>> => {
       const params = {
         start_index: startIndex,
@@ -222,6 +226,7 @@ export class GalaxyCitiesResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
     };
 

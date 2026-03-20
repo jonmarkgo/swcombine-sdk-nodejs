@@ -44,6 +44,8 @@ export class EventsResource extends BaseResource {
     start_time?: number;
     /** Faction ID for faction mode */
     faction_id?: string;
+    /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+    pageDelay?: number;
   }): Promise<Page<Event>> {
     const makeRequest = async (startIndex: number): Promise<Page<Event>> => {
       const params: QueryParams = {
@@ -81,6 +83,7 @@ export class EventsResource extends BaseResource {
         attributes: attrs,
         defaultStart: 0, // 0-based!
         fetcher: makeRequest,
+        pageDelay: options.pageDelay,
       });
     };
 

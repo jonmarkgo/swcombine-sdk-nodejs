@@ -61,6 +61,7 @@ export class FactionMembersResource extends BaseResource {
     factionId: string;
     start_index?: number;
     item_count?: number;
+    pageDelay?: number;
   }): Promise<Page<FactionMember>> {
     const makeRequest = async (startIndex: number): Promise<Page<FactionMember>> => {
       const params = {
@@ -76,6 +77,7 @@ export class FactionMembersResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options.pageDelay,
       });
     };
 
@@ -126,6 +128,7 @@ export class FactionBudgetsResource extends BaseResource {
     factionId: string;
     start_index?: number;
     item_count?: number;
+    pageDelay?: number;
   }): Promise<Page<Budget>> {
     const makeRequest = async (startIndex: number): Promise<Page<Budget>> => {
       const params = {
@@ -141,6 +144,7 @@ export class FactionBudgetsResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options.pageDelay,
       });
     };
 
@@ -174,6 +178,7 @@ export class FactionStockholdersResource extends BaseResource {
     factionId: string;
     start_index?: number;
     item_count?: number;
+    pageDelay?: number;
   }): Promise<Page<Stockholder>> {
     const makeRequest = async (startIndex: number): Promise<Page<Stockholder>> => {
       const params = {
@@ -189,6 +194,7 @@ export class FactionStockholdersResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options.pageDelay,
       });
     };
 
@@ -263,6 +269,8 @@ export class FactionCreditlogResource extends BaseResource {
     item_count?: number;
     /** Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000) */
     start_id?: number;
+    /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+    pageDelay?: number;
   }): Promise<Page<CreditLogEntry>> {
     const makeRequest = async (startIndex: number): Promise<Page<CreditLogEntry>> => {
       const params: Record<string, number> = {
@@ -283,6 +291,7 @@ export class FactionCreditlogResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options.pageDelay,
       });
     };
 
@@ -354,6 +363,7 @@ export class FactionResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
     };
 

@@ -13,6 +13,7 @@ export class Page<T> implements AsyncIterable<T> {
   readonly hasMore: boolean;
 
   private _fetcher: (start: number) => Promise<Page<T>>;
+  private _pageDelay: number;
 
   constructor(options: {
     data: T[];
@@ -21,6 +22,8 @@ export class Page<T> implements AsyncIterable<T> {
     count: number;
     hasMore: boolean;
     fetcher: (start: number) => Promise<Page<T>>;
+    /** Milliseconds to wait before fetching the next page. Default: 0 (no delay). */
+    pageDelay?: number;
   }) {
     this.data = options.data;
     this.total = options.total;
@@ -28,10 +31,14 @@ export class Page<T> implements AsyncIterable<T> {
     this.count = options.count;
     this.hasMore = options.hasMore;
     this._fetcher = options.fetcher;
+    this._pageDelay = options.pageDelay ?? 0;
   }
 
   async getNextPage(): Promise<Page<T>> {
     if (!this.hasMore) throw new Error('No more pages');
+    if (this._pageDelay > 0) {
+      await new Promise((resolve) => setTimeout(resolve, this._pageDelay));
+    }
     return this._fetcher(this.start + this.count);
   }
 

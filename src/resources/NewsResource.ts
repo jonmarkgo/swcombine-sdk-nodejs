@@ -186,6 +186,7 @@ export class GNSResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
     };
 
@@ -255,6 +256,7 @@ export class SimNewsResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
     };
 

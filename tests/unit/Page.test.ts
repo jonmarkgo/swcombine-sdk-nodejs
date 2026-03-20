@@ -207,6 +207,61 @@ describe('Page', () => {
     });
   });
 
+  // ─── pageDelay ───────────────────────────────────────────────────
+
+  describe('pageDelay', () => {
+    it('delays before fetching the next page when pageDelay is set', async () => {
+      const page2 = new Page<string>({
+        data: ['c'],
+        total: 3,
+        start: 2,
+        count: 1,
+        hasMore: false,
+        fetcher: vi.fn(),
+        pageDelay: 100,
+      });
+      const fetcher = vi.fn().mockResolvedValue(page2);
+
+      const page1 = new Page<string>({
+        data: ['a', 'b'],
+        total: 3,
+        start: 0,
+        count: 2,
+        hasMore: true,
+        fetcher,
+        pageDelay: 100,
+      });
+
+      const startTime = Date.now();
+      await page1.getNextPage();
+      const elapsed = Date.now() - startTime;
+
+      expect(fetcher).toHaveBeenCalledWith(2);
+      expect(elapsed).toBeGreaterThanOrEqual(80); // allow some timer variance
+    });
+
+    it('does not delay when pageDelay is 0 (default)', async () => {
+      const page2 = makePage<string>({ data: ['c'], start: 2, count: 1, total: 3, hasMore: false });
+      const fetcher = vi.fn().mockResolvedValue(page2);
+
+      const page1 = makePage<string>({
+        data: ['a', 'b'],
+        start: 0,
+        count: 2,
+        total: 3,
+        hasMore: true,
+        fetcher,
+      });
+
+      const startTime = Date.now();
+      await page1.getNextPage();
+      const elapsed = Date.now() - startTime;
+
+      expect(fetcher).toHaveBeenCalled();
+      expect(elapsed).toBeLessThan(50);
+    });
+  });
+
   // ─── toJSON() ─────────────────────────────────────────────────────
 
   describe('toJSON()', () => {

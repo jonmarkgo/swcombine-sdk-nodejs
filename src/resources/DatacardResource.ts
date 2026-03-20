@@ -21,7 +21,7 @@ export class DatacardResource extends BaseResource {
   /**
    * List datacards owned by faction
    */
-  async list(options: { factionId: string }): Promise<Page<Datacard>> {
+  async list(options: { factionId: string; pageDelay?: number }): Promise<Page<Datacard>> {
     const makeRequest = async (startIndex: number): Promise<Page<Datacard>> => {
       const response = await this.http.get<Record<string, unknown>>(`/datacards/${options.factionId}`);
 
@@ -41,6 +41,7 @@ export class DatacardResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options.pageDelay,
       });
     };
 

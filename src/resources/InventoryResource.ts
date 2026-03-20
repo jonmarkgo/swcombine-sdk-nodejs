@@ -85,6 +85,7 @@ export class InventoryEntitiesResource extends BaseResource {
         attributes: attrs,
         defaultStart: 1,
         fetcher: makeRequest,
+        pageDelay: options.pageDelay,
       });
     };
 

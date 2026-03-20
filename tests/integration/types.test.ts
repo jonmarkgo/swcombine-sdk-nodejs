@@ -7,6 +7,13 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
 import { createTestClient, saveResponse, expectArray, expectFields } from './setup.js';
 
+function expectPageShape(response: unknown): void {
+  expect(response).toBeDefined();
+  expect(typeof response).toBe('object');
+  expect(response).not.toBeNull();
+  expectFields(response, ['data', 'total', 'start', 'count', 'hasMore']);
+}
+
 describe('Types Resource Integration Tests', () => {
   let client: SWCombine;
 
@@ -30,7 +37,7 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.classes.list({ entityType: 'ships' });
       saveResponse('types-classes-ships', response);
 
-      expectArray(response);
+      expectPageShape(response);
       // Ships should have classes
     });
 
@@ -38,7 +45,7 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.classes.list({ entityType: 'vehicles' });
       saveResponse('types-classes-vehicles', response);
 
-      expectArray(response);
+      expectPageShape(response);
     });
 
     it('should list classes with pagination', async () => {
@@ -51,9 +58,9 @@ describe('Types Resource Integration Tests', () => {
       });
       saveResponse('types-classes-ships-paginated', response);
 
-      expectArray(response);
+      expectPageShape(response);
       // API returns all classes (pagination not supported for this endpoint)
-      expect((response as any[]).length).toBeGreaterThan(0);
+      expect(response.data.length).toBeGreaterThan(0);
     });
   });
 
@@ -62,44 +69,47 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'ships' });
       saveResponse('types-entities-ships', response);
 
-      expectArray(response, 1);
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
       // Each entity should have attributes
-      const entity = (response as any[])[0];
+      const entity = response.data[0];
       expectFields(entity, ['attributes']);
     });
 
-    it('should list raw entities payload for ships', async () => {
-      const response = await client.types.entities.listRaw({ entityType: 'ships' });
-      saveResponse('types-entities-ships-raw', response);
+    it('should list entities payload for ships with metadata', async () => {
+      const response = await client.types.entities.list({ entityType: 'ships' });
+      saveResponse('types-entities-ships-page', response);
 
-      expect(response.attributes).toBeDefined();
-      expect(Array.isArray(response.items)).toBe(true);
-      expect(response.items.length).toBeGreaterThan(0);
+      expectPageShape(response);
+      expect(response.total).toBeGreaterThan(0);
+      expect(response.data.length).toBeGreaterThan(0);
     });
 
-    it('should list raw entities payload for faction modules', async () => {
-      const response = await client.types.entities.listRaw({ entityType: 'factionmodules' });
-      saveResponse('types-entities-factionmodules-raw', response);
+    it('should list entities payload for faction modules with metadata', async () => {
+      const response = await client.types.entities.list({ entityType: 'factionmodules' });
+      saveResponse('types-entities-factionmodules-page', response);
 
-      expect(response.attributes).toBeDefined();
-      expect(Array.isArray(response.items)).toBe(true);
-      expect(response.items.length).toBeGreaterThan(0);
-      expect(response.items[0]?.attributes?.uid).toBeDefined();
+      expectPageShape(response);
+      expect(response.total).toBeGreaterThan(0);
+      expect(response.data.length).toBeGreaterThan(0);
+      expect(response.data[0]?.attributes?.uid).toBeDefined();
     });
 
     it('should list entities of type vehicles', async () => {
       const response = await client.types.entities.list({ entityType: 'vehicles' });
       saveResponse('types-entities-vehicles', response);
 
-      expectArray(response, 1);
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should list entities of type creatures', async () => {
       const response = await client.types.entities.list({ entityType: 'creatures' });
       saveResponse('types-entities-creatures', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -107,8 +117,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'factionmodules' });
       saveResponse('types-entities-factionmodules', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -116,8 +127,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'terrain' });
       saveResponse('types-entities-terrain', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -125,8 +137,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'planets' });
       saveResponse('types-entities-planets', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -134,8 +147,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'weapons' });
       saveResponse('types-entities-weapons', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -143,8 +157,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'races' });
       saveResponse('types-entities-races', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -152,8 +167,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'materials' });
       saveResponse('types-entities-materials', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -161,8 +177,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'droids' });
       saveResponse('types-entities-droids', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -170,8 +187,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'npcs' });
       saveResponse('types-entities-npcs', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -179,8 +197,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'items' });
       saveResponse('types-entities-items', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -188,8 +207,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'facilities' });
       saveResponse('types-entities-facilities', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -197,8 +217,9 @@ describe('Types Resource Integration Tests', () => {
       const response = await client.types.entities.list({ entityType: 'stations' });
       saveResponse('types-entities-stations', response);
 
-      expectArray(response, 1);
-      const entity = response[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const entity = response.data[0];
       expect(entity?.attributes?.uid).toBeDefined();
     });
 
@@ -210,16 +231,16 @@ describe('Types Resource Integration Tests', () => {
       });
       saveResponse('types-entities-ships-paginated', response);
 
-      expectArray(response);
-      expect((response as any[]).length).toBeLessThanOrEqual(10);
+      expectPageShape(response);
+      expect(response.data.length).toBeLessThanOrEqual(10);
     });
 
     it('should get specific entity type info', async () => {
       // First get the list to find a valid entity
       const entities = await client.types.entities.list({ entityType: 'ships' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No entity UID found in list response');
         return;
@@ -242,9 +263,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific vehicle type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'vehicles' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No vehicle UID found in list response');
         return;
@@ -276,9 +297,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific creature type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'creatures' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No creature UID found in list response');
         return;
@@ -304,9 +325,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific faction module type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'factionmodules' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No faction module UID found in list response');
         return;
@@ -329,9 +350,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific terrain type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'terrain' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No terrain UID found in list response');
         return;
@@ -354,9 +375,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific planet type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'planets' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No planet UID found in list response');
         return;
@@ -379,9 +400,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific weapon type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'weapons' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No weapon UID found in list response');
         return;
@@ -407,9 +428,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific race type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'races' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No race UID found in list response');
         return;
@@ -441,9 +462,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific material type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'materials' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No material UID found in list response');
         return;
@@ -472,9 +493,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific droid type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'droids' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No droid UID found in list response');
         return;
@@ -506,9 +527,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific npc type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'npcs' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No NPC UID found in list response');
         return;
@@ -537,9 +558,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific item type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'items' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No item UID found in list response');
         return;
@@ -568,9 +589,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific facility type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'facilities' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No facility UID found in list response');
         return;
@@ -596,9 +617,9 @@ describe('Types Resource Integration Tests', () => {
 
     it('should get specific station type info', async () => {
       const entities = await client.types.entities.list({ entityType: 'stations' });
-      expect(entities.length).toBeGreaterThan(0);
+      expect(entities.data.length).toBeGreaterThan(0);
 
-      const entityUid = entities[0]?.attributes?.uid;
+      const entityUid = entities.data[0]?.attributes?.uid;
       if (!entityUid) {
         console.log('⊘ Skipping: No station UID found in list response');
         return;

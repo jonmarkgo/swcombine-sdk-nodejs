@@ -10,10 +10,16 @@ import {
   saveResponse,
   TEST_CONFIG,
   hasAuthToken,
-  expectArray,
   expectFields,
   expectUid,
 } from './setup.js';
+
+function expectPageShape(response: unknown): void {
+  expect(response).toBeDefined();
+  expect(typeof response).toBe('object');
+  expect(response).not.toBeNull();
+  expectFields(response, ['data', 'total', 'start', 'count', 'hasMore']);
+}
 
 describe('Faction Resource Integration Tests', () => {
   let client: SWCombine;
@@ -27,27 +33,30 @@ describe('Faction Resource Integration Tests', () => {
       const response = await client.faction.list();
       saveResponse('faction-list', response);
 
-      expectFields(response, ['attributes', 'faction']);
-      expectArray(response.faction, 1);
-      const faction = response.faction?.[0];
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
+      const faction = response.data[0];
       expectFields(faction, ['attributes', 'value', 'leader']);
     });
 
     it('should list all factions across all pages', async () => {
       const firstPage = await client.faction.list();
-      const response = await client.faction.listAll();
-      saveResponse('faction-list-all', response);
+      const allFactions: any[] = [];
+      for await (const faction of firstPage) {
+        allFactions.push(faction);
+      }
+      saveResponse('faction-list-all', allFactions);
 
-      expectArray(response, 1);
+      expect(allFactions.length).toBeGreaterThanOrEqual(1);
 
-      const firstPageIds = (firstPage.faction ?? []).map((faction) => faction.attributes.uid);
-      const allIds = response.map((faction) => faction.attributes.uid);
+      const firstPageIds = firstPage.data.map((faction) => faction.attributes.uid);
+      const allIds = allFactions.map((faction) => faction.attributes.uid);
 
       for (const id of firstPageIds) {
         expect(allIds).toContain(id);
       }
 
-      const faction = response[0];
+      const faction = allFactions[0];
       expectFields(faction, ['attributes', 'value', 'leader']);
     });
   });
@@ -75,7 +84,7 @@ describe('Faction Resource Integration Tests', () => {
       const response = await client.faction.members.list({ factionId: TEST_CONFIG.factionUid });
       saveResponse('faction-members', response);
 
-      expectArray(response);
+      expectPageShape(response);
     });
 
     it('should list faction budgets', async () => {
@@ -87,7 +96,7 @@ describe('Faction Resource Integration Tests', () => {
       const response = await client.faction.budgets.list({ factionId: TEST_CONFIG.factionUid });
       saveResponse('faction-budgets', response);
 
-      expectArray(response);
+      expectPageShape(response);
     });
 
     it('should list faction stockholders', async () => {
@@ -99,7 +108,7 @@ describe('Faction Resource Integration Tests', () => {
       const response = await client.faction.stockholders.list({ factionId: TEST_CONFIG.factionUid });
       saveResponse('faction-stockholders', response);
 
-      expectArray(response);
+      expectPageShape(response);
     });
 
     it('should get faction credits', async () => {
@@ -124,7 +133,7 @@ describe('Faction Resource Integration Tests', () => {
       const response = await client.faction.creditlog.list({ factionId: TEST_CONFIG.factionUid });
       saveResponse('faction-creditlog', response);
 
-      expectArray(response);
+      expectPageShape(response);
     });
   });
 });

@@ -11,9 +11,15 @@ import {
   hasAuthToken,
   TEST_CONFIG,
   expectFields,
-  expectArray,
   expectUid,
 } from './setup.js';
+
+function expectPageShape(response: unknown): void {
+  expect(response).toBeDefined();
+  expect(typeof response).toBe('object');
+  expect(response).not.toBeNull();
+  expectFields(response, ['data', 'total', 'start', 'count', 'hasMore']);
+}
 
 describe('Character Resource Integration Tests', () => {
   let client: SWCombine;
@@ -105,8 +111,8 @@ describe('Character Resource Integration Tests', () => {
       const response = await client.character.creditlog.list({ uid: TEST_CONFIG.characterUid });
       saveResponse('character-creditlog', response);
 
-      expectArray(response);
-      // Credit log is an array of transactions
+      expectPageShape(response);
+      // Credit log is a page of transactions
     });
 
     it('should list character messages (received)', async () => {
@@ -121,7 +127,7 @@ describe('Character Resource Integration Tests', () => {
       });
       saveResponse('character-messages-received', response);
 
-      expectArray(response);
+      expectPageShape(response);
     });
 
     it('should list character messages (sent)', async () => {
@@ -136,7 +142,7 @@ describe('Character Resource Integration Tests', () => {
       });
       saveResponse('character-messages-sent', response);
 
-      expectArray(response);
+      expectPageShape(response);
     });
 
     it('should get character permissions', async () => {

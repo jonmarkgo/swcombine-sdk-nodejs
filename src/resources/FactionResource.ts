@@ -4,6 +4,7 @@
 
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
+import { Page } from '../pagination/Page.js';
 import {
   FactionDetail,
   Character,
@@ -12,7 +13,6 @@ import {
   TransferFactionCreditsOptions,
   CreditLogEntry,
   FactionListItem,
-  FactionListResponse,
   ListFactionsOptions,
 } from '../types/index.js';
 
@@ -52,21 +52,36 @@ export class FactionMembersResource extends BaseResource {
    * List faction members (paginated)
    * @param options - Faction ID and optional pagination parameters
    * @example
-   * const members = await client.faction.members.list({ factionId: '20:123' });
-   * const moreMembers = await client.faction.members.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+   * const page = await client.faction.members.list({ factionId: '20:123' });
+   * console.log(page.data); // FactionMember[]
+   * // Iterate all pages:
+   * for await (const member of page) { console.log(member); }
    */
   async list(options: {
     factionId: string;
     start_index?: number;
     item_count?: number;
-  }): Promise<FactionMember[]> {
-    const params = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
+    pageDelay?: number;
+  }): Promise<Page<FactionMember>> {
+    const makeRequest = async (startIndex: number): Promise<Page<FactionMember>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>(`/faction/${options.factionId}/members`, { params });
+      const data = (response.member ?? []) as FactionMember[];
+      const attrs = (response.attributes ?? {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
-    const response = await this.http.get<{ member?: FactionMember[]; attributes?: unknown }>(`/faction/${options.factionId}/members`, { params });
-    // API returns { attributes: {...}, member: [...] }, extract just the array
-    return response.member || [];
+
+    return makeRequest(options.start_index ?? 1);
   }
 
   /**
@@ -104,21 +119,36 @@ export class FactionBudgetsResource extends BaseResource {
    * List faction budgets (paginated)
    * @param options - Faction ID and optional pagination parameters
    * @example
-   * const budgets = await client.faction.budgets.list({ factionId: '20:123' });
-   * const moreBudgets = await client.faction.budgets.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+   * const page = await client.faction.budgets.list({ factionId: '20:123' });
+   * console.log(page.data); // Budget[]
+   * // Iterate all pages:
+   * for await (const budget of page) { console.log(budget); }
    */
   async list(options: {
     factionId: string;
     start_index?: number;
     item_count?: number;
-  }): Promise<Budget[]> {
-    const params = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
+    pageDelay?: number;
+  }): Promise<Page<Budget>> {
+    const makeRequest = async (startIndex: number): Promise<Page<Budget>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>(`/faction/${options.factionId}/budgets`, { params });
+      const data = (response.budget ?? []) as Budget[];
+      const attrs = (response.attributes ?? {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
-    const response = await this.http.get<{ budget?: Budget[]; attributes?: unknown }>(`/faction/${options.factionId}/budgets`, { params });
-    // API returns { attributes: {...}, budget: [...] }, extract just the array
-    return response.budget || [];
+
+    return makeRequest(options.start_index ?? 1);
   }
 
   /**
@@ -139,21 +169,36 @@ export class FactionStockholdersResource extends BaseResource {
    * List faction stockholders (paginated)
    * @param options - Faction ID and optional pagination parameters
    * @example
-   * const stockholders = await client.faction.stockholders.list({ factionId: '20:123' });
-   * const moreStockholders = await client.faction.stockholders.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+   * const page = await client.faction.stockholders.list({ factionId: '20:123' });
+   * console.log(page.data); // Stockholder[]
+   * // Iterate all pages:
+   * for await (const stockholder of page) { console.log(stockholder); }
    */
   async list(options: {
     factionId: string;
     start_index?: number;
     item_count?: number;
-  }): Promise<Stockholder[]> {
-    const params = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
+    pageDelay?: number;
+  }): Promise<Page<Stockholder>> {
+    const makeRequest = async (startIndex: number): Promise<Page<Stockholder>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>(`/faction/${options.factionId}/stockholders`, { params });
+      const data = (response.stockholder ?? []) as Stockholder[];
+      const attrs = (response.attributes ?? {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
-    const response = await this.http.get<{ stockholder?: Stockholder[]; attributes?: unknown }>(`/faction/${options.factionId}/stockholders`, { params });
-    // API returns { attributes: {...}, stockholder: [...] }, extract just the array
-    return response.stockholder || [];
+
+    return makeRequest(options.start_index ?? 1);
   }
 }
 
@@ -224,18 +269,33 @@ export class FactionCreditlogResource extends BaseResource {
     item_count?: number;
     /** Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000) */
     start_id?: number;
-  }): Promise<CreditLogEntry[]> {
-    const params: Record<string, number> = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
+    /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+    pageDelay?: number;
+  }): Promise<Page<CreditLogEntry>> {
+    const makeRequest = async (startIndex: number): Promise<Page<CreditLogEntry>> => {
+      const params: Record<string, number> = {
+        start_index: startIndex,
+        item_count: options.item_count ?? 50,
+      };
+      if (options.start_id !== undefined) {
+        params.start_id = options.start_id;
+      }
+      const response = await this.http.get<Record<string, unknown>>(`/faction/${options.factionId}/creditlog`, { params });
+      // API returns { swcapi: { transactions: { attributes: {...}, transaction: [...] } } }
+      // HttpClient unwraps to { attributes: {...}, transaction: [...] }
+      const data = (response.transaction ?? []) as CreditLogEntry[];
+      const attrs = (response.attributes ?? {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
-    if (options.start_id !== undefined) {
-      params.start_id = options.start_id;
-    }
-    const response = await this.http.get<{ transaction?: CreditLogEntry[]; attributes?: unknown }>(`/faction/${options.factionId}/creditlog`, { params });
-    // API returns { swcapi: { transactions: { attributes: {...}, transaction: [...] } } }
-    // HttpClient unwraps to { attributes: {...}, transaction: [...] }
-    return response.transaction || [];
+
+    return makeRequest(options.start_index ?? 1);
   }
 }
 
@@ -281,59 +341,32 @@ export class FactionResource extends BaseResource {
    * @requires_auth No
    * @param options - Optional pagination parameters
    * @example
-   * const response = await client.faction.list();
-   * console.log(response.attributes?.total);
-   * console.log(response.faction?.[0]?.value);
+   * const page = await client.faction.list();
+   * console.log(page.total);
+   * console.log(page.data[0]?.value);
    *
-   * const moreFactions = await client.faction.list({ start_index: 51, item_count: 50 });
+   * // Iterate all pages:
+   * for await (const faction of page) { console.log(faction); }
    */
-  async list(options?: ListFactionsOptions): Promise<FactionListResponse> {
-    const params = {
-      start_index: options?.start_index ?? 1,
-      item_count: options?.item_count ?? 50,
-    };
-    return this.http.get<FactionListResponse>('/factions', { params });
-  }
-
-  /**
-   * List all factions across every page.
-   * @requires_auth No
-   * @param options - Optional pagination parameters for the page size and starting offset
-   * @example
-   * const factions = await client.faction.listAll();
-   * console.log(factions.length);
-   */
-  async listAll(options?: ListFactionsOptions): Promise<FactionListItem[]> {
-    const itemCount = options?.item_count ?? 50;
-    let startIndex = options?.start_index ?? 1;
-    const factions: FactionListItem[] = [];
-
-    while (true) {
-      const response = await this.list({
+  async list(options?: ListFactionsOptions): Promise<Page<FactionListItem>> {
+    const makeRequest = async (startIndex: number): Promise<Page<FactionListItem>> => {
+      const params = {
         start_index: startIndex,
-        item_count: itemCount,
+        item_count: options?.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>('/factions', { params });
+      const data = (response.faction ?? []) as FactionListItem[];
+      const attrs = (response.attributes ?? {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
       });
-      const pageItems = response.faction ?? [];
-      const pageStart = response.attributes?.start ?? startIndex;
-      const pageCount =
-        typeof response.attributes?.count === 'number' && response.attributes.count > 0
-          ? response.attributes.count
-          : pageItems.length;
-      const total = response.attributes?.total;
+    };
 
-      factions.push(...pageItems);
-
-      if (pageItems.length === 0 || pageItems.length < itemCount) {
-        break;
-      }
-
-      if (typeof total === 'number' && pageStart + pageCount - 1 >= total) {
-        break;
-      }
-
-      startIndex = pageStart + pageCount;
-    }
-
-    return factions;
+    return makeRequest(options?.start_index ?? 1);
   }
 }

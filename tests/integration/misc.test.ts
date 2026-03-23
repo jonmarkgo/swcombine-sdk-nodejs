@@ -10,9 +10,15 @@ import {
   saveResponse,
   hasAuthToken,
   TEST_CONFIG,
-  expectArray,
   expectFields,
 } from './setup.js';
+
+function expectPageShape(response: unknown): void {
+  expect(response).toBeDefined();
+  expect(typeof response).toBe('object');
+  expect(response).not.toBeNull();
+  expectFields(response, ['data', 'total', 'start', 'count', 'hasMore']);
+}
 
 describe('Events Resource Integration Tests', () => {
   let client: SWCombine;
@@ -30,7 +36,7 @@ describe('Events Resource Integration Tests', () => {
     const response = await client.events.list({ eventMode: 'personal' });
     saveResponse('events-list', response);
 
-    expectArray(response);
+    expectPageShape(response);
   });
 
   it('should list events with pagination', async () => {
@@ -46,8 +52,8 @@ describe('Events Resource Integration Tests', () => {
     });
     saveResponse('events-list-paginated', response);
 
-    expectArray(response);
-    expect((response as any[]).length).toBeLessThanOrEqual(10);
+    expectPageShape(response);
+    expect(response.data.length).toBeLessThanOrEqual(10);
   });
 
   it('should get specific event if available', async () => {
@@ -57,12 +63,12 @@ describe('Events Resource Integration Tests', () => {
     }
 
     const events = await client.events.list({ eventMode: 'personal' });
-    if ((events as any[]).length === 0) {
+    if (events.data.length === 0) {
       console.log('⊘ Skipping: No events available');
       return;
     }
 
-    const eventUid = (events as any[])[0].uid || (events as any[])[0].attributes?.uid;
+    const eventUid = (events.data[0] as any).uid || (events.data[0] as any).attributes?.uid;
     if (!eventUid) {
       console.log('⊘ Skipping: No event UID found');
       return;
@@ -116,7 +122,7 @@ describe('Datacard Resource Integration Tests', () => {
     const response = await client.datacard.list({ factionId: TEST_CONFIG.factionUid });
     saveResponse('datacard-list', response);
 
-    expectArray(response);
+    expectPageShape(response);
   });
 
   it('should get specific datacard if available', async () => {
@@ -126,12 +132,12 @@ describe('Datacard Resource Integration Tests', () => {
     }
 
     const datacards = await client.datacard.list({ factionId: TEST_CONFIG.factionUid });
-    if ((datacards as any[]).length === 0) {
+    if (datacards.data.length === 0) {
       console.log('⊘ Skipping: No datacards available');
       return;
     }
 
-    const datacardUid = (datacards as any[])[0].uid || (datacards as any[])[0].attributes?.uid;
+    const datacardUid = (datacards.data[0] as any).uid || (datacards.data[0] as any).attributes?.uid;
     if (!datacardUid) {
       console.log('⊘ Skipping: No datacard UID found');
       return;
@@ -177,7 +183,7 @@ describe('Inventory Resource Integration Tests', () => {
     });
     saveResponse('inventory-entities-vehicles', response);
 
-    expectArray(response);
+    expectPageShape(response);
   });
 
   it('should list inventory entities (ships)', async () => {
@@ -193,7 +199,7 @@ describe('Inventory Resource Integration Tests', () => {
     });
     saveResponse('inventory-entities-ships', response);
 
-    expectArray(response);
+    expectPageShape(response);
   });
 
   it('should list inventory entities with pagination', async () => {
@@ -211,7 +217,7 @@ describe('Inventory Resource Integration Tests', () => {
     });
     saveResponse('inventory-entities-ships-paginated', response);
 
-    expectArray(response);
-    expect((response as any[]).length).toBeLessThanOrEqual(10);
+    expectPageShape(response);
+    expect(response.data.length).toBeLessThanOrEqual(10);
   });
 });

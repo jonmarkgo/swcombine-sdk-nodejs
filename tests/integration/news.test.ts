@@ -8,9 +8,15 @@ import { SWCombine } from '../../src/index.js';
 import {
   createTestClient,
   saveResponse,
-  expectArray,
   expectFields,
 } from './setup.js';
+
+function expectPageShape(response: unknown): void {
+  expect(response).toBeDefined();
+  expect(typeof response).toBe('object');
+  expect(response).not.toBeNull();
+  expectFields(response, ['data', 'total', 'start', 'count', 'hasMore']);
+}
 
 describe('News Resource Integration Tests', () => {
   let client: SWCombine;
@@ -24,20 +30,20 @@ describe('News Resource Integration Tests', () => {
       const response = await client.news.gns.list();
       saveResponse('news-gns-list', response);
 
-      expectArray(response, 1);
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
       // Each news item should have attributes with id
-      const item = response[0];
+      const item = response.data[0];
       expectFields(item, ['attributes', 'value']);
       expectFields(item.attributes as unknown as Record<string, unknown>, ['id', 'href', 'title']);
-      expectFields(response as unknown as Record<string, unknown>, ['attributes']);
     });
 
     it('should get specific GNS item', async () => {
-      const items = await client.news.gns.list();
-      expect(items.length).toBeGreaterThan(0);
+      const page = await client.news.gns.list();
+      expect(page.data.length).toBeGreaterThan(0);
 
       // GNS items have attributes.id, not uid
-      const itemId = items[0].attributes.id;
+      const itemId = page.data[0].attributes.id;
       const response = await client.news.gns.get({ id: itemId });
       saveResponse('news-gns-get', response);
 
@@ -51,9 +57,8 @@ describe('News Resource Integration Tests', () => {
       const response = await client.news.gns.list({ start_index: 1, item_count: 10 });
       saveResponse('news-gns-list-paginated', response);
 
-      expectArray(response);
-      expect(response.length).toBeLessThanOrEqual(10);
-      expectFields(response as unknown as Record<string, unknown>, ['attributes']);
+      expectPageShape(response);
+      expect(response.data.length).toBeLessThanOrEqual(10);
     });
   });
 
@@ -62,22 +67,21 @@ describe('News Resource Integration Tests', () => {
       const response = await client.news.simNews.list();
       saveResponse('news-simnews-list', response);
 
-      expectArray(response);
+      expectPageShape(response);
       // SimNews may be empty
-      expectFields(response as unknown as Record<string, unknown>, ['attributes']);
-      if (response.length > 0) {
-        expectFields(response[0].attributes as unknown as Record<string, unknown>, ['id', 'href', 'title']);
+      if (response.data.length > 0) {
+        expectFields(response.data[0].attributes as unknown as Record<string, unknown>, ['id', 'href', 'title']);
       }
     });
 
     it('should get specific SimNews item if available', async () => {
-      const items = await client.news.simNews.list();
-      if (items.length === 0) {
+      const page = await client.news.simNews.list();
+      if (page.data.length === 0) {
         console.log('⊘ Skipping: No SimNews items available');
         return;
       }
 
-      const itemId = items[0].attributes.id;
+      const itemId = page.data[0].attributes.id;
       const response = await client.news.simNews.get({ id: itemId });
       saveResponse('news-simnews-get', response);
 

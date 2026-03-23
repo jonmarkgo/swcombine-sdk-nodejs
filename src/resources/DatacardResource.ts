@@ -3,6 +3,7 @@
  */
 
 import { BaseResource } from './BaseResource.js';
+import { Page } from '../pagination/Page.js';
 
 export interface Datacard {
   uid: string;
@@ -20,15 +21,31 @@ export class DatacardResource extends BaseResource {
   /**
    * List datacards owned by faction
    */
-  async list(options: { factionId: string }): Promise<Datacard[]> {
-    const response = await this.http.get<Record<string, unknown>>(`/datacards/${options.factionId}`);
-    // API returns { attributes: {...}, datacard: [...] }, extract just the array
-    for (const key of Object.keys(response)) {
-      if (key !== 'attributes' && Array.isArray(response[key])) {
-        return response[key] as Datacard[];
+  async list(options: { factionId: string; pageDelay?: number }): Promise<Page<Datacard>> {
+    const makeRequest = async (startIndex: number): Promise<Page<Datacard>> => {
+      const response = await this.http.get<Record<string, unknown>>(`/datacards/${options.factionId}`);
+
+      // Extract array — find the non-attributes array key
+      let data: Datacard[] = [];
+      let attrs: Record<string, unknown> = {};
+      for (const key of Object.keys(response)) {
+        if (key === 'attributes') {
+          attrs = response[key] as Record<string, unknown>;
+        } else if (Array.isArray(response[key])) {
+          data = response[key] as Datacard[];
+        }
       }
-    }
-    return [];
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
+    };
+
+    return makeRequest(1);
   }
 
   /**

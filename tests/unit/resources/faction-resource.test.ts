@@ -49,14 +49,14 @@ describe('FactionResource', () => {
       expect(mockHttp.get).toHaveBeenCalledWith('/factions', {
         params: { start_index: 1, item_count: 50 },
       });
-      expect(result.attributes?.total).toBe(317);
-      expect(result.faction?.[0]?.value).toBe('Rebel Alliance');
-      expect(result.faction?.[0]?.secondincommand).toEqual({});
+      expect(result.total).toBe(317);
+      expect(result.data[0]?.value).toBe('Rebel Alliance');
+      expect(result.data[0]?.secondincommand).toEqual({});
     });
   });
 
-  describe('listAll()', () => {
-    it('iterates across pages using response pagination metadata', async () => {
+  describe('auto-pagination via for-await', () => {
+    it('iterates across pages using Page<T> async iterator', async () => {
       const { resource, mockHttp } = createResource();
       mockHttp.get
         .mockResolvedValueOnce({
@@ -71,7 +71,10 @@ describe('FactionResource', () => {
           faction: [createFactionListItem('20:448', 'Biotech')],
         });
 
-      const result = await resource.listAll({ item_count: 2 });
+      const result = [];
+      for await (const faction of await resource.list({ item_count: 2 })) {
+        result.push(faction);
+      }
 
       expect(mockHttp.get).toHaveBeenNthCalledWith(1, '/factions', {
         params: { start_index: 1, item_count: 2 },
@@ -83,14 +86,17 @@ describe('FactionResource', () => {
       expect(result[0].secondincommand).toEqual({});
     });
 
-    it('stops when a page returns fewer items than requested', async () => {
+    it('stops when hasMore is false', async () => {
       const { resource, mockHttp } = createResource();
       mockHttp.get.mockResolvedValueOnce({
-        attributes: { start: 11, count: 1 },
+        attributes: { start: 11, total: 11, count: 1 },
         faction: [createFactionListItem('20:500', 'Eidola Pirates')],
       });
 
-      const result = await resource.listAll({ start_index: 11, item_count: 2 });
+      const result = [];
+      for await (const faction of await resource.list({ start_index: 11, item_count: 2 })) {
+        result.push(faction);
+      }
 
       expect(mockHttp.get).toHaveBeenCalledTimes(1);
       expect(mockHttp.get).toHaveBeenCalledWith('/factions', {

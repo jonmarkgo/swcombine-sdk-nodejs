@@ -23,11 +23,11 @@ async function main() {
 
     // List factions
     const factions = await swc.faction.list();
-    console.log(`Found ${factions.length} factions`);
+    console.log(`Found ${factions.data.length} factions`);
 
     // Get galaxy information
     const planets = await swc.galaxy.planets.list();
-    console.log(`Found ${planets.length} planets`);
+    console.log(`Found ${planets.data.length} planets`);
 
     // Check rate limits
     const rateLimits = await swc.api.rateLimits();

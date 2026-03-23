@@ -3,17 +3,14 @@
  */
 
 import { HttpClient } from '../http/HttpClient.js';
+import { Page } from '../pagination/Page.js';
 import { BaseResource } from './BaseResource.js';
 import {
   GetTypesEntityOptions,
-  ListTypesClassesOptions,
   ListTypesEntitiesOptions,
-  TypesEntitiesListMetaResponse,
-  TypesEntitiesListRawResponse,
   TypesEntityGetResponseMap,
   TypesEntityListItem,
   TypesEntityType,
-  TypesShipsListRawResponse,
 } from '../types/index.js';
 
 function getTypesEntityPathSegment(entityType: TypesEntityType): string {
@@ -54,32 +51,46 @@ export class TypesClassesResource extends BaseResource {
    * const classes = await client.types.classes.list({ entityType: 'vehicles' });
    * const moreClasses = await client.types.classes.list({ entityType: 'vehicles', start_index: 51, item_count: 50 });
    */
-  async list<T extends TypesEntityType>(
-    options: ListTypesClassesOptions<T>
-  ): Promise<EntityClass[]> {
-    const params = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
+  async list(options: {
+    entityType: TypesEntityType;
+    start_index?: number;
+    item_count?: number;
+    pageDelay?: number;
+  }): Promise<Page<EntityClass>> {
+    const makeRequest = async (startIndex: number): Promise<Page<EntityClass>> => {
+      const params = { start_index: startIndex, item_count: options.item_count ?? 50 };
+      const response = await this.http.get<Record<string, unknown>>(
+        `/types/classes/${getTypesEntityPathSegment(options.entityType)}`,
+        { params }
+      );
+
+      // API returns { swcapi: { classes: { vehicles: { attributes: {...}, class: [...] } } } }
+      // HttpClient unwraps swcapi.classes, so we get { vehicles: { attributes: {...}, class: [...] } }
+      // Attributes are nested inside response[entityType], NOT at the top level.
+      const entityTypeData = response[options.entityType] as Record<string, unknown> | undefined;
+      let data: EntityClass[] = [];
+      let attrs: Record<string, unknown> = {};
+
+      if (entityTypeData) {
+        if (Array.isArray(entityTypeData.class)) {
+          data = entityTypeData.class as EntityClass[];
+        }
+        attrs = (entityTypeData.attributes ?? {}) as Record<string, unknown>;
+      } else {
+        // Fallback: look for any array in the response
+        for (const key of Object.keys(response)) {
+          if (key !== 'attributes' && Array.isArray(response[key])) {
+            data = response[key] as EntityClass[];
+            break;
+          }
+        }
+        attrs = (response.attributes ?? {}) as Record<string, unknown>;
+      }
+
+      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
     };
 
-    const response = await this.http.get<Record<string, unknown>>(
-      `/types/classes/${getTypesEntityPathSegment(options.entityType)}`,
-      { params }
-    );
-    // API returns { swcapi: { classes: { vehicles: { attributes: {...}, class: [...] } } } }
-    // HttpClient unwraps swcapi.classes, so we get { vehicles: { attributes: {...}, class: [...] } }
-    // Extract the class array from the entity type object
-    const entityTypeData = response[options.entityType] as Record<string, unknown> | undefined;
-    if (entityTypeData && Array.isArray(entityTypeData.class)) {
-      return entityTypeData.class as EntityClass[];
-    }
-    // Fallback: look for any array in the response
-    for (const key of Object.keys(response)) {
-      if (key !== 'attributes' && Array.isArray(response[key])) {
-        return response[key] as EntityClass[];
-      }
-    }
-    return [];
+    return makeRequest(options.start_index ?? 1);
   }
 }
 
@@ -99,60 +110,22 @@ export class TypesEntitiesResource extends BaseResource {
    */
   async list<T extends TypesEntityType>(
     options: ListTypesEntitiesOptions<T>
-  ): Promise<TypesEntityListItem[]> {
-    const response = await this.listRaw(options);
-    return response.items;
-  }
+  ): Promise<Page<TypesEntityListItem>> {
+    const makeRequest = async (startIndex: number): Promise<Page<TypesEntityListItem>> => {
+      const entityPath = getTypesEntityPathSegment(options.entityType);
+      const path = options.class
+        ? `/types/${entityPath}/class/${options.class}/`
+        : `/types/${entityPath}/`;
+      const params = { start_index: startIndex, item_count: options.item_count ?? 50 };
 
-  /**
-   * Returns normalized pagination metadata and items for any `TypesEntityType`.
-   *
-   * @param options - Entity list options. `start_index` defaults to `1`, `item_count` defaults to `50`,
-   * and `class` is optional for class-filtered results.
-   * @returns `TypesEntitiesListMetaResponse` with pagination `attributes` and normalized `items`.
-   *
-   * @example
-   * const response = await client.types.entities.listRaw({
-   *   entityType: 'vehicles',
-   *   start_index: 1,
-   *   item_count: 50,
-   * });
-   * console.log(response.attributes?.total);
-   * console.log(response.items[0]?.attributes.uid);
-   *
-   * @example
-   * const response = await client.types.entities.listRaw({
-   *   entityType: 'ships',
-   *   class: 'fighter',
-   *   start_index: 1,
-   *   item_count: 25,
-   * });
-   *
-   * for (const item of response.items) {
-   *   console.log(item.attributes.uid, item.value);
-   * }
-   */
-  async listRaw<T extends TypesEntityType>(
-    options: ListTypesEntitiesOptions<T>
-  ): Promise<TypesEntitiesListMetaResponse> {
-    const entityPath = getTypesEntityPathSegment(options.entityType);
-    const path = options.class
-      ? `/types/${entityPath}/class/${options.class}/`
-      : `/types/${entityPath}/`;
+      const response = await this.http.get<Record<string, unknown>>(path, { params });
+      const data = this.extractEntityArrayForType(response, options.entityType);
+      const attrs = (response.attributes ?? {}) as Record<string, unknown>;
 
-    const params = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
+      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
     };
 
-    const payload = (await this.http.get<Record<string, unknown>>(path, {
-      params,
-    })) as TypesEntitiesListRawResponse;
-
-    return {
-      attributes: payload.attributes,
-      items: this.extractEntityArrayForType(payload, options.entityType),
-    };
+    return makeRequest(options.start_index ?? 1);
   }
 
   /**
@@ -166,20 +139,20 @@ export class TypesEntitiesResource extends BaseResource {
   }
 
   private extractEntityArrayForType(
-    response: TypesEntitiesListRawResponse,
+    response: Record<string, unknown>,
     entityType: TypesEntityType
   ): TypesEntityListItem[] {
     // Prefer explicit ships array key when available.
     if (entityType === 'ships') {
-      const shipsResponse = response as TypesShipsListRawResponse;
-      if (Array.isArray(shipsResponse.shiptype)) {
-        return shipsResponse.shiptype;
+      const shipTypes = response.shiptype;
+      if (Array.isArray(shipTypes)) {
+        return shipTypes as TypesEntityListItem[];
       }
     }
 
     // Prefer explicit vehicles array key when available.
     if (entityType === 'vehicles') {
-      const vehicleTypes = (response as Record<string, unknown>).vehicletype;
+      const vehicleTypes = response.vehicletype;
       if (Array.isArray(vehicleTypes)) {
         return vehicleTypes as TypesEntityListItem[];
       }
@@ -187,7 +160,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit creatures array key when available.
     if (entityType === 'creatures') {
-      const creatureTypes = (response as Record<string, unknown>).creaturetype;
+      const creatureTypes = response.creaturetype;
       if (Array.isArray(creatureTypes)) {
         return creatureTypes as TypesEntityListItem[];
       }
@@ -195,7 +168,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit faction module array key when available.
     if (entityType === 'factionmodules') {
-      const factionModuleTypes = (response as Record<string, unknown>)['faction moduletype'];
+      const factionModuleTypes = response['faction moduletype'];
       if (Array.isArray(factionModuleTypes)) {
         return factionModuleTypes as TypesEntityListItem[];
       }
@@ -203,7 +176,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit terrain array key when available.
     if (entityType === 'terrain') {
-      const terrainTypes = (response as Record<string, unknown>).terraintype;
+      const terrainTypes = response.terraintype;
       if (Array.isArray(terrainTypes)) {
         return terrainTypes as TypesEntityListItem[];
       }
@@ -211,7 +184,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit planet array key when available.
     if (entityType === 'planets') {
-      const planetTypes = (response as Record<string, unknown>).planettype;
+      const planetTypes = response.planettype;
       if (Array.isArray(planetTypes)) {
         return planetTypes as TypesEntityListItem[];
       }
@@ -219,7 +192,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit weapon array key when available.
     if (entityType === 'weapons') {
-      const weaponTypes = (response as Record<string, unknown>).weapontype;
+      const weaponTypes = response.weapontype;
       if (Array.isArray(weaponTypes)) {
         return weaponTypes as TypesEntityListItem[];
       }
@@ -227,7 +200,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit race array key when available.
     if (entityType === 'races') {
-      const raceTypes = (response as Record<string, unknown>).race;
+      const raceTypes = response.race;
       if (Array.isArray(raceTypes)) {
         return raceTypes as TypesEntityListItem[];
       }
@@ -235,7 +208,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit material array key when available.
     if (entityType === 'materials') {
-      const materialTypes = (response as Record<string, unknown>).materialtype;
+      const materialTypes = response.materialtype;
       if (Array.isArray(materialTypes)) {
         return materialTypes as TypesEntityListItem[];
       }
@@ -243,7 +216,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit droid array key when available.
     if (entityType === 'droids') {
-      const droidTypes = (response as Record<string, unknown>).droidtype;
+      const droidTypes = response.droidtype;
       if (Array.isArray(droidTypes)) {
         return droidTypes as TypesEntityListItem[];
       }
@@ -251,7 +224,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit NPC array key when available.
     if (entityType === 'npcs') {
-      const npcTypes = (response as Record<string, unknown>).npctype;
+      const npcTypes = response.npctype;
       if (Array.isArray(npcTypes)) {
         return npcTypes as TypesEntityListItem[];
       }
@@ -259,7 +232,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit item array key when available.
     if (entityType === 'items') {
-      const itemTypes = (response as Record<string, unknown>).itemtype;
+      const itemTypes = response.itemtype;
       if (Array.isArray(itemTypes)) {
         return itemTypes as TypesEntityListItem[];
       }
@@ -267,7 +240,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit facility array key when available.
     if (entityType === 'facilities') {
-      const facilityTypes = (response as Record<string, unknown>).facilitytype;
+      const facilityTypes = response.facilitytype;
       if (Array.isArray(facilityTypes)) {
         return facilityTypes as TypesEntityListItem[];
       }
@@ -275,7 +248,7 @@ export class TypesEntitiesResource extends BaseResource {
 
     // Prefer explicit station array key when available.
     if (entityType === 'stations') {
-      const stationTypes = (response as Record<string, unknown>).stationtype;
+      const stationTypes = response.stationtype;
       if (Array.isArray(stationTypes)) {
         return stationTypes as TypesEntityListItem[];
       }
@@ -284,7 +257,7 @@ export class TypesEntitiesResource extends BaseResource {
     return this.extractEntityArray(response);
   }
 
-  private extractEntityArray(response: TypesEntitiesListRawResponse): TypesEntityListItem[] {
+  private extractEntityArray(response: Record<string, unknown>): TypesEntityListItem[] {
     for (const key of Object.keys(response)) {
       if (key === 'attributes') {
         continue;

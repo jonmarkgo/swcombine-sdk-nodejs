@@ -443,13 +443,6 @@ export interface FactionDetail {
   [key: string]: unknown;
 }
 
-export interface FactionListAttributes {
-  start?: number;
-  total?: number;
-  count?: number;
-  [key: string]: unknown;
-}
-
 export interface FactionListReferenceAttributes {
   uid?: string;
   href?: string;
@@ -470,11 +463,6 @@ export interface FactionListItem {
   leader: FactionListReference;
   secondincommand: FactionListPersonReference;
   [key: string]: unknown;
-}
-
-export interface FactionListResponse {
-  attributes?: FactionListAttributes;
-  faction?: FactionListItem[];
 }
 
 /**
@@ -691,38 +679,6 @@ export interface GalaxyStationListItem {
   [key: string]: unknown;
 }
 
-export interface GalaxyListAttributes {
-  start?: number;
-  total?: number;
-  count?: number;
-  [key: string]: unknown;
-}
-
-export interface GalaxyPlanetListRawResponse {
-  attributes?: GalaxyListAttributes;
-  planet?: GalaxyPlanetListItem[];
-}
-
-export interface GalaxySectorListRawResponse {
-  attributes?: GalaxyListAttributes;
-  sector?: GalaxySectorListItem[];
-}
-
-export interface GalaxySystemListRawResponse {
-  attributes?: GalaxyListAttributes;
-  system?: GalaxySystemListItem[];
-}
-
-export interface GalaxyStationListRawResponse {
-  attributes?: GalaxyListAttributes;
-  station?: GalaxyStationListItem[];
-}
-
-export interface GalaxyCityListRawResponse {
-  attributes?: GalaxyListAttributes;
-  city?: GalaxyCityListItem[];
-}
-
 export interface GalaxyColour {
   r: number;
   g: number;
@@ -923,21 +879,6 @@ export interface NewsListItem {
 }
 
 /**
- * Pagination metadata returned by news list endpoints.
- */
-export interface NewsListAttributes {
-  start?: number;
-  total?: number;
-  count?: number;
-  [key: string]: unknown;
-}
-
-/**
- * News list result that preserves array behavior and exposes list metadata.
- */
-export type NewsListResponse = NewsListItem[] & { attributes: NewsListAttributes };
-
-/**
  * Reference object used by detailed news responses.
  */
 export interface NewsReference {
@@ -992,17 +933,6 @@ export interface Event {
   timestamp: string;
   description?: string;
   [key: string]: unknown;
-}
-
-// ============================================================================
-// List Response Wrapper
-// ============================================================================
-
-export interface ListResponse<T> {
-  data: T[];
-  total?: number;
-  page?: number;
-  hasMore?: boolean;
 }
 
 // ============================================================================
@@ -1387,6 +1317,8 @@ export interface ListTypesClassesOptions<T extends TypesEntityType = TypesEntity
   entityType: T;
   start_index?: number;
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
 }
 
 export interface ListTypesEntitiesOptions<T extends TypesEntityType = TypesEntityType> {
@@ -1394,6 +1326,8 @@ export interface ListTypesEntitiesOptions<T extends TypesEntityType = TypesEntit
   class?: string;
   start_index?: number;
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
 }
 
 export interface GetTypesEntityOptions<T extends TypesEntityType = TypesEntityType> {
@@ -1412,43 +1346,6 @@ export interface TypesEntityListItem {
   };
   value: string;
   [key: string]: unknown;
-}
-
-/**
- * Pagination attributes returned by /types/:entityType list endpoints.
- */
-export interface TypesEntityListAttributes {
-  start?: number;
-  total?: number;
-  count?: number;
-  [key: string]: unknown;
-}
-
-/**
- * Generic wrapped response returned by /types/:entityType list endpoints.
- * Example: { attributes: {...}, vehicletype: [...] }
- */
-export interface TypesEntitiesListRawResponse {
-  attributes?: TypesEntityListAttributes;
-  [key: string]: unknown;
-}
-
-/**
- * Wrapped ships list response returned by /types/ships.
- * Example: { attributes: {...}, shiptype: [...] }
- */
-export interface TypesShipsListRawResponse extends TypesEntitiesListRawResponse {
-  shiptype?: TypesEntityListItem[];
-}
-
-/**
- * Normalized /types/:entityType list response.
- * `attributes` contains pagination metadata (`start`, `total`, `count`) and
- * `items` contains the normalized entity rows for all type endpoints.
- */
-export interface TypesEntitiesListMetaResponse {
-  attributes?: TypesEntityListAttributes;
-  items: TypesEntityListItem[];
 }
 
 /**
@@ -2204,6 +2101,8 @@ export interface ListMessagesOptions {
   mode?: MessageMode;
   start_index?: number;
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
 }
 
 export interface GetMessageOptions {
@@ -2245,6 +2144,8 @@ export interface GetCharacterCreditlogOptions {
   start_index?: number;
   /** Number of items to retrieve. Default: 50, Max: 1000 */
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
   /** Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000) */
   start_id?: number;
 }
@@ -2263,6 +2164,8 @@ export interface ListFactionsOptions {
   start_index?: number;
   /** Number of items to retrieve. Default: 50 */
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
 }
 
 export interface ListFactionMembersOptions {
@@ -2325,6 +2228,8 @@ export interface ListNewsOptionsBase {
   start_index?: number;
   /** Number of items to retrieve. Default: 50, Max: 50 */
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
   /** Filter news starting from this Unix timestamp */
   start_date?: number;
   /** Filter news up to this Unix timestamp */
@@ -2373,6 +2278,8 @@ export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = In
   start_index?: number;
   /** Number of items to retrieve. Default: 50, Max: 200 */
   item_count?: number;
+  /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+  pageDelay?: number;
   /** Filter types to apply to the query */
   filter_type?: InventoryFilterType[];
   /** Values corresponding to each filter type */

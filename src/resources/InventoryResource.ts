@@ -4,6 +4,7 @@
 
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
+import { Page } from '../pagination/Page.js';
 import {
   Entity,
   GetEntityOptions,
@@ -49,41 +50,46 @@ export class InventoryEntitiesResource extends BaseResource {
    */
   async list<T extends InventoryEntityType>(
     options: ListInventoryEntitiesOptions<T>
-  ): Promise<InventoryEntityTypeMap[T][]> {
-    const params: QueryParams = {
-      start_index: options.start_index || 1,
-      item_count: options.item_count || 50,
+  ): Promise<Page<InventoryEntityTypeMap[T]>> {
+    const makeRequest = async (startIndex: number): Promise<Page<InventoryEntityTypeMap[T]>> => {
+      const params: QueryParams = {
+        start_index: startIndex,
+        item_count: options.item_count ?? 50,
+      };
+
+      // Add filtering parameters if provided
+      if (options.filter_type) {
+        params.filter_type = options.filter_type;
+      }
+      if (options.filter_value) {
+        params.filter_value = options.filter_value;
+      }
+      if (options.filter_inclusion) {
+        params.filter_inclusion = options.filter_inclusion;
+      }
+
+      const response = await this.http.get<Record<string, unknown>>(
+        `/inventory/${options.uid}/${options.entityType}/${options.assignType}`,
+        { params }
+      );
+
+      // API returns { filters: {...}, entities: { attributes: {...}, entity: [...] } }
+      const entities = response.entities as Record<string, unknown> | undefined;
+      const data = (entities && Array.isArray(entities.entity)
+        ? entities.entity
+        : []) as InventoryEntityTypeMap[T][];
+      const attrs = (entities?.attributes || {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
 
-    // Add filtering parameters if provided
-    if (options.filter_type) {
-      params.filter_type = options.filter_type;
-    }
-    if (options.filter_value) {
-      params.filter_value = options.filter_value;
-    }
-    if (options.filter_inclusion) {
-      params.filter_inclusion = options.filter_inclusion;
-    }
-
-    const response = await this.http.get<Record<string, unknown>>(
-      `/inventory/${options.uid}/${options.entityType}/${options.assignType}`,
-      { params }
-    );
-    // API returns { swcapi: { filters: {...}, entities: { attributes: {...}, entity: [...] } } }
-    // HttpClient unwraps swcapi but since there are multiple keys (filters, entities),
-    // it returns the whole object. Extract entities.entity array.
-    const entities = response.entities as Record<string, unknown> | undefined;
-    if (entities && Array.isArray(entities.entity)) {
-      return entities.entity as InventoryEntityTypeMap[T][];
-    }
-    // Fallback: look for any array in the response
-    for (const key of Object.keys(response)) {
-      if (key !== 'attributes' && Array.isArray(response[key])) {
-        return response[key] as InventoryEntityTypeMap[T][];
-      }
-    }
-    return [];
+    return makeRequest(options.start_index ?? 1);
   }
 
   /**

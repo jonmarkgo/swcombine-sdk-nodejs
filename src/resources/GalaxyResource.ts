@@ -4,17 +4,13 @@
 
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
+import { Page } from '../pagination/Page.js';
 import {
   GalaxyPlanetListItem,
   GalaxySectorListItem,
   GalaxySystemListItem,
   GalaxyStationListItem,
   GalaxyCityListItem,
-  GalaxyPlanetListRawResponse,
-  GalaxySectorListRawResponse,
-  GalaxySystemListRawResponse,
-  GalaxyStationListRawResponse,
-  GalaxyCityListRawResponse,
   Planet,
   Sector,
   System,
@@ -33,14 +29,6 @@ import {
  * @see https://www.swcombine.com/ws/v2.0/documentation/galaxy/planets/ SW Combine API Documentation
  */
 export class GalaxyPlanetsResource extends BaseResource {
-  async listRaw(options?: { start_index?: number; item_count?: number }): Promise<GalaxyPlanetListRawResponse> {
-    const params = {
-      start_index: options?.start_index || 1,
-      item_count: options?.item_count || 50,
-    };
-    return this.http.get<GalaxyPlanetListRawResponse>('/galaxy/planets/', { params });
-  }
-
   /**
    * List all planets (paginated)
    * @param options - Optional pagination parameters
@@ -48,10 +36,26 @@ export class GalaxyPlanetsResource extends BaseResource {
    * const planets = await client.galaxy.planets.list();
    * const morePlanets = await client.galaxy.planets.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxyPlanetListItem[]> {
-    const response = await this.listRaw(options);
-    // API returns { attributes: {...}, planet: [...] }, extract just the array
-    return response.planet || [];
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxyPlanetListItem>> {
+    const makeRequest = async (startIndex: number): Promise<Page<GalaxyPlanetListItem>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options?.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>('/galaxy/planets/', { params });
+      const data = (response.planet || []) as GalaxyPlanetListItem[];
+      const attrs = (response.attributes || {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
+      });
+    };
+
+    return makeRequest(options?.start_index ?? 1);
   }
 
   /**
@@ -68,14 +72,6 @@ export class GalaxyPlanetsResource extends BaseResource {
  * @see https://www.swcombine.com/ws/v2.0/documentation/galaxy/sectors/ SW Combine API Documentation
  */
 export class GalaxySectorsResource extends BaseResource {
-  async listRaw(options?: { start_index?: number; item_count?: number }): Promise<GalaxySectorListRawResponse> {
-    const params = {
-      start_index: options?.start_index || 1,
-      item_count: options?.item_count || 50,
-    };
-    return this.http.get<GalaxySectorListRawResponse>('/galaxy/sectors/', { params });
-  }
-
   /**
    * List all sectors (paginated)
    * @param options - Optional pagination parameters
@@ -83,10 +79,26 @@ export class GalaxySectorsResource extends BaseResource {
    * const sectors = await client.galaxy.sectors.list();
    * const moreSectors = await client.galaxy.sectors.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxySectorListItem[]> {
-    const response = await this.listRaw(options);
-    // API returns { attributes: {...}, sector: [...] }, extract just the array
-    return response.sector || [];
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxySectorListItem>> {
+    const makeRequest = async (startIndex: number): Promise<Page<GalaxySectorListItem>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options?.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>('/galaxy/sectors/', { params });
+      const data = (response.sector || []) as GalaxySectorListItem[];
+      const attrs = (response.attributes || {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
+      });
+    };
+
+    return makeRequest(options?.start_index ?? 1);
   }
 
   /**
@@ -106,14 +118,6 @@ export class GalaxySectorsResource extends BaseResource {
  * @see https://www.swcombine.com/ws/v2.0/documentation/galaxy/systems/ SW Combine API Documentation
  */
 export class GalaxySystemsResource extends BaseResource {
-  async listRaw(options?: { start_index?: number; item_count?: number }): Promise<GalaxySystemListRawResponse> {
-    const params = {
-      start_index: options?.start_index || 1,
-      item_count: options?.item_count || 50,
-    };
-    return this.http.get<GalaxySystemListRawResponse>('/galaxy/systems/', { params });
-  }
-
   /**
    * List all systems (paginated)
    * @param options - Optional pagination parameters
@@ -121,10 +125,26 @@ export class GalaxySystemsResource extends BaseResource {
    * const systems = await client.galaxy.systems.list();
    * const moreSystems = await client.galaxy.systems.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxySystemListItem[]> {
-    const response = await this.listRaw(options);
-    // API returns { attributes: {...}, system: [...] }, extract just the array
-    return response.system || [];
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxySystemListItem>> {
+    const makeRequest = async (startIndex: number): Promise<Page<GalaxySystemListItem>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options?.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>('/galaxy/systems/', { params });
+      const data = (response.system || []) as GalaxySystemListItem[];
+      const attrs = (response.attributes || {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
+      });
+    };
+
+    return makeRequest(options?.start_index ?? 1);
   }
 
   /**
@@ -141,14 +161,6 @@ export class GalaxySystemsResource extends BaseResource {
  * @see https://www.swcombine.com/ws/v2.0/documentation/galaxy/stations/ SW Combine API Documentation
  */
 export class GalaxyStationsResource extends BaseResource {
-  async listRaw(options?: { start_index?: number; item_count?: number }): Promise<GalaxyStationListRawResponse> {
-    const params = {
-      start_index: options?.start_index || 1,
-      item_count: options?.item_count || 50,
-    };
-    return this.http.get<GalaxyStationListRawResponse>('/galaxy/stations/', { params });
-  }
-
   /**
    * List all stations in named systems with no ECM (paginated)
    * @param options - Optional pagination parameters
@@ -156,10 +168,26 @@ export class GalaxyStationsResource extends BaseResource {
    * const stations = await client.galaxy.stations.list();
    * const moreStations = await client.galaxy.stations.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxyStationListItem[]> {
-    const response = await this.listRaw(options);
-    // API returns { attributes: {...}, station: [...] }, extract just the array
-    return response.station || [];
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxyStationListItem>> {
+    const makeRequest = async (startIndex: number): Promise<Page<GalaxyStationListItem>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options?.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>('/galaxy/stations/', { params });
+      const data = (response.station || []) as GalaxyStationListItem[];
+      const attrs = (response.attributes || {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
+      });
+    };
+
+    return makeRequest(options?.start_index ?? 1);
   }
 
   /**
@@ -176,14 +204,6 @@ export class GalaxyStationsResource extends BaseResource {
  * @see https://www.swcombine.com/ws/v2.0/documentation/galaxy/cities/ SW Combine API Documentation
  */
 export class GalaxyCitiesResource extends BaseResource {
-  async listRaw(options?: { start_index?: number; item_count?: number }): Promise<GalaxyCityListRawResponse> {
-    const params = {
-      start_index: options?.start_index || 1,
-      item_count: options?.item_count || 50,
-    };
-    return this.http.get<GalaxyCityListRawResponse>('/galaxy/cities/', { params });
-  }
-
   /**
    * List all cities (paginated)
    * @param options - Optional pagination parameters
@@ -191,10 +211,26 @@ export class GalaxyCitiesResource extends BaseResource {
    * const cities = await client.galaxy.cities.list();
    * const moreCities = await client.galaxy.cities.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number }): Promise<GalaxyCityListItem[]> {
-    const response = await this.listRaw(options);
-    // API returns { attributes: {...}, city: [...] }, extract just the array
-    return response.city || [];
+  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<GalaxyCityListItem>> {
+    const makeRequest = async (startIndex: number): Promise<Page<GalaxyCityListItem>> => {
+      const params = {
+        start_index: startIndex,
+        item_count: options?.item_count ?? 50,
+      };
+      const response = await this.http.get<Record<string, unknown>>('/galaxy/cities/', { params });
+      const data = (response.city || []) as GalaxyCityListItem[];
+      const attrs = (response.attributes || {}) as Record<string, unknown>;
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options?.pageDelay,
+      });
+    };
+
+    return makeRequest(options?.start_index ?? 1);
   }
 
   /**
@@ -238,13 +274,10 @@ export class GalaxyResource extends BaseResource {
   async getSectorsFromSystems(): Promise<Array<{ uid: string; name: string; href?: string }>> {
     const systemsResponse = await this.systems.list();
 
-    // Handle paginated response
-    const systems = (systemsResponse as any).system || systemsResponse;
-
     // Extract unique sectors
     const sectorMap = new Map<string, { uid: string; name: string; href?: string }>();
 
-    for (const system of systems) {
+    for (const system of systemsResponse.data) {
       const sector = system.location?.container;
       if (sector?.attributes?.uid && sector.attributes.type === 'sector') {
         const uid = sector.attributes.uid;

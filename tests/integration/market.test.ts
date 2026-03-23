@@ -8,9 +8,15 @@ import { SWCombine } from '../../src/index.js';
 import {
   createTestClient,
   saveResponse,
-  expectArray,
   expectFields,
 } from './setup.js';
+
+function expectPageShape(response: unknown): void {
+  expect(response).toBeDefined();
+  expect(typeof response).toBe('object');
+  expect(response).not.toBeNull();
+  expectFields(response, ['data', 'total', 'start', 'count', 'hasMore']);
+}
 
 describe('Market Resource Integration Tests', () => {
   let client: SWCombine;
@@ -24,9 +30,10 @@ describe('Market Resource Integration Tests', () => {
       const response = await client.market.vendors.list();
       saveResponse('market-vendors-list', response);
 
-      expectArray(response, 1);
+      expectPageShape(response);
+      expect(response.data.length).toBeGreaterThanOrEqual(1);
       // Each vendor should have attributes with id and name
-      const vendor = (response as any[])[0];
+      const vendor = response.data[0];
       expectFields(vendor, ['attributes', 'owner']);
     });
 
@@ -34,16 +41,16 @@ describe('Market Resource Integration Tests', () => {
       const response = await client.market.vendors.list({ start_index: 1, item_count: 10 });
       saveResponse('market-vendors-list-paginated', response);
 
-      expectArray(response);
-      expect((response as any[]).length).toBeLessThanOrEqual(10);
+      expectPageShape(response);
+      expect(response.data.length).toBeLessThanOrEqual(10);
     });
 
     it('should get specific vendor', async () => {
       const vendors = await client.market.vendors.list();
-      expect((vendors as any[]).length).toBeGreaterThan(0);
+      expect(vendors.data.length).toBeGreaterThan(0);
 
       // Vendor ID is in attributes.id
-      const vendorId = (vendors as any[])[0].attributes.id;
+      const vendorId = (vendors.data[0] as any).attributes.id;
       const response = await client.market.vendors.get({ uid: String(vendorId) });
       saveResponse('market-vendor-get', response);
 

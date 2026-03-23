@@ -3,6 +3,7 @@
  */
 
 import { BaseResource } from './BaseResource.js';
+import { Page } from '../pagination/Page.js';
 import { Event, QueryParams } from '../types/index.js';
 
 /**
@@ -43,33 +44,50 @@ export class EventsResource extends BaseResource {
     start_time?: number;
     /** Faction ID for faction mode */
     faction_id?: string;
-  }): Promise<Event[]> {
-    const params: QueryParams = {
-      start_index: options.start_index !== undefined ? options.start_index : 0, // 0-based indexing!
-      item_count: options.item_count || 50,
+    /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
+    pageDelay?: number;
+  }): Promise<Page<Event>> {
+    const makeRequest = async (startIndex: number): Promise<Page<Event>> => {
+      const params: QueryParams = {
+        start_index: startIndex,
+        item_count: options.item_count ?? 50,
+      };
+
+      if (options.start_time !== undefined) {
+        params.start_time = options.start_time;
+      }
+      if (options.faction_id) {
+        params.faction_id = options.faction_id;
+      }
+
+      // Build path - eventType is optional
+      const path = options.eventType
+        ? `/events/${options.eventMode}/${options.eventType}`
+        : `/events/${options.eventMode}`;
+
+      const response = await this.http.get<Record<string, unknown>>(path, { params });
+
+      // Extract array — find the non-attributes array key
+      let data: Event[] = [];
+      let attrs: Record<string, unknown> = {};
+      for (const key of Object.keys(response)) {
+        if (key === 'attributes') {
+          attrs = response[key] as Record<string, unknown>;
+        } else if (Array.isArray(response[key])) {
+          data = response[key] as Event[];
+        }
+      }
+
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 0, // 0-based!
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
 
-    if (options.start_time !== undefined) {
-      params.start_time = options.start_time;
-    }
-    if (options.faction_id) {
-      params.faction_id = options.faction_id;
-    }
-
-    // Build path - eventType is optional
-    const path = options.eventType
-      ? `/events/${options.eventMode}/${options.eventType}`
-      : `/events/${options.eventMode}`;
-
-    const response = await this.http.get<Record<string, unknown>>(path, { params });
-    // API returns { attributes: {...}, event: [...] }, extract just the array
-    // Key name may vary, so find the array
-    for (const key of Object.keys(response)) {
-      if (key !== 'attributes' && Array.isArray(response[key])) {
-        return response[key] as Event[];
-      }
-    }
-    return [];
+    return makeRequest(options.start_index ?? 0); // 0-based!
   }
 
   /**

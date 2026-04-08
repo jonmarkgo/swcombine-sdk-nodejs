@@ -484,34 +484,72 @@ export const Scopes = {
 } as const;
 
 /**
- * Type representing any valid scope value
+ * Recursively extracts all literal string values from a (possibly nested)
+ * readonly scope object. Used to build typed unions from the `as const`
+ * scope catalogs above.
  */
-export type ScopeValue = string;
+type ExtractScopeValues<T> = T extends string
+  ? T
+  : T extends object
+    ? { [K in keyof T]: ExtractScopeValues<T[K]> }[keyof T]
+    : never;
+
+/** Union of all character scope literal values */
+export type CharacterScope = (typeof CharacterScopes)[keyof typeof CharacterScopes];
+
+/** Union of all message scope literal values */
+export type MessageScope = (typeof MessageScopes)[keyof typeof MessageScopes];
+
+/** Union of all personal inventory scope literal values (including nested entity groups) */
+export type PersonalInventoryScope = ExtractScopeValues<typeof PersonalInventoryScopes>;
+
+/** Union of all faction scope literal values */
+export type FactionScope = (typeof FactionScopes)[keyof typeof FactionScopes];
+
+/** Union of all faction inventory scope literal values (including nested entity groups) */
+export type FactionInventoryScope = ExtractScopeValues<typeof FactionInventoryScopes>;
+
+/**
+ * Union of every valid OAuth scope literal value recognized by the SDK.
+ * Use this type when accepting or returning arbitrary scope collections.
+ */
+export type AllScopes =
+  | CharacterScope
+  | MessageScope
+  | PersonalInventoryScope
+  | FactionScope
+  | FactionInventoryScope;
+
+/**
+ * @deprecated Use `AllScopes` for a precise union of scope literals.
+ * Retained as an alias so existing imports keep compiling.
+ */
+export type ScopeValue = AllScopes;
 
 /**
  * Helper function to get all character scopes
  */
-export function getAllCharacterScopes(): string[] {
+export function getAllCharacterScopes(): CharacterScope[] {
   return Object.values(CharacterScopes);
 }
 
 /**
  * Helper function to get all message scopes
  */
-export function getAllMessageScopes(): string[] {
+export function getAllMessageScopes(): MessageScope[] {
   return Object.values(MessageScopes);
 }
 
 /**
  * Helper function to get all personal inventory scopes
  */
-export function getAllPersonalInventoryScopes(): string[] {
-  const scopes: string[] = [PersonalInventoryScopes.OVERVIEW];
+export function getAllPersonalInventoryScopes(): PersonalInventoryScope[] {
+  const scopes: PersonalInventoryScope[] = [PersonalInventoryScopes.OVERVIEW];
 
   // Add all entity-specific scopes
   Object.entries(PersonalInventoryScopes).forEach(([key, value]) => {
     if (key !== 'OVERVIEW' && typeof value === 'object') {
-      scopes.push(...Object.values(value));
+      scopes.push(...(Object.values(value) as PersonalInventoryScope[]));
     }
   });
 
@@ -521,20 +559,20 @@ export function getAllPersonalInventoryScopes(): string[] {
 /**
  * Helper function to get all faction scopes
  */
-export function getAllFactionScopes(): string[] {
+export function getAllFactionScopes(): FactionScope[] {
   return Object.values(FactionScopes);
 }
 
 /**
  * Helper function to get all faction inventory scopes
  */
-export function getAllFactionInventoryScopes(): string[] {
-  const scopes: string[] = [FactionInventoryScopes.OVERVIEW];
+export function getAllFactionInventoryScopes(): FactionInventoryScope[] {
+  const scopes: FactionInventoryScope[] = [FactionInventoryScopes.OVERVIEW];
 
   // Add all entity-specific scopes
   Object.entries(FactionInventoryScopes).forEach(([key, value]) => {
     if (key !== 'OVERVIEW' && typeof value === 'object') {
-      scopes.push(...Object.values(value));
+      scopes.push(...(Object.values(value) as FactionInventoryScope[]));
     }
   });
 
@@ -544,7 +582,7 @@ export function getAllFactionInventoryScopes(): string[] {
 /**
  * Get all available scopes (for comprehensive testing)
  */
-export function getAllScopes(): string[] {
+export function getAllScopes(): AllScopes[] {
   return [
     ...getAllCharacterScopes(),
     ...getAllMessageScopes(),
@@ -557,7 +595,7 @@ export function getAllScopes(): string[] {
 /**
  * Get basic read-only scopes (good for read-only integrations)
  */
-export function getReadOnlyScopes(): string[] {
+export function getReadOnlyScopes(): AllScopes[] {
   return [
     CharacterScopes.READ,
     CharacterScopes.STATS,
@@ -578,6 +616,6 @@ export function getReadOnlyScopes(): string[] {
 /**
  * Get minimal scopes for basic character info (authentication only)
  */
-export function getMinimalScopes(): string[] {
+export function getMinimalScopes(): CharacterScope[] {
   return [CharacterScopes.AUTH, CharacterScopes.READ];
 }

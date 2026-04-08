@@ -2,6 +2,8 @@
  * Core types and interfaces for SW Combine SDK
  */
 
+import type { AllScopes } from '../auth/scopes.js';
+
 // ============================================================================
 // Utility Types
 // ============================================================================
@@ -124,7 +126,7 @@ export interface OAuthToken {
 
 export interface OAuthAuthorizationOptions {
   /** OAuth scopes to request */
-  scopes: string[];
+  scopes: AllScopes[];
   /** State parameter for CSRF protection */
   state: string;
 }

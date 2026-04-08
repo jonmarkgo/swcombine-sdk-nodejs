@@ -35,6 +35,15 @@ export {
   getReadOnlyScopes,
   getMinimalScopes,
 } from './auth/scopes.js';
+export type {
+  AllScopes,
+  CharacterScope,
+  MessageScope,
+  PersonalInventoryScope,
+  FactionScope,
+  FactionInventoryScope,
+  ScopeValue,
+} from './auth/scopes.js';
 
 // Auth types
 export type { TokenStorage } from './auth/TokenManager.js';

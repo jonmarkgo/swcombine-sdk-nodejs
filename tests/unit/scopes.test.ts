@@ -15,6 +15,14 @@ import {
   PersonalInventoryScopes,
   Scopes,
 } from '../../src/auth/scopes.js';
+import type {
+  AllScopes,
+  CharacterScope,
+  FactionInventoryScope,
+  FactionScope,
+  MessageScope,
+  PersonalInventoryScope,
+} from '../../src/auth/scopes.js';
 
 function buildInventoryScopes(
   prefix: 'personal_inv' | 'faction_inv',
@@ -171,6 +179,29 @@ describe('OAuth scope catalog', () => {
     expectTypeOf(FactionInventoryScopes.SHIPS.TAGS_READ).toEqualTypeOf<'faction_inv_ships_tags_read'>();
     expectTypeOf(FactionInventoryScopes.PLANETS.ASSIGN).toEqualTypeOf<'faction_inv_planets_assign'>();
     expectTypeOf(Scopes.PersonalInventory.SHIPS.TAGS_READ).toEqualTypeOf<'personal_inv_ships_tags_read'>();
+  });
+
+  it('helpers return narrowed scope unions rather than widened string arrays', () => {
+    expectTypeOf(getAllCharacterScopes()).toEqualTypeOf<CharacterScope[]>();
+    expectTypeOf(getAllMessageScopes()).toEqualTypeOf<MessageScope[]>();
+    expectTypeOf(getAllPersonalInventoryScopes()).toEqualTypeOf<PersonalInventoryScope[]>();
+    expectTypeOf(getAllFactionScopes()).toEqualTypeOf<FactionScope[]>();
+    expectTypeOf(getAllFactionInventoryScopes()).toEqualTypeOf<FactionInventoryScope[]>();
+    expectTypeOf(getAllScopes()).toEqualTypeOf<AllScopes[]>();
+    expectTypeOf(getReadOnlyScopes()).toEqualTypeOf<AllScopes[]>();
+    expectTypeOf(getMinimalScopes()).toEqualTypeOf<CharacterScope[]>();
+
+    // AllScopes must be a true union of literals, not widened to `string`
+    expectTypeOf<AllScopes>().not.toEqualTypeOf<string>();
+
+    // Spot-check that representative leaf literals from every category
+    // flow into the AllScopes union
+    expectTypeOf<'character_read'>().toMatchTypeOf<AllScopes>();
+    expectTypeOf<'messages_send'>().toMatchTypeOf<AllScopes>();
+    expectTypeOf<'personal_inv_overview'>().toMatchTypeOf<AllScopes>();
+    expectTypeOf<'personal_inv_ships_tags_read'>().toMatchTypeOf<AllScopes>();
+    expectTypeOf<'faction_read'>().toMatchTypeOf<AllScopes>();
+    expectTypeOf<'faction_inv_planets_assign'>().toMatchTypeOf<AllScopes>();
   });
 
   it('returns complete helper scope lists without omitting overview scopes', () => {

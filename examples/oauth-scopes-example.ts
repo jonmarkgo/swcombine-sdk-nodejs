@@ -15,6 +15,7 @@ import {
   getAllScopes,
   getAllCharacterScopes,
 } from '../src/index.js';
+import type { AllScopes } from '../src/index.js';
 
 // Initialize SDK
 const client = new SWCombine({
@@ -191,11 +192,14 @@ function example9_NestedStructure() {
  * Example 10: Type-safe scope usage in TypeScript
  */
 function example10_TypeSafety() {
-  // TypeScript will provide autocomplete and type checking
-  const scopes: string[] = [
+  // Typing as AllScopes[] gives you a precise union of every valid scope
+  // literal — autocomplete across all categories, and arbitrary strings
+  // are rejected at compile time.
+  const scopes: AllScopes[] = [
     CharacterScopes.READ,         // ✓ Autocomplete suggests all character scopes
     MessageScopes.SEND,            // ✓ Autocomplete suggests all message scopes
     // CharacterScopes.TYPO,       // ✗ TypeScript error - property doesn't exist
+    // 'not_a_real_scope',          // ✗ TypeScript error - not in AllScopes union
   ];
 
   const authUrl = client.auth.getAuthorizationUrl({

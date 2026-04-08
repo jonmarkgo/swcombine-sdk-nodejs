@@ -43,7 +43,11 @@ export class Page<T> implements AsyncIterable<T> {
   }
 
   async *[Symbol.asyncIterator](): AsyncIterator<T> {
-    let page: Page<T> = this;
+    yield* Page.iterateFrom(this);
+  }
+
+  private static async *iterateFrom<T>(start: Page<T>): AsyncGenerator<T> {
+    let page = start;
     while (true) {
       for (const item of page.data) {
         yield item;

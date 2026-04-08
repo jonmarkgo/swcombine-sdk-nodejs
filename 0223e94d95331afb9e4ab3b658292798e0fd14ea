@@ -1,0 +1,38 @@
+src/pagination/Page.ts
+  7c2de6f2d84ac143 46-50
+src/resources/DatacardResource.ts
+  7c2de6f2d84ac143 25
+src/auth/scopes.ts
+  7c2de6f2d84ac143 487-489,491-495,497-527,532,539,546-547,552,562,569-570,575,585,598,619
+src/types/index.ts
+  7c2de6f2d84ac143 5-6,129
+src/index.ts
+  7c2de6f2d84ac143 38-46
+examples/oauth-scopes-example.ts
+  7c2de6f2d84ac143 18,195-198,202
+tests/unit/scopes.test.ts
+  7c2de6f2d84ac143 18-25,184-206
+package.json
+  7c2de6f2d84ac143 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "0223e94d95331afb9e4ab3b658292798e0fd14ea",
+  "prompts": {
+    "7c2de6f2d84ac143": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5ac3d461-c7c3-44f1-b4e8-ad1c0b149c2c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 108,
+      "total_deletions": 20,
+      "accepted_lines": 108,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/16ceb0ec86df948d8dcf7059fb310b5a8b615ec98eeab60d97aeafd0e3be90af"
+    }
+  }
+}

@@ -391,9 +391,7 @@ export interface FactionDetailReference {
   [key: string]: unknown;
 }
 
-export type FactionDetailPersonReference =
-  | FactionDetailReference
-  | Record<string, never>;
+export type FactionDetailPersonReference = FactionDetailReference | Record<string, never>;
 
 export interface FactionDetailColour {
   r: number;
@@ -2257,13 +2255,13 @@ export interface ListGNSOptions extends ListNewsOptionsBase {
  * SimNews listing options
  * Uses only base options (no faction filtering)
  */
-export interface ListSimNewsOptions extends ListNewsOptionsBase {}
+export type ListSimNewsOptions = ListNewsOptionsBase;
 
 /**
  * @deprecated Use ListGNSOptions or ListSimNewsOptions instead.
  * This combined type is kept for backwards compatibility.
  */
-export interface ListNewsOptions extends ListGNSOptions {}
+export type ListNewsOptions = ListGNSOptions;
 
 export interface GetEntityOptions {
   entityType: string;

@@ -132,7 +132,7 @@ export class OAuthClient {
       const response = await axios.post(OAUTH_ENDPOINT_TOKEN, params.toString(), {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
       });
 
@@ -171,7 +171,7 @@ export class OAuthClient {
       const response = await axios.post(OAUTH_ENDPOINT_TOKEN, params.toString(), {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
       });
 
@@ -198,13 +198,13 @@ export class OAuthClient {
   /**
    * Parse token response from API
    */
-  private parseTokenResponse(data: any): OAuthToken {
-    const expiresIn = data.expires_in ?? 3600; // Default to 1 hour
+  private parseTokenResponse(data: Record<string, unknown>): OAuthToken {
+    const expiresIn = typeof data.expires_in === 'number' ? data.expires_in : 3600;
     const expiresAt = Date.now() + expiresIn * 1000;
 
     return {
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
+      accessToken: data.access_token as string,
+      refreshToken: data.refresh_token as string | undefined,
       expiresAt,
     };
   }

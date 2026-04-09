@@ -75,9 +75,9 @@ export class InventoryEntitiesResource extends BaseResource {
 
       // API returns { filters: {...}, entities: { attributes: {...}, entity: [...] } }
       const entities = response.entities as Record<string, unknown> | undefined;
-      const data = (entities && Array.isArray(entities.entity)
-        ? entities.entity
-        : []) as InventoryEntityTypeMap[T][];
+      const data = (
+        entities && Array.isArray(entities.entity) ? entities.entity : []
+      ) as InventoryEntityTypeMap[T][];
       const attrs = (entities?.attributes || {}) as Record<string, unknown>;
 
       return this.createPage({
@@ -124,7 +124,7 @@ export class InventoryEntitiesResource extends BaseResource {
     new_value: string;
     reason?: string;
   }): Promise<Entity> {
-    const data: any = {
+    const data: Record<string, string> = {
       new_value: options.new_value,
     };
     if (options.reason) {
@@ -182,7 +182,7 @@ export class InventoryResource extends BaseResource {
   /**
    * Get inventory by UID
    */
-  async get(options: { uid: string }): Promise<any> {
-    return this.request<any>('GET', `/inventory/${options.uid}`);
+  async get(options: { uid: string }): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>('GET', `/inventory/${options.uid}`);
   }
 }

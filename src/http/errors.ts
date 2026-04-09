@@ -15,7 +15,7 @@ export interface SWCErrorOptions {
   type: SWCErrorType;
   statusCode?: number;
   requestId?: string;
-  response?: any;
+  response?: Record<string, unknown>;
   retryable?: boolean;
   retryAfter?: number;
   cause?: Error;
@@ -32,7 +32,7 @@ export class SWCError extends Error {
   /** Request ID from API response */
   public readonly requestId?: string;
   /** Original API error response */
-  public readonly response?: any;
+  public readonly response?: Record<string, unknown>;
   /** Whether this error can be retried */
   public readonly retryable: boolean;
   /** Seconds to wait before retrying (for rate limit errors) */
@@ -83,7 +83,11 @@ export class SWCError extends Error {
   /**
    * Create an error from an HTTP status code and response
    */
-  static fromHttpResponse(statusCode: number, response: any, requestId?: string): SWCError {
+  static fromHttpResponse(
+    statusCode: number,
+    response: Record<string, unknown> | undefined,
+    requestId?: string
+  ): SWCError {
     let type: SWCErrorType;
     let message: string;
 
@@ -91,8 +95,10 @@ export class SWCError extends Error {
     const isRateLimitError =
       statusCode === 400 &&
       (response?.error === 'rate_limit_exceeded' ||
-        response?.message?.toLowerCase().includes('rate limit') ||
-        response?.error_description?.toLowerCase().includes('rate limit'));
+        (typeof response?.message === 'string' &&
+          response.message.toLowerCase().includes('rate limit')) ||
+        (typeof response?.error_description === 'string' &&
+          response.error_description.toLowerCase().includes('rate limit')));
 
     // Determine error type from status code and content
     if (isRateLimitError) {
@@ -133,16 +139,19 @@ export class SWCError extends Error {
     }
 
     // Use error message from response if available
-    if (response?.error_description) {
+    if (typeof response?.error_description === 'string') {
       message = response.error_description;
-    } else if (response?.message) {
+    } else if (typeof response?.message === 'string') {
       message = response.message;
     } else if (response?.error) {
       message = typeof response.error === 'string' ? response.error : message;
     }
 
     // Extract retry-after header for rate limit errors
-    const retryAfter = type === 'rate_limit' ? response?.retry_after : undefined;
+    const retryAfter =
+      type === 'rate_limit' && typeof response?.retry_after === 'number'
+        ? response.retry_after
+        : undefined;
 
     return new SWCError(message, {
       type,

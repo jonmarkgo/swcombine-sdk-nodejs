@@ -87,7 +87,13 @@ export class TypesClassesResource extends BaseResource {
         attrs = (response.attributes ?? {}) as Record<string, unknown>;
       }
 
-      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
 
     return makeRequest(options.start_index ?? 1);
@@ -122,7 +128,13 @@ export class TypesEntitiesResource extends BaseResource {
       const data = this.extractEntityArrayForType(response, options.entityType);
       const attrs = (response.attributes ?? {}) as Record<string, unknown>;
 
-      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
 
     return makeRequest(options.start_index ?? 1);

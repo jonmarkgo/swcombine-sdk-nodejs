@@ -20,13 +20,20 @@ export class MarketVendorsResource extends BaseResource {
    * const vendors = await client.market.vendors.list();
    * const moreVendors = await client.market.vendors.list({ start_index: 51, item_count: 50 });
    */
-  async list(options?: { start_index?: number; item_count?: number; pageDelay?: number }): Promise<Page<Vendor>> {
+  async list(options?: {
+    start_index?: number;
+    item_count?: number;
+    pageDelay?: number;
+  }): Promise<Page<Vendor>> {
     const makeRequest = async (startIndex: number): Promise<Page<Vendor>> => {
       const params = {
         start_index: startIndex,
         item_count: options?.item_count ?? 50,
       };
-      const response = await this.http.get<{ vendor?: Vendor[]; attributes?: Record<string, unknown> }>('/market/vendors', { params });
+      const response = await this.http.get<{
+        vendor?: Vendor[];
+        attributes?: Record<string, unknown>;
+      }>('/market/vendors', { params });
 
       const data: Vendor[] = response.vendor ?? [];
       const attrs: Record<string, unknown> = response.attributes ?? {};

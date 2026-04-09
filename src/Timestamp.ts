@@ -2,12 +2,7 @@
  * Timestamp utility for working with Star Wars Combine Combine Galactic Time (CGT)
  */
 
-import type {
-  TimestampMoment,
-  Duration,
-  TimestampFormat,
-  TimestampUnit,
-} from './types/index.js';
+import type { TimestampMoment, Duration, TimestampFormat, TimestampUnit } from './types/index.js';
 
 const MS_PER_SECOND = 1000;
 const SECONDS_PER_MINUTE = 60;
@@ -73,7 +68,9 @@ export class Timestamp {
 
     // Auto-detect seconds vs milliseconds
     const timestampMs =
-      unixTimestamp < 100000000000 ? Math.floor(unixTimestamp * MS_PER_SECOND) : Math.floor(unixTimestamp);
+      unixTimestamp < 100000000000
+        ? Math.floor(unixTimestamp * MS_PER_SECOND)
+        : Math.floor(unixTimestamp);
 
     if (timestampMs < this.swcStartMs) {
       throw new RangeError('unixTimestamp must not be before SWC start.');
@@ -412,10 +409,18 @@ export class Timestamp {
     if (!Number.isInteger(moment.hour) || moment.hour < 0 || moment.hour >= HOURS_PER_DAY) {
       throw new RangeError('hour must be an integer between 0 and 23.');
     }
-    if (!Number.isInteger(moment.minute) || moment.minute < 0 || moment.minute >= MINUTES_PER_HOUR) {
+    if (
+      !Number.isInteger(moment.minute) ||
+      moment.minute < 0 ||
+      moment.minute >= MINUTES_PER_HOUR
+    ) {
       throw new RangeError('minute must be an integer between 0 and 59.');
     }
-    if (!Number.isInteger(moment.second) || moment.second < 0 || moment.second >= SECONDS_PER_MINUTE) {
+    if (
+      !Number.isInteger(moment.second) ||
+      moment.second < 0 ||
+      moment.second >= SECONDS_PER_MINUTE
+    ) {
       throw new RangeError('second must be an integer between 0 and 59.');
     }
   }

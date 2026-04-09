@@ -115,14 +115,20 @@ export class CharacterMessagesResource extends BaseResource {
         start_index: startIndex,
         item_count: options.item_count ?? 50,
       };
-      const response = await this.http.get<{ message?: MessageListItem[]; attributes?: Record<string, unknown> }>(
-        path,
-        { params }
-      );
+      const response = await this.http.get<{
+        message?: MessageListItem[];
+        attributes?: Record<string, unknown>;
+      }>(path, { params });
       // API returns { attributes: {...}, message: [...] }, extract array and attributes
       const data = response.message ?? [];
       const attrs = (response.attributes as Record<string, unknown>) ?? {};
-      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
 
     return makeRequest(options.start_index ?? 1);
@@ -303,7 +309,9 @@ export class CharacterPrivilegesResource extends BaseResource {
    *   console.log(`${g.attributes.name}: ${g.attributes.count} privileges`);
    * });
    */
-  async list(options: GetCharacterPrivilegesOptions & { faction_id?: number }): Promise<PrivilegesResponse> {
+  async list(
+    options: GetCharacterPrivilegesOptions & { faction_id?: number }
+  ): Promise<PrivilegesResponse> {
     const params: Record<string, number> = {};
     if (options.faction_id !== undefined) {
       params.faction_id = options.faction_id;
@@ -456,15 +464,21 @@ export class CharacterCreditlogResource extends BaseResource {
       if (options.start_id !== undefined) {
         params.start_id = options.start_id;
       }
-      const response = await this.http.get<{ transaction?: CreditLogEntry[]; attributes?: Record<string, unknown> }>(
-        `/character/${options.uid}/creditlog`,
-        { params }
-      );
+      const response = await this.http.get<{
+        transaction?: CreditLogEntry[];
+        attributes?: Record<string, unknown>;
+      }>(`/character/${options.uid}/creditlog`, { params });
       // API returns { swcapi: { transactions: { attributes: {...}, transaction: [...] } } }
       // HttpClient unwraps to { attributes: {...}, transaction: [...] }
       const data = response.transaction ?? [];
       const attrs = (response.attributes as Record<string, unknown>) ?? {};
-      return this.createPage({ data, attributes: attrs, defaultStart: 1, fetcher: makeRequest, pageDelay: options.pageDelay });
+      return this.createPage({
+        data,
+        attributes: attrs,
+        defaultStart: 1,
+        fetcher: makeRequest,
+        pageDelay: options.pageDelay,
+      });
     };
 
     return makeRequest(options.start_index ?? 1);
@@ -505,7 +519,10 @@ export class CharacterPermissionsResource extends BaseResource {
    * console.log('Granted scopes:', scopes.join(', '));
    */
   async list(options: GetCharacterPermissionsOptions): Promise<CharacterPermissionsResponse> {
-    return this.request<CharacterPermissionsResponse>('GET', `/character/${options.uid}/permissions`);
+    return this.request<CharacterPermissionsResponse>(
+      'GET',
+      `/character/${options.uid}/permissions`
+    );
   }
 
   /**
@@ -605,7 +622,7 @@ export class CharacterResource extends BaseResource {
     try {
       const scopes = await this.permissions.getScopes({ uid: options.uid });
       return scopes.includes(options.permission);
-    } catch (error) {
+    } catch {
       // If we can't fetch permissions, assume we don't have access
       return false;
     }

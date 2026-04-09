@@ -152,7 +152,7 @@ export class ApiResource extends BaseResource {
   async time(options?: { cgt?: string; time?: number }): Promise<TimeResponse> {
     if (options && (options.cgt || options.time !== undefined)) {
       // Use POST for conversions
-      const data: any = {};
+      const data: Record<string, string | number> = {};
       if (options.cgt) {
         data.cgt = options.cgt;
       }

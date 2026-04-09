@@ -32,7 +32,9 @@ function normalizeNewsId(id: unknown): number {
 function normalizeNewsListItem(item: unknown): NewsListItem {
   const raw = item && typeof item === 'object' ? (item as Record<string, unknown>) : {};
   const rawAttributes =
-    raw.attributes && typeof raw.attributes === 'object' ? (raw.attributes as Record<string, unknown>) : {};
+    raw.attributes && typeof raw.attributes === 'object'
+      ? (raw.attributes as Record<string, unknown>)
+      : {};
 
   const value =
     typeof raw.value === 'string'
@@ -175,11 +177,13 @@ export class GNSResource extends BaseResource {
       if (options?.faction) params.faction = options.faction;
       if (options?.faction_type) params.faction_type = options.faction_type;
 
-      const response = await this.http.get<{ newsitem?: unknown[]; attributes?: unknown }>(path, { params });
+      const response = await this.http.get<{ newsitem?: unknown[]; attributes?: unknown }>(path, {
+        params,
+      });
       const data = (response.newsitem || []).map(normalizeNewsListItem);
-      const attrs = (response.attributes && typeof response.attributes === 'object'
-        ? response.attributes
-        : {}) as Record<string, unknown>;
+      const attrs = (
+        response.attributes && typeof response.attributes === 'object' ? response.attributes : {}
+      ) as Record<string, unknown>;
 
       return this.createPage({
         data,
@@ -245,11 +249,13 @@ export class SimNewsResource extends BaseResource {
       if (options?.search) params.search = options.search;
       if (options?.author) params.author = options.author;
 
-      const response = await this.http.get<{ newsitem?: unknown[]; attributes?: unknown }>(path, { params });
+      const response = await this.http.get<{ newsitem?: unknown[]; attributes?: unknown }>(path, {
+        params,
+      });
       const data = (response.newsitem || []).map(normalizeNewsListItem);
-      const attrs = (response.attributes && typeof response.attributes === 'object'
-        ? response.attributes
-        : {}) as Record<string, unknown>;
+      const attrs = (
+        response.attributes && typeof response.attributes === 'object' ? response.attributes : {}
+      ) as Record<string, unknown>;
 
       return this.createPage({
         data,

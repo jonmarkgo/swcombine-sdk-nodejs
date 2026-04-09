@@ -46,7 +46,7 @@ export class HttpClient {
       baseURL: options.baseURL ?? 'https://www.swcombine.com/ws/v2.0/',
       timeout: options.timeout ?? 30000,
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
@@ -74,16 +74,20 @@ export class HttpClient {
               config.headers['Authorization'] = `OAuth ${token}`;
 
               if (this.debug) {
-                console.log(`[SWC SDK] Added auth token as Authorization header: ${token.substring(0, 8)}...`);
+                console.log(
+                  `[SWC SDK] Added auth token as Authorization header: ${token.substring(0, 8)}...`
+                );
               }
             } else {
               if (this.debug) {
                 console.log(`[SWC SDK] No token available from TokenManager`);
               }
             }
-          } catch (error: any) {
+          } catch (error: unknown) {
             if (this.debug) {
-              console.log(`[SWC SDK] Error getting token: ${error.message}`);
+              console.log(
+                `[SWC SDK] Error getting token: ${error instanceof Error ? error.message : String(error)}`
+              );
             }
             // Don't fail the request, just proceed without token
           }
@@ -167,7 +171,7 @@ export class HttpClient {
             // Token refresh failed, throw auth error
             throw SWCError.fromHttpResponse(
               401,
-              error.response?.data,
+              error.response?.data as Record<string, unknown> | undefined,
               error.response?.headers['x-request-id']
             );
           }
@@ -211,7 +215,7 @@ export class HttpClient {
         if (error.response) {
           throw SWCError.fromHttpResponse(
             error.response.status,
-            error.response.data,
+            error.response.data as Record<string, unknown> | undefined,
             error.response.headers['x-request-id']
           );
         } else if (error.request) {
@@ -241,14 +245,16 @@ export class HttpClient {
     }
 
     const status = error.response.status;
-    const responseData = error.response.data as any;
+    const responseData = error.response.data as Record<string, unknown> | undefined;
 
     // Check if HTTP 400 is actually a rate limit error
     const isRateLimitError =
       status === 400 &&
       (responseData?.error === 'rate_limit_exceeded' ||
-        responseData?.message?.toLowerCase().includes('rate limit') ||
-        responseData?.error_description?.toLowerCase().includes('rate limit'));
+        (typeof responseData?.message === 'string' &&
+          responseData.message.toLowerCase().includes('rate limit')) ||
+        (typeof responseData?.error_description === 'string' &&
+          responseData.error_description.toLowerCase().includes('rate limit')));
 
     // Retry rate limit errors (429 or 400 with rate limit content)
     if (status === 429 || isRateLimitError) {
@@ -278,7 +284,7 @@ export class HttpClient {
   /**
    * Make a GET request
    */
-  async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.axios.get<T>(url, config);
     return response.data;
   }
@@ -286,7 +292,7 @@ export class HttpClient {
   /**
    * Make a POST request
    */
-  async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.axios.post<T>(url, data, config);
     return response.data;
   }
@@ -294,7 +300,7 @@ export class HttpClient {
   /**
    * Make a PUT request
    */
-  async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.axios.put<T>(url, data, config);
     return response.data;
   }
@@ -302,7 +308,7 @@ export class HttpClient {
   /**
    * Make a DELETE request
    */
-  async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.axios.delete<T>(url, config);
     return response.data;
   }
@@ -310,7 +316,7 @@ export class HttpClient {
   /**
    * Make a custom request
    */
-  async request<T = any>(config: AxiosRequestConfig): Promise<T> {
+  async request<T = unknown>(config: AxiosRequestConfig): Promise<T> {
     const response = await this.axios.request<T>(config);
     return response.data;
   }

@@ -57,7 +57,7 @@ export abstract class BaseResource {
     // Items consumed so far = (start - startOffset) + count
     // For 1-based: (1 - 1) + 50 = 50 consumed out of total
     // For 0-based: (0 - 0) + 50 = 50 consumed out of total
-    const consumed = (start - options.defaultStart) + count;
+    const consumed = start - options.defaultStart + count;
     const hasMore = consumed < total;
 
     return new Page({

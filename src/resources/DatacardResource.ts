@@ -23,7 +23,9 @@ export class DatacardResource extends BaseResource {
    */
   async list(options: { factionId: string; pageDelay?: number }): Promise<Page<Datacard>> {
     const makeRequest = async (_startIndex: number): Promise<Page<Datacard>> => {
-      const response = await this.http.get<Record<string, unknown>>(`/datacards/${options.factionId}`);
+      const response = await this.http.get<Record<string, unknown>>(
+        `/datacards/${options.factionId}`
+      );
 
       // Extract array — find the non-attributes array key
       let data: Datacard[] = [];
@@ -68,7 +70,7 @@ export class DatacardResource extends BaseResource {
     uses?: number;
     unlimited?: boolean;
   }): Promise<Datacard> {
-    const data: any = {
+    const data: Record<string, string | number> = {
       production_entity_uid: options.production_entity_uid,
     };
 

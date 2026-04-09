@@ -68,7 +68,10 @@ export class FactionMembersResource extends BaseResource {
         start_index: startIndex,
         item_count: options.item_count ?? 50,
       };
-      const response = await this.http.get<Record<string, unknown>>(`/faction/${options.factionId}/members`, { params });
+      const response = await this.http.get<Record<string, unknown>>(
+        `/faction/${options.factionId}/members`,
+        { params }
+      );
       const data = (response.member ?? []) as FactionMember[];
       const attrs = (response.attributes ?? {}) as Record<string, unknown>;
 
@@ -96,16 +99,12 @@ export class FactionMembersResource extends BaseResource {
     uid: string;
     property: 'info1' | 'info2' | 'info3';
     new_value: string;
-  }): Promise<any> {
-    return this.request(
-      'POST',
-      `/faction/${options.factionId}/members`,
-      {
-        uid: options.uid,
-        property: options.property,
-        new_value: options.new_value,
-      }
-    );
+  }): Promise<Record<string, unknown>> {
+    return this.request('POST', `/faction/${options.factionId}/members`, {
+      uid: options.uid,
+      property: options.property,
+      new_value: options.new_value,
+    });
   }
 }
 
@@ -135,7 +134,10 @@ export class FactionBudgetsResource extends BaseResource {
         start_index: startIndex,
         item_count: options.item_count ?? 50,
       };
-      const response = await this.http.get<Record<string, unknown>>(`/faction/${options.factionId}/budgets`, { params });
+      const response = await this.http.get<Record<string, unknown>>(
+        `/faction/${options.factionId}/budgets`,
+        { params }
+      );
       const data = (response.budget ?? []) as Budget[];
       const attrs = (response.attributes ?? {}) as Record<string, unknown>;
 
@@ -185,7 +187,10 @@ export class FactionStockholdersResource extends BaseResource {
         start_index: startIndex,
         item_count: options.item_count ?? 50,
       };
-      const response = await this.http.get<Record<string, unknown>>(`/faction/${options.factionId}/stockholders`, { params });
+      const response = await this.http.get<Record<string, unknown>>(
+        `/faction/${options.factionId}/stockholders`,
+        { params }
+      );
       const data = (response.stockholder ?? []) as Stockholder[];
       const attrs = (response.attributes ?? {}) as Record<string, unknown>;
 
@@ -280,7 +285,10 @@ export class FactionCreditlogResource extends BaseResource {
       if (options.start_id !== undefined) {
         params.start_id = options.start_id;
       }
-      const response = await this.http.get<Record<string, unknown>>(`/faction/${options.factionId}/creditlog`, { params });
+      const response = await this.http.get<Record<string, unknown>>(
+        `/faction/${options.factionId}/creditlog`,
+        { params }
+      );
       // API returns { swcapi: { transactions: { attributes: {...}, transaction: [...] } } }
       // HttpClient unwraps to { attributes: {...}, transaction: [...] }
       const data = (response.transaction ?? []) as CreditLogEntry[];

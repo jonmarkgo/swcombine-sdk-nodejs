@@ -1,0 +1,54 @@
+docs/AUTHENTICATION.md
+  786642f529483045 44,50,299-301,303,306,396-397,400,402-403,405,407-409,429
+examples/oauth-scopes-example.ts
+  786642f529483045 38,141,188
+docs/SCOPES.md
+  786642f529483045 135,148,197,246,279,290,296,300-301
+README.md
+  786642f529483045 47,63,70-72,76-77,94-95,98,183,189,310,319,354,385-386,389-391,393,448-451
+scripts/get-oauth-token.ts
+  786642f529483045 16,48,318,322-326
+examples/oauth-flow.ts
+  786642f529483045 8-15,33,42,88
+docs/GETTING_STARTED.md
+  786642f529483045 20,36,43-45,49-50,85,99-100,109,155,158,163-164,187-189,192,222-227,229,232-234,239-241,243-247,307,316,319-320,328-329,335-336
+docs/PUBLISHING.md
+  786642f529483045 13,20-21,33-35,52,60,91,94,97,116,121,127-128
+src/types/index.ts
+  786642f529483045 2102
+docs/LOCAL_DEVELOPMENT.md
+  786642f529483045 38,41,92,95,181,185,343
+src/resources/CharacterResource.ts
+  786642f529483045 85,90-91,93-94,140-142,569-582,584-590
+AGENTS.md
+  786642f529483045 33-34,37-55,57-58,78,86-90,110,113-114,132-136,146,148-159,167,229-242,255,258-274,277,280-283,285-291
+scripts/get-character-uid.ts
+  786642f529483045 28,35,39-40,42-44
+tests/integration/character.test.ts
+  786642f529483045 7,126,141
+tests/integration/README.md
+  786642f529483045 3-10
+docs/getting-oauth-token.md
+  786642f529483045 1,3-4,30-33,104,115,117-119,121-125,127-129,188-190
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "4c367a5cfaf1ece21e94c2d0af224068bc63de10",
+  "prompts": {
+    "786642f529483045": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ccaa6321-b918-46b9-9fcf-8e8c223e2738",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 112,
+      "total_deletions": 86,
+      "accepted_lines": 317,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/6fa440fa57c1209842b0622a151a7835a8455606534a50f34f448905f99dd9ea"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+src/auth/OAuthClient.ts
+  243cf0687f5c4222 201-202,206-207
+src/types/index.ts
+  3cc5bc063547e067 2258,2264
+src/resources/InventoryResource.ts
+  243cf0687f5c4222 127,185-186
+src/resources/ApiResource.ts
+  243cf0687f5c4222 155
+src/resources/CharacterResource.ts
+  3cc5bc063547e067 625
+src/http/errors.ts
+  243cf0687f5c4222 18,35,86-90,98-101,142,144,151-154
+src/http/HttpClient.ts
+  243cf0687f5c4222 86,88-90,174,218,248,254-257,287,295,303,311,319
+src/resources/DatacardResource.ts
+  243cf0687f5c4222 73
+src/resources/FactionResource.ts
+  243cf0687f5c4222 102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "3278762a7c2649ec3e62ab4aa027d6a53a1cce69",
+  "prompts": {
+    "243cf0687f5c4222": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d6e8e99-f522-4996-9b39-990f28913eb9",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 30,
+      "total_deletions": 30,
+      "accepted_lines": 43,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/7b42745dc25da9ff045391dd7d86cb843e10aa59ab43dcc2cfbfd65afc9e4c3e"
+    },
+    "3cc5bc063547e067": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4bd5707b-bdff-4c48-8fb5-bd39c930b575",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 3,
+      "accepted_lines": 3,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/d3e13b9d4f81d109da16f90558bcc821535e590f5b63fe2c9c4cf6d74d22a716"
+    }
+  }
+}

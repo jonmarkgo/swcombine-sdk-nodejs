@@ -32,6 +32,5 @@ jobs:
           fi
 
       # prepublishOnly handles build + test automatically
-      - run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Auth via OIDC trusted publishing — no token needed
+      - run: npm publish --access public

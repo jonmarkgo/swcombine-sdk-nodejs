@@ -1,0 +1,22 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "ee8f3a7d50cef9250906072434b83acd81eb24c9",
+  "prompts": {
+    "9d82c36bd59519b3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ef8387e-96e7-42ab-87df-64986a8a9ca9",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 1,
+      "accepted_lines": 0,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/6729fa40a624d5c4623fb301268d59d9b39f87c889049dbf8556e94c960ee579"
+    }
+  }
+}

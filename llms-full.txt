@@ -1647,7 +1647,7 @@ for await (const member of page) { console.log(member); }
 
 ### updateMemberInfo()
 
-> **updateMemberInfo**(`options`): `Promise`\<`any`\>
+> **updateMemberInfo**(`options`): `Promise`\<`Record`\<`string`, `unknown`\>\>
 
 Update faction member info field
 
@@ -1681,7 +1681,7 @@ Character UID to update
 
 #### Returns
 
-`Promise`\<`any`\>
+`Promise`\<`Record`\<`string`, `unknown`\>\>
 
 # Class: FactionResource
 
@@ -2682,7 +2682,7 @@ https://www.swcombine.com/ws/v2.0/documentation/inventory/uid/ SW Combine API Do
 
 ### get()
 
-> **get**(`options`): `Promise`\<`any`\>
+> **get**(`options`): `Promise`\<`Record`\<`string`, `unknown`\>\>
 
 Get inventory by UID
 
@@ -2696,7 +2696,7 @@ Get inventory by UID
 
 #### Returns
 
-`Promise`\<`any`\>
+`Promise`\<`Record`\<`string`, `unknown`\>\>
 
 ---
 
@@ -3047,7 +3047,7 @@ or `for await (const item of page)` to iterate through all pages automatically.
 
 ##### options?
 
-`ListSimNewsOptions`
+`ListNewsOptionsBase`
 
 Optional category, pagination, and filtering parameters
 
@@ -4017,7 +4017,7 @@ Request ID from API response
 
 ### response?
 
-> `readonly` `optional` **response**: `any`
+> `readonly` `optional` **response**: `Record`\<`string`, `unknown`\>
 
 Original API error response
 
@@ -4179,7 +4179,7 @@ Create an error from an HTTP status code and response
 
 ##### response
 
-`any`
+`Record`\<`string`, `unknown`\> | `undefined`
 
 ##### requestId?
 

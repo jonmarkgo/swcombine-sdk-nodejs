@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import { SWCombine } from '../../src/index.js';
+import { SWCombine, MessageMode } from '../../src/index.js';
 import {
   createTestClient,
   saveResponse,
@@ -123,7 +123,7 @@ describe('Character Resource Integration Tests', () => {
 
       const response = await client.character.messages.list({
         uid: TEST_CONFIG.characterUid,
-        mode: 'received',
+        mode: MessageMode.Received,
       });
       saveResponse('character-messages-received', response);
 
@@ -138,7 +138,7 @@ describe('Character Resource Integration Tests', () => {
 
       const response = await client.character.messages.list({
         uid: TEST_CONFIG.characterUid,
-        mode: 'sent',
+        mode: MessageMode.Sent,
       });
       saveResponse('character-messages-sent', response);
 

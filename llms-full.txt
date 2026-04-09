@@ -1,4 +1,4 @@
-# swcombine-sdk v2.2.1
+# swcombine-sdk v3.1.1
 
 > Comprehensive TypeScript SDK for Star Wars Combine API v2.0
 
@@ -15,9 +15,6 @@ npm install swcombine-sdk
 # Class: SWCombine
 
 Main SW Combine SDK client
-
-**Warning:** Integration tests (`npm run test:integration`) make real API calls
-to the SW Combine servers. Run `npm test` for unit tests instead.
 
 ## See
 
@@ -509,7 +506,7 @@ https://www.swcombine.com/ws/v2.0/documentation/character/uid/creditlog/ SW Comb
 
 ### list()
 
-> **list**(`options`): `Promise`\<`CreditLogEntry`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`CreditLogEntry`\>\>
 
 Get character's credit log (paginated)
 
@@ -526,7 +523,7 @@ Character UID and optional pagination/filtering parameters
 
 #### Returns
 
-`Promise`\<`CreditLogEntry`[]\>
+`Promise`\<`Page`\<`CreditLogEntry`\>\>
 
 #### Example
 
@@ -536,6 +533,11 @@ const moreLogs = await client.character.creditlog.list({ uid: '1:12345', start_i
 const oldestLogs = await client.character.creditlog.list({ uid: '1:12345', start_id: 1 });
 // Fetch up to 1000 credit log entries at once
 const manyLogs = await client.character.creditlog.list({ uid: '1:12345', item_count: 1000 });
+
+// Iterate through all pages automatically
+for await (const entry of creditlog) {
+  console.log(entry);
+}
 ```
 
 # Class: CharacterCreditsResource
@@ -762,8 +764,10 @@ Full message details including `communication`
 #### Example
 
 ```ts
-const messages = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
-const messageId = messages[0]?.attributes.uid;
+import { MessageMode } from 'swcombine-sdk';
+
+const messages = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received });
+const messageId = messages.data[0]?.attributes.uid;
 
 if (messageId) {
   const message = await client.character.messages.get({ uid: '1:12345', messageId });
@@ -775,7 +779,7 @@ if (messageId) {
 
 ### list()
 
-> **list**(`options`): `Promise`\<`MessageListItem`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`MessageListItem`\>\>
 
 List messages sent or received by character (paginated)
 
@@ -795,21 +799,28 @@ Character UID, optional message mode, and optional pagination parameters
 
 #### Returns
 
-`Promise`\<`MessageListItem`[]\>
+`Promise`\<`Page`\<`MessageListItem`\>\>
 
-Array of message metadata items (`MessageListItem[]`)
+Page of message metadata items (`Page<MessageListItem>`)
 
 #### Example
 
 ```ts
-const allMessages = await client.character.messages.list({ uid: '1:12345' });
-const received = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
-const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: 'received', start_index: 51, item_count: 50 });
+import { MessageMode } from 'swcombine-sdk';
 
-const firstMessageId = received[0]?.attributes.uid;
+const allMessages = await client.character.messages.list({ uid: '1:12345' });
+const received = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received });
+const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received, start_index: 51, item_count: 50 });
+
+const firstMessageId = received.data[0]?.attributes.uid;
 if (firstMessageId) {
   const detail = await client.character.messages.get({ uid: '1:12345', messageId: firstMessageId });
   console.log(detail.communication);
+}
+
+// Iterate through all pages automatically
+for await (const msg of allMessages) {
+  console.log(msg.attributes.uid);
 }
 ```
 
@@ -1144,9 +1155,12 @@ const character = await client.character.get({ uid: '1:12345' });
 
 ### getByHandle()
 
-> **getByHandle**(`options`): `Promise`\<\{ `uid`: `string`; \}\>
+> **getByHandle**(`options`): `Promise`\<\{ `handle`: `string`; `uid`: `string`; \}\>
 
-Get character UID by handle (username)
+Look up a character's UID by their handle (username).
+
+This endpoint is public — no authentication required — and is the primary
+way to resolve a handle to the `uid` used by every other character endpoint.
 
 #### Parameters
 
@@ -1156,7 +1170,20 @@ Get character UID by handle (username)
 
 #### Returns
 
-`Promise`\<\{ `uid`: `string`; \}\>
+`Promise`\<\{ `handle`: `string`; `uid`: `string`; \}\>
+
+`{ uid, handle }` — both fields are always present
+
+#### Example
+
+```ts
+const { uid, handle } = await client.character.getByHandle({ handle: 'Dreks Selmur' });
+console.log(uid);    // "1:46931"
+console.log(handle); // "Dreks Selmur"
+
+// Chain into a full profile fetch (requires CHARACTER_READ)
+const character = await client.character.get({ uid });
+```
 
 ***
 
@@ -1344,7 +1371,7 @@ Get specific budget
 
 ### list()
 
-> **list**(`options`): `Promise`\<`Budget`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`Budget`\>\>
 
 List faction budgets (paginated)
 
@@ -1362,19 +1389,25 @@ Faction ID and optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`Budget`[]\>
+`Promise`\<`Page`\<`Budget`\>\>
 
 #### Example
 
 ```ts
-const budgets = await client.faction.budgets.list({ factionId: '20:123' });
-const moreBudgets = await client.faction.budgets.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+const page = await client.faction.budgets.list({ factionId: '20:123' });
+console.log(page.data); // Budget[]
+// Iterate all pages:
+for await (const budget of page) { console.log(budget); }
 ```
 
 # Class: FactionCreditlogResource
@@ -1413,7 +1446,7 @@ https://www.swcombine.com/ws/v2.0/documentation/faction/uid/creditlog/ SW Combin
 
 ### list()
 
-> **list**(`options`): `Promise`\<`CreditLogEntry`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`CreditLogEntry`\>\>
 
 Get faction credit log (paginated)
 
@@ -1435,6 +1468,12 @@ Faction UID
 
 Number of items to retrieve. Default: 50, Max: 1000
 
+###### pageDelay?
+
+`number`
+
+Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+
 ###### start_id?
 
 `number`
@@ -1449,7 +1488,7 @@ Starting position (1-based). Default: 1
 
 #### Returns
 
-`Promise`\<`CreditLogEntry`[]\>
+`Promise`\<`Page`\<`CreditLogEntry`\>\>
 
 #### Example
 
@@ -1565,7 +1604,7 @@ https://www.swcombine.com/ws/v2.0/documentation/faction/fuid/members/ SW Combine
 
 ### list()
 
-> **list**(`options`): `Promise`\<`FactionMember`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`FactionMember`\>\>
 
 List faction members (paginated)
 
@@ -1583,19 +1622,25 @@ Faction ID and optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`FactionMember`[]\>
+`Promise`\<`Page`\<`FactionMember`\>\>
 
 #### Example
 
 ```ts
-const members = await client.faction.members.list({ factionId: '20:123' });
-const moreMembers = await client.faction.members.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+const page = await client.faction.members.list({ factionId: '20:123' });
+console.log(page.data); // FactionMember[]
+// Iterate all pages:
+for await (const member of page) { console.log(member); }
 ```
 
 ***
@@ -1735,7 +1780,7 @@ const myFaction = await client.faction.get();
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`FactionListResponse`\>
+> **list**(`options?`): `Promise`\<`Page`\<`FactionListItem`\>\>
 
 List all factions (paginated)
 @requires_auth No
@@ -1750,44 +1795,17 @@ Optional pagination parameters
 
 #### Returns
 
-`Promise`\<`FactionListResponse`\>
+`Promise`\<`Page`\<`FactionListItem`\>\>
 
 #### Example
 
 ```ts
-const response = await client.faction.list();
-console.log(response.attributes?.total);
-console.log(response.faction?.[0]?.value);
+const page = await client.faction.list();
+console.log(page.total);
+console.log(page.data[0]?.value);
 
-const moreFactions = await client.faction.list({ start_index: 51, item_count: 50 });
-```
-
-***
-
-### listAll()
-
-> **listAll**(`options?`): `Promise`\<`FactionListItem`[]\>
-
-List all factions across every page.
-@requires_auth No
-
-#### Parameters
-
-##### options?
-
-`ListFactionsOptions`
-
-Optional pagination parameters for the page size and starting offset
-
-#### Returns
-
-`Promise`\<`FactionListItem`[]\>
-
-#### Example
-
-```ts
-const factions = await client.faction.listAll();
-console.log(factions.length);
+// Iterate all pages:
+for await (const faction of page) { console.log(faction); }
 ```
 
 # Class: FactionStockholdersResource
@@ -1826,7 +1844,7 @@ https://www.swcombine.com/ws/v2.0/documentation/faction/uid/stockholders/ SW Com
 
 ### list()
 
-> **list**(`options`): `Promise`\<`Stockholder`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`Stockholder`\>\>
 
 List faction stockholders (paginated)
 
@@ -1844,19 +1862,25 @@ Faction ID and optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`Stockholder`[]\>
+`Promise`\<`Page`\<`Stockholder`\>\>
 
 #### Example
 
 ```ts
-const stockholders = await client.faction.stockholders.list({ factionId: '20:123' });
-const moreStockholders = await client.faction.stockholders.list({ factionId: '20:123', start_index: 51, item_count: 50 });
+const page = await client.faction.stockholders.list({ factionId: '20:123' });
+console.log(page.data); // Stockholder[]
+// Iterate all pages:
+for await (const stockholder of page) { console.log(stockholder); }
 ```
 
 ---
@@ -1917,7 +1941,7 @@ Get city by UID
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`GalaxyCityListItem`[]\>
+> **list**(`options?`): `Promise`\<`Page`\<`GalaxyCityListItem`\>\>
 
 List all cities (paginated)
 
@@ -1931,13 +1955,17 @@ Optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`GalaxyCityListItem`[]\>
+`Promise`\<`Page`\<`GalaxyCityListItem`\>\>
 
 #### Example
 
@@ -1945,28 +1973,6 @@ Optional pagination parameters
 const cities = await client.galaxy.cities.list();
 const moreCities = await client.galaxy.cities.list({ start_index: 51, item_count: 50 });
 ```
-
-***
-
-### listRaw()
-
-> **listRaw**(`options?`): `Promise`\<`GalaxyCityListRawResponse`\>
-
-#### Parameters
-
-##### options?
-
-###### item_count?
-
-`number`
-
-###### start_index?
-
-`number`
-
-#### Returns
-
-`Promise`\<`GalaxyCityListRawResponse`\>
 
 # Class: GalaxyPlanetsResource
 
@@ -2022,7 +2028,7 @@ Get planet by UID
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`GalaxyPlanetListItem`[]\>
+> **list**(`options?`): `Promise`\<`Page`\<`GalaxyPlanetListItem`\>\>
 
 List all planets (paginated)
 
@@ -2036,13 +2042,17 @@ Optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`GalaxyPlanetListItem`[]\>
+`Promise`\<`Page`\<`GalaxyPlanetListItem`\>\>
 
 #### Example
 
@@ -2050,28 +2060,6 @@ Optional pagination parameters
 const planets = await client.galaxy.planets.list();
 const morePlanets = await client.galaxy.planets.list({ start_index: 51, item_count: 50 });
 ```
-
-***
-
-### listRaw()
-
-> **listRaw**(`options?`): `Promise`\<`GalaxyPlanetListRawResponse`\>
-
-#### Parameters
-
-##### options?
-
-###### item_count?
-
-`number`
-
-###### start_index?
-
-`number`
-
-#### Returns
-
-`Promise`\<`GalaxyPlanetListRawResponse`\>
 
 # Class: GalaxyResource
 
@@ -2220,7 +2208,7 @@ const sector = await client.galaxy.sectors.get({ uid: 'seswenna' });
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`GalaxySectorListItem`[]\>
+> **list**(`options?`): `Promise`\<`Page`\<`GalaxySectorListItem`\>\>
 
 List all sectors (paginated)
 
@@ -2234,13 +2222,17 @@ Optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`GalaxySectorListItem`[]\>
+`Promise`\<`Page`\<`GalaxySectorListItem`\>\>
 
 #### Example
 
@@ -2248,28 +2240,6 @@ Optional pagination parameters
 const sectors = await client.galaxy.sectors.list();
 const moreSectors = await client.galaxy.sectors.list({ start_index: 51, item_count: 50 });
 ```
-
-***
-
-### listRaw()
-
-> **listRaw**(`options?`): `Promise`\<`GalaxySectorListRawResponse`\>
-
-#### Parameters
-
-##### options?
-
-###### item_count?
-
-`number`
-
-###### start_index?
-
-`number`
-
-#### Returns
-
-`Promise`\<`GalaxySectorListRawResponse`\>
 
 # Class: GalaxyStationsResource
 
@@ -2325,7 +2295,7 @@ Get station by UID
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`GalaxyStationListItem`[]\>
+> **list**(`options?`): `Promise`\<`Page`\<`GalaxyStationListItem`\>\>
 
 List all stations in named systems with no ECM (paginated)
 
@@ -2339,13 +2309,17 @@ Optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`GalaxyStationListItem`[]\>
+`Promise`\<`Page`\<`GalaxyStationListItem`\>\>
 
 #### Example
 
@@ -2353,28 +2327,6 @@ Optional pagination parameters
 const stations = await client.galaxy.stations.list();
 const moreStations = await client.galaxy.stations.list({ start_index: 51, item_count: 50 });
 ```
-
-***
-
-### listRaw()
-
-> **listRaw**(`options?`): `Promise`\<`GalaxyStationListRawResponse`\>
-
-#### Parameters
-
-##### options?
-
-###### item_count?
-
-`number`
-
-###### start_index?
-
-`number`
-
-#### Returns
-
-`Promise`\<`GalaxyStationListRawResponse`\>
 
 # Class: GalaxySystemsResource
 
@@ -2430,7 +2382,7 @@ Get system by UID
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`GalaxySystemListItem`[]\>
+> **list**(`options?`): `Promise`\<`Page`\<`GalaxySystemListItem`\>\>
 
 List all systems (paginated)
 
@@ -2444,13 +2396,17 @@ Optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`GalaxySystemListItem`[]\>
+`Promise`\<`Page`\<`GalaxySystemListItem`\>\>
 
 #### Example
 
@@ -2458,28 +2414,6 @@ Optional pagination parameters
 const systems = await client.galaxy.systems.list();
 const moreSystems = await client.galaxy.systems.list({ start_index: 51, item_count: 50 });
 ```
-
-***
-
-### listRaw()
-
-> **listRaw**(`options?`): `Promise`\<`GalaxySystemListRawResponse`\>
-
-#### Parameters
-
-##### options?
-
-###### item_count?
-
-`number`
-
-###### start_index?
-
-`number`
-
-#### Returns
-
-`Promise`\<`GalaxySystemListRawResponse`\>
 
 ---
 
@@ -2567,7 +2501,7 @@ Get specific entity
 
 ### list()
 
-> **list**\<`T`\>(`options`): `Promise`\<`InventoryEntityTypeMap`\[`T`\][]\>
+> **list**\<`T`\>(`options`): `Promise`\<`Page`\<`InventoryEntityTypeMap`\[`T`\]\>\>
 
 List entities in inventory (paginated with optional filtering)
 
@@ -2589,7 +2523,7 @@ Inventory UID, entity type, assign type, and optional pagination/filtering param
 
 #### Returns
 
-`Promise`\<`InventoryEntityTypeMap`\[`T`\][]\>
+`Promise`\<`Page`\<`InventoryEntityTypeMap`\[`T`\]\>\>
 
 #### Example
 
@@ -2860,7 +2794,7 @@ Get vendor by UID
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`Vendor`[]\>
+> **list**(`options?`): `Promise`\<`Page`\<`Vendor`\>\>
 
 List all public vendors (paginated)
 
@@ -2874,13 +2808,17 @@ Optional pagination parameters
 
 `number`
 
+###### pageDelay?
+
+`number`
+
 ###### start_index?
 
 `number`
 
 #### Returns
 
-`Promise`\<`Vendor`[]\>
+`Promise`\<`Page`\<`Vendor`\>\>
 
 #### Example
 
@@ -2957,12 +2895,12 @@ console.log(post.faction.value);
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`NewsListResponse`\>
+> **list**(`options?`): `Promise`\<`Page`\<`NewsListItem`\>\>
 
 List GNS news items (paginated with optional filtering)
-Returns headline metadata entries (`attributes.id`, `attributes.href`, `attributes.title`, `value`).
-The returned array also includes pagination metadata at `result.attributes`
-(`start`, `total`, `count`) from the API response.
+Returns a Page of headline metadata entries (`attributes.id`, `attributes.href`, `attributes.title`, `value`).
+Use `page.data` for the current page items, `page.hasMore` / `page.getNextPage()` for pagination,
+or `for await (const item of page)` to iterate through all pages automatically.
 @requires_auth No
 
 #### Parameters
@@ -2975,18 +2913,18 @@ Optional category, pagination, and filtering parameters
 
 #### Returns
 
-`Promise`\<`NewsListResponse`\>
+`Promise`\<`Page`\<`NewsListItem`\>\>
 
 #### Example
 
 ```ts
-const news = await client.news.gns.list();
+const page = await client.news.gns.list();
 const economyNews = await client.news.gns.list({ category: 'economy' });
 const moreNews = await client.news.gns.list({ start_index: 51, item_count: 50 });
 const searchNews = await client.news.gns.list({ search: 'battle', author: 'John Doe' });
 const factionNews = await client.news.gns.list({ faction: 'Empire', faction_type: 'government' });
-console.log(news[0].attributes.title);
-console.log(news.attributes.start, news.attributes.total, news.attributes.count);
+console.log(page.data[0].attributes.title);
+console.log(page.start, page.total, page.count);
 ```
 
 # Class: NewsResource
@@ -3097,12 +3035,12 @@ console.log(post.faction.value);
 
 ### list()
 
-> **list**(`options?`): `Promise`\<`NewsListResponse`\>
+> **list**(`options?`): `Promise`\<`Page`\<`NewsListItem`\>\>
 
 List Sim News items (paginated with optional filtering)
-Returns headline metadata entries (`attributes.id`, `attributes.href`, `attributes.title`, `value`).
-The returned array also includes pagination metadata at `result.attributes`
-(`start`, `total`, `count`) from the API response.
+Returns a Page of headline metadata entries (`attributes.id`, `attributes.href`, `attributes.title`, `value`).
+Use `page.data` for the current page items, `page.hasMore` / `page.getNextPage()` for pagination,
+or `for await (const item of page)` to iterate through all pages automatically.
 @requires_auth No
 
 #### Parameters
@@ -3115,17 +3053,17 @@ Optional category, pagination, and filtering parameters
 
 #### Returns
 
-`Promise`\<`NewsListResponse`\>
+`Promise`\<`Page`\<`NewsListItem`\>\>
 
 #### Example
 
 ```ts
-const news = await client.news.simNews.list();
+const page = await client.news.simNews.list();
 const playerNews = await client.news.simNews.list({ category: 'player' });
 const moreNews = await client.news.simNews.list({ start_index: 51, item_count: 50 });
 const searchNews = await client.news.simNews.list({ search: 'update', author: 'Admin' });
-console.log(news[0].attributes.title);
-console.log(news.attributes.start, news.attributes.total, news.attributes.count);
+console.log(page.data[0].attributes.title);
+console.log(page.start, page.total, page.count);
 ```
 
 ---
@@ -3168,7 +3106,7 @@ https://www.swcombine.com/ws/v2.0/documentation/types/classes/entity_type/ SW Co
 
 ### list()
 
-> **list**\<`T`\>(`options`): `Promise`\<`EntityClass`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`EntityClass`\>\>
 
 Get all classes for a specific entity type (paginated)
 
@@ -3176,23 +3114,31 @@ NOTE: Official API documentation states "Query String: N/A" and "Parameters: N/A
 but empirical testing suggests pagination parameters may be required to avoid 404 errors.
 The SDK includes pagination parameters by default for safety.
 
-#### Type Parameters
-
-##### T
-
-`T` *extends* `TypesEntityType`
-
 #### Parameters
 
 ##### options
 
-`ListTypesClassesOptions`\<`T`\>
-
 Entity type (plural, e.g., 'vehicles', 'ships') and optional pagination parameters
+
+###### entityType
+
+`TypesEntityType`
+
+###### item_count?
+
+`number`
+
+###### pageDelay?
+
+`number`
+
+###### start_index?
+
+`number`
 
 #### Returns
 
-`Promise`\<`EntityClass`[]\>
+`Promise`\<`Page`\<`EntityClass`\>\>
 
 #### Example
 
@@ -3261,7 +3207,7 @@ Get specific entity type information
 
 ### list()
 
-> **list**\<`T`\>(`options`): `Promise`\<`TypesEntityListItem`[]\>
+> **list**\<`T`\>(`options`): `Promise`\<`Page`\<`TypesEntityListItem`\>\>
 
 Get all entities of a type (paginated)
 
@@ -3281,7 +3227,7 @@ Entity type (plural, e.g., 'vehicles', 'ships'), optional class filter, and opti
 
 #### Returns
 
-`Promise`\<`TypesEntityListItem`[]\>
+`Promise`\<`Page`\<`TypesEntityListItem`\>\>
 
 #### Example
 
@@ -3289,60 +3235,6 @@ Entity type (plural, e.g., 'vehicles', 'ships'), optional class filter, and opti
 const ships = await client.types.entities.list({ entityType: 'ships' });
 const moreShips = await client.types.entities.list({ entityType: 'ships', start_index: 51, item_count: 50 });
 const fighters = await client.types.entities.list({ entityType: 'ships', class: 'fighter', start_index: 1, item_count: 50 });
-```
-
-***
-
-### listRaw()
-
-> **listRaw**\<`T`\>(`options`): `Promise`\<`TypesEntitiesListMetaResponse`\>
-
-Returns normalized pagination metadata and items for any `TypesEntityType`.
-
-#### Type Parameters
-
-##### T
-
-`T` *extends* `TypesEntityType`
-
-#### Parameters
-
-##### options
-
-`ListTypesEntitiesOptions`\<`T`\>
-
-Entity list options. `start_index` defaults to `1`, `item_count` defaults to `50`,
-and `class` is optional for class-filtered results.
-
-#### Returns
-
-`Promise`\<`TypesEntitiesListMetaResponse`\>
-
-`TypesEntitiesListMetaResponse` with pagination `attributes` and normalized `items`.
-
-#### Examples
-
-```ts
-const response = await client.types.entities.listRaw({
-  entityType: 'vehicles',
-  start_index: 1,
-  item_count: 50,
-});
-console.log(response.attributes?.total);
-console.log(response.items[0]?.attributes.uid);
-```
-
-```ts
-const response = await client.types.entities.listRaw({
-  entityType: 'ships',
-  class: 'fighter',
-  start_index: 1,
-  item_count: 25,
-});
-
-for (const item of response.items) {
-  console.log(item.attributes.uid, item.value);
-}
 ```
 
 # Class: TypesResource
@@ -3461,7 +3353,7 @@ Get specific event
 
 ### list()
 
-> **list**(`options`): `Promise`\<`Event`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`Event`\>\>
 
 List events by type and mode (paginated)
 
@@ -3497,6 +3389,12 @@ Faction ID for faction mode
 
 Number of items to retrieve. Default: 50, Max: 1000
 
+###### pageDelay?
+
+`number`
+
+Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+
 ###### start_index?
 
 `number`
@@ -3511,7 +3409,7 @@ Unix timestamp to filter events after this time
 
 #### Returns
 
-`Promise`\<`Event`[]\>
+`Promise`\<`Page`\<`Event`\>\>
 
 #### Example
 
@@ -3712,7 +3610,7 @@ Get specific datacard
 
 ### list()
 
-> **list**(`options`): `Promise`\<`Datacard`[]\>
+> **list**(`options`): `Promise`\<`Page`\<`Datacard`\>\>
 
 List datacards owned by faction
 
@@ -3724,9 +3622,13 @@ List datacards owned by faction
 
 `string`
 
+###### pageDelay?
+
+`number`
+
 #### Returns
 
-`Promise`\<`Datacard`[]\>
+`Promise`\<`Page`\<`Datacard`\>\>
 
 ---
 
@@ -4469,7 +4371,7 @@ Refresh token for getting new access token
 
 ### scopes
 
-> **scopes**: `string`[]
+> **scopes**: `AllScopes`[]
 
 OAuth scopes to request
 
@@ -4531,7 +4433,7 @@ Character-related scopes
 
 > `readonly` **ALL**: `"character_all"` = `'character_all'`
 
-Access all character information (includes all above)
+Access all character information
 
 ### AUTH
 
@@ -4555,19 +4457,19 @@ Transfer character credits
 
 > `readonly` **EVENTS**: `"character_events"` = `'character_events'`
 
-Read character events
+Read the characters' events
 
 ### FORCE
 
 > `readonly` **FORCE**: `"character_force"` = `'character_force'`
 
-Read character force-related information (FP, FXP, regen rate, Force Meter)
+Read character force-related information.<br/>If you are Force-aware, this will return Master or Student where applicable, as well as FP, FXP, regen rate, and Force Meter.
 
 ### LOCATION
 
 > `readonly` **LOCATION**: `"character_location"` = `'character_location'`
 
-Read location information in-game
+Read your location in-game
 
 ### PRIVILEGES
 
@@ -4579,7 +4481,7 @@ Read character privileges
 
 > `readonly` **READ**: `"character_read"` = `'character_read'`
 
-Read basic character information (UID, handle, image, race, gender, etc.)
+Read basic character information.<br/>If your profile is private, this will return unique ID, handle, and image.<br/>If your profile is not private, this will also return your race, gender, last login, description, and biography.
 
 ### SKILLS
 
@@ -4591,7 +4493,7 @@ Read character skills
 
 > `readonly` **STATS**: `"character_stats"` = `'character_stats'`
 
-Read character HP and XP
+Read information about the character's HP and XP
 
 # Variable: MessageScopes
 
@@ -4605,25 +4507,25 @@ Message-related scopes
 
 > `readonly` **ALL**: `"messages_all"` = `'messages_all'`
 
-All message permissions
+Read, send and delete messages to or from the character
 
 ### DELETE
 
 > `readonly` **DELETE**: `"messages_delete"` = `'messages_delete'`
 
-Delete messages
+Delete messages to or from the character
 
 ### READ
 
 > `readonly` **READ**: `"messages_read"` = `'messages_read'`
 
-Read messages
+Read messages sent to or by the character
 
 ### SEND
 
 > `readonly` **SEND**: `"messages_send"` = `'messages_send'`
 
-Send messages
+Send messages to or from the character
 
 # Variable: FactionScopes
 
@@ -4637,61 +4539,61 @@ Faction management scopes
 
 > `readonly` **ALL**: `"faction_all"` = `'faction_all'`
 
-All faction permissions
+Access and change anything in your faction
 
 ### BUDGETS\_READ
 
 > `readonly` **BUDGETS\_READ**: `"faction_budgets_read"` = `'faction_budgets_read'`
 
-Read faction budgets
+See your faction's budgets
 
 ### BUDGETS\_WRITE
 
 > `readonly` **BUDGETS\_WRITE**: `"faction_budgets_write"` = `'faction_budgets_write'`
 
-Write faction budgets
+Change your faction's budgets
 
 ### CREDITS\_READ
 
 > `readonly` **CREDITS\_READ**: `"faction_credits_read"` = `'faction_credits_read'`
 
-Read faction credits
+See how many credits your faction owns
 
 ### CREDITS\_WRITE
 
 > `readonly` **CREDITS\_WRITE**: `"faction_credits_write"` = `'faction_credits_write'`
 
-Write/transfer faction credits
+Transfer credits on behalf of your faction
 
 ### DATACARDS\_READ
 
 > `readonly` **DATACARDS\_READ**: `"faction_datacards_read"` = `'faction_datacards_read'`
 
-Read faction datacards
+See your faction's datacard assignments
 
 ### DATACARDS\_WRITE
 
 > `readonly` **DATACARDS\_WRITE**: `"faction_datacards_write"` = `'faction_datacards_write'`
 
-Write faction datacards
+Assign or revoke your faction's datacard assignments
 
 ### MEMBERS
 
 > `readonly` **MEMBERS**: `"faction_members"` = `'faction_members'`
 
-Read faction members
+See your faction's members list
 
 ### READ
 
 > `readonly` **READ**: `"faction_read"` = `'faction_read'`
 
-Read faction information
+Read basic information about your faction
 
 ### STOCKS
 
 > `readonly` **STOCKS**: `"faction_stocks"` = `'faction_stocks'`
 
-Read faction stocks
+See the stocks your faction owns
 
 # Variable: Scopes
 
@@ -4709,7 +4611,7 @@ All available scopes organized by category
 
 > `readonly` **ALL**: `"character_all"` = `'character_all'`
 
-Access all character information (includes all above)
+Access all character information
 
 #### Character.AUTH
 
@@ -4733,19 +4635,19 @@ Transfer character credits
 
 > `readonly` **EVENTS**: `"character_events"` = `'character_events'`
 
-Read character events
+Read the characters' events
 
 #### Character.FORCE
 
 > `readonly` **FORCE**: `"character_force"` = `'character_force'`
 
-Read character force-related information (FP, FXP, regen rate, Force Meter)
+Read character force-related information.<br/>If you are Force-aware, this will return Master or Student where applicable, as well as FP, FXP, regen rate, and Force Meter.
 
 #### Character.LOCATION
 
 > `readonly` **LOCATION**: `"character_location"` = `'character_location'`
 
-Read location information in-game
+Read your location in-game
 
 #### Character.PRIVILEGES
 
@@ -4757,7 +4659,7 @@ Read character privileges
 
 > `readonly` **READ**: `"character_read"` = `'character_read'`
 
-Read basic character information (UID, handle, image, race, gender, etc.)
+Read basic character information.<br/>If your profile is private, this will return unique ID, handle, and image.<br/>If your profile is not private, this will also return your race, gender, last login, description, and biography.
 
 #### Character.SKILLS
 
@@ -4769,7 +4671,7 @@ Read character skills
 
 > `readonly` **STATS**: `"character_stats"` = `'character_stats'`
 
-Read character HP and XP
+Read information about the character's HP and XP
 
 ### Faction
 
@@ -4779,61 +4681,61 @@ Read character HP and XP
 
 > `readonly` **ALL**: `"faction_all"` = `'faction_all'`
 
-All faction permissions
+Access and change anything in your faction
 
 #### Faction.BUDGETS\_READ
 
 > `readonly` **BUDGETS\_READ**: `"faction_budgets_read"` = `'faction_budgets_read'`
 
-Read faction budgets
+See your faction's budgets
 
 #### Faction.BUDGETS\_WRITE
 
 > `readonly` **BUDGETS\_WRITE**: `"faction_budgets_write"` = `'faction_budgets_write'`
 
-Write faction budgets
+Change your faction's budgets
 
 #### Faction.CREDITS\_READ
 
 > `readonly` **CREDITS\_READ**: `"faction_credits_read"` = `'faction_credits_read'`
 
-Read faction credits
+See how many credits your faction owns
 
 #### Faction.CREDITS\_WRITE
 
 > `readonly` **CREDITS\_WRITE**: `"faction_credits_write"` = `'faction_credits_write'`
 
-Write/transfer faction credits
+Transfer credits on behalf of your faction
 
 #### Faction.DATACARDS\_READ
 
 > `readonly` **DATACARDS\_READ**: `"faction_datacards_read"` = `'faction_datacards_read'`
 
-Read faction datacards
+See your faction's datacard assignments
 
 #### Faction.DATACARDS\_WRITE
 
 > `readonly` **DATACARDS\_WRITE**: `"faction_datacards_write"` = `'faction_datacards_write'`
 
-Write faction datacards
+Assign or revoke your faction's datacard assignments
 
 #### Faction.MEMBERS
 
 > `readonly` **MEMBERS**: `"faction_members"` = `'faction_members'`
 
-Read faction members
+See your faction's members list
 
 #### Faction.READ
 
 > `readonly` **READ**: `"faction_read"` = `'faction_read'`
 
-Read faction information
+Read basic information about your faction
 
 #### Faction.STOCKS
 
 > `readonly` **STOCKS**: `"faction_stocks"` = `'faction_stocks'`
 
-Read faction stocks
+See the stocks your faction owns
 
 ### FactionInventory
 
@@ -4841,33 +4743,243 @@ Read faction stocks
 
 #### FactionInventory.CITIES
 
-> `readonly` **CITIES**: `Record`\<`string`, `string`\>
+> `readonly` **CITIES**: `object`
 
 Faction city scopes
 
+#### FactionInventory.CITIES.ALL
+
+> `readonly` **ALL**: `"faction_inv_cities_all"` = `'faction_inv_cities_all'`
+
+Access and change anything in your faction's city inventory
+
+#### FactionInventory.CITIES.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_cities_assign"` = `'faction_inv_cities_assign'`
+
+Assign your faction's cities
+
+#### FactionInventory.CITIES.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_cities_makeover"` = `'faction_inv_cities_makeover'`
+
+Make over your faction's cities
+
+#### FactionInventory.CITIES.READ
+
+> `readonly` **READ**: `"faction_inv_cities_read"` = `'faction_inv_cities_read'`
+
+Read basic information about your faction's cities
+
+#### FactionInventory.CITIES.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_cities_rename"` = `'faction_inv_cities_rename'`
+
+Rename your faction's cities
+
+#### FactionInventory.CITIES.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_cities_tags_read"` = `'faction_inv_cities_tags_read'`
+
+Read the tags assigned to your faction's cities
+
+#### FactionInventory.CITIES.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_cities_tags_write"` = `'faction_inv_cities_tags_write'`
+
+Modify the tags assigned to your faction's cities
+
 #### FactionInventory.CREATURES
 
-> `readonly` **CREATURES**: `Record`\<`string`, `string`\>
+> `readonly` **CREATURES**: `object`
 
 Faction creature scopes
 
+#### FactionInventory.CREATURES.ALL
+
+> `readonly` **ALL**: `"faction_inv_creatures_all"` = `'faction_inv_creatures_all'`
+
+Access and change anything in your faction's creature inventory
+
+#### FactionInventory.CREATURES.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_creatures_assign"` = `'faction_inv_creatures_assign'`
+
+Assign your faction's creatures
+
+#### FactionInventory.CREATURES.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_creatures_makeover"` = `'faction_inv_creatures_makeover'`
+
+Make over your faction's creatures
+
+#### FactionInventory.CREATURES.READ
+
+> `readonly` **READ**: `"faction_inv_creatures_read"` = `'faction_inv_creatures_read'`
+
+Read basic information about your faction's creatures
+
+#### FactionInventory.CREATURES.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_creatures_rename"` = `'faction_inv_creatures_rename'`
+
+Rename your faction's creatures
+
+#### FactionInventory.CREATURES.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_creatures_tags_read"` = `'faction_inv_creatures_tags_read'`
+
+Read the tags assigned to your faction's creatures
+
+#### FactionInventory.CREATURES.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_creatures_tags_write"` = `'faction_inv_creatures_tags_write'`
+
+Modify the tags assigned to your faction's creatures
+
 #### FactionInventory.DROIDS
 
-> `readonly` **DROIDS**: `Record`\<`string`, `string`\>
+> `readonly` **DROIDS**: `object`
 
 Faction droid scopes
 
+#### FactionInventory.DROIDS.ALL
+
+> `readonly` **ALL**: `"faction_inv_droids_all"` = `'faction_inv_droids_all'`
+
+Access and change anything in your faction's droid inventory
+
+#### FactionInventory.DROIDS.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_droids_assign"` = `'faction_inv_droids_assign'`
+
+Assign your faction's droids
+
+#### FactionInventory.DROIDS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_droids_makeover"` = `'faction_inv_droids_makeover'`
+
+Make over your faction's droids
+
+#### FactionInventory.DROIDS.READ
+
+> `readonly` **READ**: `"faction_inv_droids_read"` = `'faction_inv_droids_read'`
+
+Read basic information about your faction's droids
+
+#### FactionInventory.DROIDS.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_droids_rename"` = `'faction_inv_droids_rename'`
+
+Rename your faction's droids
+
+#### FactionInventory.DROIDS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_droids_tags_read"` = `'faction_inv_droids_tags_read'`
+
+Read the tags assigned to your faction's droids
+
+#### FactionInventory.DROIDS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_droids_tags_write"` = `'faction_inv_droids_tags_write'`
+
+Modify the tags assigned to your faction's droids
+
 #### FactionInventory.FACILITIES
 
-> `readonly` **FACILITIES**: `Record`\<`string`, `string`\>
+> `readonly` **FACILITIES**: `object`
 
 Faction facility scopes
 
+#### FactionInventory.FACILITIES.ALL
+
+> `readonly` **ALL**: `"faction_inv_facilities_all"` = `'faction_inv_facilities_all'`
+
+Access and change anything in your faction's facility inventory
+
+#### FactionInventory.FACILITIES.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_facilities_assign"` = `'faction_inv_facilities_assign'`
+
+Assign your faction's facilities
+
+#### FactionInventory.FACILITIES.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_facilities_makeover"` = `'faction_inv_facilities_makeover'`
+
+Make over your faction's facilities
+
+#### FactionInventory.FACILITIES.READ
+
+> `readonly` **READ**: `"faction_inv_facilities_read"` = `'faction_inv_facilities_read'`
+
+Read basic information about your faction's facilities
+
+#### FactionInventory.FACILITIES.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_facilities_rename"` = `'faction_inv_facilities_rename'`
+
+Rename your faction's facilities
+
+#### FactionInventory.FACILITIES.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_facilities_tags_read"` = `'faction_inv_facilities_tags_read'`
+
+Read the tags assigned to your faction's facilities
+
+#### FactionInventory.FACILITIES.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_facilities_tags_write"` = `'faction_inv_facilities_tags_write'`
+
+Modify the tags assigned to your faction's facilities
+
 #### FactionInventory.ITEMS
 
-> `readonly` **ITEMS**: `Record`\<`string`, `string`\>
+> `readonly` **ITEMS**: `object`
 
 Faction item scopes
+
+#### FactionInventory.ITEMS.ALL
+
+> `readonly` **ALL**: `"faction_inv_items_all"` = `'faction_inv_items_all'`
+
+Access and change anything in your faction's item inventory
+
+#### FactionInventory.ITEMS.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_items_assign"` = `'faction_inv_items_assign'`
+
+Assign your faction's items
+
+#### FactionInventory.ITEMS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_items_makeover"` = `'faction_inv_items_makeover'`
+
+Make over your faction's items
+
+#### FactionInventory.ITEMS.READ
+
+> `readonly` **READ**: `"faction_inv_items_read"` = `'faction_inv_items_read'`
+
+Read basic information about your faction's items
+
+#### FactionInventory.ITEMS.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_items_rename"` = `'faction_inv_items_rename'`
+
+Rename your faction's items
+
+#### FactionInventory.ITEMS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_items_tags_read"` = `'faction_inv_items_tags_read'`
+
+Read the tags assigned to your faction's items
+
+#### FactionInventory.ITEMS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_items_tags_write"` = `'faction_inv_items_tags_write'`
+
+Modify the tags assigned to your faction's items
 
 #### FactionInventory.MATERIALS
 
@@ -4879,25 +4991,37 @@ Faction material scopes (no ASSIGN)
 
 > `readonly` **ALL**: `"faction_inv_materials_all"` = `'faction_inv_materials_all'`
 
+Access and change anything in your faction's material inventory
+
 #### FactionInventory.MATERIALS.MAKEOVER
 
 > `readonly` **MAKEOVER**: `"faction_inv_materials_makeover"` = `'faction_inv_materials_makeover'`
+
+Make over your faction's materials
 
 #### FactionInventory.MATERIALS.READ
 
 > `readonly` **READ**: `"faction_inv_materials_read"` = `'faction_inv_materials_read'`
 
+Read basic information about your faction's materials
+
 #### FactionInventory.MATERIALS.RENAME
 
 > `readonly` **RENAME**: `"faction_inv_materials_rename"` = `'faction_inv_materials_rename'`
+
+Rename your faction's materials
 
 #### FactionInventory.MATERIALS.TAGS\_READ
 
 > `readonly` **TAGS\_READ**: `"faction_inv_materials_tags_read"` = `'faction_inv_materials_tags_read'`
 
+Read the tags assigned to your faction's materials
+
 #### FactionInventory.MATERIALS.TAGS\_WRITE
 
 > `readonly` **TAGS\_WRITE**: `"faction_inv_materials_tags_write"` = `'faction_inv_materials_tags_write'`
+
+Modify the tags assigned to your faction's materials
 
 #### FactionInventory.NPCS
 
@@ -4909,55 +5033,223 @@ Faction NPC scopes (has MAKEOVER but no RENAME)
 
 > `readonly` **ALL**: `"faction_inv_npcs_all"` = `'faction_inv_npcs_all'`
 
+Access and change anything in your faction's NPC inventory
+
 #### FactionInventory.NPCS.ASSIGN
 
 > `readonly` **ASSIGN**: `"faction_inv_npcs_assign"` = `'faction_inv_npcs_assign'`
+
+Assign your faction's NPCs
 
 #### FactionInventory.NPCS.MAKEOVER
 
 > `readonly` **MAKEOVER**: `"faction_inv_npcs_makeover"` = `'faction_inv_npcs_makeover'`
 
+Make over your faction's NPCs
+
 #### FactionInventory.NPCS.READ
 
 > `readonly` **READ**: `"faction_inv_npcs_read"` = `'faction_inv_npcs_read'`
+
+Read basic information about your faction's NPCs
 
 #### FactionInventory.NPCS.TAGS\_READ
 
 > `readonly` **TAGS\_READ**: `"faction_inv_npcs_tags_read"` = `'faction_inv_npcs_tags_read'`
 
+Read the tags assigned to your faction's NPCs
+
 #### FactionInventory.NPCS.TAGS\_WRITE
 
 > `readonly` **TAGS\_WRITE**: `"faction_inv_npcs_tags_write"` = `'faction_inv_npcs_tags_write'`
+
+Modify the tags assigned to your faction's NPCs
 
 #### FactionInventory.OVERVIEW
 
 > `readonly` **OVERVIEW**: `"faction_inv_overview"` = `'faction_inv_overview'`
 
-Overview of faction inventory
+Read basic information about your faction's inventories
 
 #### FactionInventory.PLANETS
 
-> `readonly` **PLANETS**: `Record`\<`string`, `string`\>
+> `readonly` **PLANETS**: `object`
 
 Faction planet scopes (no RENAME/MAKEOVER)
 
+#### FactionInventory.PLANETS.ALL
+
+> `readonly` **ALL**: `"faction_inv_planets_all"` = `'faction_inv_planets_all'`
+
+Access and change anything in your faction's planet inventory
+
+#### FactionInventory.PLANETS.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_planets_assign"` = `'faction_inv_planets_assign'`
+
+Assign your faction's planets
+
+#### FactionInventory.PLANETS.READ
+
+> `readonly` **READ**: `"faction_inv_planets_read"` = `'faction_inv_planets_read'`
+
+Read basic information about your faction's planets
+
+#### FactionInventory.PLANETS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_planets_tags_read"` = `'faction_inv_planets_tags_read'`
+
+Read the tags assigned to your faction's planets
+
+#### FactionInventory.PLANETS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_planets_tags_write"` = `'faction_inv_planets_tags_write'`
+
+Modify the tags assigned to your faction's planets
+
 #### FactionInventory.SHIPS
 
-> `readonly` **SHIPS**: `Record`\<`string`, `string`\>
+> `readonly` **SHIPS**: `object`
 
 Faction ship scopes
 
+#### FactionInventory.SHIPS.ALL
+
+> `readonly` **ALL**: `"faction_inv_ships_all"` = `'faction_inv_ships_all'`
+
+Access and change anything in your faction's ship inventory
+
+#### FactionInventory.SHIPS.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_ships_assign"` = `'faction_inv_ships_assign'`
+
+Assign your faction's ships
+
+#### FactionInventory.SHIPS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_ships_makeover"` = `'faction_inv_ships_makeover'`
+
+Make over your faction's ships
+
+#### FactionInventory.SHIPS.READ
+
+> `readonly` **READ**: `"faction_inv_ships_read"` = `'faction_inv_ships_read'`
+
+Read basic information about your faction's ships
+
+#### FactionInventory.SHIPS.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_ships_rename"` = `'faction_inv_ships_rename'`
+
+Rename your faction's ships
+
+#### FactionInventory.SHIPS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_ships_tags_read"` = `'faction_inv_ships_tags_read'`
+
+Read the tags assigned to your faction's ships
+
+#### FactionInventory.SHIPS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_ships_tags_write"` = `'faction_inv_ships_tags_write'`
+
+Modify the tags assigned to your faction's ships
+
 #### FactionInventory.STATIONS
 
-> `readonly` **STATIONS**: `Record`\<`string`, `string`\>
+> `readonly` **STATIONS**: `object`
 
 Faction station scopes
 
+#### FactionInventory.STATIONS.ALL
+
+> `readonly` **ALL**: `"faction_inv_stations_all"` = `'faction_inv_stations_all'`
+
+Access and change anything in your faction's space station inventory
+
+#### FactionInventory.STATIONS.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_stations_assign"` = `'faction_inv_stations_assign'`
+
+Assign your faction's space stations
+
+#### FactionInventory.STATIONS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_stations_makeover"` = `'faction_inv_stations_makeover'`
+
+Make over your faction's space stations
+
+#### FactionInventory.STATIONS.READ
+
+> `readonly` **READ**: `"faction_inv_stations_read"` = `'faction_inv_stations_read'`
+
+Read basic information about your faction's space stations
+
+#### FactionInventory.STATIONS.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_stations_rename"` = `'faction_inv_stations_rename'`
+
+Rename your faction's space stations
+
+#### FactionInventory.STATIONS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_stations_tags_read"` = `'faction_inv_stations_tags_read'`
+
+Read the tags assigned to your faction's space stations
+
+#### FactionInventory.STATIONS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_stations_tags_write"` = `'faction_inv_stations_tags_write'`
+
+Modify the tags assigned to your faction's space stations
+
 #### FactionInventory.VEHICLES
 
-> `readonly` **VEHICLES**: `Record`\<`string`, `string`\>
+> `readonly` **VEHICLES**: `object`
 
 Faction vehicle scopes
+
+#### FactionInventory.VEHICLES.ALL
+
+> `readonly` **ALL**: `"faction_inv_vehicles_all"` = `'faction_inv_vehicles_all'`
+
+Access and change anything in your faction's vehicle inventory
+
+#### FactionInventory.VEHICLES.ASSIGN
+
+> `readonly` **ASSIGN**: `"faction_inv_vehicles_assign"` = `'faction_inv_vehicles_assign'`
+
+Assign your faction's vehicles
+
+#### FactionInventory.VEHICLES.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"faction_inv_vehicles_makeover"` = `'faction_inv_vehicles_makeover'`
+
+Make over your faction's vehicles
+
+#### FactionInventory.VEHICLES.READ
+
+> `readonly` **READ**: `"faction_inv_vehicles_read"` = `'faction_inv_vehicles_read'`
+
+Read basic information about your faction's vehicles
+
+#### FactionInventory.VEHICLES.RENAME
+
+> `readonly` **RENAME**: `"faction_inv_vehicles_rename"` = `'faction_inv_vehicles_rename'`
+
+Rename your faction's vehicles
+
+#### FactionInventory.VEHICLES.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"faction_inv_vehicles_tags_read"` = `'faction_inv_vehicles_tags_read'`
+
+Read the tags assigned to your faction's vehicles
+
+#### FactionInventory.VEHICLES.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"faction_inv_vehicles_tags_write"` = `'faction_inv_vehicles_tags_write'`
+
+Modify the tags assigned to your faction's vehicles
 
 ### Messages
 
@@ -4967,25 +5259,25 @@ Faction vehicle scopes
 
 > `readonly` **ALL**: `"messages_all"` = `'messages_all'`
 
-All message permissions
+Read, send and delete messages to or from the character
 
 #### Messages.DELETE
 
 > `readonly` **DELETE**: `"messages_delete"` = `'messages_delete'`
 
-Delete messages
+Delete messages to or from the character
 
 #### Messages.READ
 
 > `readonly` **READ**: `"messages_read"` = `'messages_read'`
 
-Read messages
+Read messages sent to or by the character
 
 #### Messages.SEND
 
 > `readonly` **SEND**: `"messages_send"` = `'messages_send'`
 
-Send messages
+Send messages to or from the character
 
 ### PersonalInventory
 
@@ -4993,33 +5285,243 @@ Send messages
 
 #### PersonalInventory.CITIES
 
-> `readonly` **CITIES**: `Record`\<`string`, `string`\>
+> `readonly` **CITIES**: `object`
 
 Personal city scopes
 
+#### PersonalInventory.CITIES.ALL
+
+> `readonly` **ALL**: `"personal_inv_cities_all"` = `'personal_inv_cities_all'`
+
+Access and change anything in your city inventory
+
+#### PersonalInventory.CITIES.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_cities_assign"` = `'personal_inv_cities_assign'`
+
+Assign your cities
+
+#### PersonalInventory.CITIES.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_cities_makeover"` = `'personal_inv_cities_makeover'`
+
+Make over your cities
+
+#### PersonalInventory.CITIES.READ
+
+> `readonly` **READ**: `"personal_inv_cities_read"` = `'personal_inv_cities_read'`
+
+Read basic information about your cities
+
+#### PersonalInventory.CITIES.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_cities_rename"` = `'personal_inv_cities_rename'`
+
+Rename your cities
+
+#### PersonalInventory.CITIES.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_cities_tags_read"` = `'personal_inv_cities_tags_read'`
+
+Read the tags assigned to your cities
+
+#### PersonalInventory.CITIES.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_cities_tags_write"` = `'personal_inv_cities_tags_write'`
+
+Modify the tags assigned to your cities
+
 #### PersonalInventory.CREATURES
 
-> `readonly` **CREATURES**: `Record`\<`string`, `string`\>
+> `readonly` **CREATURES**: `object`
 
 Personal creature scopes
 
+#### PersonalInventory.CREATURES.ALL
+
+> `readonly` **ALL**: `"personal_inv_creatures_all"` = `'personal_inv_creatures_all'`
+
+Access and change anything in your creature inventory
+
+#### PersonalInventory.CREATURES.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_creatures_assign"` = `'personal_inv_creatures_assign'`
+
+Assign your creatures
+
+#### PersonalInventory.CREATURES.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_creatures_makeover"` = `'personal_inv_creatures_makeover'`
+
+Make over your creatures
+
+#### PersonalInventory.CREATURES.READ
+
+> `readonly` **READ**: `"personal_inv_creatures_read"` = `'personal_inv_creatures_read'`
+
+Read basic information about your creatures
+
+#### PersonalInventory.CREATURES.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_creatures_rename"` = `'personal_inv_creatures_rename'`
+
+Rename your creatures
+
+#### PersonalInventory.CREATURES.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_creatures_tags_read"` = `'personal_inv_creatures_tags_read'`
+
+Read the tags assigned to your creatures
+
+#### PersonalInventory.CREATURES.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_creatures_tags_write"` = `'personal_inv_creatures_tags_write'`
+
+Modify the tags assigned to your creatures
+
 #### PersonalInventory.DROIDS
 
-> `readonly` **DROIDS**: `Record`\<`string`, `string`\>
+> `readonly` **DROIDS**: `object`
 
 Personal droid scopes
 
+#### PersonalInventory.DROIDS.ALL
+
+> `readonly` **ALL**: `"personal_inv_droids_all"` = `'personal_inv_droids_all'`
+
+Access and change anything in your droid inventory
+
+#### PersonalInventory.DROIDS.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_droids_assign"` = `'personal_inv_droids_assign'`
+
+Assign your droids
+
+#### PersonalInventory.DROIDS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_droids_makeover"` = `'personal_inv_droids_makeover'`
+
+Make over your droids
+
+#### PersonalInventory.DROIDS.READ
+
+> `readonly` **READ**: `"personal_inv_droids_read"` = `'personal_inv_droids_read'`
+
+Read basic information about your droids
+
+#### PersonalInventory.DROIDS.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_droids_rename"` = `'personal_inv_droids_rename'`
+
+Rename your droids
+
+#### PersonalInventory.DROIDS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_droids_tags_read"` = `'personal_inv_droids_tags_read'`
+
+Read the tags assigned to your droids
+
+#### PersonalInventory.DROIDS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_droids_tags_write"` = `'personal_inv_droids_tags_write'`
+
+Modify the tags assigned to your droids
+
 #### PersonalInventory.FACILITIES
 
-> `readonly` **FACILITIES**: `Record`\<`string`, `string`\>
+> `readonly` **FACILITIES**: `object`
 
 Personal facility scopes
 
+#### PersonalInventory.FACILITIES.ALL
+
+> `readonly` **ALL**: `"personal_inv_facilities_all"` = `'personal_inv_facilities_all'`
+
+Access and change anything in your facility inventory
+
+#### PersonalInventory.FACILITIES.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_facilities_assign"` = `'personal_inv_facilities_assign'`
+
+Assign your facilities
+
+#### PersonalInventory.FACILITIES.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_facilities_makeover"` = `'personal_inv_facilities_makeover'`
+
+Make over your facilities
+
+#### PersonalInventory.FACILITIES.READ
+
+> `readonly` **READ**: `"personal_inv_facilities_read"` = `'personal_inv_facilities_read'`
+
+Read basic information about your facilities
+
+#### PersonalInventory.FACILITIES.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_facilities_rename"` = `'personal_inv_facilities_rename'`
+
+Rename your facilities
+
+#### PersonalInventory.FACILITIES.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_facilities_tags_read"` = `'personal_inv_facilities_tags_read'`
+
+Read the tags assigned to your facilities
+
+#### PersonalInventory.FACILITIES.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_facilities_tags_write"` = `'personal_inv_facilities_tags_write'`
+
+Modify the tags assigned to your facilities
+
 #### PersonalInventory.ITEMS
 
-> `readonly` **ITEMS**: `Record`\<`string`, `string`\>
+> `readonly` **ITEMS**: `object`
 
 Personal item scopes
+
+#### PersonalInventory.ITEMS.ALL
+
+> `readonly` **ALL**: `"personal_inv_items_all"` = `'personal_inv_items_all'`
+
+Access and change anything in your item inventory
+
+#### PersonalInventory.ITEMS.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_items_assign"` = `'personal_inv_items_assign'`
+
+Assign your items
+
+#### PersonalInventory.ITEMS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_items_makeover"` = `'personal_inv_items_makeover'`
+
+Make over your items
+
+#### PersonalInventory.ITEMS.READ
+
+> `readonly` **READ**: `"personal_inv_items_read"` = `'personal_inv_items_read'`
+
+Read basic information about your items
+
+#### PersonalInventory.ITEMS.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_items_rename"` = `'personal_inv_items_rename'`
+
+Rename your items
+
+#### PersonalInventory.ITEMS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_items_tags_read"` = `'personal_inv_items_tags_read'`
+
+Read the tags assigned to your items
+
+#### PersonalInventory.ITEMS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_items_tags_write"` = `'personal_inv_items_tags_write'`
+
+Modify the tags assigned to your items
 
 #### PersonalInventory.MATERIALS
 
@@ -5031,25 +5533,37 @@ Personal material scopes (no ASSIGN)
 
 > `readonly` **ALL**: `"personal_inv_materials_all"` = `'personal_inv_materials_all'`
 
+Access and change anything in your material inventory
+
 #### PersonalInventory.MATERIALS.MAKEOVER
 
 > `readonly` **MAKEOVER**: `"personal_inv_materials_makeover"` = `'personal_inv_materials_makeover'`
+
+Make over your materials
 
 #### PersonalInventory.MATERIALS.READ
 
 > `readonly` **READ**: `"personal_inv_materials_read"` = `'personal_inv_materials_read'`
 
+Read basic information about your materials
+
 #### PersonalInventory.MATERIALS.RENAME
 
 > `readonly` **RENAME**: `"personal_inv_materials_rename"` = `'personal_inv_materials_rename'`
+
+Rename your materials
 
 #### PersonalInventory.MATERIALS.TAGS\_READ
 
 > `readonly` **TAGS\_READ**: `"personal_inv_materials_tags_read"` = `'personal_inv_materials_tags_read'`
 
+Read the tags assigned to your materials
+
 #### PersonalInventory.MATERIALS.TAGS\_WRITE
 
 > `readonly` **TAGS\_WRITE**: `"personal_inv_materials_tags_write"` = `'personal_inv_materials_tags_write'`
+
+Modify the tags assigned to your materials
 
 #### PersonalInventory.NPCS
 
@@ -5061,82 +5575,250 @@ Personal NPC scopes (has MAKEOVER but no RENAME)
 
 > `readonly` **ALL**: `"personal_inv_npcs_all"` = `'personal_inv_npcs_all'`
 
+Access and change anything in your NPC inventory
+
 #### PersonalInventory.NPCS.ASSIGN
 
 > `readonly` **ASSIGN**: `"personal_inv_npcs_assign"` = `'personal_inv_npcs_assign'`
+
+Assign your NPCs
 
 #### PersonalInventory.NPCS.MAKEOVER
 
 > `readonly` **MAKEOVER**: `"personal_inv_npcs_makeover"` = `'personal_inv_npcs_makeover'`
 
+Make over your NPCs
+
 #### PersonalInventory.NPCS.READ
 
 > `readonly` **READ**: `"personal_inv_npcs_read"` = `'personal_inv_npcs_read'`
+
+Read basic information about your NPCs
 
 #### PersonalInventory.NPCS.TAGS\_READ
 
 > `readonly` **TAGS\_READ**: `"personal_inv_npcs_tags_read"` = `'personal_inv_npcs_tags_read'`
 
+Read the tags assigned to your NPCs
+
 #### PersonalInventory.NPCS.TAGS\_WRITE
 
 > `readonly` **TAGS\_WRITE**: `"personal_inv_npcs_tags_write"` = `'personal_inv_npcs_tags_write'`
+
+Modify the tags assigned to your NPCs
 
 #### PersonalInventory.OVERVIEW
 
 > `readonly` **OVERVIEW**: `"personal_inv_overview"` = `'personal_inv_overview'`
 
-Overview of personal inventory
+Read basic information about your inventories
 
 #### PersonalInventory.PLANETS
 
-> `readonly` **PLANETS**: `Record`\<`string`, `string`\>
+> `readonly` **PLANETS**: `object`
 
 Personal planet scopes (no RENAME/MAKEOVER)
 
+#### PersonalInventory.PLANETS.ALL
+
+> `readonly` **ALL**: `"personal_inv_planets_all"` = `'personal_inv_planets_all'`
+
+Access and change anything in your planet inventory
+
+#### PersonalInventory.PLANETS.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_planets_assign"` = `'personal_inv_planets_assign'`
+
+Assign your planets
+
+#### PersonalInventory.PLANETS.READ
+
+> `readonly` **READ**: `"personal_inv_planets_read"` = `'personal_inv_planets_read'`
+
+Read basic information about your planets
+
+#### PersonalInventory.PLANETS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_planets_tags_read"` = `'personal_inv_planets_tags_read'`
+
+Read the tags assigned to your planets
+
+#### PersonalInventory.PLANETS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_planets_tags_write"` = `'personal_inv_planets_tags_write'`
+
+Modify the tags assigned to your planets
+
 #### PersonalInventory.SHIPS
 
-> `readonly` **SHIPS**: `Record`\<`string`, `string`\>
+> `readonly` **SHIPS**: `object`
 
 Personal ship scopes
 
+#### PersonalInventory.SHIPS.ALL
+
+> `readonly` **ALL**: `"personal_inv_ships_all"` = `'personal_inv_ships_all'`
+
+Access and change anything in your ship inventory
+
+#### PersonalInventory.SHIPS.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_ships_assign"` = `'personal_inv_ships_assign'`
+
+Assign your ships
+
+#### PersonalInventory.SHIPS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_ships_makeover"` = `'personal_inv_ships_makeover'`
+
+Make over your ships
+
+#### PersonalInventory.SHIPS.READ
+
+> `readonly` **READ**: `"personal_inv_ships_read"` = `'personal_inv_ships_read'`
+
+Read basic information about your ships
+
+#### PersonalInventory.SHIPS.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_ships_rename"` = `'personal_inv_ships_rename'`
+
+Rename your ships
+
+#### PersonalInventory.SHIPS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_ships_tags_read"` = `'personal_inv_ships_tags_read'`
+
+Read the tags assigned to your ships
+
+#### PersonalInventory.SHIPS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_ships_tags_write"` = `'personal_inv_ships_tags_write'`
+
+Modify the tags assigned to your ships
+
 #### PersonalInventory.STATIONS
 
-> `readonly` **STATIONS**: `Record`\<`string`, `string`\>
+> `readonly` **STATIONS**: `object`
 
 Personal station scopes
 
+#### PersonalInventory.STATIONS.ALL
+
+> `readonly` **ALL**: `"personal_inv_stations_all"` = `'personal_inv_stations_all'`
+
+Access and change anything in your space station inventory
+
+#### PersonalInventory.STATIONS.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_stations_assign"` = `'personal_inv_stations_assign'`
+
+Assign your space stations
+
+#### PersonalInventory.STATIONS.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_stations_makeover"` = `'personal_inv_stations_makeover'`
+
+Make over your space stations
+
+#### PersonalInventory.STATIONS.READ
+
+> `readonly` **READ**: `"personal_inv_stations_read"` = `'personal_inv_stations_read'`
+
+Read basic information about your space stations
+
+#### PersonalInventory.STATIONS.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_stations_rename"` = `'personal_inv_stations_rename'`
+
+Rename your space stations
+
+#### PersonalInventory.STATIONS.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_stations_tags_read"` = `'personal_inv_stations_tags_read'`
+
+Read the tags assigned to your space stations
+
+#### PersonalInventory.STATIONS.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_stations_tags_write"` = `'personal_inv_stations_tags_write'`
+
+Modify the tags assigned to your space stations
+
 #### PersonalInventory.VEHICLES
 
-> `readonly` **VEHICLES**: `Record`\<`string`, `string`\>
+> `readonly` **VEHICLES**: `object`
 
 Personal vehicle scopes
 
+#### PersonalInventory.VEHICLES.ALL
+
+> `readonly` **ALL**: `"personal_inv_vehicles_all"` = `'personal_inv_vehicles_all'`
+
+Access and change anything in your vehicle inventory
+
+#### PersonalInventory.VEHICLES.ASSIGN
+
+> `readonly` **ASSIGN**: `"personal_inv_vehicles_assign"` = `'personal_inv_vehicles_assign'`
+
+Assign your vehicles
+
+#### PersonalInventory.VEHICLES.MAKEOVER
+
+> `readonly` **MAKEOVER**: `"personal_inv_vehicles_makeover"` = `'personal_inv_vehicles_makeover'`
+
+Make over your vehicles
+
+#### PersonalInventory.VEHICLES.READ
+
+> `readonly` **READ**: `"personal_inv_vehicles_read"` = `'personal_inv_vehicles_read'`
+
+Read basic information about your vehicles
+
+#### PersonalInventory.VEHICLES.RENAME
+
+> `readonly` **RENAME**: `"personal_inv_vehicles_rename"` = `'personal_inv_vehicles_rename'`
+
+Rename your vehicles
+
+#### PersonalInventory.VEHICLES.TAGS\_READ
+
+> `readonly` **TAGS\_READ**: `"personal_inv_vehicles_tags_read"` = `'personal_inv_vehicles_tags_read'`
+
+Read the tags assigned to your vehicles
+
+#### PersonalInventory.VEHICLES.TAGS\_WRITE
+
+> `readonly` **TAGS\_WRITE**: `"personal_inv_vehicles_tags_write"` = `'personal_inv_vehicles_tags_write'`
+
+Modify the tags assigned to your vehicles
+
 # Function: getAllScopes()
 
-> **getAllScopes**(): `string`[]
+> **getAllScopes**(): `AllScopes`[]
 
 Get all available scopes (for comprehensive testing)
 
 ## Returns
 
-`string`[]
+`AllScopes`[]
 
 # Function: getReadOnlyScopes()
 
-> **getReadOnlyScopes**(): `string`[]
+> **getReadOnlyScopes**(): `AllScopes`[]
 
 Get basic read-only scopes (good for read-only integrations)
 
 ## Returns
 
-`string`[]
+`AllScopes`[]
 
 # Function: getMinimalScopes()
 
-> **getMinimalScopes**(): `string`[]
+> **getMinimalScopes**(): `CharacterScope`[]
 
 Get minimal scopes for basic character info (authentication only)
 
 ## Returns
 
-`string`[]
+`CharacterScope`[]

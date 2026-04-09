@@ -44,7 +44,7 @@ pnpm add swcombine-sdk
 ### 1. Initialize the Client
 
 ```typescript
-import { SWCombine } from 'swcombine-sdk';
+import { SWCombine, AccessType } from 'swcombine-sdk';
 
 // Public mode (no auth)
 const publicClient = new SWCombine();
@@ -60,20 +60,21 @@ const fullClient = new SWCombine({
   clientSecret: process.env.SWC_CLIENT_SECRET!,
   token: process.env.SWC_ACCESS_TOKEN, // Optional - string or OAuthToken object
   redirectUri: 'http://localhost:3000/callback',
-  accessType: 'offline',
+  accessType: AccessType.Offline,
 });
 ```
 
 ### 2. Make API Calls
 
 ```typescript
-// Get public character information (no auth required)
-const character = await publicClient.character.getByHandle({
+// Look up a character's UID from their handle (no auth required).
+// Returns `{ uid, handle }`; use `character.get({ uid })` for the full profile.
+const { uid, handle } = await publicClient.character.getByHandle({
   handle: 'character-handle',
 });
 
-console.log(character.uid);    // "1:12345"
-console.log(character.name);   // "Character Name"
+console.log(uid);    // "1:12345"
+console.log(handle); // "character-handle"
 ```
 
 ### 3. Authenticated Endpoints
@@ -90,9 +91,11 @@ const character = await authenticatedClient.character.get({
 });
 
 // Get character messages — list() returns Page<T>
+import { MessageMode } from 'swcombine-sdk';
+
 const messages = await authenticatedClient.character.messages.list({
   uid: '1:12345',
-  mode: 'received',
+  mode: MessageMode.Received,
 });
 
 console.log(messages.total);           // total messages across all pages
@@ -177,13 +180,13 @@ OAuth-only methods require full OAuth mode (`clientId` + `clientSecret`):
 - `client.refreshToken()`
 
 ```typescript
-import { SWCombine, CharacterScopes, MessageScopes } from 'swcombine-sdk';
+import { SWCombine, AccessType, CharacterScopes, MessageScopes } from 'swcombine-sdk';
 
 const client = new SWCombine({
   clientId: 'your-client-id',
   clientSecret: 'your-client-secret',
   redirectUri: 'http://localhost:3000/callback',
-  accessType: 'offline', // Get refresh token
+  accessType: AccessType.Offline, // Get refresh token
 });
 
 // 1. Generate authorization URL
@@ -304,7 +307,7 @@ try {
 Full TypeScript support with intelligent type inference:
 
 ```typescript
-import { Page, Message, MessageListItem } from 'swcombine-sdk';
+import { Page, Message, MessageListItem, MessageMode } from 'swcombine-sdk';
 
 // Types are automatically inferred
 const character = await client.character.get({ uid: '1:12345' });
@@ -313,7 +316,7 @@ const character = await client.character.get({ uid: '1:12345' });
 // list() returns Page<T> with full type safety
 const messages: Page<MessageListItem> = await client.character.messages.list({
   uid: '1:12345',
-  mode: 'received', // TypeScript knows valid values: 'sent' | 'received'
+  mode: MessageMode.Received, // MessageMode.Sent | MessageMode.Received
 });
 
 const messageId = messages.data[0]?.attributes.uid;
@@ -348,7 +351,7 @@ interface ClientConfig {
 
   // Optional OAuth settings
   redirectUri?: string;
-  accessType?: 'online' | 'offline';
+  accessType?: AccessType;    // AccessType.Online | AccessType.Offline
 
   // Optional HTTP settings
   baseURL?: string;           // Default: https://www.swcombine.com/ws/v2.0/
@@ -379,14 +382,15 @@ See the [examples](examples/) directory for complete working examples:
 ```typescript
 import { SWCombine } from 'swcombine-sdk';
 
-const client = new SWCombine();
-
-// Get character info
-const character = await client.character.getByHandle({
-  handle: 'character-name',
+const client = new SWCombine({
+  token: process.env.SWC_ACCESS_TOKEN!,
 });
 
-console.log(`${character.name} (${character.uid})`);
+// Resolve a handle → UID, then fetch the full profile
+const { uid, handle } = await client.character.getByHandle({ handle: 'character-name' });
+const character = await client.character.get({ uid });
+
+console.log(`${character.name} (${handle}, ${character.uid})`);
 ```
 
 ## Developer Tools
@@ -405,12 +409,6 @@ Quickly get a character's UID from their handle:
 
 ```bash
 npm run get-character-uid YourHandle
-```
-
-### Run Integration Tests
-
-```bash
-npm run test:integration
 ```
 
 ## Documentation
@@ -440,22 +438,17 @@ npm test
 # Run unit tests in watch mode
 npm run test:watch
 
-# Run all integration tests (requires .env with API credentials)
-npm run test:integration
-
-# Run integration tests for a specific resource
-npm run test:integration:character
-npm run test:integration:galaxy
-npm run test:integration:faction
-# Also: test:integration:api, test:integration:market, test:integration:news,
-#        test:integration:types, test:integration:misc
-
 # Lint
 npm run lint
 
 # Format code
 npm run format
 ```
+
+> **Note:** An integration test suite exists under `tests/integration/` but runs against the
+> live SW Combine API and shares the global 600 req/hour rate limit. It is **not** intended
+> for routine developer use — please don't run it as part of normal workflows. Maintainers
+> should consult `tests/integration/README.md` before running it against production.
 
 ## Requirements
 

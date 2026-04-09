@@ -30,10 +30,32 @@ Each build uses a separate `tsconfig.*.json` file with different module settings
 ## Testing
 
 ```bash
-npm test                   # Run unit tests (vitest watch mode)
-npm run test:watch         # Explicit watch mode
-npm run test:integration   # Run integration tests (requires .env with valid credentials)
+npm test                        # Run unit tests once — use this for routine verification
+npm run test:watch              # Watch mode for unit tests
 ```
+
+Unit tests live in `tests/unit/` and use mocked HTTP clients (see `tests/unit/helpers/mock-http.ts`). They cover `Page`, `Timestamp`, error handling, token management, scopes, and each resource class. **Always prefer unit tests** — they're fast and never touch the live API.
+
+### Integration tests (use sparingly)
+
+> **Rate-limit-sensitive.** Integration tests hit the real SW Combine API and share the
+> global 600 req/hour budget. Do NOT run them as part of normal development, CI on every
+> PR, or `prepublishOnly`. Run them only when validating changes against real API shapes,
+> and prefer the narrowest per-resource subset for the change you're working on.
+
+```bash
+npm run test:integration              # Full suite — avoid unless you need it
+npm run test:integration:api          # Per-resource subsets — prefer these
+npm run test:integration:character    # includes tests/integration/character-me.test.ts
+npm run test:integration:faction
+npm run test:integration:galaxy
+npm run test:integration:market
+npm run test:integration:news
+npm run test:integration:types
+npm run test:integration:misc
+```
+
+See `tests/integration/README.md` for the rate-limit caveat and what each test covers.
 
 **Integration tests** require a `.env` file with:
 - `SWC_CLIENT_ID` - OAuth client ID
@@ -53,7 +75,7 @@ npm run format             # Format with Prettier
 npm run format:check       # Check formatting without changing
 ```
 
-**Lint warnings policy:** The codebase has ~17 remaining `any` type warnings in error handling and HTTP internals, which are acceptable. All errors must be fixed.
+**Lint warnings policy:** A small number of `any` type warnings in error handling and HTTP internals are acceptable. All errors must be fixed.
 
 ## Developer Tools
 
@@ -61,6 +83,11 @@ npm run format:check       # Check formatting without changing
 npm run get-token          # Interactive OAuth flow to get access token
 npm run get-character-uid  # Get character UID from handle
 npm run refresh-token      # Refresh an existing token
+
+npm run docs:api           # Regenerate TypeDoc markdown + llms.txt
+npm run docs:api:watch     # TypeDoc in watch mode
+npm run docs:html          # Regenerate HTML docs (gh-pages site)
+npm run docs:llms          # Regenerate llms.txt only
 ```
 
 These scripts use `tsx` to run TypeScript directly and are located in `scripts/`.
@@ -80,10 +107,11 @@ These scripts use `tsx` to run TypeScript directly and are located in `scripts/`
 All API resources extend `BaseResource` (src/resources/BaseResource.ts) which provides:
 - `protected request<T>(method, path, data?)` - Generic HTTP request method
 - `protected http: HttpClient` - Direct access to HTTP client
+- `protected createPage<T>(...)` - Helper for constructing `Page<T>` responses from a paginated API payload
 
 **Resource organization:**
-- `ApiResource` - Meta endpoints (helloworld, permissions, ratelimits)
-- `CharacterResource` - Character endpoints with nested sub-resources:
+- `ApiResource` - Meta endpoints (helloWorld, permissions, rateLimits, time)
+- `CharacterResource` - Character endpoints including `character.me()` and nested sub-resources:
   - `character.messages` - Message management
   - `character.skills` - Skills data
   - `character.privileges` - Privileges
@@ -101,7 +129,11 @@ All API resources extend `BaseResource` (src/resources/BaseResource.ts) which pr
   - `galaxy.systems`
   - `galaxy.stations`
   - `galaxy.cities`
-- `InventoryResource`, `MarketResource`, `NewsResource`, etc.
+- `InventoryResource` - with nested `inventory.entities`
+- `MarketResource` - with nested `market.vendors` (the only market sub-resource today)
+- `NewsResource` - with nested `news.gns` and `news.simNews`
+- `TypesResource` - with nested `types.classes` and `types.entities`
+- `EventsResource`, `LocationResource`, `DatacardResource`
 
 ### HTTP Request Flow
 
@@ -111,7 +143,20 @@ All API resources extend `BaseResource` (src/resources/BaseResource.ts) which pr
 4. **Response interceptor** handles errors, converts to `SWCError`, manages retries
 5. Automatic token refresh on 401 if refresh token available
 
-### Pagination Pattern
+### Pagination Pattern (`Page<T>`)
+
+Since v3, every `list()` method returns a `Page<T>` (see `src/pagination/Page.ts`).
+
+```typescript
+const page = await client.inventory.entities.list({ ... });
+page.data;      // T[] — items on this page
+page.total;     // total items across all pages
+page.start;     // starting index of this page
+page.count;     // items on this page
+page.hasMore;   // whether more pages exist
+await page.getNextPage();                 // fetch next page (preserves filters)
+for await (const item of page) { ... }    // auto-paginate across all pages
+```
 
 All list endpoints support optional pagination parameters:
 
@@ -119,6 +164,7 @@ All list endpoints support optional pagination parameters:
 {
   start_index?: number;  // Default: 1 (0 for Events endpoint - special case!)
   item_count?: number;   // Default: 50
+  pageDelay?: number;    // ms to wait between auto-pagination fetches (default: 0)
 }
 ```
 
@@ -180,17 +226,20 @@ Resources normalize these in their methods. Check `GalaxyResource.ts` for castin
 ```
 src/
 ├── index.ts                 # Public API exports
-├── SWCombine.ts            # Main client class
-├── auth/                   # OAuth & token management
-│   ├── OAuthClient.ts      # OAuth 2.0 flows
-│   ├── TokenManager.ts     # Token storage & refresh
-│   ├── scopes.ts           # Type-safe scope constants
-│   └── permissions.ts      # Permission definitions
-├── http/                   # HTTP layer
-│   ├── HttpClient.ts       # Axios wrapper with retry logic
-│   └── errors.ts           # SWCError class
-├── resources/              # API resource classes
-│   ├── BaseResource.ts     # Base class for all resources
+├── SWCombine.ts             # Main client class
+├── Timestamp.ts             # Combine Galactic Time (CGT) utility
+├── auth/                    # OAuth & token management
+│   ├── OAuthClient.ts       # OAuth 2.0 flows
+│   ├── TokenManager.ts      # Token storage & refresh
+│   ├── scopes.ts            # Type-safe scope constants (lowercase values)
+│   └── permissions.ts       # Permission definitions
+├── http/                    # HTTP layer
+│   ├── HttpClient.ts        # Axios wrapper with retry logic
+│   └── errors.ts            # SWCError class
+├── pagination/
+│   └── Page.ts              # Generic Page<T> wrapper (async iterable)
+├── resources/               # API resource classes
+│   ├── BaseResource.ts      # Base class; provides createPage helper
 │   ├── ApiResource.ts
 │   ├── CharacterResource.ts
 │   ├── FactionResource.ts
@@ -203,22 +252,43 @@ src/
 │   ├── LocationResource.ts
 │   └── DatacardResource.ts
 └── types/
-    └── index.ts            # All TypeScript interfaces & types
+    └── index.ts             # All TypeScript interfaces & types
 
 tests/
-├── unit/                   # Unit tests (none yet)
-└── integration/            # Real API integration tests
-    ├── setup.ts            # Test configuration & helpers
+├── unit/                    # Unit tests with mocked HTTP
+│   ├── helpers/mock-http.ts
+│   ├── Page.test.ts
+│   ├── timestamp.test.ts
+│   ├── errors.test.ts
+│   ├── token-manager.test.ts
+│   ├── scopes.test.ts
+│   ├── http-client.test.ts
+│   ├── swcombine-auth-modes.test.ts
+│   ├── base-resource.test.ts
+│   ├── BaseResource.createPage.test.ts
+│   ├── character-me-types.test.ts
+│   ├── character-message-types.test.ts
+│   ├── faction-types.test.ts
+│   └── resources/           # Resource-specific mocked tests
+└── integration/             # Real API integration tests
+    ├── setup.ts             # Test configuration & helpers
     ├── api.test.ts
     ├── character.test.ts
+    ├── character-me.test.ts
     ├── faction.test.ts
     ├── galaxy.test.ts
-    └── ...
+    ├── market.test.ts
+    ├── news.test.ts
+    ├── types.test.ts
+    └── misc.test.ts
 
-scripts/                    # Developer utilities
-├── get-oauth-token.ts      # Interactive OAuth flow
-├── get-character-uid.ts    # UID lookup
-└── refresh-token.ts        # Token refresh
+scripts/                     # Developer utilities
+├── get-oauth-token.ts       # Interactive OAuth flow
+├── get-character-uid.ts     # UID lookup
+├── refresh-token.ts         # Token refresh
+├── generate-llms-txt.ts     # Generates llms.txt from TypeDoc output
+├── test-sectors.ts          # Dev harness for /galaxy/sectors
+└── test-entities.ts         # Dev harness for /inventory entities
 ```
 
 ## Publishing

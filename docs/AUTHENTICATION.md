@@ -41,13 +41,13 @@ Visit the SW Combine developer portal to register your application and obtain:
 ### Step 2: Initialize SDK
 
 ```typescript
-import { SWCombine, CharacterScopes, MessageScopes } from 'swcombine-sdk';
+import { SWCombine, AccessType, CharacterScopes, MessageScopes } from 'swcombine-sdk';
 
 const client = new SWCombine({
   clientId: 'your-client-id',
   clientSecret: 'your-client-secret',
   redirectUri: 'http://localhost:3000/callback',
-  accessType: 'offline', // Request refresh token
+  accessType: AccessType.Offline, // Request refresh token
 });
 ```
 
@@ -296,12 +296,14 @@ app.get('/dashboard', async (req, res) => {
     token: req.session.token,
   });
 
-  // Make authenticated request
+  // Identify the caller via the `/character/` endpoint (requires CHARACTER_READ).
+  // `OAuthToken` itself does not carry a character UID.
+  const me = await authenticatedClient.character.me();
   const permissions = await authenticatedClient.character.permissions.list({
-    uid: req.session.token.characterUid,
+    uid: me.uid,
   });
 
-  res.send(`Welcome! You have ${permissions.permission.length} permissions.`);
+  res.send(`Welcome ${me.name}! You have ${permissions.permission.length} permissions.`);
 });
 
 app.listen(3000, () => {
@@ -391,14 +393,20 @@ const client = new SWCombine({
 
 ### "Invalid Scope"
 
-Scopes must be UPPERCASE:
+Scope values are **lowercase** (e.g. `character_read`, `messages_send`). Prefer the
+typed constants so the case and spelling are handled for you:
 
 ```typescript
-// ✓ Correct
-scopes: ['CHARACTER_READ', 'MESSAGES_SEND']
+import { CharacterScopes, MessageScopes } from 'swcombine-sdk';
 
-// ✗ Wrong
+// ✓ Correct — constants resolve to lowercase literals
+scopes: [CharacterScopes.READ, MessageScopes.SEND]
+
+// ✓ Also correct — raw lowercase strings
 scopes: ['character_read', 'messages_send']
+
+// ✗ Wrong — uppercase is rejected by the API
+scopes: ['CHARACTER_READ', 'MESSAGES_SEND']
 ```
 
 ### "Redirect URI Mismatch"
@@ -418,4 +426,4 @@ redirectUri: 'https://localhost:3000/callback', // ✗ (https vs http)
 
 - **[OAuth Scopes Guide](./SCOPES.md)** - Learn about available permissions
 - **[Getting Started](./GETTING_STARTED.md)** - Basic SDK usage
-- **[API Reference](./API.md)** - Detailed API documentation
+- **[API Reference](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)** - Full TypeDoc reference

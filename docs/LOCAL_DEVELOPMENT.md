@@ -35,9 +35,10 @@ const client = new SWCombine({
   clientSecret: process.env.SWC_CLIENT_SECRET!,
 });
 
-const character = await client.character.getByHandle({
+const { uid, handle } = await client.character.getByHandle({
   handle: 'test-character',
 });
+console.log(uid, handle);
 ```
 
 ## Development Workflow
@@ -88,10 +89,10 @@ Most similar to how it will work from npm:
 # In SDK directory
 npm run build
 npm pack
-# Creates: swcombine-sdk-0.1.0.tgz
+# Creates: swcombine-sdk-<version>.tgz
 
 # In your app
-npm install /path/to/swcombine-sdk-nodejs/swcombine-sdk-0.1.0.tgz
+npm install /path/to/swcombine-sdk-nodejs/swcombine-sdk-<version>.tgz
 ```
 
 ### Method 3: Package.json File Reference
@@ -177,11 +178,11 @@ async function main() {
 
   console.log('Testing SDK...');
 
-  const character = await client.character.getByHandle({
+  const result = await client.character.getByHandle({
     handle: 'test-handle',
   });
 
-  console.log('Character:', character);
+  console.log('Lookup result:', result); // { uid, handle }
 }
 
 main().catch(console.error);
@@ -339,7 +340,7 @@ npm run build
 npm pack
 
 # In test app
-npm install /path/to/sdk/swcombine-sdk-0.1.0.tgz
+npm install /path/to/sdk/swcombine-sdk-<version>.tgz
 
 # Test thoroughly
 npm test

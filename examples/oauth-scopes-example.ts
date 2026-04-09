@@ -35,7 +35,7 @@ function example1_MinimalScopes() {
   });
 
   console.log('Minimal scopes:', getMinimalScopes());
-  // Output: ['CHARACTER_AUTH', 'CHARACTER_READ']
+  // Output: ['character_auth', 'character_read']
 }
 
 /**
@@ -138,7 +138,7 @@ function example7_AllScopes() {
   });
 
   console.log('All available scopes count:', getAllScopes().length);
-  // Returns 230+ scopes covering all API permissions
+  // Returns 170+ scopes covering all API permissions
 }
 
 /**
@@ -185,7 +185,7 @@ function example9_NestedStructure() {
   // Example: Get all permissions for personal ships
   const shipScopes = Object.values(Scopes.PersonalInventory.SHIPS);
   console.log('\nAll ship scopes:', shipScopes);
-  // ['PERSONAL_INV_SHIPS_READ', 'PERSONAL_INV_SHIPS_RENAME', ...]
+  // ['personal_inv_ships_read', 'personal_inv_ships_rename', ...]
 }
 
 /**

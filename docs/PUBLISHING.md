@@ -10,41 +10,15 @@ This guide walks you through publishing the SW Combine SDK to npm.
 
 ## One-Time Setup
 
-### 1. Update package.json
-
-Replace these placeholder values in `package.json`:
-
-```json
-{
-  "author": "Your Name <your.email@example.com>",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/swcombine-sdk-nodejs.git"
-  },
-  "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/swcombine-sdk-nodejs/issues"
-  },
-  "homepage": "https://github.com/YOUR_USERNAME/swcombine-sdk-nodejs#readme"
-}
-```
-
-### 2. Check Package Name Availability
-
-```bash
-npm view swcombine-sdk
-
-# If it exists, choose a different name in package.json:
-# "name": "@yourorg/swcombine-sdk"  (scoped package)
-# or
-# "name": "swcombine-api-sdk"  (different name)
-```
-
-### 3. Login to npm
+### 1. Login to npm
 
 ```bash
 npm login
 # Enter your username, password, email, and 2FA code
 ```
+
+The published package is [`swcombine-sdk`](https://www.npmjs.com/package/swcombine-sdk).
+Only maintainers listed on the npm package can publish new versions.
 
 ## Pre-Publish Checklist
 
@@ -54,8 +28,11 @@ Before every publish, verify:
 
 ```bash
 npm test
-npm run test:integration  # If you have valid credentials
 ```
+
+> Do **not** run `npm run test:integration` as part of pre-publish — it hits the live
+> SW Combine API and eats the shared 600 req/hour rate limit. The `prepublishOnly` hook
+> only runs unit tests, which is the intended gate.
 
 ### 2. Build Successfully
 
@@ -72,17 +49,15 @@ ls -R dist/
 This simulates what will be published:
 
 ```bash
-# Create a tarball
+# Create a tarball (filename includes the current version from package.json)
 npm pack
-
-# This creates: swcombine-sdk-0.1.0.tgz
 
 # Test it in another directory
 cd /tmp
 mkdir test-install
 cd test-install
 npm init -y
-npm install /path/to/swcombine-sdk-nodejs/swcombine-sdk-0.1.0.tgz
+npm install /path/to/swcombine-sdk-nodejs/swcombine-sdk-*.tgz
 
 # Test importing
 node -e "const sdk = require('swcombine-sdk'); console.log(sdk.SWCombine)"
@@ -113,16 +88,13 @@ npm publish --dry-run
 ### 6. Update Version (Semantic Versioning)
 
 ```bash
-# For first release (0.1.0 → 1.0.0)
-npm version 1.0.0
-
-# For patches (1.0.0 → 1.0.1)
+# For patches (3.1.1 → 3.1.2)
 npm version patch
 
-# For minor features (1.0.0 → 1.1.0)
+# For minor features (3.1.1 → 3.2.0)
 npm version minor
 
-# For breaking changes (1.0.0 → 2.0.0)
+# For breaking changes (3.1.1 → 4.0.0)
 npm version major
 ```
 
@@ -133,23 +105,6 @@ This automatically:
 
 ## Publishing
 
-### First Publication (v1.0.0)
-
-```bash
-# Final check
-npm run lint
-npm test
-npm run build
-
-# Publish (with public access for first scoped package)
-npm publish --access public
-
-# Or for unscoped packages
-npm publish
-```
-
-### Subsequent Releases
-
 ```bash
 # 1. Make your changes and commit them
 git add .
@@ -158,16 +113,19 @@ git commit -m "Add new feature"
 # 2. Update version
 npm version minor  # or patch/major
 
-# 3. Build and test
+# 3. Build and test (prepublishOnly also runs these automatically)
 npm run build
 npm test
 
 # 4. Publish
-npm publish
+npm publish --access public
 
 # 5. Push to Git (including tags)
 git push origin main --tags
 ```
+
+The `prepublishOnly` script in `package.json` runs `npm run build && npm test`
+before each publish, so a broken build cannot reach the registry.
 
 ## Publishing Workflow Script
 

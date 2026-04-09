@@ -1,6 +1,7 @@
-# Getting an OAuth Access Token for Integration Tests
+# Getting an OAuth Access Token
 
-This guide will help you get an OAuth access token to run integration tests.
+This guide will help you get an OAuth access token for use with the SDK — for
+local development, scripts, or manually exercising endpoints.
 
 ## Quick Start
 
@@ -26,9 +27,10 @@ This guide will help you get an OAuth access token to run integration tests.
    SWC_ACCESS_TOKEN=your_access_token_here
    ```
 
-5. **Run integration tests:**
-   ```bash
-   npm run test:integration
+5. **Use the token with the SDK** in your own scripts or app:
+   ```typescript
+   import { SWCombine } from 'swcombine-sdk';
+   const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
    ```
 
 ## Prerequisites
@@ -99,7 +101,7 @@ You should see:
 
 The OAuth helper provides:
 - **Access Token** - Use this for API requests (expires in ~1 hour)
-- **Refresh Token** - Can be used to get a new access token (if `accessType: 'offline'`)
+- **Refresh Token** - Can be used to get a new access token (if `accessType: AccessType.Offline`)
 - **Expiry Time** - When the access token expires
 
 ## Using the Token
@@ -110,14 +112,21 @@ Add the access token to your `.env` file:
 SWC_ACCESS_TOKEN=your_very_long_access_token_string_here
 ```
 
-Now run integration tests:
+Then construct a client with it:
 
-```bash
-# All tests
-npm run test:integration
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+import { config } from 'dotenv';
 
-# Specific test
-npm run test:integration tests/integration/character.test.ts
+config();
+
+const client = new SWCombine({
+  token: process.env.SWC_ACCESS_TOKEN!,
+});
+
+// Example: fetch your own character profile
+const me = await client.character.me();
+console.log(me.name, me.uid);
 ```
 
 ## Troubleshooting
@@ -176,6 +185,6 @@ If you prefer to do it manually without the helper:
 ## Next Steps
 
 Once you have your access token:
-1. Run integration tests to validate the SDK
-2. Check captured responses in `tests/integration/api-responses/`
-3. Refine TypeScript types based on real API data
+1. Build something with it — see the [examples](../examples/) directory
+2. Consult the full [API reference](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)
+3. Remember the global rate limit is 600 requests per hour per token

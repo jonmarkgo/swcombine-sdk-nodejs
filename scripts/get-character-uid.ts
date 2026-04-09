@@ -25,36 +25,24 @@ async function main() {
   const client = new SWCombine({
     clientId: process.env.SWC_CLIENT_ID,
     clientSecret: process.env.SWC_CLIENT_SECRET,
-    accessToken: process.env.SWC_ACCESS_TOKEN,
+    token: process.env.SWC_ACCESS_TOKEN,
   });
 
   console.log(`🔍 Looking up character: ${handle}`);
   console.log('');
 
   try {
-    const character = await client.character.getByHandle({ handle });
+    const { uid, handle: resolvedHandle } = await client.character.getByHandle({ handle });
 
     console.log('✅ Character found!');
     console.log('');
-    console.log('Full response:', JSON.stringify(character, null, 2));
+    console.log('Character UID:', uid);
+    console.log('Handle:', resolvedHandle);
     console.log('');
-
-    const uid = character.uid || (character as any).UID || (character as any).id;
-
-    if (uid) {
-      console.log('Character UID:', uid);
-      if (character.name) {
-        console.log('Name:', character.name);
-      }
-      console.log('');
-      console.log('💡 Add this to your .env file:');
-      console.log(`TEST_CHARACTER_UID=${uid}`);
-      console.log(`TEST_CHARACTER_HANDLE=${handle}`);
-      console.log('');
-    } else {
-      console.log('⚠️  Could not find UID field in response');
-      console.log('Available fields:', Object.keys(character).join(', '));
-    }
+    console.log('💡 Add this to your .env file:');
+    console.log(`TEST_CHARACTER_UID=${uid}`);
+    console.log(`TEST_CHARACTER_HANDLE=${resolvedHandle}`);
+    console.log('');
   } catch (error: any) {
     console.error('❌ Error:', error.message);
     if (error.statusCode === 404) {

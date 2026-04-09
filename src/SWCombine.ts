@@ -31,9 +31,6 @@ import { DatacardResource } from './resources/DatacardResource.js';
 /**
  * Main SW Combine SDK client
  *
- * **Warning:** Integration tests (`npm run test:integration`) make real API calls
- * to the SW Combine servers. Run `npm test` for unit tests instead.
- *
  * @see https://www.swcombine.com/ws/v2.0/developers/index.php SW Combine API Documentation
  */
 export class SWCombine {

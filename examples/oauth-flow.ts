@@ -5,7 +5,14 @@
 
 import express from 'express';
 import session from 'express-session';
-import { SWCombine, CHARACTER_READ, FACTION_READ, MESSAGES_READ } from '../src/index.js';
+import {
+  SWCombine,
+  AccessType,
+  MessageMode,
+  CharacterScopes,
+  FactionScopes,
+  MessageScopes,
+} from '../src/index.js';
 
 const app = express();
 
@@ -23,7 +30,7 @@ const swc = new SWCombine({
   clientId: process.env.SWC_CLIENT_ID!,
   clientSecret: process.env.SWC_CLIENT_SECRET!,
   redirectUri: 'http://localhost:3000/callback',
-  accessType: 'offline', // Get refresh token for offline access
+  accessType: AccessType.Offline, // Get refresh token for offline access
 });
 
 // Login route - redirect to SW Combine
@@ -32,7 +39,7 @@ app.get('/login', (req, res) => {
   req.session.oauthState = state;
 
   const authUrl = swc.auth.getAuthorizationUrl({
-    scopes: [CHARACTER_READ, FACTION_READ, MESSAGES_READ],
+    scopes: [CharacterScopes.READ, FactionScopes.READ, MessageScopes.READ],
     state,
   });
 
@@ -78,7 +85,7 @@ app.get('/dashboard', async (req, res) => {
     const character = await swc.character.get({ uid: 'your-character-uid' });
     const messages = await swc.character.messages.list({
       uid: character.uid,
-      mode: 'received',
+      mode: MessageMode.Received,
     });
 
     res.json({

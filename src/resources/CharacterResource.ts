@@ -82,14 +82,16 @@ export class CharacterMessagesResource extends BaseResource {
    * @requires_scope MESSAGES_READ
    * @param options - Character UID, optional message mode, and optional pagination parameters
    * @param options.uid - Character UID
-   * @param options.mode - 'sent' or 'received'. If omitted, returns both sent and received messages.
+   * @param options.mode - `MessageMode.Sent` or `MessageMode.Received`. If omitted, returns both sent and received messages.
    * @param options.start_index - Starting position (1-based). Default: 1
    * @param options.item_count - Number of items to retrieve. Default: 50, Max: 50
    * @returns Page of message metadata items (`Page<MessageListItem>`)
    * @example
+   * import { MessageMode } from 'swcombine-sdk';
+   *
    * const allMessages = await client.character.messages.list({ uid: '1:12345' });
-   * const received = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
-   * const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: 'received', start_index: 51, item_count: 50 });
+   * const received = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received });
+   * const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received, start_index: 51, item_count: 50 });
    *
    * const firstMessageId = received.data[0]?.attributes.uid;
    * if (firstMessageId) {
@@ -135,7 +137,9 @@ export class CharacterMessagesResource extends BaseResource {
    * @param options.messageId - Message UID (for example from `list().data[i].attributes.uid`)
    * @returns Full message details including `communication`
    * @example
-   * const messages = await client.character.messages.list({ uid: '1:12345', mode: 'received' });
+   * import { MessageMode } from 'swcombine-sdk';
+   *
+   * const messages = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received });
    * const messageId = messages.data[0]?.attributes.uid;
    *
    * if (messageId) {
@@ -562,10 +566,28 @@ export class CharacterResource extends BaseResource {
   }
 
   /**
-   * Get character UID by handle (username)
+   * Look up a character's UID by their handle (username).
+   *
+   * This endpoint is public — no authentication required — and is the primary
+   * way to resolve a handle to the `uid` used by every other character endpoint.
+   *
+   * @param options.handle - The character handle to look up
+   * @returns `{ uid, handle }` — both fields are always present
+   * @example
+   * const { uid, handle } = await client.character.getByHandle({ handle: 'Dreks Selmur' });
+   * console.log(uid);    // "1:46931"
+   * console.log(handle); // "Dreks Selmur"
+   *
+   * // Chain into a full profile fetch (requires CHARACTER_READ)
+   * const character = await client.character.get({ uid });
    */
-  async getByHandle(options: GetCharacterByHandleOptions): Promise<{ uid: string }> {
-    return this.request<{ uid: string }>('GET', `/character/handlecheck/${options.handle}`);
+  async getByHandle(
+    options: GetCharacterByHandleOptions
+  ): Promise<{ uid: string; handle: string }> {
+    return this.request<{ uid: string; handle: string }>(
+      'GET',
+      `/character/handlecheck/${options.handle}`
+    );
   }
 
   /**

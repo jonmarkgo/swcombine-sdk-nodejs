@@ -132,7 +132,7 @@ Request all available permissions (useful for testing):
 import { getAllScopes } from 'swcombine-sdk';
 
 const authUrl = client.auth.getAuthorizationUrl({
-  scopes: getAllScopes(), // All 230+ scopes
+  scopes: getAllScopes(), // All 170+ scopes
   state: 'random-state',
 });
 ```
@@ -145,7 +145,7 @@ Request just authentication and basic character info:
 import { getMinimalScopes } from 'swcombine-sdk';
 
 const authUrl = client.auth.getAuthorizationUrl({
-  scopes: getMinimalScopes(), // ['CHARACTER_AUTH', 'CHARACTER_READ']
+  scopes: getMinimalScopes(), // ['character_auth', 'character_read']
   state: 'random-state',
 });
 ```
@@ -194,7 +194,7 @@ const inventoryScopes = getAllPersonalInventoryScopes();
 import { getMinimalScopes } from 'swcombine-sdk';
 
 const scopes = getMinimalScopes();
-// ['CHARACTER_AUTH', 'CHARACTER_READ']
+// ['character_auth', 'character_read']
 ```
 
 ### Character Profile Dashboard
@@ -243,7 +243,7 @@ const scopes = [
 import { getAllScopes } from 'swcombine-sdk';
 
 const scopes = getAllScopes();
-// All 230+ available scopes
+// All 170+ available scopes
 ```
 
 ## TypeScript Benefits
@@ -276,7 +276,7 @@ const invalid = CharacterScopes.TYPO; // Error: Property 'TYPO' does not exist
 
 ### Helper Functions
 
-- `getAllScopes()` - Returns all 230+ available scopes
+- `getAllScopes()` - Returns all 170+ available scopes
 - `getMinimalScopes()` - Returns minimal scopes for authentication
 - `getReadOnlyScopes()` - Returns read-only scopes
 - `getAllCharacterScopes()` - Returns all character scopes
@@ -287,16 +287,16 @@ const invalid = CharacterScopes.TYPO; // Error: Property 'TYPO' does not exist
 
 ## Important Notes
 
-1. **No Scope Inheritance**: The SW Combine API does not support scope inheritance. Requesting `CHARACTER_ALL` does NOT include `CHARACTER_READ` - you must request both if you want comprehensive access.
+1. **No Scope Inheritance**: The SW Combine API does not support scope inheritance. Requesting `character_all` does NOT include `character_read` - you must request both if you want comprehensive access.
 
 2. **Request Exact Scopes**: Only request the scopes your application actually needs. Users can see what permissions you're requesting during the OAuth flow.
 
 3. **Token Expiration**: Access tokens typically expire after 1 hour. Use refresh tokens for long-lived access.
 
-4. **Scope Format**: All scopes are UPPERCASE with underscores (e.g., `CHARACTER_READ`, `PERSONAL_INV_SHIPS_ALL`).
+4. **Scope Format**: All scope values sent to the API are **lowercase** with underscores (e.g., `character_read`, `personal_inv_ships_all`). The `CharacterScopes.*` / `Scopes.*` constants resolve to these lowercase literals — prefer the constants so TypeScript can catch typos.
 
 ## See Also
 
-- [OAuth Authentication Guide](./OAUTH.md)
-- [API Reference](./API.md)
+- [OAuth Authentication Guide](./AUTHENTICATION.md)
+- [API Reference](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)
 - [Examples](../examples/)

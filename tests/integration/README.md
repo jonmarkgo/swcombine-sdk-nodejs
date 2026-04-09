@@ -1,5 +1,13 @@
 # Integration Tests
 
+> **⚠️ Rate limit warning — read before running.**
+> These tests hit the **live** SW Combine API and consume the global 600 requests/hour
+> per-token budget. They are intended for maintainer-led validation against real API
+> shapes, not routine development. **Do not** run them as part of a normal dev loop,
+> in CI on every PR, or as a pre-publish check. Use `npm test` (unit tests) for everyday
+> verification. When you do need to run the integration suite, run the narrowest subset
+> that covers your change and watch `client.getRateLimitInfo()` afterward.
+
 These integration tests validate the SDK against the live SW Combine API and capture real API responses to refine type definitions.
 
 ## Setup

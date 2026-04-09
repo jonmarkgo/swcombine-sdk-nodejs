@@ -2099,7 +2099,7 @@ export interface GetCharacterByHandleOptions {
 
 export interface ListMessagesOptions {
   uid: string;
-  /** Message mode: 'sent' or 'received'. If omitted, returns both sent and received messages. */
+  /** Message mode: `MessageMode.Sent` or `MessageMode.Received`. If omitted, returns both sent and received messages. */
   mode?: MessageMode;
   start_index?: number;
   item_count?: number;

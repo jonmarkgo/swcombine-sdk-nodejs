@@ -17,7 +17,7 @@ pnpm add swcombine-sdk
 ### 1. Import and Initialize
 
 ```typescript
-import { SWCombine } from 'swcombine-sdk';
+import { SWCombine, AccessType } from 'swcombine-sdk';
 
 // Public mode (no auth)
 const publicClient = new SWCombine();
@@ -33,20 +33,21 @@ const fullClient = new SWCombine({
   clientSecret: 'your-client-secret',
   token: 'your-access-token',
   redirectUri: 'http://localhost:3000/callback',
-  accessType: 'offline',
+  accessType: AccessType.Offline,
 });
 ```
 
 ### 2. Make Your First API Call
 
 ```typescript
-// Get public character information (no auth required)
-const character = await publicClient.character.getByHandle({
+// Resolve a character handle to a UID (no auth required).
+// `getByHandle` returns `{ uid, handle }`; call `character.get()` for the full profile.
+const { uid, handle } = await publicClient.character.getByHandle({
   handle: 'character-handle',
 });
 
-console.log(character.uid);    // "1:12345"
-console.log(character.name);   // "Character Name"
+console.log(uid);    // "1:12345"
+console.log(handle); // "character-handle"
 ```
 
 ### 3. Use Authenticated Endpoints
@@ -81,7 +82,7 @@ interface ClientConfig {
 
   // Optional OAuth settings
   redirectUri?: string;
-  accessType?: 'online' | 'offline';
+  accessType?: AccessType;    // AccessType.Online | AccessType.Offline
 
   // Optional HTTP settings
   baseURL?: string;           // Default: https://www.swcombine.com/ws/v2.0/
@@ -95,6 +96,8 @@ interface ClientConfig {
 ### Example with All Options
 
 ```typescript
+import { SWCombine, AccessType } from 'swcombine-sdk';
+
 const client = new SWCombine({
   // OAuth credentials
   clientId: process.env.SWC_CLIENT_ID!,
@@ -103,7 +106,7 @@ const client = new SWCombine({
 
   // OAuth configuration
   redirectUri: 'http://localhost:3000/callback',
-  accessType: 'offline', // Request refresh token
+  accessType: AccessType.Offline, // Request refresh token
 
   // HTTP configuration
   timeout: 60000,        // 60 seconds
@@ -149,14 +152,16 @@ The SDK provides access to all major SW Combine API resources:
 ### Characters
 ```typescript
 // Public endpoints (no auth)
-await client.character.getByHandle({ handle: 'character-handle' });
+await client.character.getByHandle({ handle: 'character-handle' }); // → { uid, handle }
 
 // Authenticated endpoints
+await client.character.me();                                         // current token owner
 await client.character.get({ uid: '1:12345' });
 await client.character.skills.list({ uid: '1:12345' });
 await client.character.privileges.list({ uid: '1:12345' });
 await client.character.credits.get({ uid: '1:12345' });
-await client.character.messages.list({ uid: '1:12345', mode: 'received' });
+await client.character.creditlog.list({ uid: '1:12345' });
+await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received });
 await client.character.permissions.list({ uid: '1:12345' });
 ```
 
@@ -179,10 +184,12 @@ await client.faction.stockholders.list({ uid: '20:123' });
 // Get inventory
 await client.inventory.get({ uid: '1:12345' });
 
-// Get specific entities
+// List entities (returns Page<T>)
+// entityType is plural: 'ships' | 'vehicles' | 'stations' | 'cities' | 'facilities'
+//   | 'planets' | 'items' | 'npcs' | 'droids' | 'creatures' | 'materials'
 await client.inventory.entities.list({
   uid: '1:12345',
-  entityType: 'vehicle',
+  entityType: 'vehicles',
   assignType: 'pilot',
 });
 ```
@@ -212,27 +219,32 @@ await client.datacard.list({ factionId: '20:123' });
 
 ### Types & Galaxy Info
 ```typescript
-// Entity types
-await client.types.rooms.list();
-await client.types.races.list();
-await client.types.skills.list();
-// ... and more
+// Entity types — entityType is one of:
+// 'ships' | 'vehicles' | 'stations' | 'cities' | 'facilities' | 'planets'
+//   | 'items' | 'npcs' | 'droids' | 'creatures' | 'materials' | 'factionmodules'
+await client.types.classes.list({ entityType: 'vehicles' });
+await client.types.entities.list({ entityType: 'ships' });
+await client.types.entities.get({ entityType: 'ships', uid: 'ship-type-uid' });
 
-// Galaxy information
+// Galaxy information (all return Page<T>)
 await client.galaxy.systems.list();
 await client.galaxy.planets.list();
+await client.galaxy.sectors.list();
+await client.galaxy.stations.list();
+await client.galaxy.cities.list();
 ```
 
 ### Market & News
 ```typescript
-// Market listings
-await client.market.listings.list();
-await client.market.auctions.list();
-await client.market.bazaar.list();
+// Market vendors (the only market sub-resource today)
+await client.market.vendors.list();
+await client.market.vendors.get({ uid: 'vendor-uid' });
 
-// News
-await client.news.list();
-await client.news.get({ uid: 'news-uid' });
+// News — Galactic News Service and Sim News are separate feeds
+await client.news.gns.list();                       // Page<NewsListItem>
+await client.news.gns.get({ id: 49108 });
+await client.news.simNews.list({ category: 'player' });
+await client.news.simNews.get({ id: 12345 });
 ```
 
 ### API Utilities
@@ -292,7 +304,7 @@ try {
 The SDK is written in TypeScript and provides full type definitions:
 
 ```typescript
-import { Character, Faction, Message } from 'swcombine-sdk';
+import { Character, Faction, Message, MessageMode } from 'swcombine-sdk';
 
 // Types are automatically inferred
 const character = await client.character.get({ uid: '1:12345' });
@@ -301,11 +313,11 @@ const character = await client.character.get({ uid: '1:12345' });
 // Or explicitly type
 const faction: Faction = await client.faction.get({ uid: '20:123' });
 
-// Request parameters are also typed
+// Request parameters are also typed — use the MessageMode enum
 await client.character.messages.list({
   uid: '1:12345',
-  mode: 'received', // TypeScript knows valid values
-  // mode: 'invalid', // ❌ TypeScript error
+  mode: MessageMode.Received, // TypeScript enforces MessageMode members
+  // mode: 'invalid',          // ❌ TypeScript error
 });
 ```
 
@@ -313,12 +325,13 @@ await client.character.messages.list({
 
 - **[OAuth Authentication](./AUTHENTICATION.md)** - Set up OAuth and get access tokens
 - **[OAuth Scopes](./SCOPES.md)** - Learn about OAuth permissions
-- **[API Reference](./API.md)** - Detailed API documentation
+- **[v2 → v3 Migration Guide](./MIGRATION-v3.md)** - Upgrading from v2
+- **[API Reference](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)** - Full TypeDoc reference
 - **[Examples](../examples/)** - Code examples for common tasks
 
 ## Need Help?
 
 - Check the [examples](../examples/) directory for working code
-- Read the [API documentation](./API.md)
-- Review integration tests in `tests/integration/` for usage patterns
+- Browse the full [API reference](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)
+- Read resource source files in `src/resources/` for method signatures and JSDoc examples
 - Submit issues on GitHub

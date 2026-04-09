@@ -13,7 +13,7 @@
 
 import express from 'express';
 import { config } from 'dotenv';
-import { SWCombine } from '../src/index.js';
+import { SWCombine, AccessType } from '../src/index.js';
 import { getAllScopes } from '../src/auth/scopes.js';
 import * as crypto from 'crypto';
 
@@ -45,7 +45,7 @@ const swc = new SWCombine({
   clientId: process.env.SWC_CLIENT_ID,
   clientSecret: process.env.SWC_CLIENT_SECRET,
   redirectUri: REDIRECT_URI,
-  accessType: 'offline', // Get refresh token for long-lived access
+  accessType: AccessType.Offline, // Get refresh token for long-lived access
 });
 
 // Store state for CSRF protection
@@ -315,15 +315,15 @@ app.get('/callback', async (req, res) => {
                   <div class="token-box" style="margin-top: 10px;">SWC_ACCESS_TOKEN=${token.accessToken}</div>
                 </li>
                 <li>Save the file</li>
-                <li>Run the integration tests:<br>
-                  <code>npm run test:integration</code>
-                </li>
+                <li>Use the token with <code>new SWCombine({ token: process.env.SWC_ACCESS_TOKEN })</code> in your own code</li>
               </ol>
             </div>
 
-            <h2>🧪 Test Your Token:</h2>
-            <p>You can verify your token works by running:</p>
-            <div class="token-box">npm run test:integration tests/integration/character.test.ts</div>
+            <h2>🧪 Verify Your Token:</h2>
+            <p>A single <code>client.character.me()</code> call is enough to confirm the token works without spending much of your 600 req/hour budget:</p>
+            <div class="token-box">import { SWCombine } from 'swcombine-sdk';
+const client = new SWCombine({ token: '${token.accessToken.slice(0, 8)}...' });
+console.log(await client.character.me());</div>
 
             <p style="margin-top: 30px; color: #666;">
               <small>This token will expire in ~1 hour. ${token.refreshToken ? 'You can use the refresh token to get a new access token.' : ''}</small>

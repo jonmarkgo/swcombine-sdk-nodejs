@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          registry-url: 'https://registry.npmjs.org'
 
       - run: npm ci
 
@@ -32,3 +33,5 @@ jobs:
 
       # prepublishOnly handles build + test automatically
       - run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

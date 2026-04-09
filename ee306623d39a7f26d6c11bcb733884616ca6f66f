@@ -1,0 +1,24 @@
+.github/workflows/publish.yml
+  9d82c36bd59519b3 14,16,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "ee306623d39a7f26d6c11bcb733884616ca6f66f",
+  "prompts": {
+    "9d82c36bd59519b3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8ef8387e-96e7-42ab-87df-64986a8a9ca9",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 3,
+      "accepted_lines": 3,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/d1cae0c02aaefb00654fa0c3ff3e34ac442851bc974aeca30dba9393a2b33b69"
+    }
+  }
+}

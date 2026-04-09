@@ -1,0 +1,38 @@
+.github/workflows/publish.yml
+  57e2f312bec86b2c 1-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.6",
+  "base_commit_sha": "48ebc8e9334a2d506810fafc5a9bf49a2f43f1b8",
+  "prompts": {
+    "57e2f312bec86b2c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fcc52431-a72f-4df0-8f6a-d4823f5f0113",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 35,
+      "total_deletions": 0,
+      "accepted_lines": 35,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/72abc6befe0078109f493734defbcf0b2ec7a89301fac3b6a15c27b1c03c4881"
+    },
+    "786642f529483045": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ccaa6321-b918-46b9-9fcf-8e8c223e2738",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 224,
+      "total_deletions": 176,
+      "accepted_lines": 223,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/763aedf9853c8800beff978bb598b232de16b18a9e4a2cab232a6c4541f5a901"
+    }
+  }
+}

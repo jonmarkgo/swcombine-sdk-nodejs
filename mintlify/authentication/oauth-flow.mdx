@@ -1,0 +1,303 @@
+---
+title: "OAuth 2.0 flow: authorize users with SW Combine SDK"
+description: "Run the OAuth 2.0 authorization code flow with the SW Combine SDK: register your app, generate an auth URL, handle the callback, and protect against CSRF."
+keywords: ["swcombine sdk", "oauth 2.0", "authorization flow", "access token", "callback handler", "express", "csrf"]
+---
+
+The SW Combine API uses OAuth 2.0's authorization code flow to let users grant your application access to their game account. This guide walks you through every step: registering your app, generating an authorization URL, handling the callback, and using the resulting token to make authenticated requests.
+
+<Steps>
+  <Step title="Register your application with SW Combine">
+    Before writing any code, register your OAuth application on the SW Combine developer portal at `https://www.swcombine.com/ws/developers/`. You will receive a **client ID** and **client secret**, and you must register a **redirect URI** (callback URL) that SW Combine will redirect users to after authorization.
+
+    For local development, register `http://localhost:3000/callback` as your redirect URI.
+
+    <Warning>
+      Your redirect URI must exactly match the value you pass to the SDK — including scheme (`http` vs `https`), port, and path. A trailing slash mismatch will cause a redirect URI error.
+    </Warning>
+
+    Once you have your credentials, store them in environment variables — never hardcode them:
+
+    ```bash .env
+    SWC_CLIENT_ID=your_client_id
+    SWC_CLIENT_SECRET=your_client_secret
+    ```
+  </Step>
+
+  <Step title="Initialize the client in full OAuth mode">
+    Create a `SWCombine` instance with your OAuth credentials. Pass `AccessType.Offline` if you want a refresh token so the SDK can automatically renew access without requiring the user to re-authorize:
+
+    ```typescript
+    import { SWCombine, AccessType } from 'swcombine-sdk';
+
+    const client = new SWCombine({
+      clientId: process.env.SWC_CLIENT_ID!,
+      clientSecret: process.env.SWC_CLIENT_SECRET!,
+      redirectUri: 'http://localhost:3000/callback',
+      accessType: AccessType.Offline, // Request a refresh token
+    });
+    ```
+
+    <Note>
+      `AccessType.Online` (the default) returns only an access token. `AccessType.Offline` additionally returns a refresh token, enabling automatic renewal without user interaction.
+    </Note>
+  </Step>
+
+  <Step title="Generate an authorization URL and redirect the user">
+    Call `client.auth.getAuthorizationUrl()` with the scopes your application needs and a randomly generated `state` value for CSRF protection. Redirect the user to the returned URL:
+
+    ```typescript
+    import { CharacterScopes, MessageScopes } from 'swcombine-sdk';
+
+    // Generate a random state value and save it for later verification
+    const state = Math.random().toString(36).substring(7);
+
+    const authUrl = client.auth.getAuthorizationUrl({
+      scopes: [
+        CharacterScopes.READ,
+        CharacterScopes.STATS,
+        MessageScopes.READ,
+        MessageScopes.SEND,
+      ],
+      state,
+    });
+
+    // Redirect the user to SW Combine for authorization
+    res.redirect(authUrl);
+    ```
+
+    The `state` parameter is echoed back in the callback and lets you verify the response is genuine. Store it somewhere you can retrieve it at callback time — a session, cookie, or database row.
+
+    <Tip>
+      Request only the scopes your application actually uses. Users see a permission list during authorization, so a shorter list builds more trust. See the [scopes reference](/authentication/scopes) for available constants.
+    </Tip>
+  </Step>
+
+  <Step title="Handle the OAuth callback">
+    After the user authorizes (or denies) your app, SW Combine redirects them to your `redirectUri` with a `code` and `state` query parameter. Your callback handler must verify the state and exchange the code for a token:
+
+    ```typescript
+    app.get('/callback', async (req, res) => {
+      try {
+        // Verify state to prevent CSRF attacks
+        if (req.query.state !== req.session.oauthState) {
+          return res.status(400).send('Invalid state parameter');
+        }
+
+        // Exchange the authorization code for an access token
+        const result = await client.auth.handleCallback(req.query);
+
+        if (!result.success) {
+          return res.status(400).send(`OAuth failed: ${result.error}`);
+        }
+
+        // result.token contains accessToken, refreshToken, and expiresAt
+        const token = result.token!;
+
+        console.log('Access token:', token.accessToken);
+        console.log('Refresh token:', token.refreshToken);
+        console.log('Expires at:', new Date(token.expiresAt));
+
+        // Save the token securely for this user
+        req.session.token = token;
+
+        res.redirect('/dashboard');
+      } catch (error) {
+        console.error('OAuth error:', error);
+        res.status(500).send('Authentication failed');
+      }
+    });
+    ```
+
+    `handleCallback` returns an `AuthorizationResult` object with a `success` boolean, and a `token` property when successful. The SDK also automatically sets the token on the client instance, so subsequent calls on the same client instance are immediately authenticated.
+
+    <Warning>
+      Always validate the `state` parameter before exchanging the code. Skipping this check exposes your application to CSRF attacks.
+    </Warning>
+  </Step>
+
+  <Step title="Use the token to make authenticated requests">
+    Once you have a token, create an authenticated client and make API calls:
+
+    ```typescript
+    // Option A: Use the same client (token was auto-set by handleCallback)
+    const me = await client.character.me();
+
+    // Option B: Create a new client seeded with the stored token
+    const userClient = new SWCombine({
+      clientId: process.env.SWC_CLIENT_ID!,
+      clientSecret: process.env.SWC_CLIENT_SECRET!,
+      token: req.session.token,
+    });
+
+    const character = await userClient.character.get({ uid: '1:12345' });
+    console.log(character.name);
+    ```
+
+    In full OAuth mode, the SDK automatically refreshes the access token when it detects expiry (within a 5-minute buffer), as long as a refresh token is available.
+  </Step>
+</Steps>
+
+## Complete Express.js example
+
+Here is a complete, working Express.js application that puts all steps together with session-based state management:
+
+```typescript
+import express from 'express';
+import session from 'express-session';
+import { SWCombine, AccessType, CharacterScopes, MessageScopes } from 'swcombine-sdk';
+
+const app = express();
+
+app.use(session({
+  secret: process.env.SESSION_SECRET!,
+  resave: false,
+  saveUninitialized: false,
+}));
+
+const client = new SWCombine({
+  clientId: process.env.SWC_CLIENT_ID!,
+  clientSecret: process.env.SWC_CLIENT_SECRET!,
+  redirectUri: 'http://localhost:3000/callback',
+  accessType: AccessType.Offline,
+});
+
+// Step 1: Redirect to SW Combine
+app.get('/login', (req, res) => {
+  const state = Math.random().toString(36).substring(7);
+  req.session.oauthState = state;
+
+  const authUrl = client.auth.getAuthorizationUrl({
+    scopes: [
+      CharacterScopes.READ,
+      CharacterScopes.STATS,
+      MessageScopes.READ,
+    ],
+    state,
+  });
+
+  res.redirect(authUrl);
+});
+
+// Step 2: Handle the callback
+app.get('/callback', async (req, res) => {
+  try {
+    if (req.query.state !== req.session.oauthState) {
+      return res.status(400).send('Invalid state');
+    }
+
+    const result = await client.auth.handleCallback(req.query);
+
+    if (!result.success) {
+      return res.status(400).send(`Error: ${result.error}`);
+    }
+
+    req.session.token = result.token;
+    res.redirect('/dashboard');
+  } catch (error) {
+    console.error('OAuth error:', error);
+    res.status(500).send('Authentication failed');
+  }
+});
+
+// Step 3: Use the token in protected routes
+app.get('/dashboard', async (req, res) => {
+  if (!req.session.token) {
+    return res.redirect('/login');
+  }
+
+  const userClient = new SWCombine({
+    clientId: process.env.SWC_CLIENT_ID!,
+    clientSecret: process.env.SWC_CLIENT_SECRET!,
+    token: req.session.token,
+  });
+
+  const me = await userClient.character.me();
+  res.send(`Welcome, ${me.name}!`);
+});
+
+// Step 4: Revoke the token on logout
+app.get('/logout', async (req, res) => {
+  if (req.session.token?.refreshToken) {
+    await client.auth.revokeToken(req.session.token.refreshToken);
+  }
+  req.session.destroy(() => res.redirect('/'));
+});
+
+app.listen(3000, () => {
+  console.log('Visit http://localhost:3000/login to start the OAuth flow');
+});
+```
+
+## Quick token helper for development
+
+The SDK ships with a helper script that runs a local OAuth server and prints your access token to the terminal — no Express boilerplate required:
+
+```bash
+# 1. Add your credentials to .env
+echo "SWC_CLIENT_ID=your_client_id" >> .env
+echo "SWC_CLIENT_SECRET=your_client_secret" >> .env
+
+# 2. Run the helper
+npm run get-token
+
+# 3. Open http://localhost:3000, authorize the app, then copy the token
+# 4. Add it to .env
+echo "SWC_ACCESS_TOKEN=your_token_here" >> .env
+```
+
+Make sure `http://localhost:3000/callback` is registered as a redirect URI in your SW Combine OAuth application settings before running this script.
+
+## Security best practices
+
+- **Use HTTPS in production.** Localhost HTTP is acceptable for development, but production redirect URIs must use HTTPS to protect the authorization code in transit.
+- **Validate the `state` parameter.** Always compare the returned `state` to what you stored before calling `handleCallback`. Never skip this check.
+- **Store credentials in environment variables.** Never commit `clientId`, `clientSecret`, or tokens to source control. Add `.env` to your `.gitignore`.
+- **Use `AccessType.Offline` when you need persistent access.** This gives you a refresh token so the SDK can renew access automatically without requiring another user authorization.
+- **Revoke refresh tokens on logout.** Call `client.auth.revokeToken(refreshToken)` when a user signs out to invalidate the token server-side.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Redirect URI mismatch">
+    The URI you pass as `redirectUri` must exactly match the value registered in your SW Combine OAuth application — including the scheme (`http` vs `https`), port, and path. Common mismatches include a trailing slash, or using `https` locally when `http` is registered.
+
+    ```typescript
+    // If you registered: http://localhost:3000/callback
+    redirectUri: 'http://localhost:3000/callback'  // correct
+    redirectUri: 'http://localhost:3000/callback/' // wrong — trailing slash
+    redirectUri: 'https://localhost:3000/callback' // wrong — https vs http
+    ```
+  </Accordion>
+
+  <Accordion title="Invalid scope format">
+    Scope values are lowercase strings (e.g., `character_read`, `messages_send`). The API rejects uppercase values. Use the typed constants from the SDK to avoid this:
+
+    ```typescript
+    import { CharacterScopes, MessageScopes } from 'swcombine-sdk';
+
+    // Correct — constants resolve to lowercase literals
+    scopes: [CharacterScopes.READ, MessageScopes.SEND]
+
+    // Also correct — raw lowercase strings
+    scopes: ['character_read', 'messages_send']
+
+    // Wrong — uppercase is rejected by the API
+    scopes: ['CHARACTER_READ', 'MESSAGES_SEND']
+    ```
+  </Accordion>
+
+  <Accordion title="Invalid state parameter">
+    If your callback returns an "invalid state" error, the state stored at login time doesn't match the state returned in the callback. This often happens when the session is not persisting between the login and callback routes, or when the user follows an old authorization link. Send the user back through the login flow to generate a fresh state value.
+  </Accordion>
+
+  <Accordion title="Access token not provided">
+    Calls to authenticated endpoints fail if no token is set. Make sure you either pass `token` to the constructor or call `client.setToken()` before making API requests.
+
+    ```typescript
+    const client = new SWCombine({
+      token: process.env.SWC_ACCESS_TOKEN!, // required for authenticated endpoints
+    });
+    ```
+  </Accordion>
+</AccordionGroup>

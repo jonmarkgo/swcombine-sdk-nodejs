@@ -1,0 +1,148 @@
+---
+title: "Client modes: public, token-only, and full OAuth"
+description: "Understand the three SW Combine SDK client modes, when to use each one, and how to configure the SWCombine constructor for your use case."
+keywords: ["swcombine sdk", "client modes", "public", "token", "oauth", "clientconfig", "swcombine constructor"]
+---
+
+The `SWCombine` constructor accepts an optional configuration object that determines which API endpoints you can call and what authentication behavior the SDK enables. Choosing the right mode up front saves you from unexpected `401` errors or unnecessary OAuth complexity — each mode unlocks progressively more capability.
+
+## The three modes at a glance
+
+<CardGroup cols={3}>
+  <Card title="Public" icon="globe">
+    No credentials. Call public endpoints without any token.
+  </Card>
+  <Card title="Token-only" icon="key">
+    Pass an existing access token to call authenticated endpoints.
+  </Card>
+  <Card title="Full OAuth" icon="arrows-rotate">
+    Provide OAuth app credentials to run authorization flows and auto-refresh tokens.
+  </Card>
+</CardGroup>
+
+## Public mode
+
+Public mode requires no configuration at all. Pass nothing to the constructor and you get a client that can call endpoints accessible without authentication — things like resolving a character handle or browsing galaxy data.
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine();
+
+const { uid } = await client.character.getByHandle({ handle: 'han-solo' });
+```
+
+<Note>
+  Calling an authenticated endpoint from a public client throws a `401 Unauthorized` error. If you see one, switch to token-only or full OAuth mode.
+</Note>
+
+## Token-only mode
+
+If you already have an access token — from a previous OAuth flow or a stored credential — pass it directly. The SDK attaches it as an `Authorization: OAuth {token}` header on every request.
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine({
+  token: process.env.SWC_ACCESS_TOKEN!,
+});
+
+const me = await client.character.me();
+console.log(me.name);
+```
+
+<Warning>
+  Token-only mode cannot refresh an expired token automatically. When the token expires, requests fail with a `401` and you must supply a new token manually. Use full OAuth mode if you need automatic refresh.
+</Warning>
+
+## Full OAuth mode
+
+Full OAuth mode unlocks the complete authorization flow: generating authorization URLs, handling callbacks, and automatically refreshing access tokens when they expire. It requires your OAuth application's `clientId` and `clientSecret`.
+
+```typescript
+import { SWCombine, AccessType } from 'swcombine-sdk';
+
+const client = new SWCombine({
+  clientId: process.env.SWC_CLIENT_ID!,
+  clientSecret: process.env.SWC_CLIENT_SECRET!,
+  redirectUri: 'http://localhost:3000/callback',
+  accessType: AccessType.Offline, // Request a refresh token
+  token: process.env.SWC_ACCESS_TOKEN, // Optional: seed with an existing token
+});
+```
+
+<Note>
+  You must provide `clientId` and `clientSecret` together. The SDK throws at construction time if only one is supplied.
+</Note>
+
+Use `AccessType.Offline` when you want a refresh token for long-lived server-side access. Use `AccessType.Online` (the default) for short-lived sessions where you don't need to refresh.
+
+## ClientConfig reference
+
+Every option you can pass to `new SWCombine(config)`:
+
+<ParamField path="clientId" type="string">
+  Your OAuth application's client ID. Must be provided together with `clientSecret`.
+</ParamField>
+
+<ParamField path="clientSecret" type="string">
+  Your OAuth application's client secret. Must be provided together with `clientId`.
+</ParamField>
+
+<ParamField path="token" type="string | OAuthToken">
+  An existing token to seed the client with. Accepts a raw access token string or a full `OAuthToken` object with `accessToken`, `refreshToken`, and `expiresAt` fields.
+</ParamField>
+
+<ParamField path="redirectUri" type="string">
+  The callback URL registered with your OAuth application. Required for `auth.getAuthorizationUrl()` and `auth.handleCallback()`. Must match exactly what you registered — including scheme, host, port, and path.
+</ParamField>
+
+<ParamField path="accessType" type="AccessType">
+  Controls whether the authorization server issues a refresh token. `AccessType.Offline` returns a refresh token; `AccessType.Online` (default) returns only an access token.
+</ParamField>
+
+<ParamField path="baseURL" type="string" default="https://www.swcombine.com/ws/v2.0/">
+  Override the API base URL. Most applications do not need this.
+</ParamField>
+
+<ParamField path="timeout" type="number" default="30000">
+  Request timeout in milliseconds.
+</ParamField>
+
+<ParamField path="maxRetries" type="number" default="3">
+  Maximum retry attempts for retryable errors: network failures, `5xx` responses, and rate limit hits.
+</ParamField>
+
+<ParamField path="retryDelay" type="number" default="1000">
+  Base delay between retries in milliseconds. The SDK applies exponential backoff on top of this value.
+</ParamField>
+
+<ParamField path="debug" type="boolean" default="false">
+  When `true`, logs all HTTP requests and responses to the console. Useful during development.
+</ParamField>
+
+## Choosing the right mode
+
+| Scenario | Mode |
+|---|---|
+| Browsing public game data, no user account | Public |
+| Server-side script with a stored token | Token-only |
+| Web app with user login and long-lived sessions | Full OAuth (`AccessType.Offline`) |
+| Web app with short sessions, no refresh needed | Full OAuth (`AccessType.Online`) |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="OAuth flow" icon="arrows-rotate" href="/authentication/oauth-flow">
+    Step-by-step guide to running the authorization flow and handling callbacks.
+  </Card>
+  <Card title="Token management" icon="key" href="/authentication/token-management">
+    Store, inspect, refresh, and revoke tokens in your application.
+  </Card>
+  <Card title="Error handling" icon="triangle-exclamation" href="/concepts/error-handling">
+    Catch typed `SWCError` exceptions and understand retry behavior.
+  </Card>
+  <Card title="Rate limits" icon="gauge" href="/concepts/rate-limits">
+    Monitor your request quota and avoid hitting the 600 requests/hour limit.
+  </Card>
+</CardGroup>

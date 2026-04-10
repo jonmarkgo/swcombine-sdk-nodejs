@@ -1,0 +1,141 @@
+---
+title: "Pagination: working with Page<T> and list results"
+description: "Learn how every SW Combine SDK list() method returns a Page<T> object, how to control page size, and how to auto-paginate with for await...of."
+keywords: ["swcombine sdk", "pagination", "page", "list", "for await", "item_count", "start_index", "hasnext"]
+---
+
+Every `list()` method in the SW Combine SDK returns a `Page<T>` object rather than a plain array. This gives you both the items for the current page and the metadata you need to fetch subsequent pages — either manually, one page at a time, or automatically by iterating with `for await...of`.
+
+## The Page\<T\> object
+
+When you call any `list()` method, you receive a `Page<T>` with the following shape:
+
+<ParamField path="data" type="T[]" required>
+  The array of items on the current page.
+</ParamField>
+
+<ParamField path="total" type="number" required>
+  The total number of items across all pages.
+</ParamField>
+
+<ParamField path="start" type="number" required>
+  The index of the first item on this page.
+</ParamField>
+
+<ParamField path="count" type="number" required>
+  The number of items on this page.
+</ParamField>
+
+<ParamField path="hasMore" type="boolean" required>
+  `true` when there are additional pages after this one.
+</ParamField>
+
+## Fetching a single page
+
+By default, `list()` returns the first page of up to 50 items. You can check `hasMore` to decide whether to fetch more, and call `getNextPage()` to advance one page at a time.
+
+```typescript
+const page = await client.galaxy.sectors.list();
+
+console.log(page.total);       // e.g. 248 — total sectors in the galaxy
+console.log(page.data.length); // up to 50 — items on this page
+console.log(page.hasMore);     // true if more pages exist
+
+if (page.hasMore) {
+  const nextPage = await page.getNextPage();
+  console.log(nextPage.data);
+}
+```
+
+## Auto-paginating with for await...of
+
+Use `for await...of` to iterate over every item across all pages without managing page offsets yourself. The SDK fetches subsequent pages as needed until all items are returned.
+
+```typescript
+for await (const sector of await client.galaxy.sectors.list()) {
+  console.log(sector.name);
+}
+```
+
+<Warning>
+  Auto-pagination makes one API request per page. For large datasets this can consume a significant portion of your 600 requests/hour quota. Use `pageDelay` to slow down fetches if needed.
+</Warning>
+
+## Controlling page size and starting offset
+
+Every `list()` method accepts `start_index` and `item_count` parameters. Pass them to control which slice of results you receive.
+
+<ParamField path="start_index" type="number" default="1">
+  The 1-based index of the first item to return. Most endpoints default to `1`; the Events endpoint uses `0` as its default.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  The number of items to return per page. Controls the page size for both single-page fetches and auto-pagination.
+</ParamField>
+
+<ParamField path="pageDelay" type="number" default="0">
+  Milliseconds to wait between automatic page fetches during `for await...of` iteration. Use this to stay within rate limits when paginating large datasets.
+</ParamField>
+
+```typescript
+// Fetch 25 items starting from the 51st
+const page = await client.galaxy.sectors.list({
+  start_index: 51,
+  item_count: 25,
+});
+
+// Auto-paginate with a 500 ms delay between each page fetch
+for await (const ship of await client.inventory.entities.list({
+  item_count: 100,
+  pageDelay: 500,
+})) {
+  console.log(ship.name);
+}
+```
+
+<Tip>
+  Increasing `item_count` reduces the number of requests needed to page through large datasets. The maximum accepted value depends on the endpoint — check the API reference for per-endpoint limits.
+</Tip>
+
+## Manual pagination with getNextPage()
+
+If you want explicit control over when the next page is fetched, use `getNextPage()` in a loop instead of `for await...of`.
+
+```typescript
+let page = await client.inventory.entities.list({ item_count: 100 });
+
+while (true) {
+  for (const entity of page.data) {
+    process(entity);
+  }
+
+  if (!page.hasMore) break;
+  page = await page.getNextPage();
+}
+```
+
+## Events endpoint
+
+The Events endpoint is the only one that uses a 0-based `start_index` by default rather than 1-based. This matches the underlying API behavior for that resource — all other endpoints start at `1`.
+
+```typescript
+// Events uses 0-based indexing
+const events = await client.events.list({ start_index: 0 });
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Rate limits" icon="gauge" href="/concepts/rate-limits">
+    Understand the 600 requests/hour quota and how to monitor it.
+  </Card>
+  <Card title="Error handling" icon="triangle-exclamation" href="/concepts/error-handling">
+    Handle failures gracefully and understand automatic retry behavior.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    See pagination in action with a working end-to-end example.
+  </Card>
+  <Card title="Client modes" icon="sliders" href="/concepts/client-modes">
+    Choose the right client mode for your use case.
+  </Card>
+</CardGroup>

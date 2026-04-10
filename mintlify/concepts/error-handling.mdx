@@ -1,0 +1,192 @@
+---
+title: "Error handling: SWCError types and retry behavior"
+description: "Learn how to catch typed SWCError exceptions from the SW Combine SDK, inspect error details, and understand which failures are retried automatically."
+keywords: ["swcombine sdk", "error handling", "swcerror", "retryable", "statuscode", "error type", "exponential backoff"]
+---
+
+Every error thrown by the SW Combine SDK is an instance of `SWCError` — a typed error class that carries the HTTP status code, a human-readable message, an error type string, and a `retryable` flag. Checking `instanceof SWCError` lets you distinguish SDK errors from unexpected runtime exceptions and handle them precisely.
+
+## Catching errors
+
+Wrap any SDK call in a `try/catch` block and check `instanceof SWCError` to access the structured error details:
+
+```typescript
+import { SWCombine, SWCError } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
+
+try {
+  const character = await client.character.get({ uid: '1:99999' });
+} catch (error) {
+  if (error instanceof SWCError) {
+    console.log(error.statusCode); // e.g. 404
+    console.log(error.message);    // e.g. "Character not found"
+    console.log(error.type);       // e.g. "not_found"
+    console.log(error.retryable);  // false for 404
+  } else {
+    // Unexpected non-SDK error
+    throw error;
+  }
+}
+```
+
+## SWCError properties
+
+<ParamField path="statusCode" type="number" required>
+  The HTTP status code returned by the API (e.g. `401`, `404`, `429`, `500`). For network-level failures where no HTTP response was received, this may be `0`.
+</ParamField>
+
+<ParamField path="message" type="string" required>
+  A human-readable description of what went wrong.
+</ParamField>
+
+<ParamField path="type" type="string" required>
+  A stable string identifier for the error category. One of: `not_found`, `unauthorized`, `auth`, `validation`, `network`, `server`.
+</ParamField>
+
+<ParamField path="retryable" type="boolean" required>
+  `true` when the SDK considers this error safe to retry automatically. Network errors, `5xx` server errors, and rate limit responses (`429`) are retryable. Client errors like `404` and `401` are not.
+</ParamField>
+
+<ParamField path="response" type="object">
+  The raw API response object, when one was received. Useful for inspecting response headers or the full error body from the server.
+</ParamField>
+
+## Error types
+
+<AccordionGroup>
+  <Accordion title="not_found — 404">
+    The requested resource does not exist. This is not retryable — the item you're looking for isn't there.
+
+    ```typescript
+    if (error.type === 'not_found') {
+      console.log('Resource does not exist:', error.message);
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="unauthorized — 401">
+    Your access token is missing, expired, or does not have the required OAuth scope. This is not retryable. In token-only mode, you must supply a fresh token manually. In full OAuth mode, the SDK refreshes the token automatically before retrying.
+
+    ```typescript
+    if (error.type === 'unauthorized') {
+      console.log('Check your token or required scopes:', error.message);
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="auth — OAuth errors">
+    An error occurred during the OAuth authorization flow (e.g. an invalid authorization code or a failed token exchange). This is not retryable.
+
+    ```typescript
+    if (error.type === 'auth') {
+      console.log('OAuth flow failed:', error.message);
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="validation — 400">
+    The request was malformed or a required parameter was missing or invalid. Fix the input before retrying — this error is not retryable.
+
+    ```typescript
+    if (error.type === 'validation') {
+      console.log('Invalid request parameters:', error.message);
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="network — connection failures">
+    A network-level failure occurred before a response was received: DNS resolution failed, the connection timed out, or the connection was reset. The SDK retries these automatically with exponential backoff.
+
+    ```typescript
+    if (error.type === 'network') {
+      console.log('Network failure, SDK will retry:', error.message);
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="server — 5xx">
+    The API returned a server-side error. These are retried automatically. If all retry attempts fail, the final error is thrown.
+
+    ```typescript
+    if (error.type === 'server') {
+      console.log('Server error, SDK will retry:', error.message);
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Automatic retries
+
+The SDK automatically retries retryable errors — network failures, `5xx` responses, and rate limit hits (`429`) — using exponential backoff. You configure retry behavior when constructing the client:
+
+```typescript
+const client = new SWCombine({
+  token: process.env.SWC_ACCESS_TOKEN!,
+  maxRetries: 5,    // retry up to 5 times (default: 3)
+  retryDelay: 500,  // base delay in ms, doubles each attempt (default: 1000)
+});
+```
+
+For rate limit responses, the SDK also respects the `Retry-After` header returned by the API and waits the specified duration before retrying — regardless of the configured `retryDelay`.
+
+<Note>
+  When all retry attempts are exhausted, the SDK throws the final `SWCError`. Your catch block always receives the last error that occurred, not the first.
+</Note>
+
+## Error type quick reference
+
+| Type | HTTP status | Retryable |
+|---|---|---|
+| `not_found` | 404 | No |
+| `unauthorized` | 401 | No |
+| `auth` | varies | No |
+| `validation` | 400 | No |
+| `network` | — | Yes |
+| `server` | 5xx | Yes |
+| Rate limit | 429 | Yes |
+
+## Branching on error type
+
+For applications that need to respond differently to different failures, branch on `error.type` rather than `error.statusCode` — the type values are stable across SDK versions:
+
+```typescript
+try {
+  const faction = await client.faction.get({ uid: '4:1' });
+} catch (error) {
+  if (!(error instanceof SWCError)) throw error;
+
+  switch (error.type) {
+    case 'not_found':
+      // Show a "faction not found" message to the user
+      break;
+    case 'unauthorized':
+      // Redirect to re-authentication
+      break;
+    case 'network':
+    case 'server':
+      // These were already retried — show a service unavailable message
+      break;
+    default:
+      // Log unexpected error types
+      console.error('Unexpected error type:', error.type, error.message);
+  }
+}
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Rate limits" icon="gauge" href="/concepts/rate-limits">
+    Monitor your quota and understand how the SDK handles rate limit responses.
+  </Card>
+  <Card title="Client modes" icon="sliders" href="/concepts/client-modes">
+    Configure `maxRetries` and `retryDelay` when constructing the client.
+  </Card>
+  <Card title="Authentication overview" icon="lock" href="/authentication/overview">
+    Understand token expiry and which scopes are required for each endpoint.
+  </Card>
+  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
+    Use `pageDelay` to avoid rate limit errors during auto-pagination.
+  </Card>
+</CardGroup>

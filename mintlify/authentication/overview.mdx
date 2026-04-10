@@ -1,0 +1,130 @@
+---
+title: "Authentication overview: client modes and access levels"
+description: "Learn the three ways to initialize the SW Combine SDK client — public, token-only, and full OAuth — and which endpoints each mode unlocks."
+keywords: ["swcombine sdk", "authentication", "oauth", "client config", "access token", "client modes"]
+---
+
+The SW Combine SDK supports three client modes, each suited to a different level of access. You choose a mode by what you pass to the `SWCombine` constructor. Public endpoints work with no credentials at all; most game data endpoints require an access token; and the full OAuth flow — including automatic token refresh — requires your OAuth app credentials.
+
+## The three client modes
+
+<Tabs>
+  <Tab title="Public (no credentials)">
+    Pass no arguments to get a client that can call public endpoints without any authentication. Use this for endpoints like `character.getByHandle` that resolve public data without a token.
+
+    ```typescript
+    import { SWCombine } from 'swcombine-sdk';
+
+    const client = new SWCombine();
+    ```
+
+    Authenticated endpoints will throw a `401 Unauthorized` error when called from a public client.
+  </Tab>
+
+  <Tab title="Token-only">
+    Pass an existing access token string to authenticate requests. The SDK injects it as an `Authorization: OAuth {token}` header on every request. Use this when you already have a token and don't need to run OAuth flows or refresh automatically.
+
+    ```typescript
+    import { SWCombine } from 'swcombine-sdk';
+
+    const client = new SWCombine({
+      token: process.env.SWC_ACCESS_TOKEN!,
+    });
+    ```
+
+    If the token expires, requests will fail with a `401` — the SDK cannot refresh automatically without OAuth credentials.
+  </Tab>
+
+  <Tab title="Full OAuth">
+    Pass `clientId`, `clientSecret`, and optionally a `redirectUri` to unlock the full OAuth flow: generate authorization URLs, handle callbacks, and refresh tokens automatically when they expire.
+
+    ```typescript
+    import { SWCombine, AccessType } from 'swcombine-sdk';
+
+    const client = new SWCombine({
+      clientId: process.env.SWC_CLIENT_ID!,
+      clientSecret: process.env.SWC_CLIENT_SECRET!,
+      redirectUri: 'http://localhost:3000/callback',
+      accessType: AccessType.Offline, // Request a refresh token
+      token: process.env.SWC_ACCESS_TOKEN,  // Optional: seed with an existing token
+    });
+    ```
+
+    <Note>
+      You must provide both `clientId` and `clientSecret` together. The SDK throws immediately if only one is set.
+    </Note>
+  </Tab>
+</Tabs>
+
+## ClientConfig reference
+
+Every option you can pass to `new SWCombine(config)`:
+
+<ParamField path="clientId" type="string">
+  Your OAuth application's client ID. Must be provided together with `clientSecret`.
+</ParamField>
+
+<ParamField path="clientSecret" type="string">
+  Your OAuth application's client secret. Must be provided together with `clientId`.
+</ParamField>
+
+<ParamField path="redirectUri" type="string">
+  The callback URL registered with your OAuth application. Required for `auth.getAuthorizationUrl()` and `auth.handleCallback()`. Must match exactly what you registered — including scheme, host, port, and path.
+</ParamField>
+
+<ParamField path="accessType" type="AccessType">
+  Controls whether the authorization server returns a refresh token. Use `AccessType.Offline` to receive a refresh token for long-lived access; `AccessType.Online` (default) returns only an access token.
+</ParamField>
+
+<ParamField path="token" type="string | OAuthToken">
+  An existing token to seed the client with. Can be a raw access token string or a full `OAuthToken` object (`accessToken`, `refreshToken`, `expiresAt`). The SDK uses this immediately without running an OAuth flow.
+</ParamField>
+
+<ParamField path="baseURL" type="string">
+  Override the API base URL. Defaults to `https://www.swcombine.com/ws/v2.0/`. Most applications do not need this.
+</ParamField>
+
+<ParamField path="timeout" type="number">
+  Request timeout in milliseconds. Defaults to `30000` (30 seconds).
+</ParamField>
+
+<ParamField path="maxRetries" type="number">
+  Maximum number of retry attempts for retryable errors (network failures, `5xx` responses, rate limit hits). Defaults to `3`.
+</ParamField>
+
+<ParamField path="retryDelay" type="number">
+  Base delay between retry attempts in milliseconds, applied with exponential backoff. Defaults to `1000`.
+</ParamField>
+
+<ParamField path="debug" type="boolean">
+  When `true`, logs all HTTP requests and responses to the console. Useful during development. Defaults to `false`.
+</ParamField>
+
+## Which endpoints need which mode
+
+| Mode | Required for |
+|---|---|
+| Public (no credentials) | `character.getByHandle`, `galaxy.*`, `types.*`, `news.*`, `api.helloWorld`, `api.time` |
+| Token-only | `character.get`, `character.me()`, `faction.*`, `inventory.*`, `market.*`, `events.*`, `location.*`, `datacard.*` |
+| Full OAuth | `auth.getAuthorizationUrl()`, `auth.handleCallback()`, `auth.revokeToken()`, `client.refreshToken()` |
+
+<Note>
+  Automatic token refresh only works in full OAuth mode. In token-only mode, you must supply a fresh token manually after expiry.
+</Note>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="OAuth flow" icon="arrows-rotate" href="/authentication/oauth-flow">
+    Step-by-step guide to registering your app, running the authorization flow, and handling callbacks.
+  </Card>
+  <Card title="Scopes" icon="list-check" href="/authentication/scopes">
+    Browse all 170+ scope constants and learn how to request only the permissions you need.
+  </Card>
+  <Card title="Token management" icon="key" href="/authentication/token-management">
+    Store, inspect, refresh, and revoke tokens in your application.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Make your first API call in under five minutes.
+  </Card>
+</CardGroup>

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "SW Combine SDK",
+  "theme": "luma",
+  "colors": {
+    "primary": "#1a56db",
+    "light": "#e8f0fe",
+    "dark": "#0f2d6b"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/jonmarkgo/swcombine-sdk-nodejs"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation"
+            ]
+          },
+          {
+            "group": "Authentication",
+            "pages": [
+              "authentication/overview",
+              "authentication/oauth-flow",
+              "authentication/scopes",
+              "authentication/token-management"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/client-modes",
+              "concepts/pagination",
+              "concepts/error-handling",
+              "concepts/rate-limits"
+            ]
+          },
+          {
+            "group": "API Resources",
+            "pages": [
+              "resources/character",
+              "resources/faction",
+              "resources/galaxy",
+              "resources/inventory",
+              "resources/market",
+              "resources/news",
+              "resources/events",
+              "resources/types",
+              "resources/location",
+              "resources/datacard"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/typescript-usage",
+              "guides/timestamp-utility",
+              "guides/migration-v3"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

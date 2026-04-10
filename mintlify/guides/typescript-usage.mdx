@@ -1,0 +1,236 @@
+---
+title: "TypeScript types, enums, and type safety in the SDK"
+description: "Import types, use enums, and annotate your code with the full set of types the SW Combine SDK exports from its TypeScript-first codebase."
+keywords: ["typescript", "types", "enums", "swcombine sdk", "type safety", "MessageMode", "AccessType"]
+---
+
+The SW Combine SDK is written in TypeScript 5.5+ strict mode and ships its own type definitions at `dist/types/index.d.ts`. Every method returns a fully typed response — you rarely need to annotate types yourself, but you can import any type or enum directly when you want explicit annotations or need to reference specific values.
+
+## Installing and importing
+
+The SDK supports both ESM (`import`) and CommonJS (`require`). Import the client and any types you need from the same package entry point:
+
+<CodeGroup>
+
+```typescript ESM
+import {
+  SWCombine,
+  AccessType,
+  MessageMode,
+  type Character,
+  type CharacterMe,
+  type Page,
+  type SWCError,
+} from 'swcombine-sdk';
+```
+
+```javascript CommonJS
+const {
+  SWCombine,
+  AccessType,
+  MessageMode,
+} = require('swcombine-sdk');
+```
+
+</CodeGroup>
+
+<Note>
+  All types are re-exported from `swcombine-sdk`. You do not need to import from `dist/types/index.d.ts` directly.
+</Note>
+
+## Enum reference
+
+The SDK exports two enums that you pass as parameters to API calls.
+
+### `MessageMode`
+
+Controls which mailbox to query when listing messages.
+
+| Member | Value |
+|--------|-------|
+| `MessageMode.Received` | `"received"` |
+| `MessageMode.Sent` | `"sent"` |
+
+```typescript
+import { SWCombine, MessageMode } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN });
+
+// Fetch the authenticated character's received messages
+const inbox = await client.character.messages.list({
+  mode: MessageMode.Received,
+});
+
+// Fetch sent messages
+const sent = await client.character.messages.list({
+  mode: MessageMode.Sent,
+});
+```
+
+### `AccessType`
+
+Passed in `ClientConfig` to choose whether the OAuth flow issues a refresh token.
+
+| Member | Value | Behaviour |
+|--------|-------|-----------|
+| `AccessType.Online` | `"online"` | Access token only — no refresh token |
+| `AccessType.Offline` | `"offline"` | Issues a refresh token for automatic renewal |
+
+```typescript
+import { SWCombine, AccessType } from 'swcombine-sdk';
+
+const client = new SWCombine({
+  clientId: process.env.SWC_CLIENT_ID!,
+  clientSecret: process.env.SWC_CLIENT_SECRET!,
+  redirectUri: 'http://localhost:3000/callback',
+  accessType: AccessType.Offline, // receive a refresh token
+});
+```
+
+## Explicit type annotations
+
+TypeScript infers return types automatically, but you can annotate variables when you want to make contracts explicit or pass data to other functions.
+
+### Single-entity responses
+
+```typescript
+import { SWCombine, type CharacterMe, type FactionDetail } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN });
+
+// Type is inferred — annotation is optional but clear
+const me: CharacterMe = await client.character.me();
+console.log(me.name, me.xpLevel);
+
+const faction: FactionDetail = await client.faction.get({ uid: '20:123' });
+console.log(faction.name, faction.leader.value);
+```
+
+### Paginated list responses
+
+Every `list()` method returns `Page<T>`. Annotate with the specific item type if you need to pass the page to a typed function:
+
+```typescript
+import {
+  SWCombine,
+  type Page,
+  type FactionListItem,
+  type MessageListItem,
+  type CreditLogEntry,
+} from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN });
+
+const factions: Page<FactionListItem> = await client.faction.list();
+factions.data.forEach((f: FactionListItem) => console.log(f.value));
+
+const messages: Page<MessageListItem> = await client.character.messages.list({ uid: '1:12345' });
+const firstSender: string | undefined = messages.data[0]?.attributes?.uid;
+
+const log: Page<CreditLogEntry> = await client.character.creditlog.list({ uid: '1:12345' });
+log.data.forEach((entry) => console.log(entry.amount));
+```
+
+### Error handling with `SWCError`
+
+All API errors are thrown as `SWCError` instances. Import the class to narrow the type in `catch` blocks:
+
+```typescript
+import { SWCombine, SWCError, type CharacterMe } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN });
+
+try {
+  const me: CharacterMe = await client.character.me();
+  console.log(me.name);
+} catch (err) {
+  if (err instanceof SWCError) {
+    console.error(`API error ${err.statusCode}: ${err.type}`);
+    if (err.retryable) {
+      console.error('This request can be retried.');
+    }
+  } else {
+    throw err;
+  }
+}
+```
+
+## Scope types
+
+When building OAuth authorization URLs you pass an array of scopes. The SDK exports typed scope constants so you never mistype a scope string:
+
+```typescript
+import { SWCombine, CharacterScopes, MessageScopes, FactionScopes } from 'swcombine-sdk';
+
+const client = new SWCombine({
+  clientId: process.env.SWC_CLIENT_ID!,
+  clientSecret: process.env.SWC_CLIENT_SECRET!,
+  redirectUri: 'http://localhost:3000/callback',
+});
+
+const url = client.auth.getAuthorizationUrl({
+  scopes: [
+    CharacterScopes.READ,
+    MessageScopes.READ,
+    FactionScopes.READ,
+  ],
+  state: crypto.randomUUID(),
+});
+```
+
+Helper functions are also available if you want predefined scope sets:
+
+```typescript
+import { getAllScopes, getReadOnlyScopes, getMinimalScopes } from 'swcombine-sdk';
+
+// All available scopes
+const all = getAllScopes();
+
+// Read-only scopes only
+const readOnly = getReadOnlyScopes();
+```
+
+## Full exported type reference
+
+The following types and interfaces are exported from `swcombine-sdk`:
+
+**Core response types**
+
+| Type | Description |
+|------|-------------|
+| `Character` | Basic character object (uid, handle, name) |
+| `CharacterMe` | Full authenticated character profile |
+| `Faction` | Basic faction object |
+| `FactionDetail` | Full faction detail response |
+| `FactionListItem` | Row returned by `faction.list()` |
+| `FactionMember` | Row returned by `faction.members.list()` |
+| `Message` | Full message with `communication` body |
+| `MessageListItem` | Row returned by `character.messages.list()` |
+| `CreditLogEntry` | Row returned by credit log endpoints |
+
+**Galaxy types**
+
+| Type | Description |
+|------|-------------|
+| `GalaxySystem` / `GalaxySystemListItem` | System detail / list row |
+| `GalaxyPlanet` / `GalaxyPlanetListItem` | Planet detail / list row |
+| `GalaxySector` / `GalaxySectorListItem` | Sector detail / list row |
+| `GalaxyStation` / `GalaxyStationListItem` | Station detail / list row |
+| `GalaxyCity` / `GalaxyCityListItem` | City detail / list row |
+
+**Configuration and utility types**
+
+| Type | Description |
+|------|-------------|
+| `ClientConfig` | Options accepted by the `SWCombine` constructor |
+| `OAuthToken` | Access token + optional refresh token + expiry |
+| `Page<T>` | Wrapper returned by all `list()` methods |
+| `RateLimitInfo` | Rate limit headers parsed from API responses |
+| `SWCError` | Error class for all API errors |
+
+**Enums**
+
+| Type | Description |
+|------|-------------|
+| `MessageMode` | `Received` or `Sent` mailbox |
+| `AccessType` | `Online` or `Offline` OAuth access |

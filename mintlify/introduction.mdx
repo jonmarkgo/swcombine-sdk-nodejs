@@ -1,0 +1,75 @@
+---
+title: "SW Combine SDK: TypeScript client for the Star Wars API"
+description: "Type-safe Node.js SDK for the Star Wars Combine API v2.0. Covers 60+ endpoints with built-in OAuth 2.0, auto-pagination, and automatic retries."
+keywords: ["swcombine", "star wars combine", "typescript sdk", "node.js", "api client", "oauth"]
+---
+
+The SW Combine SDK is a TypeScript library for interacting with the [Star Wars Combine API v2.0](https://www.swcombine.com/ws/developers/). It covers all 60+ endpoints across 11 resource categories — characters, factions, the galaxy, inventory, market, news, events, types, location, datacards, and API utilities — and handles OAuth 2.0 authentication, automatic token refresh, pagination, and retries so you can focus on building your application.
+
+## Key features
+
+<CardGroup cols={2}>
+  <Card title="TypeScript first" icon="code">
+    Full type definitions for every endpoint, parameter, and response. Your editor autocompletes method names, parameters, and return types without any extra configuration.
+  </Card>
+  <Card title="OAuth 2.0 built in" icon="key">
+    Complete OAuth flow with authorization URL generation, callback handling, and automatic token refresh. Supports both online and offline access types.
+  </Card>
+  <Card title="Auto-pagination" icon="arrows-rotate">
+    Every list endpoint returns `Page<T>` with `hasMore`, `getNextPage()`, and `for await...of` support to iterate across all results automatically.
+  </Card>
+  <Card title="Automatic retries" icon="shield">
+    Exponential backoff for network errors, 5xx responses, and rate limit hits. Respects `Retry-After` headers from the API.
+  </Card>
+  <Card title="Type-safe OAuth scopes" icon="lock">
+    170+ scope constants with autocomplete — `CharacterScopes.READ`, `MessageScopes.SEND`, `Scopes.PersonalInventory.SHIPS.READ` — so you never mistype a scope string.
+  </Card>
+  <Card title="Minimal footprint" icon="feather">
+    A single production dependency (`axios`). Ships as both ES Modules and CommonJS so it works with any Node.js project setup.
+  </Card>
+</CardGroup>
+
+## Supported resources
+
+The client exposes all 11 resource categories through a single `SWCombine` instance:
+
+| Property | Resource | What it covers |
+|---|---|---|
+| `client.character` | Characters | Profile, messages, skills, privileges, credits, credit log |
+| `client.faction` | Factions | Info, members, budgets, stockholders, credits, credit log |
+| `client.galaxy` | Galaxy | Systems, sectors, planets, stations, cities |
+| `client.inventory` | Inventory | Entity listing and management across all entity types |
+| `client.market` | Market | Vendor listings and details |
+| `client.news` | News | Galactic News Service (GNS) and Sim News feeds |
+| `client.events` | Events | Personal, faction, inventory, and combat events |
+| `client.types` | Types | Entity types, classes, and detailed type info |
+| `client.location` | Location | Entity location lookups |
+| `client.datacard` | Datacards | Datacard management and assignment |
+| `client.api` | API utilities | Hello world, permissions, rate limits, time conversion |
+
+<Note>
+  The SDK also exports a `Timestamp` utility for working with Combine Galactic Time (CGT), which uses the Star Wars Combine's custom calendar system.
+</Note>
+
+## Requirements
+
+- **Node.js** 18 or higher
+- **TypeScript** 5.5 or higher (for TypeScript projects)
+- An [npm account](https://www.npmjs.com) to install the package
+
+## Get started
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Install the SDK, initialize a client, and make your first API call in under five minutes.
+  </Card>
+  <Card title="Installation" icon="download" href="/installation">
+    Detailed setup instructions including environment variables, ESM vs CJS configuration, and TypeScript setup.
+  </Card>
+  <Card title="Authentication" icon="lock" href="/authentication/overview">
+    Set up OAuth 2.0, obtain access tokens, and configure automatic token refresh.
+  </Card>
+  <Card title="API resources" icon="book" href="/resources/character">
+    Browse all available resource methods with parameters and examples.
+  </Card>
+</CardGroup>

@@ -1,0 +1,137 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "SW Combine SDK",
+  "projectDescription": "A comprehensive TypeScript SDK for the Star Wars Combine API v2.0, providing OAuth 2.0 authentication, type-safe access to 60+ API endpoints, and automatic pagination.",
+  "theme": "luma",
+  "primaryColor": "#1a56db",
+  "lightColor": "#e8f0fe",
+  "darkColor": "#0f2d6b",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation"
+            ]
+          },
+          {
+            "group": "Authentication",
+            "pages": [
+              "authentication/overview",
+              "authentication/oauth-flow",
+              "authentication/scopes",
+              "authentication/token-management"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/client-modes",
+              "concepts/pagination",
+              "concepts/error-handling",
+              "concepts/rate-limits"
+            ]
+          },
+          {
+            "group": "API Resources",
+            "pages": [
+              "resources/character",
+              "resources/faction",
+              "resources/galaxy",
+              "resources/inventory",
+              "resources/market",
+              "resources/news",
+              "resources/events",
+              "resources/types",
+              "resources/location",
+              "resources/datacard"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/typescript-usage",
+              "guides/timestamp-utility",
+              "guides/migration-v3"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Full coverage of 60+ SW Combine API v2.0 endpoints across 11 resource categories",
+    "Built-in OAuth 2.0 authentication with automatic token refresh",
+    "Page<T> pagination with async iterator support for auto-pagination",
+    "170+ type-safe OAuth scope constants with TypeScript autocomplete",
+    "Automatic retry with exponential backoff for failed requests",
+    "Dual ESM and CommonJS module support for Node.js 18+",
+    "Zero production dependencies (except axios)",
+    "Combine Galactic Time (CGT) Timestamp utility"
+  ],
+  "publicApiSurface": [
+    "SWCombine (main client class)",
+    "client.character.me()",
+    "client.character.get({ uid })",
+    "client.character.getByHandle({ handle })",
+    "client.character.messages.list(options)",
+    "client.character.messages.get(options)",
+    "client.character.messages.create(options)",
+    "client.character.messages.delete(options)",
+    "client.character.skills.list({ uid })",
+    "client.character.privileges.list({ uid })",
+    "client.character.credits.get({ uid })",
+    "client.character.credits.transfer(options)",
+    "client.character.creditlog.list(options)",
+    "client.character.permissions.list({ uid })",
+    "client.faction.get({ uid })",
+    "client.faction.list()",
+    "client.faction.members.list({ uid })",
+    "client.faction.budgets.list({ uid })",
+    "client.faction.stockholders.list({ uid })",
+    "client.galaxy.systems.list()",
+    "client.galaxy.planets.list()",
+    "client.galaxy.sectors.list()",
+    "client.galaxy.stations.list()",
+    "client.galaxy.cities.list()",
+    "client.inventory.get({ uid })",
+    "client.inventory.entities.list(options)",
+    "client.market.vendors.list()",
+    "client.market.vendors.get({ uid })",
+    "client.news.gns.list()",
+    "client.news.gns.get({ id })",
+    "client.news.simNews.list(options)",
+    "client.news.simNews.get({ id })",
+    "client.events.list(options)",
+    "client.events.get({ uid })",
+    "client.types.classes.list({ entityType })",
+    "client.types.entities.list({ entityType })",
+    "client.types.entities.get({ entityType, uid })",
+    "client.location.get({ entityType, uid })",
+    "client.datacard.list({ factionId })",
+    "client.api.helloWorld()",
+    "client.api.permissions()",
+    "client.api.rateLimits()",
+    "client.api.time()",
+    "client.auth.getAuthorizationUrl(options)",
+    "client.auth.handleCallback(query)",
+    "client.auth.revokeToken(refreshToken)",
+    "client.refreshToken()",
+    "client.setToken(token)",
+    "client.getToken()",
+    "client.getRateLimitInfo()",
+    "client.onRateLimitUpdate(callback)",
+    "Page<T> (pagination wrapper with getNextPage() and async iteration)",
+    "SWCError (typed error class)",
+    "Timestamp (Combine Galactic Time utility)",
+    "CharacterScopes, MessageScopes, FactionScopes, PersonalInventoryScopes, FactionInventoryScopes",
+    "getAllScopes(), getReadOnlyScopes(), getMinimalScopes()",
+    "AccessType enum",
+    "MessageMode enum"
+  ]
+}

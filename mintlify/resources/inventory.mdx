@@ -1,0 +1,155 @@
+---
+title: "Inventory resource: ships, items, and owned entities"
+description: "Use client.inventory to retrieve an overview of a character's holdings and list all entities of a given type — ships, vehicles, items, NPCs, and more."
+keywords: ["swcombine sdk", "inventory", "ships", "vehicles", "items", "entities", "assignType", "entityType"]
+---
+
+The `client.inventory` resource gives you visibility into everything a character owns or is assigned to in the Star Wars Combine universe. You start with an overview that summarizes total counts by category, then drill down into individual entity types to page through the actual assets. The entities endpoint supports filtering by assignment type — owner, pilot, crewmember, and more — so you can answer questions like "which ships am I piloting but don't own?"
+
+## Overview
+
+### inventory.get()
+
+Returns a summary of all entities in a character's inventory, grouped by type and assignment role.
+
+<ParamField path="uid" type="string" required>
+  The character UID in `"type:id"` format, e.g. `"1:12345"`.
+</ParamField>
+
+```typescript
+const overview = await client.inventory.get({ uid: '1:12345' });
+
+console.log(overview.ships.owned);
+console.log(overview.items.total);
+```
+
+## Listing entities
+
+### inventory.entities.list()
+
+Returns a paginated list of entities of a specific type in the character's inventory. Use `entityType` to select the category and `assignType` to filter by assignment role.
+
+<ParamField path="uid" type="string" required>
+  The character UID.
+</ParamField>
+
+<ParamField path="entityType" type="string" required>
+  The category of entities to list. Must be one of:
+  `ships`, `vehicles`, `stations`, `cities`, `facilities`, `planets`, `items`, `npcs`, `droids`, `creatures`, `materials`.
+</ParamField>
+
+<ParamField path="assignType" type="string">
+  Filter by assignment role. Common values: `owner`, `pilot`, `crewmember`. Omit to return all assignments.
+</ParamField>
+
+<ParamField path="start_index" type="number" default="1">
+  1-based index of the first entity to return.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of entities per page.
+</ParamField>
+
+```typescript
+// List all ships in the inventory
+const ships = await client.inventory.entities.list({
+  uid: '1:12345',
+  entityType: 'ships',
+});
+
+console.log(ships.total); // Total ship count
+
+for await (const ship of ships) {
+  console.log(ship.name, ship.uid, ship.type);
+}
+```
+
+## Filtering by assignment type
+
+The `assignType` parameter lets you distinguish between entities you own and entities you are assigned to in another role. This is particularly useful for ships and vehicles where a character may be a pilot or crewmember without being the owner.
+
+```typescript
+// Ships this character owns
+const ownedShips = await client.inventory.entities.list({
+  uid: '1:12345',
+  entityType: 'ships',
+  assignType: 'owner',
+});
+
+// Ships this character is piloting but may not own
+const pilotedShips = await client.inventory.entities.list({
+  uid: '1:12345',
+  entityType: 'ships',
+  assignType: 'pilot',
+});
+```
+
+## All entity types
+
+The `entityType` parameter accepts the following values:
+
+| Value | Description |
+|-------|-------------|
+| `ships` | Spacecraft of all classes |
+| `vehicles` | Ground and repulsorlift vehicles |
+| `stations` | Space stations |
+| `cities` | Planetary cities |
+| `facilities` | Ground-based production and military facilities |
+| `planets` | Planets owned or controlled by the character |
+| `items` | Equipment, weapons, and consumables |
+| `npcs` | Non-player characters assigned to the character |
+| `droids` | Droid units |
+| `creatures` | Domesticated or working creatures |
+| `materials` | Raw materials and resources |
+
+## Full example
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
+
+const uid = '1:12345';
+
+// Get the summary first
+const overview = await client.inventory.get({ uid });
+
+// Then page through ships
+const ships = await client.inventory.entities.list({
+  uid,
+  entityType: 'ships',
+  assignType: 'owner',
+  item_count: 100,
+});
+
+console.log(`Owns ${ships.total} ships`);
+
+for await (const ship of ships) {
+  console.log(`  ${ship.name} (${ship.uid})`);
+}
+
+// List all items
+const items = await client.inventory.entities.list({ uid, entityType: 'items' });
+console.log(`${items.total} items in inventory`);
+```
+
+<Tip>
+  Large inventories — especially for items and materials — can span many pages. Use a higher `item_count` value and consider a `pageDelay` when auto-paginating to stay within rate limits.
+</Tip>
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="Character" icon="user" href="/resources/character">
+    Fetch character profiles and credit balances.
+  </Card>
+  <Card title="Location" icon="map-pin" href="/resources/location">
+    Look up where a specific ship or vehicle is currently located.
+  </Card>
+  <Card title="Types" icon="tag" href="/resources/types">
+    Retrieve entity type definitions for ships, vehicles, and items.
+  </Card>
+  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
+    Learn how Page&lt;T&gt; works and how to auto-paginate.
+  </Card>
+</CardGroup>

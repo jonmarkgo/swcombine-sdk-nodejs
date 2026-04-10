@@ -1,0 +1,115 @@
+---
+title: "Location resource: entity positions in the galaxy"
+description: "Use client.location to retrieve the current galactic position of any entity — characters, ships, vehicles, and more — by entity type and UID."
+keywords: ["swcombine sdk", "location", "position", "coordinates", "entity location", "ship location", "character location", "galaxy map"]
+---
+
+The `client.location` resource lets you look up where any entity currently is in the Star Wars Combine galaxy. Whether you need to find a ship, track a character's position, or determine which system a vehicle is in, `location.get()` returns the full positional data for that entity. You provide the entity's type and UID, and the API returns the location context including system, planet, and coordinate data.
+
+## Getting an entity's location
+
+### location.get()
+
+Returns the current location data for a single entity.
+
+<ParamField path="entityType" type="string" required>
+  The type of entity to locate. Common values include:
+  - `character` — a player character
+  - `ship` — a spacecraft
+  - `vehicle` — a ground vehicle
+  
+  Other entity types may also be supported.
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  The entity UID in `"type:id"` format, e.g. `"1:12345"` for a character.
+</ParamField>
+
+```typescript
+// Get a character's current location
+const location = await client.location.get({
+  entityType: 'character',
+  uid: '1:12345',
+});
+
+console.log(location.system);
+console.log(location.planet);
+console.log(location.x, location.y); // Coordinates
+```
+
+```typescript
+// Get a ship's current location
+const shipLocation = await client.location.get({
+  entityType: 'ship',
+  uid: '8:67890',
+});
+
+console.log(shipLocation.system);
+console.log(shipLocation.coordinates);
+```
+
+## Common entity types
+
+| `entityType` value | Description |
+|--------------------|-------------|
+| `character` | Player character |
+| `ship` | Spacecraft |
+| `vehicle` | Ground or repulsorlift vehicle |
+
+<Note>
+  The `entityType` string here corresponds to the kind of entity you are locating, not the type-prefix in the UID. For example, a character with UID `"1:12345"` uses `entityType: 'character'`.
+</Note>
+
+## Full example
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
+
+// Find where the authenticated character is
+const me = await client.character.me();
+
+const location = await client.location.get({
+  entityType: 'character',
+  uid: me.uid,
+});
+
+console.log(`Current location: ${location.system}`);
+
+// Find where each of the character's ships is
+const ships = await client.inventory.entities.list({
+  uid: me.uid,
+  entityType: 'ships',
+  assignType: 'owner',
+});
+
+for await (const ship of ships) {
+  const loc = await client.location.get({
+    entityType: 'ship',
+    uid: ship.uid,
+  });
+  console.log(`${ship.name} is in ${loc.system}`);
+}
+```
+
+<Warning>
+  Calling `location.get()` for every ship in a large inventory will consume one API request per ship. If you have many ships, you may hit the 600 requests/hour rate limit. Consider caching location data or batching your lookups with a delay.
+</Warning>
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="Galaxy" icon="globe" href="/resources/galaxy">
+    Browse systems, planets, and sectors to understand the galaxy map.
+  </Card>
+  <Card title="Inventory" icon="box" href="/resources/inventory">
+    List the ships and vehicles you want to locate.
+  </Card>
+  <Card title="Character" icon="user" href="/resources/character">
+    Get the character UID needed to look up a character's location.
+  </Card>
+  <Card title="Rate limits" icon="gauge" href="/concepts/rate-limits">
+    Understand the 600 req/hour quota before making per-entity location calls.
+  </Card>
+</CardGroup>

@@ -1,0 +1,141 @@
+---
+title: "Install and configure the SW Combine SDK for Node.js"
+description: "Install swcombine-sdk, meet the Node.js 18+ and TypeScript 5.5+ requirements, configure environment variables, and choose ESM or CommonJS imports."
+keywords: ["swcombine sdk", "installation", "npm", "yarn", "pnpm", "esm", "commonjs", "environment variables", "typescript"]
+---
+
+This page covers everything you need to add the SW Combine SDK to your project: package installation, Node.js and TypeScript version requirements, environment variable setup, and how to import the SDK in ESM and CommonJS projects.
+
+## Requirements
+
+Before installing, confirm your environment meets these requirements:
+
+- **Node.js 18 or higher** — the SDK uses native `fetch`-compatible APIs and async iteration
+- **TypeScript 5.5 or higher** — required if you use TypeScript; the SDK ships with strict type definitions
+- **axios** is the only production dependency and is installed automatically
+
+## Install the package
+
+<CodeGroup>
+
+```bash npm
+npm install swcombine-sdk
+```
+
+```bash yarn
+yarn add swcombine-sdk
+```
+
+```bash pnpm
+pnpm add swcombine-sdk
+```
+
+</CodeGroup>
+
+## Import styles
+
+The SDK ships as both ES Modules and CommonJS, so it works in any Node.js project regardless of whether you use `import` or `require`.
+
+### ES Modules (recommended)
+
+Use named imports in `.ts`, `.mts`, `.mjs`, or any project with `"type": "module"` in `package.json`:
+
+```typescript
+import { SWCombine, AccessType, SWCError } from 'swcombine-sdk';
+import type { Character, Page } from 'swcombine-sdk';
+```
+
+### CommonJS
+
+Use `require` in `.js` or `.cjs` files, or any project without `"type": "module"`:
+
+```javascript
+const { SWCombine, AccessType, SWCError } = require('swcombine-sdk');
+```
+
+<Note>
+  TypeScript users: the SDK's type declarations are automatically resolved regardless of which module format you use. No extra `@types` package is needed.
+</Note>
+
+## Set up environment variables
+
+Store your SW Combine API credentials in environment variables rather than hardcoding them. Create a `.env` file at your project root:
+
+```bash
+# .env
+SWC_CLIENT_ID=your_client_id
+SWC_CLIENT_SECRET=your_client_secret
+SWC_ACCESS_TOKEN=your_access_token
+SWC_REFRESH_TOKEN=your_refresh_token   # Only needed for offline access / token refresh
+```
+
+Then load the file before initializing the client. If you use [dotenv](https://www.npmjs.com/package/dotenv):
+
+```typescript
+import { config } from 'dotenv';
+config(); // Load .env into process.env
+
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine({
+  token: process.env.SWC_ACCESS_TOKEN!,
+});
+```
+
+<Warning>
+  Never commit your `.env` file or credentials to source control. Add `.env` to your `.gitignore`.
+</Warning>
+
+<Tip>
+  You only need `SWC_CLIENT_ID` and `SWC_CLIENT_SECRET` if you are running the full OAuth flow (generating authorization URLs, handling callbacks, or refreshing tokens). For simple authenticated API calls, `SWC_ACCESS_TOKEN` alone is sufficient.
+</Tip>
+
+## TypeScript configuration
+
+The SDK uses modern TypeScript features. Your `tsconfig.json` should target at least ES2020 and enable `strict` mode:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true
+  }
+}
+```
+
+<Note>
+  If your project uses `"module": "CommonJS"`, the SDK's CJS build is picked up automatically via the `exports` field in its `package.json`. No extra configuration is needed.
+</Note>
+
+## Verify the installation
+
+After installing, confirm the SDK is working with a quick public API call that requires no credentials:
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine(); // Public mode — no token needed
+
+const { uid, handle } = await client.character.getByHandle({
+  handle: 'your-character-handle',
+});
+
+console.log(uid);    // "1:12345"
+console.log(handle); // "your-character-handle"
+```
+
+If this runs without error, the SDK is installed correctly and can reach the SW Combine API.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Step-by-step guide to making your first authenticated API call.
+  </Card>
+  <Card title="Authentication" icon="lock" href="/authentication/overview">
+    Set up OAuth 2.0 and get an access token to use authenticated endpoints.
+  </Card>
+</CardGroup>

@@ -1,0 +1,73 @@
+---
+title: "SW Combine SDK: TypeScript client for Star Wars Combine"
+description: "The SW Combine SDK gives you type-safe access to all 60+ Star Wars Combine API v2.0 endpoints with built-in OAuth 2.0 authentication and automatic pagination."
+---
+
+The SW Combine SDK is a TypeScript library that lets you integrate your applications with the [Star Wars Combine](https://www.swcombine.com) API. It covers all 60+ endpoints across characters, factions, the galaxy, inventory, market, news, events, and more — with full type safety, automatic token refresh, and built-in pagination.
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Install the SDK and make your first API call in minutes.
+  </Card>
+  <Card title="Authentication" icon="lock" href="/authentication/overview">
+    Set up OAuth 2.0 and obtain access tokens for authenticated endpoints.
+  </Card>
+  <Card title="API Resources" icon="book" href="/resources/character">
+    Explore all available resources: characters, factions, galaxy, inventory, and more.
+  </Card>
+  <Card title="Core Concepts" icon="lightbulb" href="/concepts/client-modes">
+    Understand client modes, pagination, error handling, and rate limits.
+  </Card>
+</CardGroup>
+
+## Why use this SDK?
+
+The SW Combine SDK handles the complexity of the API so you can focus on building your application.
+
+<CardGroup cols={2}>
+  <Card title="Type-Safe" icon="check">
+    Full TypeScript definitions with IntelliSense support for every endpoint, parameter, and response.
+  </Card>
+  <Card title="OAuth 2.0 Built-in" icon="key">
+    Complete OAuth flow with automatic token refresh — no manual token management required.
+  </Card>
+  <Card title="Auto-Pagination" icon="arrows-rotate">
+    Every list endpoint returns `Page<T>` with `for await...of` support to iterate all results.
+  </Card>
+  <Card title="Automatic Retries" icon="shield">
+    Exponential backoff for network errors and rate limit responses, with respect for `Retry-After` headers.
+  </Card>
+</CardGroup>
+
+## Get started in three steps
+
+<Steps>
+  <Step title="Install the package">
+    ```bash
+    npm install swcombine-sdk
+    ```
+  </Step>
+  <Step title="Initialize the client">
+    ```typescript
+    import { SWCombine } from 'swcombine-sdk';
+
+    const client = new SWCombine({
+      token: process.env.SWC_ACCESS_TOKEN!,
+    });
+    ```
+  </Step>
+  <Step title="Make your first API call">
+    ```typescript
+    const { uid, handle } = await client.character.getByHandle({
+      handle: 'your-character-handle',
+    });
+
+    console.log(uid);    // "1:12345"
+    console.log(handle); // "your-character-handle"
+    ```
+  </Step>
+</Steps>
+
+<Note>
+  Need an access token? See the [Authentication guide](/authentication/overview) to set up OAuth 2.0 and obtain your first token.
+</Note>

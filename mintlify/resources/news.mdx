@@ -1,0 +1,141 @@
+---
+title: "News resource: GNS articles and sim news posts"
+description: "Use client.news to list and retrieve Galactic News Service articles and sim news posts, with optional category filtering for sim news."
+keywords: ["swcombine sdk", "news", "GNS", "galactic news service", "sim news", "articles", "announcements"]
+---
+
+The `client.news` resource gives you programmatic access to two distinct news feeds in the Star Wars Combine universe. The Galactic News Service (GNS) carries in-character news written by players, while sim news carries out-of-character announcements and updates from the game administration. Both feeds expose a list method for pagination and a get method for fetching individual articles by numeric ID.
+
+## Galactic News Service (GNS)
+
+The GNS is the primary in-character news feed — player-authored articles covering galactic events, faction announcements, and political developments.
+
+### news.gns.list()
+
+Returns a paginated list of GNS articles, ordered by publication date.
+
+<ParamField path="start_index" type="number" default="1">
+  1-based index of the first article to return.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of articles per page.
+</ParamField>
+
+```typescript
+const articles = await client.news.gns.list();
+
+console.log(articles.total); // Total GNS articles
+
+for await (const article of articles) {
+  console.log(article.title, article.author, article.published_at);
+}
+```
+
+### news.gns.get()
+
+Retrieves the full content of a single GNS article by its numeric ID.
+
+<ParamField path="id" type="number" required>
+  The numeric ID of the GNS article. Note this is a `number`, not a string UID.
+</ParamField>
+
+```typescript
+const article = await client.news.gns.get({ id: 4521 });
+
+console.log(article.title);
+console.log(article.body);
+console.log(article.author);
+```
+
+<Note>
+  GNS article IDs are plain numbers, not the `"type:id"` string format used by entity UIDs elsewhere in the SDK.
+</Note>
+
+## Sim news
+
+Sim news carries out-of-character content: game updates, rule changes, event announcements, and administration notices. Articles can be filtered by category.
+
+### news.simNews.list()
+
+Returns a paginated list of sim news posts.
+
+<ParamField path="category" type="string">
+  Optional category filter. Omit to return posts across all categories.
+</ParamField>
+
+<ParamField path="start_index" type="number" default="1">
+  1-based index of the first post to return.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of posts per page.
+</ParamField>
+
+```typescript
+// All sim news
+const allNews = await client.news.simNews.list();
+
+// Filtered by category
+const updates = await client.news.simNews.list({ category: 'game-update' });
+
+for await (const post of updates) {
+  console.log(post.title, post.category, post.published_at);
+}
+```
+
+### news.simNews.get()
+
+Retrieves the full content of a single sim news post by its numeric ID.
+
+<ParamField path="id" type="number" required>
+  The numeric ID of the sim news post.
+</ParamField>
+
+```typescript
+const post = await client.news.simNews.get({ id: 892 });
+
+console.log(post.title);
+console.log(post.body);
+```
+
+## Full example
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
+
+// Fetch the latest 10 GNS articles
+const gns = await client.news.gns.list({ item_count: 10 });
+for (const article of gns.data) {
+  console.log(`[GNS] ${article.title} by ${article.author}`);
+}
+
+// Fetch the latest 10 sim news posts
+const simNews = await client.news.simNews.list({ item_count: 10 });
+for (const post of simNews.data) {
+  console.log(`[Sim] ${post.title}`);
+}
+
+// Get a specific GNS article by ID
+const full = await client.news.gns.get({ id: gns.data[0].id });
+console.log(full.body);
+```
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="Events" icon="bolt" href="/resources/events">
+    Query in-game activity events for characters, factions, and combat.
+  </Card>
+  <Card title="Character" icon="user" href="/resources/character">
+    Identify the author of a GNS article by character UID.
+  </Card>
+  <Card title="Faction" icon="flag" href="/resources/faction">
+    Look up faction details referenced in galactic news articles.
+  </Card>
+  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
+    Learn how Page&lt;T&gt; works and how to auto-paginate news feeds.
+  </Card>
+</CardGroup>

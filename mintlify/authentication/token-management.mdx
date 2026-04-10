@@ -1,0 +1,227 @@
+---
+title: "Token management: store, refresh, and expire OAuth tokens"
+description: "Learn how to store OAuth tokens, trigger automatic and manual refresh, check expiration, and implement custom persistence with the SW Combine SDK."
+keywords: ["swcombine sdk", "token management", "oauth token", "refresh token", "token expiry", "setToken", "getToken", "clearToken"]
+---
+
+After you obtain an access token through the OAuth flow, the SDK gives you a set of methods to inspect, update, and refresh that token throughout your application's lifecycle. This page covers the `OAuthToken` structure, the token methods on the `SWCombine` client, automatic token refresh, and patterns for persisting tokens across server restarts.
+
+## The OAuthToken object
+
+Every method that returns a token uses the `OAuthToken` interface:
+
+```typescript
+interface OAuthToken {
+  accessToken: string;   // Bearer token sent with every API request
+  refreshToken?: string; // Present only when accessType is AccessType.Offline
+  expiresAt: number;     // Unix timestamp in milliseconds when the access token expires
+}
+```
+
+`expiresAt` is a millisecond epoch value. Compare it with `Date.now()` to check whether the token has expired, or let the SDK do this automatically.
+
+<Note>
+  Access tokens typically expire after one hour. Refresh tokens are long-lived but have no guaranteed expiry from the SDK side — store and protect them accordingly.
+</Note>
+
+## Token methods on the client
+
+These methods are available on any `SWCombine` instance:
+
+### setToken
+
+Sets the active token. Accepts either a raw access token string or a full `OAuthToken` object. When you pass a string, the SDK wraps it in an `OAuthToken` with a 1-hour assumed expiry.
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+import type { OAuthToken } from 'swcombine-sdk';
+
+const client = new SWCombine({
+  clientId: process.env.SWC_CLIENT_ID!,
+  clientSecret: process.env.SWC_CLIENT_SECRET!,
+});
+
+// From a string (assumes 1-hour expiry)
+client.setToken('your-access-token');
+
+// From a full OAuthToken object (preferred — preserves exact expiry and refresh token)
+const token: OAuthToken = await loadTokenFromDatabase();
+client.setToken(token);
+```
+
+### getToken
+
+Returns the current `OAuthToken` object, or `null` if no token is set.
+
+```typescript
+const token = client.getToken();
+
+if (token) {
+  console.log('Access token:', token.accessToken);
+  console.log('Has refresh token:', !!token.refreshToken);
+  console.log('Expires at:', new Date(token.expiresAt).toISOString());
+}
+```
+
+### clearToken
+
+Removes the active token from the client. After calling this, any authenticated request will fail until you set a new token.
+
+```typescript
+client.clearToken();
+```
+
+### isTokenExpired
+
+Returns `true` if the current token's `expiresAt` is in the past, or if no token is set.
+
+```typescript
+if (client.isTokenExpired()) {
+  console.log('Token has expired');
+}
+```
+
+### hasRefreshToken
+
+Returns `true` if the current token includes a `refreshToken` value.
+
+```typescript
+if (client.hasRefreshToken()) {
+  console.log('Automatic refresh is available');
+} else {
+  console.log('No refresh token — user must re-authorize when access expires');
+}
+```
+
+## Automatic token refresh
+
+When you initialize the client in full OAuth mode (with `clientId` and `clientSecret`) and the current token includes a `refreshToken`, the SDK refreshes automatically. It checks the token before every request and refreshes proactively if the token is expired or will expire within the next **5 minutes**.
+
+```typescript
+const client = new SWCombine({
+  clientId: process.env.SWC_CLIENT_ID!,
+  clientSecret: process.env.SWC_CLIENT_SECRET!,
+  token: storedToken, // OAuthToken with a refreshToken
+});
+
+// If the access token is expired or expiring within 5 minutes, the SDK
+// refreshes it automatically before sending this request.
+const character = await client.character.me();
+```
+
+Automatic refresh requires two conditions:
+1. The client was initialized with `clientId` and `clientSecret`.
+2. The current `OAuthToken` includes a `refreshToken` (i.e., you used `AccessType.Offline` during authorization).
+
+If either condition is missing, the SDK throws an `SWCError` with type `auth` rather than silently failing.
+
+## Manual token refresh
+
+Call `client.refreshToken()` to trigger a refresh immediately, regardless of expiry state. This is useful if you want to pre-fetch a fresh token before a batch job or proactively rotate before expiry:
+
+```typescript
+// Manually refresh the access token
+await client.refreshToken();
+
+// Read the updated token after refresh
+const refreshed = client.getToken();
+console.log('New access token:', refreshed?.accessToken);
+console.log('New expiry:', refreshed ? new Date(refreshed.expiresAt) : 'n/a');
+```
+
+`refreshToken()` requires both OAuth credentials and an active refresh token. It throws `SWCError` if either is missing.
+
+## Proactive refresh before expiry
+
+To avoid any disruption during long-running tasks, you can schedule a refresh before the token expires:
+
+```typescript
+const token = client.getToken();
+
+if (token) {
+  const expiresIn = token.expiresAt - Date.now();
+  const refreshIn = expiresIn - 5 * 60 * 1000; // Refresh 5 minutes early
+
+  if (refreshIn > 0) {
+    setTimeout(async () => {
+      await client.refreshToken();
+      const newToken = client.getToken();
+      // Persist the updated token
+      await saveTokenToDatabase(newToken!);
+    }, refreshIn);
+  }
+}
+```
+
+## Custom token persistence
+
+The SDK stores tokens in memory by default. If you restart your server, you lose the token and the user must re-authorize. To avoid this, save the token to a database after authorization and restore it on startup:
+
+```typescript
+// After OAuth callback — persist the token
+const result = await client.auth.handleCallback(req.query);
+
+if (result.success && result.token) {
+  await saveTokenToDatabase(userId, result.token);
+}
+
+// On server startup — restore the token for a known user
+async function restoreSession(userId: string): Promise<void> {
+  const storedToken = await loadTokenFromDatabase(userId);
+
+  if (storedToken) {
+    client.setToken(storedToken);
+
+    if (client.isTokenExpired() && client.hasRefreshToken()) {
+      // Refresh immediately if the stored token has already expired
+      await client.refreshToken();
+      const refreshed = client.getToken();
+      await saveTokenToDatabase(userId, refreshed!);
+    }
+  }
+}
+```
+
+In multi-user server applications, create a separate `SWCombine` instance per request rather than sharing one client across users:
+
+```typescript
+app.get('/dashboard', async (req, res) => {
+  const storedToken = await loadTokenFromDatabase(req.session.userId);
+
+  const userClient = new SWCombine({
+    clientId: process.env.SWC_CLIENT_ID!,
+    clientSecret: process.env.SWC_CLIENT_SECRET!,
+    token: storedToken,
+  });
+
+  const me = await userClient.character.me();
+
+  // Persist the (possibly refreshed) token back to the database
+  const currentToken = userClient.getToken();
+  if (currentToken) {
+    await saveTokenToDatabase(req.session.userId, currentToken);
+  }
+
+  res.json({ name: me.name });
+});
+```
+
+## Handling token expiration errors
+
+Even with automatic refresh configured, you should handle `401 Unauthorized` responses gracefully — for example, when a refresh token itself has been revoked:
+
+```typescript
+import { SWCombine, SWCError } from 'swcombine-sdk';
+
+try {
+  const character = await client.character.get({ uid: '1:12345' });
+} catch (error) {
+  if (error instanceof SWCError && error.statusCode === 401) {
+    // The token is invalid or revoked — send the user back through OAuth
+    client.clearToken();
+    res.redirect('/login');
+  } else {
+    throw error;
+  }
+}
+```

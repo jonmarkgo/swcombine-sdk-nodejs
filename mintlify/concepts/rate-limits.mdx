@@ -1,0 +1,120 @@
+---
+title: "Rate limits: monitoring and managing your request quota"
+description: "Understand the SW Combine API's 600 requests/hour limit, how to monitor your remaining quota in real time, and how the SDK handles rate limit responses."
+keywords: ["swcombine sdk", "rate limits", "quota", "requests per hour", "retry-after", "getratelimitinfo", "onratelimitupdate"]
+---
+
+The SW Combine API allows up to 600 requests per hour. The SDK tracks this quota automatically and exposes methods for monitoring it in real time. When you hit the limit, the SDK retries the request after the server-specified wait time — but for applications that make many requests in sequence, understanding your remaining quota helps you pace calls proactively rather than hitting the limit first.
+
+## Checking your current quota
+
+Call `client.getRateLimitInfo()` at any point to read the current quota state. It returns `null` until at least one API request has been made in the current session.
+
+```typescript
+const info = client.getRateLimitInfo();
+
+if (info) {
+  console.log(info.remaining);  // Requests left in this window
+  console.log(info.limit);      // Total requests allowed (600)
+  console.log(info.resetTime);  // Date when the window resets
+}
+```
+
+The SDK reads rate limit state from the response headers of each API call, so `getRateLimitInfo()` always reflects the most recent response.
+
+## Listening for quota updates
+
+Use `client.onRateLimitUpdate(callback)` to register a callback that fires after every API call. This lets you react to quota changes — for example, logging a warning when you're running low or pausing work when the limit is nearly exhausted.
+
+```typescript
+client.onRateLimitUpdate((info) => {
+  console.log(`${info.remaining} of ${info.limit} requests remaining`);
+  console.log(`Resets at: ${info.resetTime.toISOString()}`);
+
+  if (info.remaining < 50) {
+    console.warn('Approaching rate limit — consider slowing down requests');
+  }
+});
+```
+
+The callback receives the same `{ remaining, limit, resetTime }` object as `getRateLimitInfo()`.
+
+## How the SDK handles rate limit responses
+
+When the API returns a `429 Too Many Requests` response, the SDK:
+
+<Steps>
+  <Step title="Reads the Retry-After header">
+    The API includes a `Retry-After` header specifying how many seconds to wait before retrying.
+  </Step>
+  <Step title="Waits the specified duration">
+    The SDK pauses for the full `Retry-After` duration, overriding the configured `retryDelay`.
+  </Step>
+  <Step title="Retries the request">
+    The original request is retried transparently. If all retry attempts are exhausted without success, an `SWCError` with `retryable: true` is thrown.
+  </Step>
+</Steps>
+
+<Note>
+  The number of retry attempts is controlled by `maxRetries` in your `ClientConfig` (default: `3`). If you expect to frequently hit rate limits, increase `maxRetries` or add delays between calls.
+</Note>
+
+## Querying per-endpoint rate limits
+
+The API exposes detailed per-endpoint rate limit information through a dedicated endpoint. Use `client.api.rateLimits()` to fetch it:
+
+```typescript
+const limits = await client.api.rateLimits();
+console.log(limits);
+```
+
+This returns the rate limit configuration from the API itself, which can be useful for understanding which endpoints have tighter restrictions than the global 600/hour limit.
+
+## Slowing down auto-pagination
+
+When you paginate through large datasets with `for await...of`, the SDK makes one API request per page. For a dataset of 5,000 items with a page size of 50, that's 100 requests — almost a sixth of your hourly quota in a single loop.
+
+Use the `pageDelay` option on any `list()` call to add a wait between page fetches:
+
+```typescript
+// Wait 1 second between each page fetch
+for await (const ship of await client.inventory.entities.list({
+  item_count: 100,
+  pageDelay: 1000,
+})) {
+  console.log(ship.name);
+}
+```
+
+<Tip>
+  Combine a larger `item_count` with a modest `pageDelay` to reduce total requests while keeping throughput acceptable. Fetching 100 items per page instead of 50 halves the number of requests needed.
+</Tip>
+
+## Rate limit reference
+
+| Property | Value |
+|---|---|
+| Requests per hour | 600 |
+| Reset window | Rolling 1-hour window |
+| Retry behavior | Automatic, respects `Retry-After` header |
+| Error type when exhausted | `SWCError` with `retryable: true` |
+| SDK method to check quota | `client.getRateLimitInfo()` |
+| SDK method to listen for updates | `client.onRateLimitUpdate(callback)` |
+| Per-endpoint limits | `client.api.rateLimits()` |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
+    Control page size and add delays between auto-pagination fetches.
+  </Card>
+  <Card title="Error handling" icon="triangle-exclamation" href="/concepts/error-handling">
+    Understand how the SDK retries rate limit errors and when it gives up.
+  </Card>
+  <Card title="Client modes" icon="sliders" href="/concepts/client-modes">
+    Configure `maxRetries` and `retryDelay` at client construction time.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    See pagination and rate limit awareness in a complete example.
+  </Card>
+</CardGroup>

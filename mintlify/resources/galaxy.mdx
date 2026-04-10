@@ -1,0 +1,184 @@
+---
+title: "Galaxy resource: systems, planets, sectors, and more"
+description: "Use client.galaxy to paginate through all star systems, planets, sectors, stations, and cities in the Star Wars Combine galaxy map."
+keywords: ["swcombine sdk", "galaxy", "systems", "planets", "sectors", "stations", "cities", "galaxy map"]
+---
+
+The `client.galaxy` resource provides read access to the physical map of the Star Wars Combine galaxy. Every sub-resource — systems, planets, sectors, stations, and cities — returns a `Page<T>` and supports the standard `start_index` / `item_count` pagination parameters and `for await...of` auto-pagination. These endpoints are useful for building interactive maps, location lookups, and spatial analytics.
+
+<Note>
+  Some galaxy sub-resources (notably sectors) return a `404` if you omit pagination parameters entirely. Always pass explicit `start_index` and `item_count` values when calling these endpoints.
+</Note>
+
+## Star systems
+
+### galaxy.systems.list()
+
+Returns a paginated list of all star systems in the galaxy.
+
+<ParamField path="start_index" type="number" default="1">
+  1-based index of the first system to return.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of systems per page.
+</ParamField>
+
+```typescript
+const systems = await client.galaxy.systems.list({
+  start_index: 1,
+  item_count: 50,
+});
+
+console.log(systems.total); // Total number of systems
+
+for await (const system of systems) {
+  console.log(system.name, system.uid);
+}
+```
+
+## Planets
+
+### galaxy.planets.list()
+
+Returns a paginated list of all planets across all star systems.
+
+<ParamField path="start_index" type="number" default="1">
+  1-based index of the first planet to return.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of planets per page.
+</ParamField>
+
+```typescript
+const planets = await client.galaxy.planets.list({
+  start_index: 1,
+  item_count: 100,
+});
+
+for await (const planet of planets) {
+  console.log(planet.name, planet.system);
+}
+```
+
+## Sectors
+
+### galaxy.sectors.list()
+
+Returns a paginated list of all sectors. Sectors group star systems into named regions of space.
+
+<ParamField path="start_index" type="number" default="1">
+  1-based index of the first sector to return.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of sectors per page.
+</ParamField>
+
+<Warning>
+  The sectors endpoint returns a `404` if you call it without pagination parameters. Always provide `start_index` and `item_count` explicitly.
+</Warning>
+
+```typescript
+const sectors = await client.galaxy.sectors.list({
+  start_index: 1,
+  item_count: 50,
+});
+
+for await (const sector of sectors) {
+  console.log(sector.name);
+}
+```
+
+## Stations
+
+### galaxy.stations.list()
+
+Returns a paginated list of space stations across the galaxy.
+
+<ParamField path="start_index" type="number" default="1">
+  1-based index of the first station to return.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of stations per page.
+</ParamField>
+
+```typescript
+const stations = await client.galaxy.stations.list({
+  start_index: 1,
+  item_count: 50,
+});
+
+for await (const station of stations) {
+  console.log(station.name, station.type);
+}
+```
+
+## Cities
+
+### galaxy.cities.list()
+
+Returns a paginated list of all cities on planets across the galaxy.
+
+<ParamField path="start_index" type="number" default="1">
+  1-based index of the first city to return.
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of cities per page.
+</ParamField>
+
+```typescript
+const cities = await client.galaxy.cities.list({
+  start_index: 1,
+  item_count: 50,
+});
+
+for await (const city of cities) {
+  console.log(city.name, city.planet);
+}
+```
+
+## Iterating the full galaxy
+
+Because all five sub-resources support `for await...of`, you can combine them to build a complete picture of the galaxy in a single script:
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
+
+// Count all systems and planets
+const systems = await client.galaxy.systems.list({ start_index: 1, item_count: 50 });
+const planets = await client.galaxy.planets.list({ start_index: 1, item_count: 50 });
+
+console.log(`Galaxy contains ${systems.total} systems and ${planets.total} planets`);
+
+// Iterate every sector
+for await (const sector of await client.galaxy.sectors.list({ start_index: 1, item_count: 50 })) {
+  console.log(sector.name);
+}
+```
+
+<Tip>
+  Auto-pagination with `for await...of` makes one API request per page. For resources with thousands of entries, use a larger `item_count` (up to the endpoint maximum) to reduce request count and stay within the 600 requests/hour rate limit.
+</Tip>
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="Location" icon="map-pin" href="/resources/location">
+    Look up the current location of any entity in the galaxy.
+  </Card>
+  <Card title="Inventory" icon="box" href="/resources/inventory">
+    List ships, vehicles, and other entities owned by a character.
+  </Card>
+  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
+    Learn how Page&lt;T&gt; works and how to auto-paginate large datasets.
+  </Card>
+  <Card title="Rate limits" icon="gauge" href="/concepts/rate-limits">
+    Understand the 600 req/hour quota before iterating large galaxy datasets.
+  </Card>
+</CardGroup>

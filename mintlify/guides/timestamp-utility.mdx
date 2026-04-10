@@ -1,0 +1,204 @@
+---
+title: "Working with Combine Galactic Time (Timestamp)"
+description: "Create, format, compare, and do arithmetic with CGT timestamps using the SDK's Timestamp utility class that converts between CGT and JavaScript dates."
+keywords: ["timestamp", "CGT", "Combine Galactic Time", "Timestamp", "in-game time", "swcombine sdk"]
+---
+
+The Star Wars Combine game world runs on its own calendar called Combine Galactic Time (CGT). CGT counts from the game's origin date of 3 December 1998 at 07:00:00 UTC, so a CGT year maps to a real-world year of 365 days. The SDK's `Timestamp` class lets you create, format, compare, and do arithmetic on CGT moments — and convert freely between CGT, JavaScript `Date` objects, and Unix timestamps.
+
+## Creating a Timestamp
+
+There are three static factory methods and one direct constructor.
+
+### Static factories
+
+```typescript
+import { Timestamp } from 'swcombine-sdk';
+
+// Current CGT moment
+const now = Timestamp.now();
+
+// From a Unix timestamp (seconds or milliseconds — auto-detected)
+const fromUnix = Timestamp.fromUnixTimestamp(1700000000);
+
+// From a JavaScript Date object
+const fromDate = Timestamp.fromDate(new Date('2025-03-15T12:00:00Z'));
+```
+
+### Direct constructor
+
+Pass a `TimestampMoment` object. Only `year` and `day` are required; `hour`, `minute`, and `second` default to `0`.
+
+```typescript
+import { Timestamp } from 'swcombine-sdk';
+
+const moment = new Timestamp({ year: 27, day: 88, hour: 5, minute: 12, second: 0 });
+```
+
+<Note>
+  `day` is 1-indexed — valid values are `1` through `365`. The constructor throws a `RangeError` if any field is out of range.
+</Note>
+
+## Reading components
+
+Use the getter methods to read individual CGT components:
+
+```typescript
+const ts = Timestamp.now();
+
+console.log(ts.getYear());    // e.g. 27
+console.log(ts.getDay());     // e.g. 88  (1–365)
+console.log(ts.getHour());    // e.g. 5   (0–23)
+console.log(ts.getMinute());  // e.g. 12  (0–59)
+console.log(ts.getSecond());  // e.g. 0   (0–59)
+```
+
+To get all components at once as a plain object, use `asMoment()`:
+
+```typescript
+const moment = ts.asMoment();
+// { year: 27, day: 88, hour: 5, minute: 12, second: 0 }
+```
+
+## Formatting
+
+`toString()` accepts either a preset name or a custom template string.
+
+### Preset formats
+
+| Preset | Output example |
+|--------|----------------|
+| `'full'` (default) | `Year 27 Day 88, 5:12:00` |
+| `'minute'` | `Year 27 Day 88, 5:12` |
+| `'day'` | `Year 27 Day 88` |
+| `'shortFull'` | `Y27 D88, 5:12:00` |
+| `'shortMinute'` | `Y27 D88, 5:12` |
+| `'shortDay'` | `Y27 D88` |
+
+```typescript
+const ts = Timestamp.now();
+
+console.log(ts.toString());            // "Year 27 Day 88, 5:12:00"
+console.log(ts.toString('minute'));    // "Year 27 Day 88, 5:12"
+console.log(ts.toString('day'));       // "Year 27 Day 88"
+console.log(ts.toString('shortFull')); // "Y27 D88, 5:12:00"
+```
+
+### Custom template strings
+
+Use curly-brace tags in your own template. Double a tag letter to get zero-padded output.
+
+| Tag | Output | Padded tag | Output |
+|-----|--------|-----------|--------|
+| `{y}` | year | `{yy}` | zero-padded year |
+| `{d}` | day | `{dd}` | zero-padded day |
+| `{h}` | hour | `{hh}` | zero-padded hour |
+| `{m}` | minute | `{mm}` | zero-padded minute |
+| `{s}` | second | `{ss}` | zero-padded second |
+| `{hms}` | shorthand for `{hh}:{mm}:{ss}` | — | — |
+
+```typescript
+const ts = Timestamp.now();
+
+// "05:12:00 on Day 88 of Year 27"
+console.log(ts.toString('{hms} on Day {d} of Year {y}'));
+
+// "Y27-D088"
+console.log(ts.toString('Y{y}-D{dd}'));
+```
+
+## Arithmetic
+
+`add()` and `subtract()` accept a partial duration object — include only the fields you need. Both methods return a new `Timestamp` and do not mutate the original.
+
+```typescript
+import { Timestamp } from 'swcombine-sdk';
+
+const now = Timestamp.now();
+
+// Add 1 year and 30 days
+const later = now.add({ years: 1, days: 30 });
+
+// Subtract 5 hours and 45 minutes
+const earlier = now.subtract({ hours: 5, minutes: 45 });
+
+// Add only seconds
+const soon = now.add({ seconds: 3600 });
+```
+
+<Note>
+  `subtract()` will never go before the SWC origin date. If the subtraction would underflow, the result is clamped to Year 0 Day 1.
+</Note>
+
+### Measuring the gap between two timestamps
+
+`getDurationTo()` returns the full duration between two `Timestamp` instances as a `Duration` object:
+
+```typescript
+const start = new Timestamp({ year: 27, day: 1 });
+const end = new Timestamp({ year: 27, day: 91, hour: 12 });
+
+const duration = start.getDurationTo(end);
+// { years: 0, days: 90, hours: 12, minutes: 0, seconds: 0 }
+console.log(`${duration.days} days and ${duration.hours} hours remaining`);
+```
+
+A negative duration is returned when the target is in the past relative to the source.
+
+## Comparing timestamps
+
+Three methods let you compare two `Timestamp` instances:
+
+```typescript
+const a = new Timestamp({ year: 27, day: 10 });
+const b = new Timestamp({ year: 27, day: 20 });
+
+console.log(a.isBefore(b));  // true
+console.log(a.isAfter(b));   // false
+console.log(a.equals(b));    // false
+console.log(a.equals(new Timestamp({ year: 27, day: 10 }))); // true
+```
+
+## Converting back to JavaScript types
+
+```typescript
+const ts = Timestamp.fromUnixTimestamp(1700000000);
+
+// To a JavaScript Date
+const date: Date = ts.toDate();
+
+// To a Unix timestamp in seconds
+const sec: number = ts.toUnixTimestamp('sec');
+
+// To a Unix timestamp in milliseconds
+const ms: number = ts.toUnixTimestamp('ms');
+```
+
+Both `'sec'` and `'seconds'` are accepted as the unit string, as are `'ms'` and `'milliseconds'`.
+
+## Practical example: time remaining until an event
+
+Combine the factory methods and `getDurationTo()` to display a countdown in your application:
+
+```typescript
+import { Timestamp } from 'swcombine-sdk';
+
+function timeUntil(eventUnixTimestamp: number): string {
+  const now = Timestamp.now();
+  const event = Timestamp.fromUnixTimestamp(eventUnixTimestamp);
+
+  if (now.isAfter(event)) {
+    return 'Event has already passed.';
+  }
+
+  const { days, hours, minutes } = now.getDurationTo(event);
+
+  if (days > 0) {
+    return `${days}d ${hours}h remaining`;
+  }
+  if (hours > 0) {
+    return `${hours}h ${minutes}m remaining`;
+  }
+  return `${minutes}m remaining`;
+}
+```

@@ -1,0 +1,158 @@
+---
+title: "Quickstart: make your first SW Combine SDK API call"
+description: "Install the SW Combine SDK, initialize a client, call a public endpoint without auth, make an authenticated request, and paginate through list results."
+keywords: ["swcombine sdk", "quickstart", "getting started", "typescript", "node.js", "oauth"]
+---
+
+This guide walks you through everything you need to make your first API calls with the SW Combine SDK: installing the package, choosing a client mode, calling a public endpoint that needs no credentials, making an authenticated request, and iterating through paginated results.
+
+<Steps>
+  <Step title="Install the package">
+    Add `swcombine-sdk` to your project using your preferred package manager:
+
+    <CodeGroup>
+
+    ```bash npm
+    npm install swcombine-sdk
+    ```
+
+    ```bash yarn
+    yarn add swcombine-sdk
+    ```
+
+    ```bash pnpm
+    pnpm add swcombine-sdk
+    ```
+
+    </CodeGroup>
+
+    The SDK requires **Node.js 18+** and **TypeScript 5.5+** for TypeScript projects. Its only production dependency is `axios`.
+  </Step>
+
+  <Step title="Initialize the client">
+    The `SWCombine` class supports three initialization modes depending on what you need:
+
+    ```typescript
+    import { SWCombine, AccessType } from 'swcombine-sdk';
+
+    // Public mode — no credentials required.
+    // Use this for endpoints that don't need authentication.
+    const publicClient = new SWCombine();
+
+    // Token-only mode — provide an existing access token.
+    // Use this when you already have a token and don't need OAuth flows.
+    const tokenClient = new SWCombine({
+      token: process.env.SWC_ACCESS_TOKEN!,
+    });
+
+    // Full OAuth mode — required for OAuth flows and automatic token refresh.
+    // Provide your OAuth app credentials along with an optional token.
+    const fullClient = new SWCombine({
+      clientId: process.env.SWC_CLIENT_ID!,
+      clientSecret: process.env.SWC_CLIENT_SECRET!,
+      token: process.env.SWC_ACCESS_TOKEN, // Optional: skip if you don't have one yet
+      redirectUri: 'http://localhost:3000/callback',
+      accessType: AccessType.Offline, // Request a refresh token
+    });
+    ```
+
+    <Note>
+      If you provide `clientId`, you must also provide `clientSecret` — and vice versa. The SDK throws immediately if only one is set.
+    </Note>
+  </Step>
+
+  <Step title="Call a public endpoint">
+    Some endpoints are available without authentication. `character.getByHandle` is a good first call — it resolves a character handle to a UID and requires no access token:
+
+    ```typescript
+    // No auth needed — public mode works here
+    const { uid, handle } = await publicClient.character.getByHandle({
+      handle: 'your-character-handle',
+    });
+
+    console.log(uid);    // "1:12345"
+    console.log(handle); // "your-character-handle"
+    ```
+
+    The returned `uid` uses the format `"type:id"` (for example, `"1:12345"` for a character). You'll use this UID to fetch full profile details from authenticated endpoints.
+
+    <Tip>
+      `character.getByHandle` is useful for resolving a known handle to a UID before making authenticated calls that require one.
+    </Tip>
+  </Step>
+
+  <Step title="Make an authenticated request">
+    Most endpoints require an access token. Initialize a client with a token and call `character.get` to retrieve a full character profile:
+
+    ```typescript
+    const client = new SWCombine({
+      token: process.env.SWC_ACCESS_TOKEN!,
+    });
+
+    const character = await client.character.get({
+      uid: '1:12345',
+    });
+
+    console.log(character.name);    // Character name
+    console.log(character.credits); // Credit balance
+    console.log(character.faction); // Faction info
+    ```
+
+    <Warning>
+      Authenticated calls will throw a `401 Unauthorized` error if your token is missing, expired, or lacks the required OAuth scope. See the [authentication guide](/authentication/overview) to get a token.
+    </Warning>
+
+    You can also call `client.character.me()` to fetch the profile of the character who owns the current access token — no UID needed:
+
+    ```typescript
+    const me = await client.character.me();
+    console.log(me.name); // Your character's name
+    ```
+  </Step>
+
+  <Step title="Paginate through results">
+    Every `list()` method returns a `Page<T>` object with pagination built in. You can check `hasMore`, call `getNextPage()` manually, or use `for await...of` to iterate across all pages automatically:
+
+    ```typescript
+    import { Page } from 'swcombine-sdk';
+
+    // Fetch the first page of galaxy sectors
+    const firstPage = await client.galaxy.sectors.list();
+
+    console.log(firstPage.total);          // Total sectors across all pages
+    console.log(firstPage.data.length);    // Sectors on this page
+    console.log(firstPage.hasMore);        // true if more pages exist
+
+    // Fetch the next page manually
+    if (firstPage.hasMore) {
+      const secondPage = await firstPage.getNextPage();
+    }
+
+    // Auto-paginate with for-await — yields every item across all pages
+    for await (const sector of await client.galaxy.sectors.list()) {
+      console.log(sector.name);
+    }
+    ```
+
+    <Note>
+      Auto-pagination with `for await...of` makes sequential API requests until all items are returned. Keep the [rate limit](/concepts/rate-limits) of 600 requests per hour in mind when iterating large datasets.
+    </Note>
+  </Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="lock" href="/authentication/overview">
+    Set up OAuth 2.0 and get an access token for authenticated endpoints.
+  </Card>
+  <Card title="Installation" icon="download" href="/installation">
+    Full installation details including environment variables and import styles.
+  </Card>
+  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
+    Learn how `Page<T>` works, how to control page size, and how auto-pagination behaves.
+  </Card>
+  <Card title="Error handling" icon="triangle-exclamation" href="/concepts/error-handling">
+    Catch typed `SWCError` exceptions and handle retryable vs non-retryable failures.
+  </Card>
+</CardGroup>

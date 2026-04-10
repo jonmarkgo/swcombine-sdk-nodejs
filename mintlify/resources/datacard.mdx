@@ -1,0 +1,74 @@
+---
+title: "Datacard resource: faction production licenses"
+description: "Use client.datacard to list all production datacards licensed to a faction, including the entity types a faction is authorized to manufacture."
+keywords: ["swcombine sdk", "datacard", "production", "faction", "license", "manufacturing", "entity types"]
+---
+
+The `client.datacard` resource exposes the production license system in the Star Wars Combine universe. A datacard is a manufacturing license that authorizes a faction to produce a specific type of entity — a ship class, a weapon, a droid, and so on. By calling `datacard.list()` with a faction ID, you get the full list of entity types that faction is authorized to manufacture.
+
+## Listing datacards
+
+### datacard.list()
+
+Returns a paginated list of all datacards held by a faction.
+
+<ParamField path="factionId" type="string" required>
+  The faction UID in `"type:id"` format, e.g. `"20:123"`. Note this parameter is named `factionId`, not `uid`.
+</ParamField>
+
+```typescript
+const datacards = await client.datacard.list({ factionId: '20:123' });
+
+console.log(datacards.total); // Total datacards held by this faction
+
+for await (const card of datacards) {
+  console.log(card.name, card.entityType, card.uid);
+}
+```
+
+## Full example
+
+```typescript
+import { SWCombine } from 'swcombine-sdk';
+
+const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
+
+const factionId = '20:123';
+
+// Get faction details
+const faction = await client.faction.get({ uid: factionId });
+console.log(`${faction.name} datacards:`);
+
+// List all datacards
+const datacards = await client.datacard.list({ factionId });
+console.log(`${datacards.total} production licenses`);
+
+for await (const card of datacards) {
+  console.log(`  ${card.name} (${card.entityType})`);
+}
+```
+
+<Tip>
+  Combine `datacard.list()` with `types.entities.get()` to enrich each datacard with the full technical specifications of the entity type it licenses.
+</Tip>
+
+<Note>
+  The parameter name for `datacard.list()` is `factionId`, not `uid`. This differs from other resource methods that use `uid` for their primary identifier.
+</Note>
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="Faction" icon="flag" href="/resources/faction">
+    Retrieve faction details using the same faction UID.
+  </Card>
+  <Card title="Types" icon="tag" href="/resources/types">
+    Look up full entity type definitions for the entities a datacard covers.
+  </Card>
+  <Card title="Inventory" icon="box" href="/resources/inventory">
+    List the ships and items a faction has already produced.
+  </Card>
+  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
+    Learn how Page&lt;T&gt; works and how to auto-paginate datacard lists.
+  </Card>
+</CardGroup>

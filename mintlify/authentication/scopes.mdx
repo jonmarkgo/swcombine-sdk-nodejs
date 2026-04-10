@@ -1,0 +1,255 @@
+---
+title: "OAuth scopes: request only the permissions you need"
+description: "All 170+ SW Combine SDK OAuth scope constants for character, message, inventory, and faction access, with helper functions and common combinations."
+keywords: ["swcombine sdk", "oauth scopes", "permissions", "character scopes", "faction scopes", "scope constants", "typescript"]
+---
+
+OAuth scopes tell SW Combine what your application is allowed to do on a user's behalf. When you generate an authorization URL, the scopes you include determine which endpoints you can call and which actions you can take with the resulting token. Requesting fewer scopes limits your app's footprint and builds user trust — users see the full permission list before they authorize.
+
+## Using scope constants
+
+The SDK exports typed constants for every scope. Using them instead of raw strings gives you IDE autocomplete, compile-time typo detection, and a single source of truth if scope names ever change:
+
+```typescript
+import { SWCombine, CharacterScopes, MessageScopes } from 'swcombine-sdk';
+
+const client = new SWCombine({
+  clientId: process.env.SWC_CLIENT_ID!,
+  clientSecret: process.env.SWC_CLIENT_SECRET!,
+  redirectUri: 'http://localhost:3000/callback',
+});
+
+const authUrl = client.auth.getAuthorizationUrl({
+  scopes: [
+    CharacterScopes.READ,    // 'character_read'
+    CharacterScopes.STATS,   // 'character_stats'
+    MessageScopes.READ,      // 'messages_read'
+    MessageScopes.SEND,      // 'messages_send'
+  ],
+  state: 'your-csrf-state-value',
+});
+```
+
+<Note>
+  All scope values sent to the API are **lowercase** strings with underscores (e.g., `character_read`, `personal_inv_ships_all`). The constants resolve to these lowercase literals automatically. The API rejects uppercase scope strings.
+</Note>
+
+## Scope categories
+
+<AccordionGroup>
+  <Accordion title="Character scopes — CharacterScopes">
+    Import: `import { CharacterScopes } from 'swcombine-sdk'`
+
+    | Constant | Value | What it grants |
+    |---|---|---|
+    | `CharacterScopes.AUTH` | `character_auth` | Character name and ID only, for identity verification |
+    | `CharacterScopes.READ` | `character_read` | UID, handle, image, race, gender (and more if profile is public) |
+    | `CharacterScopes.STATS` | `character_stats` | HP and XP |
+    | `CharacterScopes.PRIVILEGES` | `character_privileges` | Character privileges |
+    | `CharacterScopes.SKILLS` | `character_skills` | Character skills |
+    | `CharacterScopes.CREDITS` | `character_credits` | Credit balance (read-only) |
+    | `CharacterScopes.CREDITS_WRITE` | `character_credits_write` | Transfer credits |
+    | `CharacterScopes.FORCE` | `character_force` | Force points, FXP, regen rate, Force Meter |
+    | `CharacterScopes.LOCATION` | `character_location` | In-game location |
+    | `CharacterScopes.EVENTS` | `character_events` | Character event log |
+    | `CharacterScopes.ALL` | `character_all` | All character permissions |
+  </Accordion>
+
+  <Accordion title="Message scopes — MessageScopes">
+    Import: `import { MessageScopes } from 'swcombine-sdk'`
+
+    | Constant | Value | What it grants |
+    |---|---|---|
+    | `MessageScopes.READ` | `messages_read` | Read messages sent to or by the character |
+    | `MessageScopes.SEND` | `messages_send` | Send messages |
+    | `MessageScopes.DELETE` | `messages_delete` | Delete messages |
+    | `MessageScopes.ALL` | `messages_all` | Read, send, and delete messages |
+  </Accordion>
+
+  <Accordion title="Personal inventory scopes — Scopes.PersonalInventory">
+    Import: `import { Scopes } from 'swcombine-sdk'`
+
+    Personal inventory scopes follow the pattern `Scopes.PersonalInventory.{ENTITY}.{ACTION}`. The top-level overview scope gives access to inventory summary data.
+
+    ```typescript
+    Scopes.PersonalInventory.OVERVIEW          // 'personal_inv_overview'
+
+    // Ships
+    Scopes.PersonalInventory.SHIPS.READ        // 'personal_inv_ships_read'
+    Scopes.PersonalInventory.SHIPS.RENAME      // 'personal_inv_ships_rename'
+    Scopes.PersonalInventory.SHIPS.ASSIGN      // 'personal_inv_ships_assign'
+    Scopes.PersonalInventory.SHIPS.MAKEOVER    // 'personal_inv_ships_makeover'
+    Scopes.PersonalInventory.SHIPS.TAGS_READ   // 'personal_inv_ships_tags_read'
+    Scopes.PersonalInventory.SHIPS.TAGS_WRITE  // 'personal_inv_ships_tags_write'
+    Scopes.PersonalInventory.SHIPS.ALL         // 'personal_inv_ships_all'
+    ```
+
+    The same actions (`READ`, `RENAME`, `ASSIGN`, `MAKEOVER`, `TAGS_READ`, `TAGS_WRITE`, `ALL`) are available for: `VEHICLES`, `STATIONS`, `CITIES`, `FACILITIES`, `ITEMS`, `DROIDS`, `MATERIALS`, `CREATURES`. Planets have a reduced set (`READ`, `ASSIGN`, `TAGS_READ`, `TAGS_WRITE`, `ALL`); NPCs don't have `RENAME`.
+  </Accordion>
+
+  <Accordion title="Faction scopes — FactionScopes">
+    Import: `import { FactionScopes } from 'swcombine-sdk'`
+
+    | Constant | Value | What it grants |
+    |---|---|---|
+    | `FactionScopes.READ` | `faction_read` | Basic faction information |
+    | `FactionScopes.MEMBERS` | `faction_members` | Faction members list |
+    | `FactionScopes.STOCKS` | `faction_stocks` | Stocks owned by the faction |
+    | `FactionScopes.CREDITS_READ` | `faction_credits_read` | Faction credit balance |
+    | `FactionScopes.CREDITS_WRITE` | `faction_credits_write` | Transfer faction credits |
+    | `FactionScopes.BUDGETS_READ` | `faction_budgets_read` | Faction budget details |
+    | `FactionScopes.BUDGETS_WRITE` | `faction_budgets_write` | Modify faction budgets |
+    | `FactionScopes.DATACARDS_READ` | `faction_datacards_read` | Faction datacard assignments |
+    | `FactionScopes.DATACARDS_WRITE` | `faction_datacards_write` | Assign or revoke datacards |
+    | `FactionScopes.ALL` | `faction_all` | All faction permissions |
+  </Accordion>
+
+  <Accordion title="Faction inventory scopes — Scopes.FactionInventory">
+    Import: `import { Scopes } from 'swcombine-sdk'`
+
+    Faction inventory scopes mirror the personal inventory structure under `Scopes.FactionInventory`:
+
+    ```typescript
+    Scopes.FactionInventory.OVERVIEW             // 'faction_inv_overview'
+
+    // Faction ships
+    Scopes.FactionInventory.SHIPS.READ           // 'faction_inv_ships_read'
+    Scopes.FactionInventory.SHIPS.RENAME         // 'faction_inv_ships_rename'
+    Scopes.FactionInventory.SHIPS.ASSIGN         // 'faction_inv_ships_assign'
+    Scopes.FactionInventory.SHIPS.MAKEOVER       // 'faction_inv_ships_makeover'
+    Scopes.FactionInventory.SHIPS.TAGS_READ      // 'faction_inv_ships_tags_read'
+    Scopes.FactionInventory.SHIPS.TAGS_WRITE     // 'faction_inv_ships_tags_write'
+    Scopes.FactionInventory.SHIPS.ALL            // 'faction_inv_ships_all'
+    ```
+
+    The full set of entity types mirrors the personal inventory: `SHIPS`, `VEHICLES`, `STATIONS`, `CITIES`, `FACILITIES`, `PLANETS`, `ITEMS`, `NPCS`, `DROIDS`, `MATERIALS`, `CREATURES`.
+  </Accordion>
+</AccordionGroup>
+
+## Helper functions
+
+The SDK provides four helper functions that return pre-built scope arrays for common scenarios:
+
+```typescript
+import {
+  getMinimalScopes,
+  getReadOnlyScopes,
+  getAllScopes,
+  getAllCharacterScopes,
+  getAllMessageScopes,
+  getAllPersonalInventoryScopes,
+  getAllFactionScopes,
+  getAllFactionInventoryScopes,
+} from 'swcombine-sdk';
+```
+
+| Function | Returns | Use case |
+|---|---|---|
+| `getMinimalScopes()` | `['character_auth', 'character_read']` | Login / identity verification only |
+| `getReadOnlyScopes()` | Character read, stats, skills, credits, messages read, inventory overview, faction read | Analytics dashboards and read-only integrations |
+| `getAllCharacterScopes()` | All `CharacterScopes.*` values | Character management tools |
+| `getAllMessageScopes()` | All `MessageScopes.*` values | Full messaging access |
+| `getAllPersonalInventoryScopes()` | All `PersonalInventoryScopes.*` values | Personal asset management |
+| `getAllFactionScopes()` | All `FactionScopes.*` values | Faction administration |
+| `getAllFactionInventoryScopes()` | All `FactionInventoryScopes.*` values | Faction asset management |
+| `getAllScopes()` | All 170+ scopes across every category | Development and testing only |
+
+<Warning>
+  The SW Combine API does not support scope inheritance. Requesting `CharacterScopes.ALL` (`character_all`) does **not** include `CharacterScopes.READ` (`character_read`) — you must list both explicitly if you want comprehensive access.
+</Warning>
+
+## Common scope combinations
+
+<AccordionGroup>
+  <Accordion title="Login / authentication only">
+    ```typescript
+    import { getMinimalScopes } from 'swcombine-sdk';
+
+    const authUrl = client.auth.getAuthorizationUrl({
+      scopes: getMinimalScopes(), // ['character_auth', 'character_read']
+      state,
+    });
+    ```
+  </Accordion>
+
+  <Accordion title="Character profile dashboard">
+    ```typescript
+    import { CharacterScopes } from 'swcombine-sdk';
+
+    const scopes = [
+      CharacterScopes.READ,
+      CharacterScopes.STATS,
+      CharacterScopes.SKILLS,
+      CharacterScopes.FORCE,
+      CharacterScopes.LOCATION,
+    ];
+    ```
+  </Accordion>
+
+  <Accordion title="Messaging application">
+    ```typescript
+    import { CharacterScopes, MessageScopes } from 'swcombine-sdk';
+
+    const scopes = [
+      CharacterScopes.READ,
+      MessageScopes.READ,
+      MessageScopes.SEND,
+      MessageScopes.DELETE,
+    ];
+    ```
+  </Accordion>
+
+  <Accordion title="Fleet management tool">
+    ```typescript
+    import { CharacterScopes, Scopes } from 'swcombine-sdk';
+
+    const scopes = [
+      CharacterScopes.READ,
+      Scopes.PersonalInventory.OVERVIEW,
+      Scopes.PersonalInventory.SHIPS.ALL,
+      Scopes.PersonalInventory.VEHICLES.ALL,
+    ];
+    ```
+  </Accordion>
+
+  <Accordion title="Faction administration tool">
+    ```typescript
+    import { FactionScopes, Scopes } from 'swcombine-sdk';
+
+    const scopes = [
+      FactionScopes.ALL,
+      Scopes.FactionInventory.OVERVIEW,
+      Scopes.FactionInventory.SHIPS.READ,
+      Scopes.FactionInventory.VEHICLES.READ,
+    ];
+    ```
+  </Accordion>
+
+  <Accordion title="Read-only analytics or dashboard">
+    ```typescript
+    import { getReadOnlyScopes } from 'swcombine-sdk';
+
+    const authUrl = client.auth.getAuthorizationUrl({
+      scopes: getReadOnlyScopes(),
+      state,
+    });
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## TypeScript type safety
+
+The SDK exports an `AllScopes` type — a union of every valid scope literal — so TypeScript catches invalid scope strings at compile time:
+
+```typescript
+import type { AllScopes } from 'swcombine-sdk';
+import { CharacterScopes, MessageScopes } from 'swcombine-sdk';
+
+// TypeScript enforces that every item is a valid scope literal
+const scopes: AllScopes[] = [
+  CharacterScopes.READ,   // OK — autocomplete suggests all character scopes
+  MessageScopes.SEND,     // OK — autocomplete suggests all message scopes
+  // 'not_a_scope',       // Error: not assignable to type 'AllScopes'
+  // CharacterScopes.TYPO // Error: property 'TYPO' does not exist
+];
+```

@@ -1,0 +1,38 @@
+tests/unit/token-manager.test.ts
+  4f2dfce2d276f396 201-269
+src/http/errors.ts
+  4f2dfce2d276f396 94-107,111-115,155-167,172-173
+scripts/get-oauth-token.ts
+  4f2dfce2d276f396 18,42-55,57-61,164-179,192,196-200
+tests/unit/http-client.test.ts
+  4f2dfce2d276f396 254-319
+src/http/HttpClient.ts
+  4f2dfce2d276f396 161-171
+package.json
+  4f2dfce2d276f396 3
+src/auth/TokenManager.ts
+  4f2dfce2d276f396 41-52,55-56,63-68
+tests/unit/errors.test.ts
+  4f2dfce2d276f396 91-161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "42210ed0e889b82ec26864f7de8a3f6e77a60ca8",
+  "prompts": {
+    "4f2dfce2d276f396": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c98e0b0e-278b-4349-b9ae-bcfac1d55a00",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 487,
+      "total_deletions": 41,
+      "accepted_lines": 314,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/f456c320ff14313ecc8a59c43a64839fa3f5e2d73b767e420e14360643c0373f"
+    }
+  }
+}

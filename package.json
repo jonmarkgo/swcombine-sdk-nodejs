@@ -41,7 +41,6 @@
     "docs:api:watch": "typedoc --watch",
     "docs:html": "typedoc --options typedoc.html.json",
     "docs:llms": "tsx scripts/generate-llms-txt.ts",
-    "licenses": "license-checker --json --out THIRD-PARTY-LICENSES.json && license-checker --out NOTICES.txt",
     "get-token": "tsx scripts/get-oauth-token.ts",
     "get-character-uid": "tsx scripts/get-character-uid.ts",
     "refresh-token": "tsx scripts/refresh-token.ts",

@@ -1,7 +1,16 @@
 ---
-title: "Error handling: SWCError types and retry behavior"
-description: "Learn how to catch typed SWCError exceptions from the SW Combine SDK, inspect error details, and understand which failures are retried automatically."
-keywords: ["swcombine sdk", "error handling", "swcerror", "retryable", "statuscode", "error type", "exponential backoff"]
+title: 'Error Handling'
+description: 'Learn how to catch typed SWCError exceptions from the SW Combine SDK, inspect error details, and understand which failures are retried automatically.'
+keywords:
+  [
+    'swcombine sdk',
+    'error handling',
+    'swcerror',
+    'retryable',
+    'statuscode',
+    'error type',
+    'exponential backoff',
+  ]
 ---
 
 Every error thrown by the SW Combine SDK is an instance of `SWCError` — a typed error class that carries the HTTP status code, a human-readable message, an error type string, and a `retryable` flag. Checking `instanceof SWCError` lets you distinguish SDK errors from unexpected runtime exceptions and handle them precisely.
@@ -20,9 +29,9 @@ try {
 } catch (error) {
   if (error instanceof SWCError) {
     console.log(error.statusCode); // e.g. 404
-    console.log(error.message);    // e.g. "Character not found"
-    console.log(error.type);       // e.g. "not_found"
-    console.log(error.retryable);  // false for 404
+    console.log(error.message); // e.g. "Character not found"
+    console.log(error.type); // e.g. "not_found"
+    console.log(error.retryable); // false for 404
   } else {
     // Unexpected non-SDK error
     throw error;
@@ -33,7 +42,8 @@ try {
 ## SWCError properties
 
 <ParamField path="statusCode" type="number" required>
-  The HTTP status code returned by the API (e.g. `401`, `404`, `429`, `500`). For network-level failures where no HTTP response was received, this may be `0`.
+  The HTTP status code returned by the API (e.g. `401`, `404`, `429`, `500`). For network-level
+  failures where no HTTP response was received, this may be `0`.
 </ParamField>
 
 <ParamField path="message" type="string" required>
@@ -41,15 +51,19 @@ try {
 </ParamField>
 
 <ParamField path="type" type="string" required>
-  A stable string identifier for the error category. One of: `not_found`, `unauthorized`, `auth`, `validation`, `network`, `server`.
+  A stable string identifier for the error category. One of: `not_found`, `unauthorized`, `auth`,
+  `validation`, `network`, `server`.
 </ParamField>
 
 <ParamField path="retryable" type="boolean" required>
-  `true` when the SDK considers this error safe to retry automatically. Network errors, `5xx` server errors, and rate limit responses (`429`) are retryable. Client errors like `404` and `401` are not.
+  `true` when the SDK considers this error safe to retry automatically. Network errors, `5xx` server
+  errors, and rate limit responses (`429`) are retryable. Client errors like `404` and `401` are
+  not.
 </ParamField>
 
 <ParamField path="response" type="object">
-  The raw API response object, when one was received. Useful for inspecting response headers or the full error body from the server.
+  The raw API response object, when one was received. Useful for inspecting response headers or the
+  full error body from the server.
 </ParamField>
 
 ## Error types
@@ -63,6 +77,7 @@ try {
       console.log('Resource does not exist:', error.message);
     }
     ```
+
   </Accordion>
 
   <Accordion title="unauthorized — 401">
@@ -73,6 +88,7 @@ try {
       console.log('Check your token or required scopes:', error.message);
     }
     ```
+
   </Accordion>
 
   <Accordion title="auth — OAuth errors">
@@ -83,6 +99,7 @@ try {
       console.log('OAuth flow failed:', error.message);
     }
     ```
+
   </Accordion>
 
   <Accordion title="validation — 400">
@@ -93,6 +110,7 @@ try {
       console.log('Invalid request parameters:', error.message);
     }
     ```
+
   </Accordion>
 
   <Accordion title="network — connection failures">
@@ -103,6 +121,7 @@ try {
       console.log('Network failure, SDK will retry:', error.message);
     }
     ```
+
   </Accordion>
 
   <Accordion title="server — 5xx">
@@ -113,6 +132,7 @@ try {
       console.log('Server error, SDK will retry:', error.message);
     }
     ```
+
   </Accordion>
 </AccordionGroup>
 
@@ -123,28 +143,29 @@ The SDK automatically retries retryable errors — network failures, `5xx` respo
 ```typescript
 const client = new SWCombine({
   token: process.env.SWC_ACCESS_TOKEN!,
-  maxRetries: 5,    // retry up to 5 times (default: 3)
-  retryDelay: 500,  // base delay in ms, doubles each attempt (default: 1000)
+  maxRetries: 5, // retry up to 5 times (default: 3)
+  retryDelay: 500, // base delay in ms, doubles each attempt (default: 1000)
 });
 ```
 
 For rate limit responses, the SDK also respects the `Retry-After` header returned by the API and waits the specified duration before retrying — regardless of the configured `retryDelay`.
 
 <Note>
-  When all retry attempts are exhausted, the SDK throws the final `SWCError`. Your catch block always receives the last error that occurred, not the first.
+  When all retry attempts are exhausted, the SDK throws the final `SWCError`. Your catch block
+  always receives the last error that occurred, not the first.
 </Note>
 
 ## Error type quick reference
 
-| Type | HTTP status | Retryable |
-|---|---|---|
-| `not_found` | 404 | No |
-| `unauthorized` | 401 | No |
-| `auth` | varies | No |
-| `validation` | 400 | No |
-| `network` | — | Yes |
-| `server` | 5xx | Yes |
-| Rate limit | 429 | Yes |
+| Type           | HTTP status | Retryable |
+| -------------- | ----------- | --------- |
+| `not_found`    | 404         | No        |
+| `unauthorized` | 401         | No        |
+| `auth`         | varies      | No        |
+| `validation`   | 400         | No        |
+| `network`      | —           | Yes       |
+| `server`       | 5xx         | Yes       |
+| Rate limit     | 429         | Yes       |
 
 ## Branching on error type
 

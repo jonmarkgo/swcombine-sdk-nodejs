@@ -1,7 +1,6 @@
 ---
-title: "Quickstart: make your first SW Combine SDK API call"
-description: "Install the SW Combine SDK, initialize a client, call a public endpoint without auth, make an authenticated request, and paginate through list results."
-keywords: ["swcombine sdk", "quickstart", "getting started", "typescript", "node.js", "oauth"]
+title: 'Quickstart'
+keywords: ['swcombine sdk', 'quickstart', 'getting started', 'typescript', 'node.js', 'oauth']
 ---
 
 This guide walks you through everything you need to make your first API calls with the SW Combine SDK: installing the package, choosing a client mode, calling a public endpoint that needs no credentials, making an authenticated request, and iterating through paginated results.
@@ -24,9 +23,14 @@ This guide walks you through everything you need to make your first API calls wi
     pnpm add swcombine-sdk
     ```
 
+    ```bash bun
+    bun add swcombine-sdk
+    ```
+
     </CodeGroup>
 
     The SDK requires **Node.js 18+** and **TypeScript 5.5+** for TypeScript projects. Its only production dependency is `axios`.
+
   </Step>
 
   <Step title="Initialize the client">
@@ -59,6 +63,7 @@ This guide walks you through everything you need to make your first API calls wi
     <Note>
       If you provide `clientId`, you must also provide `clientSecret` — and vice versa. The SDK throws immediately if only one is set.
     </Note>
+
   </Step>
 
   <Step title="Call a public endpoint">
@@ -79,6 +84,7 @@ This guide walks you through everything you need to make your first API calls wi
     <Tip>
       `character.getByHandle` is useful for resolving a known handle to a UID before making authenticated calls that require one.
     </Tip>
+
   </Step>
 
   <Step title="Make an authenticated request">
@@ -108,6 +114,7 @@ This guide walks you through everything you need to make your first API calls wi
     const me = await client.character.me();
     console.log(me.name); // Your character's name
     ```
+
   </Step>
 
   <Step title="Paginate through results">
@@ -137,6 +144,7 @@ This guide walks you through everything you need to make your first API calls wi
     <Note>
       Auto-pagination with `for await...of` makes sequential API requests until all items are returned. Keep the [rate limit](/concepts/rate-limits) of 600 requests per hour in mind when iterating large datasets.
     </Note>
+
   </Step>
 </Steps>
 

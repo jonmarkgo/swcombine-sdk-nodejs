@@ -1,7 +1,18 @@
 ---
-title: "Install and configure the SW Combine SDK for Node.js"
-description: "Install swcombine-sdk, meet the Node.js 18+ and TypeScript 5.5+ requirements, configure environment variables, and choose ESM or CommonJS imports."
-keywords: ["swcombine sdk", "installation", "npm", "yarn", "pnpm", "esm", "commonjs", "environment variables", "typescript"]
+title: 'Installation'
+description: 'Install swcombine-sdk, meet the Node.js 18+ and TypeScript 5.5+ requirements, configure environment variables, and choose ESM or CommonJS imports.'
+keywords:
+  [
+    'swcombine sdk',
+    'installation',
+    'npm',
+    'yarn',
+    'pnpm',
+    'esm',
+    'commonjs',
+    'environment variables',
+    'typescript',
+  ]
 ---
 
 This page covers everything you need to add the SW Combine SDK to your project: package installation, Node.js and TypeScript version requirements, environment variable setup, and how to import the SDK in ESM and CommonJS projects.
@@ -30,6 +41,10 @@ yarn add swcombine-sdk
 pnpm add swcombine-sdk
 ```
 
+```bash bun
+bun add swcombine-sdk
+```
+
 </CodeGroup>
 
 ## Import styles
@@ -54,7 +69,8 @@ const { SWCombine, AccessType, SWCError } = require('swcombine-sdk');
 ```
 
 <Note>
-  TypeScript users: the SDK's type declarations are automatically resolved regardless of which module format you use. No extra `@types` package is needed.
+  TypeScript users: the SDK's type declarations are automatically resolved regardless of which
+  module format you use. No extra `@types` package is needed.
 </Note>
 
 ## Set up environment variables
@@ -68,6 +84,11 @@ SWC_CLIENT_SECRET=your_client_secret
 SWC_ACCESS_TOKEN=your_access_token
 SWC_REFRESH_TOKEN=your_refresh_token   # Only needed for offline access / token refresh
 ```
+
+<Note>
+  You don't want to really store your `SWC_ACCESS_TOKEN` in a `.env` files since they have a short
+  lifespan (1 hour).
+</Note>
 
 Then load the file before initializing the client. If you use [dotenv](https://www.npmjs.com/package/dotenv):
 
@@ -87,7 +108,9 @@ const client = new SWCombine({
 </Warning>
 
 <Tip>
-  You only need `SWC_CLIENT_ID` and `SWC_CLIENT_SECRET` if you are running the full OAuth flow (generating authorization URLs, handling callbacks, or refreshing tokens). For simple authenticated API calls, `SWC_ACCESS_TOKEN` alone is sufficient.
+  You only need `SWC_CLIENT_ID` and `SWC_CLIENT_SECRET` if you are running the full OAuth flow
+  (generating authorization URLs, handling callbacks, or refreshing tokens). For simple
+  authenticated API calls, `SWC_ACCESS_TOKEN` alone is sufficient.
 </Tip>
 
 ## TypeScript configuration
@@ -107,7 +130,8 @@ The SDK uses modern TypeScript features. Your `tsconfig.json` should target at l
 ```
 
 <Note>
-  If your project uses `"module": "CommonJS"`, the SDK's CJS build is picked up automatically via the `exports` field in its `package.json`. No extra configuration is needed.
+  If your project uses `"module": "CommonJS"`, the SDK's CJS build is picked up automatically via
+  the `exports` field in its `package.json`. No extra configuration is needed.
 </Note>
 
 ## Verify the installation
@@ -123,7 +147,7 @@ const { uid, handle } = await client.character.getByHandle({
   handle: 'your-character-handle',
 });
 
-console.log(uid);    // "1:12345"
+console.log(uid); // "1:12345"
 console.log(handle); // "your-character-handle"
 ```
 

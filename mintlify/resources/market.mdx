@@ -1,7 +1,7 @@
 ---
-title: "Market resource: vendors and marketplace listings"
-description: "Use client.market to browse and retrieve in-game market vendors that list ships, items, and other assets for sale on the Star Wars Combine marketplace."
-keywords: ["swcombine sdk", "market", "vendors", "marketplace", "trading", "buy", "sell"]
+title: 'Market'
+description: 'Use client.market to browse and retrieve in-game market vendors that list ships, items, and other assets for sale on the Star Wars Combine marketplace.'
+keywords: ['swcombine sdk', 'market', 'vendors', 'marketplace', 'trading', 'buy', 'sell']
 ---
 
 The `client.market` resource provides access to the Star Wars Combine in-game marketplace. Vendors are the sellers on the market — characters or factions that list assets for sale. You can list all vendors to browse the marketplace or fetch a specific vendor by UID to inspect their listings in detail.
@@ -74,7 +74,8 @@ for await (const vendor of await client.market.vendors.list()) {
 ```
 
 <Tip>
-  The market can have many vendors. If you need to find a specific seller, paginate through `vendors.list()` and filter client-side, or fetch by UID directly if you already know it.
+  The market can have many vendors. If you need to find a specific seller, paginate through
+  `vendors.list()` and filter client-side, or fetch by UID directly if you already know it.
 </Tip>
 
 ## Related resources

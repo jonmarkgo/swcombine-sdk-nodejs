@@ -1,13 +1,15 @@
 ---
-title: "Galaxy resource: systems, planets, sectors, and more"
-description: "Use client.galaxy to paginate through all star systems, planets, sectors, stations, and cities in the Star Wars Combine galaxy map."
-keywords: ["swcombine sdk", "galaxy", "systems", "planets", "sectors", "stations", "cities", "galaxy map"]
+title: 'Galaxy'
+description: 'Use client.galaxy to paginate through all star systems, planets, sectors, stations, and cities in the Star Wars Combine galaxy map.'
+keywords:
+  ['swcombine sdk', 'galaxy', 'systems', 'planets', 'sectors', 'stations', 'cities', 'galaxy map']
 ---
 
 The `client.galaxy` resource provides read access to the physical map of the Star Wars Combine galaxy. Every sub-resource — systems, planets, sectors, stations, and cities — returns a `Page<T>` and supports the standard `start_index` / `item_count` pagination parameters and `for await...of` auto-pagination. These endpoints are useful for building interactive maps, location lookups, and spatial analytics.
 
 <Note>
-  Some galaxy sub-resources (notably sectors) return a `404` if you omit pagination parameters entirely. Always pass explicit `start_index` and `item_count` values when calling these endpoints.
+  Some galaxy sub-resources (notably sectors) return a `404` if you omit pagination parameters
+  entirely. Always pass explicit `start_index` and `item_count` values when calling these endpoints.
 </Note>
 
 ## Star systems
@@ -77,7 +79,8 @@ Returns a paginated list of all sectors. Sectors group star systems into named r
 </ParamField>
 
 <Warning>
-  The sectors endpoint returns a `404` if you call it without pagination parameters. Always provide `start_index` and `item_count` explicitly.
+  The sectors endpoint returns a `404` if you call it without pagination parameters. Always provide
+  `start_index` and `item_count` explicitly.
 </Warning>
 
 ```typescript
@@ -163,7 +166,9 @@ for await (const sector of await client.galaxy.sectors.list({ start_index: 1, it
 ```
 
 <Tip>
-  Auto-pagination with `for await...of` makes one API request per page. For resources with thousands of entries, use a larger `item_count` (up to the endpoint maximum) to reduce request count and stay within the 600 requests/hour rate limit.
+  Auto-pagination with `for await...of` makes one API request per page. For resources with thousands
+  of entries, use a larger `item_count` (up to the endpoint maximum) to reduce request count and
+  stay within the 600 requests/hour rate limit.
 </Tip>
 
 ## Related resources

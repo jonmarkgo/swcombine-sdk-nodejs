@@ -1,7 +1,16 @@
 ---
-title: "OAuth 2.0 flow: authorize users with SW Combine SDK"
-description: "Run the OAuth 2.0 authorization code flow with the SW Combine SDK: register your app, generate an auth URL, handle the callback, and protect against CSRF."
-keywords: ["swcombine sdk", "oauth 2.0", "authorization flow", "access token", "callback handler", "express", "csrf"]
+title: 'OAuth Flow'
+description: 'Run the OAuth 2.0 authorization code flow with the SW Combine SDK: register your app, generate an auth URL, handle the callback, and protect against CSRF.'
+keywords:
+  [
+    'swcombine sdk',
+    'oauth 2.0',
+    'authorization flow',
+    'access token',
+    'callback handler',
+    'express',
+    'csrf',
+  ]
 ---
 
 The SW Combine API uses OAuth 2.0's authorization code flow to let users grant your application access to their game account. This guide walks you through every step: registering your app, generating an authorization URL, handling the callback, and using the resulting token to make authenticated requests.
@@ -22,6 +31,7 @@ The SW Combine API uses OAuth 2.0's authorization code flow to let users grant y
     SWC_CLIENT_ID=your_client_id
     SWC_CLIENT_SECRET=your_client_secret
     ```
+
   </Step>
 
   <Step title="Initialize the client in full OAuth mode">
@@ -41,6 +51,7 @@ The SW Combine API uses OAuth 2.0's authorization code flow to let users grant y
     <Note>
       `AccessType.Online` (the default) returns only an access token. `AccessType.Offline` additionally returns a refresh token, enabling automatic renewal without user interaction.
     </Note>
+
   </Step>
 
   <Step title="Generate an authorization URL and redirect the user">
@@ -71,6 +82,7 @@ The SW Combine API uses OAuth 2.0's authorization code flow to let users grant y
     <Tip>
       Request only the scopes your application actually uses. Users see a permission list during authorization, so a shorter list builds more trust. See the [scopes reference](/authentication/scopes) for available constants.
     </Tip>
+
   </Step>
 
   <Step title="Handle the OAuth callback">
@@ -114,6 +126,7 @@ The SW Combine API uses OAuth 2.0's authorization code flow to let users grant y
     <Warning>
       Always validate the `state` parameter before exchanging the code. Skipping this check exposes your application to CSRF attacks.
     </Warning>
+
   </Step>
 
   <Step title="Use the token to make authenticated requests">
@@ -135,6 +148,7 @@ The SW Combine API uses OAuth 2.0's authorization code flow to let users grant y
     ```
 
     In full OAuth mode, the SDK automatically refreshes the access token when it detects expiry (within a 5-minute buffer), as long as a refresh token is available.
+
   </Step>
 </Steps>
 
@@ -149,11 +163,13 @@ import { SWCombine, AccessType, CharacterScopes, MessageScopes } from 'swcombine
 
 const app = express();
 
-app.use(session({
-  secret: process.env.SESSION_SECRET!,
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 const client = new SWCombine({
   clientId: process.env.SWC_CLIENT_ID!,
@@ -168,11 +184,7 @@ app.get('/login', (req, res) => {
   req.session.oauthState = state;
 
   const authUrl = client.auth.getAuthorizationUrl({
-    scopes: [
-      CharacterScopes.READ,
-      CharacterScopes.STATS,
-      MessageScopes.READ,
-    ],
+    scopes: [CharacterScopes.READ, CharacterScopes.STATS, MessageScopes.READ],
     state,
   });
 
@@ -268,6 +280,7 @@ Make sure `http://localhost:3000/callback` is registered as a redirect URI in yo
     redirectUri: 'http://localhost:3000/callback/' // wrong — trailing slash
     redirectUri: 'https://localhost:3000/callback' // wrong — https vs http
     ```
+
   </Accordion>
 
   <Accordion title="Invalid scope format">
@@ -285,11 +298,15 @@ Make sure `http://localhost:3000/callback` is registered as a redirect URI in yo
     // Wrong — uppercase is rejected by the API
     scopes: ['CHARACTER_READ', 'MESSAGES_SEND']
     ```
+
   </Accordion>
 
-  <Accordion title="Invalid state parameter">
-    If your callback returns an "invalid state" error, the state stored at login time doesn't match the state returned in the callback. This often happens when the session is not persisting between the login and callback routes, or when the user follows an old authorization link. Send the user back through the login flow to generate a fresh state value.
-  </Accordion>
+<Accordion title="Invalid state parameter">
+  If your callback returns an "invalid state" error, the state stored at login time doesn't match
+  the state returned in the callback. This often happens when the session is not persisting between
+  the login and callback routes, or when the user follows an old authorization link. Send the user
+  back through the login flow to generate a fresh state value.
+</Accordion>
 
   <Accordion title="Access token not provided">
     Calls to authenticated endpoints fail if no token is set. Make sure you either pass `token` to the constructor or call `client.setToken()` before making API requests.
@@ -299,5 +316,6 @@ Make sure `http://localhost:3000/callback` is registered as a redirect URI in yo
       token: process.env.SWC_ACCESS_TOKEN!, // required for authenticated endpoints
     });
     ```
+
   </Accordion>
 </AccordionGroup>

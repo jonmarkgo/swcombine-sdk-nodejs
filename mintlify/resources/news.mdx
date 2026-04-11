@@ -1,7 +1,8 @@
 ---
-title: "News resource: GNS articles and sim news posts"
-description: "Use client.news to list and retrieve Galactic News Service articles and sim news posts, with optional category filtering for sim news."
-keywords: ["swcombine sdk", "news", "GNS", "galactic news service", "sim news", "articles", "announcements"]
+title: 'News'
+description: 'Use client.news to list and retrieve Galactic News Service articles and sim news posts, with optional category filtering for sim news.'
+keywords:
+  ['swcombine sdk', 'news', 'GNS', 'galactic news service', 'sim news', 'articles', 'announcements']
 ---
 
 The `client.news` resource gives you programmatic access to two distinct news feeds in the Star Wars Combine universe. The Galactic News Service (GNS) carries in-character news written by players, while sim news carries out-of-character announcements and updates from the game administration. Both feeds expose a list method for pagination and a get method for fetching individual articles by numeric ID.
@@ -49,7 +50,8 @@ console.log(article.author);
 ```
 
 <Note>
-  GNS article IDs are plain numbers, not the `"type:id"` string format used by entity UIDs elsewhere in the SDK.
+  GNS article IDs are plain numbers, not the `"type:id"` string format used by entity UIDs elsewhere
+  in the SDK.
 </Note>
 
 ## Sim news

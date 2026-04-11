@@ -1,7 +1,7 @@
 ---
-title: "Migrating to v3: pagination and auth changes"
-description: "Update your code for the two v3 breaking changes: Page<T> replaces raw arrays on all list() methods, and several wrapper types were removed."
-keywords: ["migration", "v3", "breaking changes", "Page", "pagination", "swcombine sdk", "upgrade"]
+title: 'Migrating to v3.x'
+description: 'Update your code for the two v3 breaking changes: Page<T> replaces raw arrays on all list() methods, and several wrapper types were removed.'
+keywords: ['migration', 'v3', 'breaking changes', 'Page', 'pagination', 'swcombine sdk', 'upgrade']
 ---
 
 Version 3.0 of the SW Combine SDK introduces two breaking changes. The first affects every `list()` call in your codebase: return types changed from raw arrays (or bespoke wrapper objects) to a unified `Page<T>` class. The second is a transparent internal change to how access tokens are transmitted. This guide walks through each change with before-and-after code so you can update your project quickly.
@@ -12,14 +12,14 @@ Version 3.0 of the SW Combine SDK introduces two breaking changes. The first aff
 
 ## Overview of breaking changes
 
-| Area | What changed |
-|------|-------------|
+| Area                      | What changed                                                                           |
+| ------------------------- | -------------------------------------------------------------------------------------- |
 | All `list()` return types | Now return `Page<T>` instead of `T[]`, `FactionListResponse`, `NewsListResponse`, etc. |
-| Pagination metadata | Access via `page.total`, `page.start`, `page.count` instead of `result.attributes.*` |
-| `listRaw()` methods | Removed — `list()` now includes metadata |
-| `listAll()` on factions | Removed — use `for await...of` instead |
-| Removed types | Multiple wrapper types replaced by `Page<T>` (see full list below) |
-| Authorization header | Tokens sent via `Authorization: OAuth {token}` header — no code changes needed |
+| Pagination metadata       | Access via `page.total`, `page.start`, `page.count` instead of `result.attributes.*`   |
+| `listRaw()` methods       | Removed — `list()` now includes metadata                                               |
+| `listAll()` on factions   | Removed — use `for await...of` instead                                                 |
+| Removed types             | Multiple wrapper types replaced by `Page<T>` (see full list below)                     |
+| Authorization header      | Tokens sent via `Authorization: OAuth {token}` header — no code changes needed         |
 
 ---
 
@@ -36,7 +36,7 @@ const ships = await client.inventory.entities.list({
   uid: '1:12345',
   assignType: 'owner',
 });
-ships.forEach(s => console.log(s.name));
+ships.forEach((s) => console.log(s.name));
 console.log(`Got ${ships.length} ships`);
 
 // v3
@@ -45,7 +45,7 @@ const ships = await client.inventory.entities.list({
   uid: '1:12345',
   assignType: 'owner',
 });
-ships.data.forEach(s => console.log(s.name));
+ships.data.forEach((s) => console.log(s.name));
 console.log(`Got ${ships.data.length} of ${ships.total} ships`);
 ```
 
@@ -56,12 +56,12 @@ The `faction.list()` endpoint previously returned a `FactionListResponse` wrappe
 ```typescript
 // v2
 const result = await client.faction.list();
-result.faction?.forEach(f => console.log(f.value));
+result.faction?.forEach((f) => console.log(f.value));
 console.log(result.attributes?.total);
 
 // v3
 const result = await client.faction.list();
-result.data.forEach(f => console.log(f.value));
+result.data.forEach((f) => console.log(f.value));
 console.log(result.total);
 ```
 
@@ -72,12 +72,12 @@ The news GNS and SimNews list endpoints previously returned arrays with a `.attr
 ```typescript
 // v2
 const news = await client.news.gns.list();
-news.forEach(n => console.log(n.value));
+news.forEach((n) => console.log(n.value));
 console.log(news.attributes.total);
 
 // v3
 const news = await client.news.gns.list();
-news.data.forEach(n => console.log(n.value));
+news.data.forEach((n) => console.log(n.value));
 console.log(news.total);
 ```
 
@@ -126,25 +126,29 @@ This pattern works on every `list()` endpoint, not just factions.
 
 The table below maps every v2 access pattern to its v3 equivalent:
 
-| v2 pattern | v3 equivalent |
-|-----------|---------------|
-| `result[0]` | `result.data[0]` |
-| `result.forEach(...)` | `result.data.forEach(...)` |
-| `result.length` | `result.data.length` |
-| `result.map(...)` | `result.data.map(...)` |
-| `result.faction?.[0]` | `result.data[0]` |
-| `result.attributes?.total` | `result.total` |
-| `result.attributes?.start` | `result.start` |
-| `result.attributes?.count` | `result.count` |
-| `listRaw()` | `list()` |
-| `listAll()` | `for await (const item of await list()) { ... }` |
+| v2 pattern                 | v3 equivalent                                    |
+| -------------------------- | ------------------------------------------------ |
+| `result[0]`                | `result.data[0]`                                 |
+| `result.forEach(...)`      | `result.data.forEach(...)`                       |
+| `result.length`            | `result.data.length`                             |
+| `result.map(...)`          | `result.data.map(...)`                           |
+| `result.faction?.[0]`      | `result.data[0]`                                 |
+| `result.attributes?.total` | `result.total`                                   |
+| `result.attributes?.start` | `result.start`                                   |
+| `result.attributes?.count` | `result.count`                                   |
+| `listRaw()`                | `list()`                                         |
+| `listAll()`                | `for await (const item of await list()) { ... }` |
 
 ### New capabilities in v3
 
 `Page<T>` adds features that were not available in v2:
 
 ```typescript
-const page = await client.inventory.entities.list({ entityType: 'ships', uid: '1:12345', assignType: 'owner' });
+const page = await client.inventory.entities.list({
+  entityType: 'ships',
+  uid: '1:12345',
+  assignType: 'owner',
+});
 
 // Check whether more pages exist
 console.log(page.hasMore); // true or false
@@ -155,7 +159,11 @@ if (page.hasMore) {
 }
 
 // Auto-paginate through every item across all pages
-for await (const ship of await client.inventory.entities.list({ entityType: 'ships', uid: '1:12345', assignType: 'owner' })) {
+for await (const ship of await client.inventory.entities.list({
+  entityType: 'ships',
+  uid: '1:12345',
+  assignType: 'owner',
+})) {
   console.log(ship.value.name);
 }
 
@@ -174,23 +182,23 @@ If you import any of the following types, replace them with `Page<T>` and update
 import { Page } from 'swcombine-sdk';
 ```
 
-| Removed type | Replacement |
-|-------------|-------------|
-| `FactionListResponse` | `Page<FactionListItem>` |
-| `FactionListAttributes` | Use `page.total`, `page.start`, `page.count` |
-| `NewsListResponse` | `Page<NewsListItem>` |
-| `NewsListAttributes` | Use `page.total`, `page.start`, `page.count` |
-| `GalaxyListAttributes` | Use `page.total`, `page.start`, `page.count` |
-| `GalaxyPlanetListRawResponse` | `Page<GalaxyPlanetListItem>` |
-| `GalaxySectorListRawResponse` | `Page<GalaxySectorListItem>` |
-| `GalaxySystemListRawResponse` | `Page<GalaxySystemListItem>` |
-| `GalaxyStationListRawResponse` | `Page<GalaxyStationListItem>` |
-| `GalaxyCityListRawResponse` | `Page<GalaxyCityListItem>` |
-| `TypesEntitiesListRawResponse` | `Page<TypesEntityListItem>` |
-| `TypesShipsListRawResponse` | `Page<TypesEntityListItem>` |
-| `TypesEntitiesListMetaResponse` | `Page<TypesEntityListItem>` |
-| `TypesEntityListAttributes` | Use `page.total`, `page.start`, `page.count` |
-| `ListResponse<T>` | `Page<T>` |
+| Removed type                    | Replacement                                  |
+| ------------------------------- | -------------------------------------------- |
+| `FactionListResponse`           | `Page<FactionListItem>`                      |
+| `FactionListAttributes`         | Use `page.total`, `page.start`, `page.count` |
+| `NewsListResponse`              | `Page<NewsListItem>`                         |
+| `NewsListAttributes`            | Use `page.total`, `page.start`, `page.count` |
+| `GalaxyListAttributes`          | Use `page.total`, `page.start`, `page.count` |
+| `GalaxyPlanetListRawResponse`   | `Page<GalaxyPlanetListItem>`                 |
+| `GalaxySectorListRawResponse`   | `Page<GalaxySectorListItem>`                 |
+| `GalaxySystemListRawResponse`   | `Page<GalaxySystemListItem>`                 |
+| `GalaxyStationListRawResponse`  | `Page<GalaxyStationListItem>`                |
+| `GalaxyCityListRawResponse`     | `Page<GalaxyCityListItem>`                   |
+| `TypesEntitiesListRawResponse`  | `Page<TypesEntityListItem>`                  |
+| `TypesShipsListRawResponse`     | `Page<TypesEntityListItem>`                  |
+| `TypesEntitiesListMetaResponse` | `Page<TypesEntityListItem>`                  |
+| `TypesEntityListAttributes`     | Use `page.total`, `page.start`, `page.count` |
+| `ListResponse<T>`               | `Page<T>`                                    |
 
 ---
 
@@ -199,7 +207,9 @@ import { Page } from 'swcombine-sdk';
 Access tokens are now sent in the `Authorization: OAuth {token}` HTTP header instead of the `?access_token=...` query parameter. **No code changes are required** — the SDK handles this automatically.
 
 <Warning>
-  If you have infrastructure (logging pipelines, proxies, reverse proxies) that inspects outgoing request URLs for an `access_token` query parameter, it will no longer appear there after upgrading to v3.
+  If you have infrastructure (logging pipelines, proxies, reverse proxies) that inspects outgoing
+  request URLs for an `access_token` query parameter, it will no longer appear there after upgrading
+  to v3.
 </Warning>
 
 ---

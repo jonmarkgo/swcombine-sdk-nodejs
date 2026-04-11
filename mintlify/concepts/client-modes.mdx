@@ -1,7 +1,16 @@
 ---
-title: "Client modes: public, token-only, and full OAuth"
-description: "Understand the three SW Combine SDK client modes, when to use each one, and how to configure the SWCombine constructor for your use case."
-keywords: ["swcombine sdk", "client modes", "public", "token", "oauth", "clientconfig", "swcombine constructor"]
+title: 'Client Modes'
+description: 'Understand the three SW Combine SDK client modes, when to use each one, and how to configure the SWCombine constructor for your use case.'
+keywords:
+  [
+    'swcombine sdk',
+    'client modes',
+    'public',
+    'token',
+    'oauth',
+    'clientconfig',
+    'swcombine constructor',
+  ]
 ---
 
 The `SWCombine` constructor accepts an optional configuration object that determines which API endpoints you can call and what authentication behavior the SDK enables. Choosing the right mode up front saves you from unexpected `401` errors or unnecessary OAuth complexity — each mode unlocks progressively more capability.
@@ -33,7 +42,8 @@ const { uid } = await client.character.getByHandle({ handle: 'han-solo' });
 ```
 
 <Note>
-  Calling an authenticated endpoint from a public client throws a `401 Unauthorized` error. If you see one, switch to token-only or full OAuth mode.
+  Calling an authenticated endpoint from a public client throws a `401 Unauthorized` error. If you
+  see one, switch to token-only or full OAuth mode.
 </Note>
 
 ## Token-only mode
@@ -52,7 +62,9 @@ console.log(me.name);
 ```
 
 <Warning>
-  Token-only mode cannot refresh an expired token automatically. When the token expires, requests fail with a `401` and you must supply a new token manually. Use full OAuth mode if you need automatic refresh.
+  Token-only mode cannot refresh an expired token automatically. When the token expires, requests
+  fail with a `401` and you must supply a new token manually. Use full OAuth mode if you need
+  automatic refresh.
 </Warning>
 
 ## Full OAuth mode
@@ -72,7 +84,8 @@ const client = new SWCombine({
 ```
 
 <Note>
-  You must provide `clientId` and `clientSecret` together. The SDK throws at construction time if only one is supplied.
+  You must provide `clientId` and `clientSecret` together. The SDK throws at construction time if
+  only one is supplied.
 </Note>
 
 Use `AccessType.Offline` when you want a refresh token for long-lived server-side access. Use `AccessType.Online` (the default) for short-lived sessions where you don't need to refresh.
@@ -90,15 +103,19 @@ Every option you can pass to `new SWCombine(config)`:
 </ParamField>
 
 <ParamField path="token" type="string | OAuthToken">
-  An existing token to seed the client with. Accepts a raw access token string or a full `OAuthToken` object with `accessToken`, `refreshToken`, and `expiresAt` fields.
+  An existing token to seed the client with. Accepts a raw access token string or a full
+  `OAuthToken` object with `accessToken`, `refreshToken`, and `expiresAt` fields.
 </ParamField>
 
 <ParamField path="redirectUri" type="string">
-  The callback URL registered with your OAuth application. Required for `auth.getAuthorizationUrl()` and `auth.handleCallback()`. Must match exactly what you registered — including scheme, host, port, and path.
+  The callback URL registered with your OAuth application. Required for `auth.getAuthorizationUrl()`
+  and `auth.handleCallback()`. Must match exactly what you registered — including scheme, host,
+  port, and path.
 </ParamField>
 
 <ParamField path="accessType" type="AccessType">
-  Controls whether the authorization server issues a refresh token. `AccessType.Offline` returns a refresh token; `AccessType.Online` (default) returns only an access token.
+  Controls whether the authorization server issues a refresh token. `AccessType.Offline` returns a
+  refresh token; `AccessType.Online` (default) returns only an access token.
 </ParamField>
 
 <ParamField path="baseURL" type="string" default="https://www.swcombine.com/ws/v2.0/">
@@ -110,11 +127,13 @@ Every option you can pass to `new SWCombine(config)`:
 </ParamField>
 
 <ParamField path="maxRetries" type="number" default="3">
-  Maximum retry attempts for retryable errors: network failures, `5xx` responses, and rate limit hits.
+  Maximum retry attempts for retryable errors: network failures, `5xx` responses, and rate limit
+  hits.
 </ParamField>
 
 <ParamField path="retryDelay" type="number" default="1000">
-  Base delay between retries in milliseconds. The SDK applies exponential backoff on top of this value.
+  Base delay between retries in milliseconds. The SDK applies exponential backoff on top of this
+  value.
 </ParamField>
 
 <ParamField path="debug" type="boolean" default="false">
@@ -123,12 +142,12 @@ Every option you can pass to `new SWCombine(config)`:
 
 ## Choosing the right mode
 
-| Scenario | Mode |
-|---|---|
-| Browsing public game data, no user account | Public |
-| Server-side script with a stored token | Token-only |
+| Scenario                                        | Mode                              |
+| ----------------------------------------------- | --------------------------------- |
+| Browsing public game data, no user account      | Public                            |
+| Server-side script with a stored token          | Token-only                        |
 | Web app with user login and long-lived sessions | Full OAuth (`AccessType.Offline`) |
-| Web app with short sessions, no refresh needed | Full OAuth (`AccessType.Online`) |
+| Web app with short sessions, no refresh needed  | Full OAuth (`AccessType.Online`)  |
 
 ## Next steps
 

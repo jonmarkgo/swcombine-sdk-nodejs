@@ -1,7 +1,8 @@
 ---
-title: "Working with Combine Galactic Time (Timestamp)"
+title: 'Combine Galactic Time'
 description: "Create, format, compare, and do arithmetic with CGT timestamps using the SDK's Timestamp utility class that converts between CGT and JavaScript dates."
-keywords: ["timestamp", "CGT", "Combine Galactic Time", "Timestamp", "in-game time", "swcombine sdk"]
+keywords:
+  ['timestamp', 'CGT', 'Combine Galactic Time', 'Timestamp', 'in-game time', 'swcombine sdk']
 ---
 
 The Star Wars Combine game world runs on its own calendar called Combine Galactic Time (CGT). CGT counts from the game's origin date of 3 December 1998 at 07:00:00 UTC, so a CGT year maps to a real-world year of 365 days. The SDK's `Timestamp` class lets you create, format, compare, and do arithmetic on CGT moments — and convert freely between CGT, JavaScript `Date` objects, and Unix timestamps.
@@ -36,7 +37,8 @@ const moment = new Timestamp({ year: 27, day: 88, hour: 5, minute: 12, second: 0
 ```
 
 <Note>
-  `day` is 1-indexed — valid values are `1` through `365`. The constructor throws a `RangeError` if any field is out of range.
+  `day` is 1-indexed — valid values are `1` through `365`. The constructor throws a `RangeError` if
+  any field is out of range.
 </Note>
 
 ## Reading components
@@ -46,11 +48,11 @@ Use the getter methods to read individual CGT components:
 ```typescript
 const ts = Timestamp.now();
 
-console.log(ts.getYear());    // e.g. 27
-console.log(ts.getDay());     // e.g. 88  (1–365)
-console.log(ts.getHour());    // e.g. 5   (0–23)
-console.log(ts.getMinute());  // e.g. 12  (0–59)
-console.log(ts.getSecond());  // e.g. 0   (0–59)
+console.log(ts.getYear()); // e.g. 27
+console.log(ts.getDay()); // e.g. 88  (1–365)
+console.log(ts.getHour()); // e.g. 5   (0–23)
+console.log(ts.getMinute()); // e.g. 12  (0–59)
+console.log(ts.getSecond()); // e.g. 0   (0–59)
 ```
 
 To get all components at once as a plain object, use `asMoment()`:
@@ -66,21 +68,21 @@ const moment = ts.asMoment();
 
 ### Preset formats
 
-| Preset | Output example |
-|--------|----------------|
+| Preset             | Output example            |
+| ------------------ | ------------------------- |
 | `'full'` (default) | `Year 27 Day 88, 5:12:00` |
-| `'minute'` | `Year 27 Day 88, 5:12` |
-| `'day'` | `Year 27 Day 88` |
-| `'shortFull'` | `Y27 D88, 5:12:00` |
-| `'shortMinute'` | `Y27 D88, 5:12` |
-| `'shortDay'` | `Y27 D88` |
+| `'minute'`         | `Year 27 Day 88, 5:12`    |
+| `'day'`            | `Year 27 Day 88`          |
+| `'shortFull'`      | `Y27 D88, 5:12:00`        |
+| `'shortMinute'`    | `Y27 D88, 5:12`           |
+| `'shortDay'`       | `Y27 D88`                 |
 
 ```typescript
 const ts = Timestamp.now();
 
-console.log(ts.toString());            // "Year 27 Day 88, 5:12:00"
-console.log(ts.toString('minute'));    // "Year 27 Day 88, 5:12"
-console.log(ts.toString('day'));       // "Year 27 Day 88"
+console.log(ts.toString()); // "Year 27 Day 88, 5:12:00"
+console.log(ts.toString('minute')); // "Year 27 Day 88, 5:12"
+console.log(ts.toString('day')); // "Year 27 Day 88"
 console.log(ts.toString('shortFull')); // "Y27 D88, 5:12:00"
 ```
 
@@ -88,14 +90,14 @@ console.log(ts.toString('shortFull')); // "Y27 D88, 5:12:00"
 
 Use curly-brace tags in your own template. Double a tag letter to get zero-padded output.
 
-| Tag | Output | Padded tag | Output |
-|-----|--------|-----------|--------|
-| `{y}` | year | `{yy}` | zero-padded year |
-| `{d}` | day | `{dd}` | zero-padded day |
-| `{h}` | hour | `{hh}` | zero-padded hour |
-| `{m}` | minute | `{mm}` | zero-padded minute |
-| `{s}` | second | `{ss}` | zero-padded second |
-| `{hms}` | shorthand for `{hh}:{mm}:{ss}` | — | — |
+| Tag     | Output                         | Padded tag | Output             |
+| ------- | ------------------------------ | ---------- | ------------------ |
+| `{y}`   | year                           | `{yy}`     | zero-padded year   |
+| `{d}`   | day                            | `{dd}`     | zero-padded day    |
+| `{h}`   | hour                           | `{hh}`     | zero-padded hour   |
+| `{m}`   | minute                         | `{mm}`     | zero-padded minute |
+| `{s}`   | second                         | `{ss}`     | zero-padded second |
+| `{hms}` | shorthand for `{hh}:{mm}:{ss}` | —          | —                  |
 
 ```typescript
 const ts = Timestamp.now();
@@ -127,7 +129,8 @@ const soon = now.add({ seconds: 3600 });
 ```
 
 <Note>
-  `subtract()` will never go before the SWC origin date. If the subtraction would underflow, the result is clamped to Year 0 Day 1.
+  `subtract()` will never go before the SWC origin date. If the subtraction would underflow, the
+  result is clamped to Year 0 Day 1.
 </Note>
 
 ### Measuring the gap between two timestamps
@@ -153,9 +156,9 @@ Three methods let you compare two `Timestamp` instances:
 const a = new Timestamp({ year: 27, day: 10 });
 const b = new Timestamp({ year: 27, day: 20 });
 
-console.log(a.isBefore(b));  // true
-console.log(a.isAfter(b));   // false
-console.log(a.equals(b));    // false
+console.log(a.isBefore(b)); // true
+console.log(a.isAfter(b)); // false
+console.log(a.equals(b)); // false
 console.log(a.equals(new Timestamp({ year: 27, day: 10 }))); // true
 ```
 

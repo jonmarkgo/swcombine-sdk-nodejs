@@ -1,7 +1,8 @@
 ---
-title: "Authentication overview: client modes and access levels"
-description: "Learn the three ways to initialize the SW Combine SDK client — public, token-only, and full OAuth — and which endpoints each mode unlocks."
-keywords: ["swcombine sdk", "authentication", "oauth", "client config", "access token", "client modes"]
+title: 'Authentication'
+description: 'Learn the three ways to initialize the SW Combine SDK client — public, token-only, and full OAuth — and which endpoints each mode unlocks.'
+keywords:
+  ['swcombine sdk', 'authentication', 'oauth', 'client config', 'access token', 'client modes']
 ---
 
 The SW Combine SDK supports three client modes, each suited to a different level of access. You choose a mode by what you pass to the `SWCombine` constructor. Public endpoints work with no credentials at all; most game data endpoints require an access token; and the full OAuth flow — including automatic token refresh — requires your OAuth app credentials.
@@ -19,6 +20,7 @@ The SW Combine SDK supports three client modes, each suited to a different level
     ```
 
     Authenticated endpoints will throw a `401 Unauthorized` error when called from a public client.
+
   </Tab>
 
   <Tab title="Token-only">
@@ -33,6 +35,7 @@ The SW Combine SDK supports three client modes, each suited to a different level
     ```
 
     If the token expires, requests will fail with a `401` — the SDK cannot refresh automatically without OAuth credentials.
+
   </Tab>
 
   <Tab title="Full OAuth">
@@ -53,6 +56,7 @@ The SW Combine SDK supports three client modes, each suited to a different level
     <Note>
       You must provide both `clientId` and `clientSecret` together. The SDK throws immediately if only one is set.
     </Note>
+
   </Tab>
 </Tabs>
 
@@ -69,19 +73,26 @@ Every option you can pass to `new SWCombine(config)`:
 </ParamField>
 
 <ParamField path="redirectUri" type="string">
-  The callback URL registered with your OAuth application. Required for `auth.getAuthorizationUrl()` and `auth.handleCallback()`. Must match exactly what you registered — including scheme, host, port, and path.
+  The callback URL registered with your OAuth application. Required for `auth.getAuthorizationUrl()`
+  and `auth.handleCallback()`. Must match exactly what you registered — including scheme, host,
+  port, and path.
 </ParamField>
 
 <ParamField path="accessType" type="AccessType">
-  Controls whether the authorization server returns a refresh token. Use `AccessType.Offline` to receive a refresh token for long-lived access; `AccessType.Online` (default) returns only an access token.
+  Controls whether the authorization server returns a refresh token. Use `AccessType.Offline` to
+  receive a refresh token for long-lived access; `AccessType.Online` (default) returns only an
+  access token.
 </ParamField>
 
 <ParamField path="token" type="string | OAuthToken">
-  An existing token to seed the client with. Can be a raw access token string or a full `OAuthToken` object (`accessToken`, `refreshToken`, `expiresAt`). The SDK uses this immediately without running an OAuth flow.
+  An existing token to seed the client with. Can be a raw access token string or a full `OAuthToken`
+  object (`accessToken`, `refreshToken`, `expiresAt`). The SDK uses this immediately without running
+  an OAuth flow.
 </ParamField>
 
 <ParamField path="baseURL" type="string">
-  Override the API base URL. Defaults to `https://www.swcombine.com/ws/v2.0/`. Most applications do not need this.
+  Override the API base URL. Defaults to `https://www.swcombine.com/ws/v2.0/`. Most applications do
+  not need this.
 </ParamField>
 
 <ParamField path="timeout" type="number">
@@ -89,34 +100,39 @@ Every option you can pass to `new SWCombine(config)`:
 </ParamField>
 
 <ParamField path="maxRetries" type="number">
-  Maximum number of retry attempts for retryable errors (network failures, `5xx` responses, rate limit hits). Defaults to `3`.
+  Maximum number of retry attempts for retryable errors (network failures, `5xx` responses, rate
+  limit hits). Defaults to `3`.
 </ParamField>
 
 <ParamField path="retryDelay" type="number">
-  Base delay between retry attempts in milliseconds, applied with exponential backoff. Defaults to `1000`.
+  Base delay between retry attempts in milliseconds, applied with exponential backoff. Defaults to
+  `1000`.
 </ParamField>
 
 <ParamField path="debug" type="boolean">
-  When `true`, logs all HTTP requests and responses to the console. Useful during development. Defaults to `false`.
+  When `true`, logs all HTTP requests and responses to the console. Useful during development.
+  Defaults to `false`.
 </ParamField>
 
 ## Which endpoints need which mode
 
-| Mode | Required for |
-|---|---|
-| Public (no credentials) | `character.getByHandle`, `galaxy.*`, `types.*`, `news.*`, `api.helloWorld`, `api.time` |
-| Token-only | `character.get`, `character.me()`, `faction.*`, `inventory.*`, `market.*`, `events.*`, `location.*`, `datacard.*` |
-| Full OAuth | `auth.getAuthorizationUrl()`, `auth.handleCallback()`, `auth.revokeToken()`, `client.refreshToken()` |
+| Mode                    | Required for                                                                                                      |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Public (no credentials) | `character.getByHandle`, `galaxy.*`, `types.*`, `news.*`, `api.helloWorld`, `api.time`                            |
+| Token-only              | `character.get`, `character.me()`, `faction.*`, `inventory.*`, `market.*`, `events.*`, `location.*`, `datacard.*` |
+| Full OAuth              | `auth.getAuthorizationUrl()`, `auth.handleCallback()`, `auth.revokeToken()`, `client.refreshToken()`              |
 
 <Note>
-  Automatic token refresh only works in full OAuth mode. In token-only mode, you must supply a fresh token manually after expiry.
+  Automatic token refresh only works in full OAuth mode. In token-only mode, you must supply a fresh
+  token manually after expiry.
 </Note>
 
 ## Next steps
 
 <CardGroup cols={2}>
   <Card title="OAuth flow" icon="arrows-rotate" href="/authentication/oauth-flow">
-    Step-by-step guide to registering your app, running the authorization flow, and handling callbacks.
+    Step-by-step guide to registering your app, running the authorization flow, and handling
+    callbacks.
   </Card>
   <Card title="Scopes" icon="list-check" href="/authentication/scopes">
     Browse all 170+ scope constants and learn how to request only the permissions you need.

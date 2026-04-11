@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "name": "SW Combine SDK",
-  "theme": "luma",
+  "theme": "mint",
   "colors": {
     "primary": "#1a56db",
     "light": "#e8f0fe",
@@ -58,7 +58,12 @@
               "resources/location",
               "resources/datacard"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
           {
             "group": "Guides",
             "pages": [
@@ -68,6 +73,10 @@
             ]
           }
         ]
+      },
+      {
+        "href": "https://jonmarkgo.github.io/swcombine-sdk-nodejs/",
+        "tab": "Typedocs"
       }
     ]
   }

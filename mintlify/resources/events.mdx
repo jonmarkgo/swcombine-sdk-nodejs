@@ -1,13 +1,25 @@
 ---
-title: "Events resource: in-game activity and event log"
-description: "Use client.events to query the Star Wars Combine event log by mode — character, faction, inventory, or combat — and retrieve individual game events."
-keywords: ["swcombine sdk", "events", "event log", "game events", "combat", "faction events", "character events", "inventory events"]
+title: 'Events'
+description: 'Use client.events to query the Star Wars Combine event log by mode — character, faction, inventory, or combat — and retrieve individual game events.'
+keywords:
+  [
+    'swcombine sdk',
+    'events',
+    'event log',
+    'game events',
+    'combat',
+    'faction events',
+    'character events',
+    'inventory events',
+  ]
 ---
 
 The `client.events` resource exposes the in-game event log — a stream of timestamped activity records covering everything that happens to a character, faction, inventory, or in combat. You filter by `eventMode` to select the scope of events you want and by `eventType` to narrow down to specific activity types. Use this resource to build activity dashboards, audit logs, or combat reporters.
 
 <Warning>
-  The events endpoint uses **0-based `start_index`** (start with `start_index: 0` for the first page). This is the only resource in the SDK that does not use 1-based pagination. All other resources start at `start_index: 1`.
+  The events endpoint uses **0-based `start_index`** (start with `start_index: 0` for the first
+  page). This is the only resource in the SDK that does not use 1-based pagination. All other
+  resources start at `start_index: 1`.
 </Warning>
 
 ## Listing events
@@ -17,15 +29,14 @@ The `client.events` resource exposes the in-game event log — a stream of times
 Returns a paginated list of game events filtered by mode and type.
 
 <ParamField path="eventMode" type="string" required>
-  The scope of events to return. Must be one of:
-  - `character` — events related to a character's personal activity
-  - `faction` — events related to faction operations
-  - `inventory` — events related to entities in the character's inventory
-  - `combat` — combat-related events
+  The scope of events to return. Must be one of: - `character` — events related to a character's
+  personal activity - `faction` — events related to faction operations - `inventory` — events
+  related to entities in the character's inventory - `combat` — combat-related events
 </ParamField>
 
 <ParamField path="eventType" type="string" required>
-  The type of event to filter for. Use `"all"` to return all event types within the selected mode, or pass a specific type string.
+  The type of event to filter for. Use `"all"` to return all event types within the selected mode,
+  or pass a specific type string.
 </ParamField>
 
 <ParamField path="start_index" type="number" default="0">
@@ -115,17 +126,18 @@ while (true) {
 ```
 
 <Tip>
-  When using `for await...of`, you do not need to manage `start_index` yourself — the SDK advances it correctly regardless of whether the endpoint uses 0-based or 1-based indexing.
+  When using `for await...of`, you do not need to manage `start_index` yourself — the SDK advances
+  it correctly regardless of whether the endpoint uses 0-based or 1-based indexing.
 </Tip>
 
 ## Event modes
 
-| Mode | Description |
-|------|-------------|
+| Mode        | Description                                                                              |
+| ----------- | ---------------------------------------------------------------------------------------- |
 | `character` | Personal activity for the authenticated character: movement, communication, transactions |
-| `faction` | Faction-level operations: member changes, credits, production |
-| `inventory` | Activity involving entities in the character's inventory: ship movements, repairs |
-| `combat` | Combat engagements, battle outcomes, and damage reports |
+| `faction`   | Faction-level operations: member changes, credits, production                            |
+| `inventory` | Activity involving entities in the character's inventory: ship movements, repairs        |
+| `combat`    | Combat engagements, battle outcomes, and damage reports                                  |
 
 ## Full example
 

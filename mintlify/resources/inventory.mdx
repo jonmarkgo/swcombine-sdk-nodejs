@@ -1,7 +1,17 @@
 ---
-title: "Inventory resource: ships, items, and owned entities"
+title: 'Inventory'
 description: "Use client.inventory to retrieve an overview of a character's holdings and list all entities of a given type — ships, vehicles, items, NPCs, and more."
-keywords: ["swcombine sdk", "inventory", "ships", "vehicles", "items", "entities", "assignType", "entityType"]
+keywords:
+  [
+    'swcombine sdk',
+    'inventory',
+    'ships',
+    'vehicles',
+    'items',
+    'entities',
+    'assignType',
+    'entityType',
+  ]
 ---
 
 The `client.inventory` resource gives you visibility into everything a character owns or is assigned to in the Star Wars Combine universe. You start with an overview that summarizes total counts by category, then drill down into individual entity types to page through the actual assets. The entities endpoint supports filtering by assignment type — owner, pilot, crewmember, and more — so you can answer questions like "which ships am I piloting but don't own?"
@@ -34,12 +44,13 @@ Returns a paginated list of entities of a specific type in the character's inven
 </ParamField>
 
 <ParamField path="entityType" type="string" required>
-  The category of entities to list. Must be one of:
-  `ships`, `vehicles`, `stations`, `cities`, `facilities`, `planets`, `items`, `npcs`, `droids`, `creatures`, `materials`.
+  The category of entities to list. Must be one of: `ships`, `vehicles`, `stations`, `cities`,
+  `facilities`, `planets`, `items`, `npcs`, `droids`, `creatures`, `materials`.
 </ParamField>
 
 <ParamField path="assignType" type="string">
-  Filter by assignment role. Common values: `owner`, `pilot`, `crewmember`. Omit to return all assignments.
+  Filter by assignment role. Common values: `owner`, `pilot`, `crewmember`. Omit to return all
+  assignments.
 </ParamField>
 
 <ParamField path="start_index" type="number" default="1">
@@ -88,19 +99,19 @@ const pilotedShips = await client.inventory.entities.list({
 
 The `entityType` parameter accepts the following values:
 
-| Value | Description |
-|-------|-------------|
-| `ships` | Spacecraft of all classes |
-| `vehicles` | Ground and repulsorlift vehicles |
-| `stations` | Space stations |
-| `cities` | Planetary cities |
+| Value        | Description                                     |
+| ------------ | ----------------------------------------------- |
+| `ships`      | Spacecraft of all classes                       |
+| `vehicles`   | Ground and repulsorlift vehicles                |
+| `stations`   | Space stations                                  |
+| `cities`     | Planetary cities                                |
 | `facilities` | Ground-based production and military facilities |
-| `planets` | Planets owned or controlled by the character |
-| `items` | Equipment, weapons, and consumables |
-| `npcs` | Non-player characters assigned to the character |
-| `droids` | Droid units |
-| `creatures` | Domesticated or working creatures |
-| `materials` | Raw materials and resources |
+| `planets`    | Planets owned or controlled by the character    |
+| `items`      | Equipment, weapons, and consumables             |
+| `npcs`       | Non-player characters assigned to the character |
+| `droids`     | Droid units                                     |
+| `creatures`  | Domesticated or working creatures               |
+| `materials`  | Raw materials and resources                     |
 
 ## Full example
 
@@ -134,7 +145,8 @@ console.log(`${items.total} items in inventory`);
 ```
 
 <Tip>
-  Large inventories — especially for items and materials — can span many pages. Use a higher `item_count` value and consider a `pageDelay` when auto-paginating to stay within rate limits.
+  Large inventories — especially for items and materials — can span many pages. Use a higher
+  `item_count` value and consider a `pageDelay` when auto-paginating to stay within rate limits.
 </Tip>
 
 ## Related resources

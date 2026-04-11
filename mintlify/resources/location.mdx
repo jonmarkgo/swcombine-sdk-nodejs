@@ -1,7 +1,17 @@
 ---
-title: "Location resource: entity positions in the galaxy"
-description: "Use client.location to retrieve the current galactic position of any entity — characters, ships, vehicles, and more — by entity type and UID."
-keywords: ["swcombine sdk", "location", "position", "coordinates", "entity location", "ship location", "character location", "galaxy map"]
+title: 'Location'
+description: 'Use client.location to retrieve the current galactic position of any entity — characters, ships, vehicles, and more — by entity type and UID.'
+keywords:
+  [
+    'swcombine sdk',
+    'location',
+    'position',
+    'coordinates',
+    'entity location',
+    'ship location',
+    'character location',
+    'galaxy map',
+  ]
 ---
 
 The `client.location` resource lets you look up where any entity currently is in the Star Wars Combine galaxy. Whether you need to find a ship, track a character's position, or determine which system a vehicle is in, `location.get()` returns the full positional data for that entity. You provide the entity's type and UID, and the API returns the location context including system, planet, and coordinate data.
@@ -13,12 +23,8 @@ The `client.location` resource lets you look up where any entity currently is in
 Returns the current location data for a single entity.
 
 <ParamField path="entityType" type="string" required>
-  The type of entity to locate. Common values include:
-  - `character` — a player character
-  - `ship` — a spacecraft
-  - `vehicle` — a ground vehicle
-  
-  Other entity types may also be supported.
+  The type of entity to locate. Common values include: - `character` — a player character - `ship` —
+  a spacecraft - `vehicle` — a ground vehicle Other entity types may also be supported.
 </ParamField>
 
 <ParamField path="uid" type="string" required>
@@ -50,14 +56,16 @@ console.log(shipLocation.coordinates);
 
 ## Common entity types
 
-| `entityType` value | Description |
-|--------------------|-------------|
-| `character` | Player character |
-| `ship` | Spacecraft |
-| `vehicle` | Ground or repulsorlift vehicle |
+| `entityType` value | Description                    |
+| ------------------ | ------------------------------ |
+| `character`        | Player character               |
+| `ship`             | Spacecraft                     |
+| `vehicle`          | Ground or repulsorlift vehicle |
 
 <Note>
-  The `entityType` string here corresponds to the kind of entity you are locating, not the type-prefix in the UID. For example, a character with UID `"1:12345"` uses `entityType: 'character'`.
+  The `entityType` string here corresponds to the kind of entity you are locating, not the
+  type-prefix in the UID. For example, a character with UID `"1:12345"` uses `entityType:
+  'character'`.
 </Note>
 
 ## Full example
@@ -94,7 +102,9 @@ for await (const ship of ships) {
 ```
 
 <Warning>
-  Calling `location.get()` for every ship in a large inventory will consume one API request per ship. If you have many ships, you may hit the 600 requests/hour rate limit. Consider caching location data or batching your lookups with a delay.
+  Calling `location.get()` for every ship in a large inventory will consume one API request per
+  ship. If you have many ships, you may hit the 600 requests/hour rate limit. Consider caching
+  location data or batching your lookups with a delay.
 </Warning>
 
 ## Related resources

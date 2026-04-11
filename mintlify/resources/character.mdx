@@ -1,7 +1,17 @@
 ---
-title: "Character resource: profiles, messages, and credits"
-description: "Use client.character to fetch character profiles, send and receive messages, manage credits, query skills, and inspect OAuth privileges and permissions."
-keywords: ["swcombine sdk", "character", "messages", "credits", "skills", "privileges", "permissions", "CHARACTER_READ"]
+title: 'Character'
+description: 'Use client.character to fetch character profiles, send and receive messages, manage credits, query skills, and inspect OAuth privileges and permissions.'
+keywords:
+  [
+    'swcombine sdk',
+    'character',
+    'messages',
+    'credits',
+    'skills',
+    'privileges',
+    'permissions',
+    'CHARACTER_READ',
+  ]
 ---
 
 The `client.character` resource gives you access to the core player identity in the Star Wars Combine universe. You can look up characters by UID or handle, read the authenticated user's own profile, exchange in-game messages, transfer credits, and inspect the fine-grained privilege and permission system. Most methods require the `CHARACTER_READ` OAuth scope; the `getByHandle` method is the only publicly available endpoint that needs no authentication at all.
@@ -17,7 +27,7 @@ Fetches the full profile for the character associated with the current access to
 ```typescript
 const me = await client.character.me();
 
-console.log(me.name);    // "Luke Skywalker"
+console.log(me.name); // "Luke Skywalker"
 console.log(me.credits); // 42000
 console.log(me.faction); // faction info object
 ```
@@ -55,12 +65,13 @@ const { uid, handle } = await publicClient.character.getByHandle({
   handle: 'luke-skywalker',
 });
 
-console.log(uid);    // "1:12345"
+console.log(uid); // "1:12345"
 console.log(handle); // "luke-skywalker"
 ```
 
 <Tip>
-  Use `getByHandle` to resolve a known handle to a UID before making authenticated calls. This is safe to call without any credentials.
+  Use `getByHandle` to resolve a known handle to a UID before making authenticated calls. This is
+  safe to call without any credentials.
 </Tip>
 
 ### hasPermission()
@@ -101,7 +112,8 @@ Returns a paginated list of messages for a character's inbox or sent box.
 </ParamField>
 
 <ParamField path="mode" type="MessageMode">
-  Filter by message direction. Use `MessageMode.Sent` or `MessageMode.Received`. Omit to return both sent and received messages.
+  Filter by message direction. Use `MessageMode.Sent` or `MessageMode.Received`. Omit to return both
+  sent and received messages.
 </ParamField>
 
 <ParamField path="start_index" type="number" default="1">
@@ -171,7 +183,8 @@ Sends a new in-game message to one or more recipients.
 </ParamField>
 
 <Warning>
-  The `receivers` field takes character **handles** separated by semicolons, not UIDs. Sending to UIDs will fail. Maximum 25 recipients per message.
+  The `receivers` field takes character **handles** separated by semicolons, not UIDs. Sending to
+  UIDs will fail. Maximum 25 recipients per message.
 </Warning>
 
 ```typescript
@@ -283,7 +296,8 @@ Returns a paginated history of credit transactions for a character.
 </ParamField>
 
 <ParamField path="start_id" type="number">
-  Optional transaction ID threshold. Use `1` for oldest 1000 entries; `0` or omit for the newest 1000.
+  Optional transaction ID threshold. Use `1` for oldest 1000 entries; `0` or omit for the newest
+  1000.
 </ParamField>
 
 ```typescript
@@ -412,7 +426,8 @@ console.log(scopes); // ["CHARACTER_READ", "CREDITS_WRITE", ...]
 ```
 
 <Note>
-  Use `getScopes()` to verify at runtime that your token has the scopes needed before calling protected endpoints.
+  Use `getScopes()` to verify at runtime that your token has the scopes needed before calling
+  protected endpoints.
 </Note>
 
 ## Related resources

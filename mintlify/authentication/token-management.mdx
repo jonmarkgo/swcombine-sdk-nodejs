@@ -1,7 +1,17 @@
 ---
-title: "Token management: store, refresh, and expire OAuth tokens"
-description: "Learn how to store OAuth tokens, trigger automatic and manual refresh, check expiration, and implement custom persistence with the SW Combine SDK."
-keywords: ["swcombine sdk", "token management", "oauth token", "refresh token", "token expiry", "setToken", "getToken", "clearToken"]
+title: 'Token Management'
+description: 'Learn how to store OAuth tokens, trigger automatic and manual refresh, check expiration, and implement custom persistence with the SW Combine SDK.'
+keywords:
+  [
+    'swcombine sdk',
+    'token management',
+    'oauth token',
+    'refresh token',
+    'token expiry',
+    'setToken',
+    'getToken',
+    'clearToken',
+  ]
 ---
 
 After you obtain an access token through the OAuth flow, the SDK gives you a set of methods to inspect, update, and refresh that token throughout your application's lifecycle. This page covers the `OAuthToken` structure, the token methods on the `SWCombine` client, automatic token refresh, and patterns for persisting tokens across server restarts.
@@ -12,16 +22,17 @@ Every method that returns a token uses the `OAuthToken` interface:
 
 ```typescript
 interface OAuthToken {
-  accessToken: string;   // Bearer token sent with every API request
+  accessToken: string; // Bearer token sent with every API request
   refreshToken?: string; // Present only when accessType is AccessType.Offline
-  expiresAt: number;     // Unix timestamp in milliseconds when the access token expires
+  expiresAt: number; // Unix timestamp in milliseconds when the access token expires
 }
 ```
 
 `expiresAt` is a millisecond epoch value. Compare it with `Date.now()` to check whether the token has expired, or let the SDK do this automatically.
 
 <Note>
-  Access tokens typically expire after one hour. Refresh tokens are long-lived but have no guaranteed expiry from the SDK side — store and protect them accordingly.
+  Access tokens typically expire after one hour. Refresh tokens are long-lived but have no
+  guaranteed expiry from the SDK side — store and protect them accordingly.
 </Note>
 
 ## Token methods on the client
@@ -110,6 +121,7 @@ const character = await client.character.me();
 ```
 
 Automatic refresh requires two conditions:
+
 1. The client was initialized with `clientId` and `clientSecret`.
 2. The current `OAuthToken` includes a `refreshToken` (i.e., you used `AccessType.Offline` during authorization).
 

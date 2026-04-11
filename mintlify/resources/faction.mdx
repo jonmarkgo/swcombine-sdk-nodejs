@@ -1,7 +1,8 @@
 ---
-title: "Faction resource: members, budgets, and credit logs"
-description: "Use client.faction to list and retrieve factions, browse members and stockholders, inspect budget allocations, and page through credit history."
-keywords: ["swcombine sdk", "faction", "members", "budgets", "stockholders", "creditlog", "faction uid"]
+title: 'Faction'
+description: 'Use client.faction to list and retrieve factions, browse members and stockholders, inspect budget allocations, and page through credit history.'
+keywords:
+  ['swcombine sdk', 'faction', 'members', 'budgets', 'stockholders', 'creditlog', 'faction uid']
 ---
 
 The `client.faction` resource exposes the faction layer of the Star Wars Combine economy and organization system. Factions are the primary organizational unit in the game — governments, corporations, crime syndicates, and more. You can list all factions, retrieve a specific one by UID, browse membership, inspect financial budgets, query stockholders, and page through the full credit transaction history for any faction.
@@ -15,7 +16,7 @@ Returns a paginated list of all factions in the game.
 ```typescript
 const factions = await client.faction.list();
 
-console.log(factions.total);   // Total number of factions
+console.log(factions.total); // Total number of factions
 console.log(factions.data[0]); // First FactionListItem
 
 for await (const faction of factions) {
@@ -50,7 +51,8 @@ console.log(faction.leader);
 ```
 
 <Note>
-  Faction UIDs use type prefix `20`, e.g. `"20:123"`. Character UIDs use type prefix `1`, e.g. `"1:12345"`. Always use the correct prefix for the resource type you are querying.
+  Faction UIDs use type prefix `20`, e.g. `"20:123"`. Character UIDs use type prefix `1`, e.g.
+  `"1:12345"`. Always use the correct prefix for the resource type you are querying.
 </Note>
 
 ## Members
@@ -156,7 +158,9 @@ for await (const entry of creditLog) {
 ```
 
 <Tip>
-  The credit log can be very large for active factions. Use `item_count` to control page size and consider adding a `pageDelay` when auto-paginating to avoid hitting the 600 requests/hour rate limit.
+  The credit log can be very large for active factions. Use `item_count` to control page size and
+  consider adding a `pageDelay` when auto-paginating to avoid hitting the 600 requests/hour rate
+  limit.
 </Tip>
 
 ## Full example
@@ -179,7 +183,7 @@ console.log(`${members.total} total members`);
 
 // Inspect budgets
 const budgets = await client.faction.budgets.list({ uid: first.uid });
-budgets.forEach(b => console.log(b.name, b.allocated));
+budgets.forEach((b) => console.log(b.name, b.allocated));
 ```
 
 ## Related resources

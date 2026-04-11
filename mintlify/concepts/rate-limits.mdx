@@ -1,7 +1,16 @@
 ---
-title: "Rate limits: monitoring and managing your request quota"
+title: 'Rate Limits'
 description: "Understand the SW Combine API's 600 requests/hour limit, how to monitor your remaining quota in real time, and how the SDK handles rate limit responses."
-keywords: ["swcombine sdk", "rate limits", "quota", "requests per hour", "retry-after", "getratelimitinfo", "onratelimitupdate"]
+keywords:
+  [
+    'swcombine sdk',
+    'rate limits',
+    'quota',
+    'requests per hour',
+    'retry-after',
+    'getratelimitinfo',
+    'onratelimitupdate',
+  ]
 ---
 
 The SW Combine API allows up to 600 requests per hour. The SDK tracks this quota automatically and exposes methods for monitoring it in real time. When you hit the limit, the SDK retries the request after the server-specified wait time — but for applications that make many requests in sequence, understanding your remaining quota helps you pace calls proactively rather than hitting the limit first.
@@ -14,9 +23,9 @@ Call `client.getRateLimitInfo()` at any point to read the current quota state. I
 const info = client.getRateLimitInfo();
 
 if (info) {
-  console.log(info.remaining);  // Requests left in this window
-  console.log(info.limit);      // Total requests allowed (600)
-  console.log(info.resetTime);  // Date when the window resets
+  console.log(info.remaining); // Requests left in this window
+  console.log(info.limit); // Total requests allowed (600)
+  console.log(info.resetTime); // Date when the window resets
 }
 ```
 
@@ -51,12 +60,14 @@ When the API returns a `429 Too Many Requests` response, the SDK:
     The SDK pauses for the full `Retry-After` duration, overriding the configured `retryDelay`.
   </Step>
   <Step title="Retries the request">
-    The original request is retried transparently. If all retry attempts are exhausted without success, an `SWCError` with `retryable: true` is thrown.
+    The original request is retried transparently. If all retry attempts are exhausted without
+    success, an `SWCError` with `retryable: true` is thrown.
   </Step>
 </Steps>
 
 <Note>
-  The number of retry attempts is controlled by `maxRetries` in your `ClientConfig` (default: `3`). If you expect to frequently hit rate limits, increase `maxRetries` or add delays between calls.
+  The number of retry attempts is controlled by `maxRetries` in your `ClientConfig` (default: `3`).
+  If you expect to frequently hit rate limits, increase `maxRetries` or add delays between calls.
 </Note>
 
 ## Querying per-endpoint rate limits
@@ -87,20 +98,22 @@ for await (const ship of await client.inventory.entities.list({
 ```
 
 <Tip>
-  Combine a larger `item_count` with a modest `pageDelay` to reduce total requests while keeping throughput acceptable. Fetching 100 items per page instead of 50 halves the number of requests needed.
+  Combine a larger `item_count` with a modest `pageDelay` to reduce total requests while keeping
+  throughput acceptable. Fetching 100 items per page instead of 50 halves the number of requests
+  needed.
 </Tip>
 
 ## Rate limit reference
 
-| Property | Value |
-|---|---|
-| Requests per hour | 600 |
-| Reset window | Rolling 1-hour window |
-| Retry behavior | Automatic, respects `Retry-After` header |
-| Error type when exhausted | `SWCError` with `retryable: true` |
-| SDK method to check quota | `client.getRateLimitInfo()` |
-| SDK method to listen for updates | `client.onRateLimitUpdate(callback)` |
-| Per-endpoint limits | `client.api.rateLimits()` |
+| Property                         | Value                                    |
+| -------------------------------- | ---------------------------------------- |
+| Requests per hour                | 600                                      |
+| Reset window                     | Rolling 1-hour window                    |
+| Retry behavior                   | Automatic, respects `Retry-After` header |
+| Error type when exhausted        | `SWCError` with `retryable: true`        |
+| SDK method to check quota        | `client.getRateLimitInfo()`              |
+| SDK method to listen for updates | `client.onRateLimitUpdate(callback)`     |
+| Per-endpoint limits              | `client.api.rateLimits()`                |
 
 ## Next steps
 

@@ -1,7 +1,16 @@
 ---
-title: "OAuth scopes: request only the permissions you need"
-description: "All 170+ SW Combine SDK OAuth scope constants for character, message, inventory, and faction access, with helper functions and common combinations."
-keywords: ["swcombine sdk", "oauth scopes", "permissions", "character scopes", "faction scopes", "scope constants", "typescript"]
+title: 'OAuth Scopes'
+description: 'All 170+ SW Combine SDK OAuth scope constants for character, message, inventory, and faction access, with helper functions and common combinations.'
+keywords:
+  [
+    'swcombine sdk',
+    'oauth scopes',
+    'permissions',
+    'character scopes',
+    'faction scopes',
+    'scope constants',
+    'typescript',
+  ]
 ---
 
 OAuth scopes tell SW Combine what your application is allowed to do on a user's behalf. When you generate an authorization URL, the scopes you include determine which endpoints you can call and which actions you can take with the resulting token. Requesting fewer scopes limits your app's footprint and builds user trust — users see the full permission list before they authorize.
@@ -21,17 +30,19 @@ const client = new SWCombine({
 
 const authUrl = client.auth.getAuthorizationUrl({
   scopes: [
-    CharacterScopes.READ,    // 'character_read'
-    CharacterScopes.STATS,   // 'character_stats'
-    MessageScopes.READ,      // 'messages_read'
-    MessageScopes.SEND,      // 'messages_send'
+    CharacterScopes.READ, // 'character_read'
+    CharacterScopes.STATS, // 'character_stats'
+    MessageScopes.READ, // 'messages_read'
+    MessageScopes.SEND, // 'messages_send'
   ],
   state: 'your-csrf-state-value',
 });
 ```
 
 <Note>
-  All scope values sent to the API are **lowercase** strings with underscores (e.g., `character_read`, `personal_inv_ships_all`). The constants resolve to these lowercase literals automatically. The API rejects uppercase scope strings.
+  All scope values sent to the API are **lowercase** strings with underscores (e.g.,
+  `character_read`, `personal_inv_ships_all`). The constants resolve to these lowercase literals
+  automatically. The API rejects uppercase scope strings.
 </Note>
 
 ## Scope categories
@@ -53,6 +64,7 @@ const authUrl = client.auth.getAuthorizationUrl({
     | `CharacterScopes.LOCATION` | `character_location` | In-game location |
     | `CharacterScopes.EVENTS` | `character_events` | Character event log |
     | `CharacterScopes.ALL` | `character_all` | All character permissions |
+
   </Accordion>
 
   <Accordion title="Message scopes — MessageScopes">
@@ -64,6 +76,7 @@ const authUrl = client.auth.getAuthorizationUrl({
     | `MessageScopes.SEND` | `messages_send` | Send messages |
     | `MessageScopes.DELETE` | `messages_delete` | Delete messages |
     | `MessageScopes.ALL` | `messages_all` | Read, send, and delete messages |
+
   </Accordion>
 
   <Accordion title="Personal inventory scopes — Scopes.PersonalInventory">
@@ -85,6 +98,7 @@ const authUrl = client.auth.getAuthorizationUrl({
     ```
 
     The same actions (`READ`, `RENAME`, `ASSIGN`, `MAKEOVER`, `TAGS_READ`, `TAGS_WRITE`, `ALL`) are available for: `VEHICLES`, `STATIONS`, `CITIES`, `FACILITIES`, `ITEMS`, `DROIDS`, `MATERIALS`, `CREATURES`. Planets have a reduced set (`READ`, `ASSIGN`, `TAGS_READ`, `TAGS_WRITE`, `ALL`); NPCs don't have `RENAME`.
+
   </Accordion>
 
   <Accordion title="Faction scopes — FactionScopes">
@@ -102,6 +116,7 @@ const authUrl = client.auth.getAuthorizationUrl({
     | `FactionScopes.DATACARDS_READ` | `faction_datacards_read` | Faction datacard assignments |
     | `FactionScopes.DATACARDS_WRITE` | `faction_datacards_write` | Assign or revoke datacards |
     | `FactionScopes.ALL` | `faction_all` | All faction permissions |
+
   </Accordion>
 
   <Accordion title="Faction inventory scopes — Scopes.FactionInventory">
@@ -123,6 +138,7 @@ const authUrl = client.auth.getAuthorizationUrl({
     ```
 
     The full set of entity types mirrors the personal inventory: `SHIPS`, `VEHICLES`, `STATIONS`, `CITIES`, `FACILITIES`, `PLANETS`, `ITEMS`, `NPCS`, `DROIDS`, `MATERIALS`, `CREATURES`.
+
   </Accordion>
 </AccordionGroup>
 
@@ -143,19 +159,21 @@ import {
 } from 'swcombine-sdk';
 ```
 
-| Function | Returns | Use case |
-|---|---|---|
-| `getMinimalScopes()` | `['character_auth', 'character_read']` | Login / identity verification only |
-| `getReadOnlyScopes()` | Character read, stats, skills, credits, messages read, inventory overview, faction read | Analytics dashboards and read-only integrations |
-| `getAllCharacterScopes()` | All `CharacterScopes.*` values | Character management tools |
-| `getAllMessageScopes()` | All `MessageScopes.*` values | Full messaging access |
-| `getAllPersonalInventoryScopes()` | All `PersonalInventoryScopes.*` values | Personal asset management |
-| `getAllFactionScopes()` | All `FactionScopes.*` values | Faction administration |
-| `getAllFactionInventoryScopes()` | All `FactionInventoryScopes.*` values | Faction asset management |
-| `getAllScopes()` | All 170+ scopes across every category | Development and testing only |
+| Function                          | Returns                                                                                 | Use case                                        |
+| --------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `getMinimalScopes()`              | `['character_auth', 'character_read']`                                                  | Login / identity verification only              |
+| `getReadOnlyScopes()`             | Character read, stats, skills, credits, messages read, inventory overview, faction read | Analytics dashboards and read-only integrations |
+| `getAllCharacterScopes()`         | All `CharacterScopes.*` values                                                          | Character management tools                      |
+| `getAllMessageScopes()`           | All `MessageScopes.*` values                                                            | Full messaging access                           |
+| `getAllPersonalInventoryScopes()` | All `PersonalInventoryScopes.*` values                                                  | Personal asset management                       |
+| `getAllFactionScopes()`           | All `FactionScopes.*` values                                                            | Faction administration                          |
+| `getAllFactionInventoryScopes()`  | All `FactionInventoryScopes.*` values                                                   | Faction asset management                        |
+| `getAllScopes()`                  | All 170+ scopes across every category                                                   | Development and testing only                    |
 
 <Warning>
-  The SW Combine API does not support scope inheritance. Requesting `CharacterScopes.ALL` (`character_all`) does **not** include `CharacterScopes.READ` (`character_read`) — you must list both explicitly if you want comprehensive access.
+  The SW Combine API does not support scope inheritance. Requesting `CharacterScopes.ALL`
+  (`character_all`) does **not** include `CharacterScopes.READ` (`character_read`) — you must list
+  both explicitly if you want comprehensive access.
 </Warning>
 
 ## Common scope combinations
@@ -170,6 +188,7 @@ import {
       state,
     });
     ```
+
   </Accordion>
 
   <Accordion title="Character profile dashboard">
@@ -184,6 +203,7 @@ import {
       CharacterScopes.LOCATION,
     ];
     ```
+
   </Accordion>
 
   <Accordion title="Messaging application">
@@ -197,6 +217,7 @@ import {
       MessageScopes.DELETE,
     ];
     ```
+
   </Accordion>
 
   <Accordion title="Fleet management tool">
@@ -210,6 +231,7 @@ import {
       Scopes.PersonalInventory.VEHICLES.ALL,
     ];
     ```
+
   </Accordion>
 
   <Accordion title="Faction administration tool">
@@ -223,6 +245,7 @@ import {
       Scopes.FactionInventory.VEHICLES.READ,
     ];
     ```
+
   </Accordion>
 
   <Accordion title="Read-only analytics or dashboard">
@@ -234,6 +257,7 @@ import {
       state,
     });
     ```
+
   </Accordion>
 </AccordionGroup>
 
@@ -247,8 +271,8 @@ import { CharacterScopes, MessageScopes } from 'swcombine-sdk';
 
 // TypeScript enforces that every item is a valid scope literal
 const scopes: AllScopes[] = [
-  CharacterScopes.READ,   // OK — autocomplete suggests all character scopes
-  MessageScopes.SEND,     // OK — autocomplete suggests all message scopes
+  CharacterScopes.READ, // OK — autocomplete suggests all character scopes
+  MessageScopes.SEND, // OK — autocomplete suggests all message scopes
   // 'not_a_scope',       // Error: not assignable to type 'AllScopes'
   // CharacterScopes.TYPO // Error: property 'TYPO' does not exist
 ];

@@ -1,0 +1,2155 @@
+{
+  "@cspotcode/source-map-support@0.8.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cspotcode/node-source-map-support",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@cspotcode/source-map-support",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@cspotcode/source-map-support/LICENSE.md"
+  },
+  "@esbuild/darwin-arm64@0.27.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/evanw/esbuild",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@esbuild/darwin-arm64",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@esbuild/darwin-arm64/README.md"
+  },
+  "@eslint-community/eslint-utils@4.9.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/eslint-community/eslint-utils",
+    "publisher": "Toru Nagashima",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@eslint-community/eslint-utils",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@eslint-community/eslint-utils/LICENSE"
+  },
+  "@eslint-community/regexpp@4.12.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/eslint-community/regexpp",
+    "publisher": "Toru Nagashima",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@eslint-community/regexpp",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@eslint-community/regexpp/LICENSE"
+  },
+  "@eslint/eslintrc@2.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/eslint/eslintrc",
+    "publisher": "Nicholas C. Zakas",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@eslint/eslintrc",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@eslint/eslintrc/LICENSE"
+  },
+  "@eslint/js@8.57.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/eslint/eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@eslint/js",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@eslint/js/LICENSE"
+  },
+  "@gerrit0/mini-shiki@3.22.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Gerrit0/mini-shiki",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@gerrit0/mini-shiki",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@gerrit0/mini-shiki/LICENSE"
+  },
+  "@humanwhocodes/config-array@0.13.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/humanwhocodes/config-array",
+    "publisher": "Nicholas C. Zakas",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@humanwhocodes/config-array",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@humanwhocodes/config-array/LICENSE"
+  },
+  "@humanwhocodes/module-importer@1.0.1": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/humanwhocodes/module-importer",
+    "publisher": "Nicholas C. Zaks",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@humanwhocodes/module-importer",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@humanwhocodes/module-importer/LICENSE"
+  },
+  "@humanwhocodes/object-schema@2.0.3": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/humanwhocodes/object-schema",
+    "publisher": "Nicholas C. Zakas",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@humanwhocodes/object-schema",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@humanwhocodes/object-schema/LICENSE"
+  },
+  "@jridgewell/resolve-uri@3.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jridgewell/resolve-uri",
+    "publisher": "Justin Ridgewell",
+    "email": "justin@ridgewell.name",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@jridgewell/resolve-uri",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@jridgewell/resolve-uri/LICENSE"
+  },
+  "@jridgewell/sourcemap-codec@1.5.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jridgewell/sourcemaps",
+    "publisher": "Justin Ridgewell",
+    "email": "justin@ridgewell.name",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@jridgewell/sourcemap-codec",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@jridgewell/sourcemap-codec/LICENSE"
+  },
+  "@jridgewell/trace-mapping@0.3.9": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jridgewell/trace-mapping",
+    "publisher": "Justin Ridgewell",
+    "email": "justin@ridgewell.name",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@jridgewell/trace-mapping",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@jridgewell/trace-mapping/LICENSE"
+  },
+  "@nodelib/fs.scandir@2.1.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@nodelib/fs.scandir",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@nodelib/fs.scandir/LICENSE"
+  },
+  "@nodelib/fs.stat@2.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.stat",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@nodelib/fs.stat",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@nodelib/fs.stat/LICENSE"
+  },
+  "@nodelib/fs.walk@1.2.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@nodelib/fs.walk",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@nodelib/fs.walk/LICENSE"
+  },
+  "@oxc-project/types@0.123.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/oxc-project/oxc",
+    "publisher": "Boshen and oxc contributors",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@oxc-project/types",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@oxc-project/types/LICENSE"
+  },
+  "@rolldown/binding-darwin-arm64@1.0.0-rc.13": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rolldown/rolldown",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@rolldown/binding-darwin-arm64",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@rolldown/binding-darwin-arm64/README.md"
+  },
+  "@rolldown/pluginutils@1.0.0-rc.13": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rolldown/rolldown",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@rolldown/pluginutils",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@rolldown/pluginutils/LICENSE"
+  },
+  "@shikijs/engine-oniguruma@3.22.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/shikijs/shiki",
+    "publisher": "Anthony Fu",
+    "email": "anthonyfu117@hotmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/engine-oniguruma",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/engine-oniguruma/LICENSE"
+  },
+  "@shikijs/langs@3.22.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/shikijs/shiki",
+    "publisher": "Anthony Fu",
+    "email": "anthonyfu117@hotmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/langs",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/langs/LICENSE"
+  },
+  "@shikijs/themes@3.22.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/shikijs/shiki",
+    "publisher": "Anthony Fu",
+    "email": "anthonyfu117@hotmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/themes",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/themes/LICENSE"
+  },
+  "@shikijs/types@3.22.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/shikijs/shiki",
+    "publisher": "Anthony Fu",
+    "email": "anthonyfu117@hotmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/types",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/types/LICENSE"
+  },
+  "@shikijs/vscode-textmate@10.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/shikijs/vscode-textmate",
+    "publisher": "Microsoft Corporation",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/vscode-textmate",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@shikijs/vscode-textmate/LICENSE.md"
+  },
+  "@standard-schema/spec@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/standard-schema/standard-schema",
+    "publisher": "Colin McDonnell",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@standard-schema/spec",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@standard-schema/spec/LICENSE"
+  },
+  "@tsconfig/node10@1.0.12": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tsconfig/bases",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@tsconfig/node10",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@tsconfig/node10/LICENSE"
+  },
+  "@tsconfig/node12@1.0.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tsconfig/bases",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@tsconfig/node12",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@tsconfig/node12/LICENSE"
+  },
+  "@tsconfig/node14@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tsconfig/bases",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@tsconfig/node14",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@tsconfig/node14/LICENSE"
+  },
+  "@tsconfig/node16@1.0.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tsconfig/bases",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@tsconfig/node16",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@tsconfig/node16/LICENSE"
+  },
+  "@types/body-parser@1.19.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/body-parser",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/body-parser/LICENSE"
+  },
+  "@types/chai@5.2.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/chai",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/chai/LICENSE"
+  },
+  "@types/connect@3.4.38": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/connect",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/connect/LICENSE"
+  },
+  "@types/deep-eql@4.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/deep-eql",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/deep-eql/LICENSE"
+  },
+  "@types/estree@1.0.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/estree",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/estree/LICENSE"
+  },
+  "@types/express-serve-static-core@5.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/express-serve-static-core",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/express-serve-static-core/LICENSE"
+  },
+  "@types/express@5.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/express",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/express/LICENSE"
+  },
+  "@types/hast@3.0.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/hast",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/hast/LICENSE"
+  },
+  "@types/http-errors@2.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/http-errors",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/http-errors/LICENSE"
+  },
+  "@types/node@20.19.33": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/node",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/node/LICENSE"
+  },
+  "@types/qs@6.14.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/qs",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/qs/LICENSE"
+  },
+  "@types/range-parser@1.2.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/range-parser",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/range-parser/LICENSE"
+  },
+  "@types/send@1.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/send",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/send/LICENSE"
+  },
+  "@types/serve-static@2.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/serve-static",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/serve-static/LICENSE"
+  },
+  "@types/unist@3.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/unist",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@types/unist/LICENSE"
+  },
+  "@typescript-eslint/eslint-plugin@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/eslint-plugin",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/eslint-plugin/LICENSE"
+  },
+  "@typescript-eslint/parser@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/parser",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/parser/LICENSE"
+  },
+  "@typescript-eslint/project-service@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/project-service",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/project-service/LICENSE"
+  },
+  "@typescript-eslint/scope-manager@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/scope-manager",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/scope-manager/LICENSE"
+  },
+  "@typescript-eslint/tsconfig-utils@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/tsconfig-utils",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/tsconfig-utils/LICENSE"
+  },
+  "@typescript-eslint/type-utils@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/type-utils",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/type-utils/LICENSE"
+  },
+  "@typescript-eslint/types@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/types",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/types/LICENSE"
+  },
+  "@typescript-eslint/typescript-estree@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/typescript-estree",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/typescript-estree/LICENSE"
+  },
+  "@typescript-eslint/utils@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/utils",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/utils/LICENSE"
+  },
+  "@typescript-eslint/visitor-keys@8.58.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typescript-eslint/typescript-eslint",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/visitor-keys",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/visitor-keys/LICENSE"
+  },
+  "@ungap/structured-clone@1.3.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/ungap/structured-clone",
+    "publisher": "Andrea Giammarchi",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@ungap/structured-clone",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@ungap/structured-clone/LICENSE"
+  },
+  "@vitest/expect@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitest-dev/vitest",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/expect",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/expect/LICENSE"
+  },
+  "@vitest/mocker@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitest-dev/vitest",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/mocker",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/mocker/LICENSE"
+  },
+  "@vitest/pretty-format@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitest-dev/vitest",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/pretty-format",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/pretty-format/LICENSE"
+  },
+  "@vitest/runner@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitest-dev/vitest",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/runner",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/runner/LICENSE"
+  },
+  "@vitest/snapshot@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitest-dev/vitest",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/snapshot",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/snapshot/LICENSE"
+  },
+  "@vitest/spy@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitest-dev/vitest",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/spy",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/spy/LICENSE"
+  },
+  "@vitest/utils@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitest-dev/vitest",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/utils",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@vitest/utils/LICENSE"
+  },
+  "accepts@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/accepts",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/accepts",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/accepts/LICENSE"
+  },
+  "acorn-jsx@5.3.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/acornjs/acorn-jsx",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/acorn-jsx",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/acorn-jsx/LICENSE"
+  },
+  "acorn-walk@8.3.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/acornjs/acorn",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/acorn-walk",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/acorn-walk/LICENSE"
+  },
+  "acorn@8.15.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/acornjs/acorn",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/acorn",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/acorn/LICENSE"
+  },
+  "ajv@6.14.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ajv-validator/ajv",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ajv",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ajv/LICENSE"
+  },
+  "ansi-regex@5.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/ansi-regex",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ansi-regex",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ansi-regex/license"
+  },
+  "ansi-styles@4.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/ansi-styles",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ansi-styles",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ansi-styles/license"
+  },
+  "arg@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/zeit/arg",
+    "publisher": "Josh Junon",
+    "email": "junon@zeit.co",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/arg",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/arg/LICENSE.md"
+  },
+  "argparse@2.0.1": {
+    "licenses": "Python-2.0",
+    "repository": "https://github.com/nodeca/argparse",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/argparse",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/argparse/LICENSE"
+  },
+  "assertion-error@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chaijs/assertion-error",
+    "publisher": "Jake Luer",
+    "email": "jake@qualiancy.com",
+    "url": "http://qualiancy.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/assertion-error",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/assertion-error/LICENSE"
+  },
+  "asynckit@0.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/alexindigo/asynckit",
+    "publisher": "Alex Indigo",
+    "email": "iam@alexindigo.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/asynckit",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/asynckit/LICENSE"
+  },
+  "axios@1.15.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/axios/axios",
+    "publisher": "Matt Zabriskie",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/axios",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/axios/LICENSE"
+  },
+  "balanced-match@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/balanced-match",
+    "publisher": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/balanced-match",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/balanced-match/LICENSE.md"
+  },
+  "balanced-match@4.0.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/balanced-match",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/typescript-estree/node_modules/balanced-match",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/typescript-estree/node_modules/balanced-match/LICENSE.md"
+  },
+  "body-parser@2.2.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/body-parser",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/body-parser",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/body-parser/LICENSE"
+  },
+  "brace-expansion@1.1.13": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/brace-expansion",
+    "publisher": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/glob/node_modules/brace-expansion",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/glob/node_modules/brace-expansion/LICENSE"
+  },
+  "brace-expansion@2.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/brace-expansion",
+    "publisher": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/brace-expansion",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/brace-expansion/LICENSE"
+  },
+  "brace-expansion@5.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/brace-expansion",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/typescript-estree/node_modules/brace-expansion/LICENSE"
+  },
+  "bytes@3.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/visionmedia/bytes.js",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "url": "http://tjholowaychuk.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/bytes",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/bytes/LICENSE"
+  },
+  "call-bind-apply-helpers@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/call-bind-apply-helpers",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/call-bind-apply-helpers",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/call-bind-apply-helpers/LICENSE"
+  },
+  "call-bound@1.0.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/call-bound",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/call-bound",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/call-bound/LICENSE"
+  },
+  "callsites@3.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/callsites",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/callsites",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/callsites/license"
+  },
+  "chai@6.2.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chaijs/chai",
+    "publisher": "Jake Luer",
+    "email": "jake@alogicalparadox.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/chai",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/chai/LICENSE"
+  },
+  "chalk@4.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/chalk",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/chalk",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/chalk/license"
+  },
+  "color-convert@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Qix-/color-convert",
+    "publisher": "Heather Arthur",
+    "email": "fayearthur@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/color-convert",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/color-convert/LICENSE"
+  },
+  "color-name@1.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/colorjs/color-name",
+    "publisher": "DY",
+    "email": "dfcreative@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/color-name",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/color-name/LICENSE"
+  },
+  "combined-stream@1.0.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/felixge/node-combined-stream",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/combined-stream",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/combined-stream/License"
+  },
+  "concat-map@0.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/node-concat-map",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/concat-map",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/concat-map/LICENSE"
+  },
+  "content-disposition@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/content-disposition",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/content-disposition",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/content-disposition/LICENSE"
+  },
+  "content-type@1.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/content-type",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/content-type",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/content-type/LICENSE"
+  },
+  "convert-source-map@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/thlorenz/convert-source-map",
+    "publisher": "Thorsten Lorenz",
+    "email": "thlorenz@gmx.de",
+    "url": "http://thlorenz.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/convert-source-map",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/convert-source-map/LICENSE"
+  },
+  "cookie-signature@1.2.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/visionmedia/node-cookie-signature",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@learnboost.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/cookie-signature",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/cookie-signature/LICENSE"
+  },
+  "cookie@0.7.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/cookie",
+    "publisher": "Roman Shtylman",
+    "email": "shtylman@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/cookie",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/cookie/LICENSE"
+  },
+  "create-require@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nuxt-contrib/create-require",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/create-require",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/create-require/LICENSE"
+  },
+  "cross-spawn@7.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/moxystudio/node-cross-spawn",
+    "publisher": "André Cruz",
+    "email": "andre@moxy.studio",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/cross-spawn",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/cross-spawn/LICENSE"
+  },
+  "debug@4.4.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/debug-js/debug",
+    "publisher": "Josh Junon",
+    "url": "https://github.com/qix-",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/debug",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/debug/LICENSE"
+  },
+  "deep-is@0.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/thlorenz/deep-is",
+    "publisher": "Thorsten Lorenz",
+    "email": "thlorenz@gmx.de",
+    "url": "http://thlorenz.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/deep-is",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/deep-is/LICENSE"
+  },
+  "delayed-stream@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/felixge/node-delayed-stream",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/delayed-stream",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/delayed-stream/License"
+  },
+  "depd@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dougwilson/nodejs-depd",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/depd",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/depd/LICENSE"
+  },
+  "detect-libc@2.1.2": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/lovell/detect-libc",
+    "publisher": "Lovell Fuller",
+    "email": "npm@lovell.info",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/detect-libc",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/detect-libc/LICENSE"
+  },
+  "diff@4.0.4": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/kpdecker/jsdiff",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/diff",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/diff/LICENSE"
+  },
+  "doctrine@3.0.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/eslint/doctrine",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/doctrine",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/doctrine/LICENSE"
+  },
+  "dotenv@17.3.1": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/motdotla/dotenv",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/dotenv",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/dotenv/LICENSE"
+  },
+  "dunder-proto@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/es-shims/dunder-proto",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/dunder-proto",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/dunder-proto/LICENSE"
+  },
+  "ee-first@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonathanong/ee-first",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ee-first",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ee-first/LICENSE"
+  },
+  "encodeurl@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/encodeurl",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/encodeurl",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/encodeurl/LICENSE"
+  },
+  "entities@4.5.0": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/fb55/entities",
+    "publisher": "Felix Boehm",
+    "email": "me@feedic.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/entities",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/entities/LICENSE"
+  },
+  "es-define-property@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/es-define-property",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-define-property",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-define-property/LICENSE"
+  },
+  "es-errors@1.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/es-errors",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-errors",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-errors/LICENSE"
+  },
+  "es-module-lexer@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/guybedford/es-module-lexer",
+    "publisher": "Guy Bedford",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-module-lexer",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-module-lexer/LICENSE"
+  },
+  "es-object-atoms@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/es-object-atoms",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-object-atoms",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-object-atoms/LICENSE"
+  },
+  "es-set-tostringtag@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/es-shims/es-set-tostringtag",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-set-tostringtag",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/es-set-tostringtag/LICENSE"
+  },
+  "esbuild@0.27.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/evanw/esbuild",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/esbuild",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/esbuild/LICENSE.md"
+  },
+  "escape-html@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/component/escape-html",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/escape-html",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/escape-html/LICENSE"
+  },
+  "escape-string-regexp@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/escape-string-regexp",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/escape-string-regexp",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/escape-string-regexp/license"
+  },
+  "eslint-scope@7.2.2": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/eslint/eslint-scope",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/eslint-scope",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/eslint-scope/LICENSE"
+  },
+  "eslint-visitor-keys@3.4.3": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/eslint/eslint-visitor-keys",
+    "publisher": "Toru Nagashima",
+    "url": "https://github.com/mysticatea",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/eslint-visitor-keys",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/eslint-visitor-keys/LICENSE"
+  },
+  "eslint-visitor-keys@5.0.1": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/eslint/js",
+    "publisher": "Toru Nagashima",
+    "url": "https://github.com/mysticatea",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/visitor-keys/node_modules/eslint-visitor-keys",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/visitor-keys/node_modules/eslint-visitor-keys/LICENSE"
+  },
+  "eslint@8.57.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/eslint/eslint",
+    "publisher": "Nicholas C. Zakas",
+    "email": "nicholas+npm@nczconsulting.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/eslint",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/eslint/LICENSE"
+  },
+  "espree@9.6.1": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/eslint/espree",
+    "publisher": "Nicholas C. Zakas",
+    "email": "nicholas+npm@nczconsulting.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/espree",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/espree/LICENSE"
+  },
+  "esquery@1.7.0": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/estools/esquery",
+    "publisher": "Joel Feenstra",
+    "email": "jrfeenst+esquery@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/esquery",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/esquery/license.txt"
+  },
+  "esrecurse@4.3.0": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/estools/esrecurse",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/esrecurse",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/esrecurse/README.md"
+  },
+  "estraverse@5.3.0": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/estools/estraverse",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/estraverse",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/estraverse/LICENSE.BSD"
+  },
+  "estree-walker@3.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Rich-Harris/estree-walker",
+    "publisher": "Rich Harris",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/estree-walker",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/estree-walker/LICENSE"
+  },
+  "esutils@2.0.3": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/estools/esutils",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/esutils",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/esutils/LICENSE.BSD"
+  },
+  "etag@1.8.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/etag",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/etag",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/etag/LICENSE"
+  },
+  "expect-type@1.3.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mmkal/expect-type",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/expect-type",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/expect-type/LICENSE"
+  },
+  "express@5.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/express",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/express",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/express/LICENSE"
+  },
+  "fast-deep-equal@3.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/fast-deep-equal",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fast-deep-equal",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fast-deep-equal/LICENSE"
+  },
+  "fast-json-stable-stringify@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/fast-json-stable-stringify",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fast-json-stable-stringify",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fast-json-stable-stringify/LICENSE"
+  },
+  "fast-levenshtein@2.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/hiddentao/fast-levenshtein",
+    "publisher": "Ramesh Nair",
+    "email": "ram@hiddentao.com",
+    "url": "http://www.hiddentao.com/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fast-levenshtein",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fast-levenshtein/LICENSE.md"
+  },
+  "fastq@1.20.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/mcollina/fastq",
+    "publisher": "Matteo Collina",
+    "email": "hello@matteocollina.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fastq",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fastq/LICENSE"
+  },
+  "fdir@6.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/thecodrr/fdir",
+    "publisher": "thecodrr",
+    "email": "thecodrr@protonmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyglobby/node_modules/fdir",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyglobby/node_modules/fdir/LICENSE"
+  },
+  "file-entry-cache@6.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/royriojas/file-entry-cache",
+    "publisher": "Roy Riojas",
+    "url": "http://royriojas.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/file-entry-cache",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/file-entry-cache/LICENSE"
+  },
+  "finalhandler@2.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/finalhandler",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/finalhandler",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/finalhandler/LICENSE"
+  },
+  "find-up@5.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/find-up",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/find-up",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/find-up/license"
+  },
+  "flat-cache@3.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jaredwray/flat-cache",
+    "publisher": "Jared Wray",
+    "url": "https://jaredwray.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/flat-cache",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/flat-cache/LICENSE"
+  },
+  "flatted@3.4.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/WebReflection/flatted",
+    "publisher": "Andrea Giammarchi",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/flatted",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/flatted/LICENSE"
+  },
+  "follow-redirects@1.15.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/follow-redirects/follow-redirects",
+    "publisher": "Ruben Verborgh",
+    "email": "ruben@verborgh.org",
+    "url": "https://ruben.verborgh.org/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/follow-redirects",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/follow-redirects/LICENSE"
+  },
+  "form-data@4.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/form-data/form-data",
+    "publisher": "Felix Geisendörfer",
+    "email": "felix@debuggable.com",
+    "url": "http://debuggable.com/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/form-data",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/form-data/License"
+  },
+  "forwarded@0.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/forwarded",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/forwarded",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/forwarded/LICENSE"
+  },
+  "fresh@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/fresh",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "url": "http://tjholowaychuk.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fresh",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fresh/LICENSE"
+  },
+  "fs.realpath@1.0.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/fs.realpath",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fs.realpath",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fs.realpath/LICENSE"
+  },
+  "fsevents@2.3.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/fsevents/fsevents",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fsevents",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/fsevents/LICENSE"
+  },
+  "function-bind@1.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Raynos/function-bind",
+    "publisher": "Raynos",
+    "email": "raynos2@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/function-bind",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/function-bind/LICENSE"
+  },
+  "get-intrinsic@1.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/get-intrinsic",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/get-intrinsic",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/get-intrinsic/LICENSE"
+  },
+  "get-proto@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/get-proto",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/get-proto",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/get-proto/LICENSE"
+  },
+  "get-tsconfig@4.13.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/privatenumber/get-tsconfig",
+    "publisher": "Hiroki Osame",
+    "email": "hiroki.osame@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/get-tsconfig",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/get-tsconfig/LICENSE"
+  },
+  "glob-parent@6.0.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/gulpjs/glob-parent",
+    "publisher": "Gulp Team",
+    "email": "team@gulpjs.com",
+    "url": "https://gulpjs.com/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/glob-parent",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/glob-parent/LICENSE"
+  },
+  "glob@7.2.3": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/node-glob",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/glob",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/glob/LICENSE"
+  },
+  "globals@13.24.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/globals",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/globals",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/globals/license"
+  },
+  "gopd@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/gopd",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/gopd",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/gopd/LICENSE"
+  },
+  "graphemer@1.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/flmnt/graphemer",
+    "publisher": "Matt Davies",
+    "email": "matt@filament.so",
+    "url": "https://github.com/mattpauldavies",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/graphemer",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/graphemer/LICENSE"
+  },
+  "has-flag@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/has-flag",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/has-flag",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/has-flag/license"
+  },
+  "has-symbols@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/has-symbols",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "url": "http://ljharb.codes",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/has-symbols",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/has-symbols/LICENSE"
+  },
+  "has-tostringtag@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/has-tostringtag",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "url": "http://ljharb.codes",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/has-tostringtag",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/has-tostringtag/LICENSE"
+  },
+  "hasown@2.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/hasOwn",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/hasown",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/hasown/LICENSE"
+  },
+  "http-errors@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/http-errors",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/http-errors",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/http-errors/LICENSE"
+  },
+  "iconv-lite@0.7.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/iconv-lite",
+    "publisher": "Alexander Shtuchkin",
+    "email": "ashtuchkin@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/iconv-lite",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/iconv-lite/LICENSE"
+  },
+  "ignore@5.3.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/kaelzhang/node-ignore",
+    "publisher": "kael",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ignore",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ignore/LICENSE-MIT"
+  },
+  "ignore@7.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/kaelzhang/node-ignore",
+    "publisher": "kael",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/eslint-plugin/node_modules/ignore",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/eslint-plugin/node_modules/ignore/LICENSE-MIT"
+  },
+  "import-fresh@3.3.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/import-fresh",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/import-fresh",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/import-fresh/license"
+  },
+  "imurmurhash@0.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jensyt/imurmurhash-js",
+    "publisher": "Jens Taylor",
+    "email": "jensyt@gmail.com",
+    "url": "https://github.com/homebrewing",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/imurmurhash",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/imurmurhash/README.md"
+  },
+  "inflight@1.0.6": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/inflight",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/inflight",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/inflight/LICENSE"
+  },
+  "inherits@2.0.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/inherits",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/inherits",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/inherits/LICENSE"
+  },
+  "ipaddr.js@1.9.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/whitequark/ipaddr.js",
+    "publisher": "whitequark",
+    "email": "whitequark@whitequark.org",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ipaddr.js",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ipaddr.js/LICENSE"
+  },
+  "is-extglob@2.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/is-extglob",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/is-extglob",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/is-extglob/LICENSE"
+  },
+  "is-glob@4.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/micromatch/is-glob",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/is-glob",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/is-glob/LICENSE"
+  },
+  "is-path-inside@3.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/is-path-inside",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/is-path-inside",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/is-path-inside/license"
+  },
+  "is-promise@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/then/is-promise",
+    "publisher": "ForbesLindesay",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/is-promise",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/is-promise/LICENSE"
+  },
+  "isexe@2.0.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/isexe",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/isexe",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/isexe/LICENSE"
+  },
+  "js-yaml@4.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodeca/js-yaml",
+    "publisher": "Vladimir Zapparov",
+    "email": "dervus.grim@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/js-yaml",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/js-yaml/LICENSE"
+  },
+  "json-buffer@3.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dominictarr/json-buffer",
+    "publisher": "Dominic Tarr",
+    "email": "dominic.tarr@gmail.com",
+    "url": "http://dominictarr.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/json-buffer",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/json-buffer/LICENSE"
+  },
+  "json-schema-traverse@0.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/json-schema-traverse",
+    "publisher": "Evgeny Poberezkin",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/json-schema-traverse",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/json-schema-traverse/LICENSE"
+  },
+  "json-stable-stringify-without-jsonify@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/samn/json-stable-stringify",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/json-stable-stringify-without-jsonify",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/json-stable-stringify-without-jsonify/LICENSE"
+  },
+  "keyv@4.5.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jaredwray/keyv",
+    "publisher": "Jared Wray",
+    "email": "me@jaredwray.com",
+    "url": "http://jaredwray.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/keyv",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/keyv/README.md"
+  },
+  "levn@0.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gkz/levn",
+    "publisher": "George Zahariev",
+    "email": "z@georgezahariev.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/levn",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/levn/LICENSE"
+  },
+  "lightningcss-darwin-arm64@1.32.0": {
+    "licenses": "MPL-2.0",
+    "repository": "https://github.com/parcel-bundler/lightningcss",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/lightningcss-darwin-arm64",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/lightningcss-darwin-arm64/LICENSE"
+  },
+  "lightningcss@1.32.0": {
+    "licenses": "MPL-2.0",
+    "repository": "https://github.com/parcel-bundler/lightningcss",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/lightningcss",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/lightningcss/LICENSE"
+  },
+  "linkify-it@5.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/markdown-it/linkify-it",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/linkify-it",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/linkify-it/LICENSE"
+  },
+  "locate-path@6.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/locate-path",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/locate-path",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/locate-path/license"
+  },
+  "lodash.merge@4.6.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lodash/lodash",
+    "publisher": "John-David Dalton",
+    "email": "john.david.dalton@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/lodash.merge",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/lodash.merge/LICENSE"
+  },
+  "lunr@2.3.9": {
+    "licenses": "MIT",
+    "repository": "https://github.com/olivernn/lunr.js",
+    "publisher": "Oliver Nightingale",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/lunr",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/lunr/LICENSE"
+  },
+  "magic-string@0.30.21": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Rich-Harris/magic-string",
+    "publisher": "Rich Harris",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/magic-string",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/magic-string/LICENSE"
+  },
+  "make-error@1.3.6": {
+    "licenses": "ISC",
+    "repository": "https://github.com/JsCommunity/make-error",
+    "publisher": "Julien Fontanet",
+    "email": "julien.fontanet@isonoe.net",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/make-error",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/make-error/LICENSE"
+  },
+  "markdown-it@14.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/markdown-it/markdown-it",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/markdown-it",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/markdown-it/LICENSE"
+  },
+  "math-intrinsics@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/es-shims/math-intrinsics",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/math-intrinsics",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/math-intrinsics/LICENSE"
+  },
+  "mdurl@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/markdown-it/mdurl",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/mdurl",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/mdurl/LICENSE"
+  },
+  "media-typer@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/media-typer",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/media-typer",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/media-typer/LICENSE"
+  },
+  "merge-descriptors@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/merge-descriptors",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/merge-descriptors",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/merge-descriptors/license"
+  },
+  "mime-db@1.52.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-db",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/form-data/node_modules/mime-db",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/form-data/node_modules/mime-db/LICENSE"
+  },
+  "mime-db@1.54.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-db",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/mime-db",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/mime-db/LICENSE"
+  },
+  "mime-types@2.1.35": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-types",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/form-data/node_modules/mime-types",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/form-data/node_modules/mime-types/LICENSE"
+  },
+  "mime-types@3.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-types",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/mime-types",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/mime-types/LICENSE"
+  },
+  "minimatch@10.2.5": {
+    "licenses": "BlueOak-1.0.0",
+    "repository": "https://github.com/isaacs/minimatch",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch/LICENSE.md"
+  },
+  "minimatch@3.1.5": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/minimatch",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/glob/node_modules/minimatch",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/glob/node_modules/minimatch/LICENSE"
+  },
+  "minimatch@9.0.9": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/minimatch",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/minimatch",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/minimatch/LICENSE"
+  },
+  "ms@2.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vercel/ms",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ms",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ms/license.md"
+  },
+  "nanoid@3.3.11": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ai/nanoid",
+    "publisher": "Andrey Sitnik",
+    "email": "andrey@sitnik.ru",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/nanoid",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/nanoid/LICENSE"
+  },
+  "natural-compare@1.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/litejs/natural-compare-lite",
+    "publisher": "Lauri Rooden",
+    "url": "https://github.com/litejs/natural-compare-lite",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/natural-compare",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/natural-compare/README.md"
+  },
+  "negotiator@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/negotiator",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/negotiator",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/negotiator/LICENSE"
+  },
+  "object-inspect@1.13.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/object-inspect",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/object-inspect",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/object-inspect/LICENSE"
+  },
+  "obug@2.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sxzz/obug",
+    "publisher": "Kevin Deng",
+    "email": "sxzz@sxzz.moe",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/obug",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/obug/LICENSE"
+  },
+  "on-finished@2.4.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/on-finished",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/on-finished",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/on-finished/LICENSE"
+  },
+  "once@1.4.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/once",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/once",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/once/LICENSE"
+  },
+  "optionator@0.9.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gkz/optionator",
+    "publisher": "George Zahariev",
+    "email": "z@georgezahariev.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/optionator",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/optionator/LICENSE"
+  },
+  "p-limit@3.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/p-limit",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/p-limit",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/p-limit/license"
+  },
+  "p-locate@5.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/p-locate",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/p-locate",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/p-locate/license"
+  },
+  "parent-module@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/parent-module",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/parent-module",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/parent-module/license"
+  },
+  "parseurl@1.3.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/parseurl",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/parseurl",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/parseurl/LICENSE"
+  },
+  "path-exists@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/path-exists",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/path-exists",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/path-exists/license"
+  },
+  "path-is-absolute@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/path-is-absolute",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/path-is-absolute",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/path-is-absolute/license"
+  },
+  "path-key@3.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/path-key",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/path-key",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/path-key/license"
+  },
+  "path-to-regexp@8.4.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/path-to-regexp",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/path-to-regexp",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/path-to-regexp/LICENSE"
+  },
+  "pathe@2.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/unjs/pathe",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/pathe",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/pathe/LICENSE"
+  },
+  "picocolors@1.1.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/alexeyraspopov/picocolors",
+    "publisher": "Alexey Raspopov",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/picocolors",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/picocolors/LICENSE"
+  },
+  "picomatch@4.0.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/micromatch/picomatch",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyglobby/node_modules/picomatch",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyglobby/node_modules/picomatch/LICENSE"
+  },
+  "postcss@8.5.9": {
+    "licenses": "MIT",
+    "repository": "https://github.com/postcss/postcss",
+    "publisher": "Andrey Sitnik",
+    "email": "andrey@sitnik.es",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/postcss",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/postcss/LICENSE"
+  },
+  "prelude-ls@1.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gkz/prelude-ls",
+    "publisher": "George Zahariev",
+    "email": "z@georgezahariev.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/prelude-ls",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/prelude-ls/LICENSE"
+  },
+  "prettier@3.8.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/prettier/prettier",
+    "publisher": "James Long",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/prettier",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/prettier/LICENSE"
+  },
+  "proxy-addr@2.0.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/proxy-addr",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/proxy-addr",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/proxy-addr/LICENSE"
+  },
+  "proxy-from-env@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Rob--W/proxy-from-env",
+    "publisher": "Rob Wu",
+    "email": "rob@robwu.nl",
+    "url": "https://robwu.nl/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/proxy-from-env",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/proxy-from-env/LICENSE"
+  },
+  "punycode.js@2.3.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mathiasbynens/punycode.js",
+    "publisher": "Mathias Bynens",
+    "url": "https://mathiasbynens.be/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/punycode.js",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/punycode.js/LICENSE-MIT.txt"
+  },
+  "punycode@2.3.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mathiasbynens/punycode.js",
+    "publisher": "Mathias Bynens",
+    "url": "https://mathiasbynens.be/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/punycode",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/punycode/LICENSE-MIT.txt"
+  },
+  "qs@6.15.0": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/ljharb/qs",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/qs",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/qs/LICENSE.md"
+  },
+  "queue-microtask@1.2.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/feross/queue-microtask",
+    "publisher": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "https://feross.org",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/queue-microtask",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/queue-microtask/LICENSE"
+  },
+  "range-parser@1.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/range-parser",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "url": "http://tjholowaychuk.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/range-parser",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/range-parser/LICENSE"
+  },
+  "raw-body@3.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/stream-utils/raw-body",
+    "publisher": "Jonathan Ong",
+    "email": "me@jongleberry.com",
+    "url": "http://jongleberry.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/raw-body",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/raw-body/LICENSE"
+  },
+  "resolve-from@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/resolve-from",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/resolve-from",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/resolve-from/license"
+  },
+  "resolve-pkg-maps@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/privatenumber/resolve-pkg-maps",
+    "publisher": "Hiroki Osame",
+    "email": "hiroki.osame@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/resolve-pkg-maps",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/resolve-pkg-maps/LICENSE"
+  },
+  "reusify@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mcollina/reusify",
+    "publisher": "Matteo Collina",
+    "email": "hello@matteocollina.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/reusify",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/reusify/LICENSE"
+  },
+  "rimraf@3.0.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/rimraf",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/rimraf",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/rimraf/LICENSE"
+  },
+  "rolldown@1.0.0-rc.13": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rolldown/rolldown",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/rolldown",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/rolldown/LICENSE"
+  },
+  "router@2.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/router",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/router",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/router/LICENSE"
+  },
+  "run-parallel@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/feross/run-parallel",
+    "publisher": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "https://feross.org",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/run-parallel",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/run-parallel/LICENSE"
+  },
+  "safer-buffer@2.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ChALkeR/safer-buffer",
+    "publisher": "Nikita Skovoroda",
+    "email": "chalkerx@gmail.com",
+    "url": "https://github.com/ChALkeR",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/safer-buffer",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/safer-buffer/LICENSE"
+  },
+  "semver@7.7.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/node-semver",
+    "publisher": "GitHub Inc.",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/semver",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/semver/LICENSE"
+  },
+  "send@1.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pillarjs/send",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/send",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/send/LICENSE"
+  },
+  "serve-static@2.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/expressjs/serve-static",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/serve-static",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/serve-static/LICENSE"
+  },
+  "setprototypeof@1.2.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/wesleytodd/setprototypeof",
+    "publisher": "Wes Todd",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/setprototypeof",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/setprototypeof/LICENSE"
+  },
+  "shebang-command@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/kevva/shebang-command",
+    "publisher": "Kevin Mårtensson",
+    "email": "kevinmartensson@gmail.com",
+    "url": "github.com/kevva",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/shebang-command",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/shebang-command/license"
+  },
+  "shebang-regex@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/shebang-regex",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/shebang-regex",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/shebang-regex/license"
+  },
+  "side-channel-list@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/side-channel-list",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/side-channel-list",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/side-channel-list/LICENSE"
+  },
+  "side-channel-map@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/side-channel-map",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/side-channel-map",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/side-channel-map/LICENSE"
+  },
+  "side-channel-weakmap@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/side-channel-weakmap",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/side-channel-weakmap",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/side-channel-weakmap/LICENSE"
+  },
+  "side-channel@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/side-channel",
+    "publisher": "Jordan Harband",
+    "email": "ljharb@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/side-channel",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/side-channel/LICENSE"
+  },
+  "siginfo@2.0.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/emilbayes/siginfo",
+    "publisher": "Emil Bay",
+    "email": "github@tixz.dk",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/siginfo",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/siginfo/LICENSE"
+  },
+  "source-map-js@1.2.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/7rulnik/source-map-js",
+    "publisher": "Valentin 7rulnik Semirulnik",
+    "email": "v7rulnik@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/source-map-js",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/source-map-js/LICENSE"
+  },
+  "stackback@0.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/shtylman/node-stackback",
+    "publisher": "Roman Shtylman",
+    "email": "shtylman@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/stackback",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/stackback/README.md"
+  },
+  "statuses@2.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/statuses",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/statuses",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/statuses/LICENSE"
+  },
+  "std-env@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/unjs/std-env",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/std-env",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/std-env/LICENCE"
+  },
+  "strip-ansi@6.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/strip-ansi",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/strip-ansi",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/strip-ansi/license"
+  },
+  "strip-json-comments@3.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/strip-json-comments",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/strip-json-comments",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/strip-json-comments/license"
+  },
+  "supports-color@7.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/supports-color",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/supports-color",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/supports-color/license"
+  },
+  "swcombine-sdk@3.2.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonmarkgo/swcombine-sdk-nodejs",
+    "publisher": "Dreks Selmur",
+    "email": "jonmarkgo@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/LICENSE"
+  },
+  "text-table@0.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/text-table",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/text-table",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/text-table/LICENSE"
+  },
+  "tinybench@2.9.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tinylibs/tinybench",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinybench",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinybench/LICENSE"
+  },
+  "tinyexec@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tinylibs/tinyexec",
+    "publisher": "James Garbutt",
+    "url": "https://github.com/43081j",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyexec",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyexec/LICENSE"
+  },
+  "tinyglobby@0.2.16": {
+    "licenses": "MIT",
+    "repository": "https://github.com/SuperchupuDev/tinyglobby",
+    "publisher": "Superchupu",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyglobby",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyglobby/LICENSE"
+  },
+  "tinyrainbow@3.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/tinylibs/tinyrainbow",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyrainbow",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tinyrainbow/LICENCE"
+  },
+  "toidentifier@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/component/toidentifier",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/toidentifier",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/toidentifier/LICENSE"
+  },
+  "ts-api-utils@2.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/JoshuaKGoldberg/ts-api-utils",
+    "publisher": "JoshuaKGoldberg",
+    "email": "npm@joshuakgoldberg.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ts-api-utils",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ts-api-utils/LICENSE.md"
+  },
+  "ts-node@10.9.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/TypeStrong/ts-node",
+    "publisher": "Blake Embrey",
+    "email": "hello@blakeembrey.com",
+    "url": "http://blakeembrey.me",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ts-node",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/ts-node/LICENSE"
+  },
+  "tsx@4.21.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/privatenumber/tsx",
+    "publisher": "Hiroki Osame",
+    "email": "hiroki.osame@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tsx",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/tsx/LICENSE"
+  },
+  "type-check@0.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gkz/type-check",
+    "publisher": "George Zahariev",
+    "email": "z@georgezahariev.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/type-check",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/type-check/LICENSE"
+  },
+  "type-fest@0.20.2": {
+    "licenses": "(MIT OR CC0-1.0)",
+    "repository": "https://github.com/sindresorhus/type-fest",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/type-fest",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/type-fest/license"
+  },
+  "type-is@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/type-is",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/type-is",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/type-is/LICENSE"
+  },
+  "typedoc-plugin-llms-txt@0.1.2": {
+    "licenses": "BlueOak-1.0.0",
+    "repository": "https://github.com/boneskull/typedoc-plugin-llms-txt",
+    "publisher": "Christopher Hiller",
+    "email": "boneskull@boneskull.com",
+    "url": "https://boneskull.com/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/typedoc-plugin-llms-txt",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/typedoc-plugin-llms-txt/LICENSE"
+  },
+  "typedoc-plugin-markdown@4.10.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/typedoc2md/typedoc-plugin-markdown",
+    "publisher": "Thomas Grey",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/typedoc-plugin-markdown",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/typedoc-plugin-markdown/LICENSE"
+  },
+  "typedoc@0.28.17": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/TypeStrong/TypeDoc",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/typedoc",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/typedoc/LICENSE"
+  },
+  "typescript@5.9.3": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/microsoft/TypeScript",
+    "publisher": "Microsoft Corp.",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/typescript",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/typescript/LICENSE.txt"
+  },
+  "uc.micro@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/markdown-it/uc.micro",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/uc.micro",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/uc.micro/LICENSE.txt"
+  },
+  "undici-types@6.21.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodejs/undici",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/undici-types",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/undici-types/LICENSE"
+  },
+  "unpipe@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/stream-utils/unpipe",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/unpipe",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/unpipe/LICENSE"
+  },
+  "uri-js@4.4.1": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/garycourt/uri-js",
+    "publisher": "Gary Court",
+    "email": "gary.court@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/uri-js",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/uri-js/LICENSE"
+  },
+  "v8-compile-cache-lib@3.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/cspotcode/v8-compile-cache-lib",
+    "publisher": "Andrew Bradley",
+    "email": "cspotcode@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/v8-compile-cache-lib",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/v8-compile-cache-lib/LICENSE"
+  },
+  "vary@1.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/vary",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/vary",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/vary/LICENSE"
+  },
+  "vite@8.0.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitejs/vite",
+    "publisher": "Evan You",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/vite",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/vite/LICENSE.md"
+  },
+  "vitest@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vitest-dev/vitest",
+    "publisher": "Anthony Fu",
+    "email": "anthonyfu117@hotmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/vitest",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/vitest/LICENSE.md"
+  },
+  "which@2.0.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/node-which",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/which",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/which/LICENSE"
+  },
+  "why-is-node-running@2.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mafintosh/why-is-node-running",
+    "publisher": "Mathias Buus",
+    "url": "@mafintosh",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/why-is-node-running",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/why-is-node-running/LICENSE"
+  },
+  "word-wrap@1.2.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/word-wrap",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/word-wrap",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/word-wrap/LICENSE"
+  },
+  "wrappy@1.0.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/wrappy",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/wrappy",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/wrappy/LICENSE"
+  },
+  "yaml@2.8.3": {
+    "licenses": "ISC",
+    "repository": "https://github.com/eemeli/yaml",
+    "publisher": "Eemeli Aro",
+    "email": "eemeli@gmail.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/yaml",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/yaml/LICENSE"
+  },
+  "yn@3.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/yn",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/yn",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/yn/license"
+  },
+  "yocto-queue@0.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/yocto-queue",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/yocto-queue",
+    "licenseFile": "/Users/karnthis/IdeaProjects/swc/swcombine-sdk-nodejs/node_modules/yocto-queue/license"
+  }
+}

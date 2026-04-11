@@ -126,6 +126,7 @@ export class OAuthClient {
       client_secret: this.clientSecret,
       redirect_uri: this.redirectUri,
       grant_type: GrantType.AuthorizationCode,
+      access_type: this.accessType,
     });
 
     try {

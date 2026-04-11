@@ -15,6 +15,7 @@ import express from 'express';
 import { config } from 'dotenv';
 import { SWCombine, AccessType } from '../src/index.js';
 import { getAllScopes } from '../src/auth/scopes.js';
+import type { AllScopes } from '../src/auth/scopes.js';
 import * as crypto from 'crypto';
 
 // Load environment variables
@@ -38,7 +39,26 @@ if (!process.env.SWC_CLIENT_ID || !process.env.SWC_CLIENT_SECRET) {
 // Get redirect URI from env or use localhost default
 const REDIRECT_URI = process.env.REDIRECT_URI || `http://localhost:${PORT}/callback`;
 
+// Resolve which scopes to request.
+// - By default, request every scope (great for comprehensive SDK testing).
+// - If SWC_SCOPES is set, use that comma-separated list instead. This is
+//   useful for deliberately testing scope-restricted behavior, e.g. to see
+//   what the API returns when a token is missing "faction_datacards_read".
+//   Example: SWC_SCOPES=character_read npm run get-token
+const customScopes = process.env.SWC_SCOPES?.trim();
+const REQUESTED_SCOPES: AllScopes[] = customScopes
+  ? (customScopes
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean) as AllScopes[])
+  : getAllScopes();
+
 console.log('Using redirect URI:', REDIRECT_URI);
+console.log(
+  `Requesting ${REQUESTED_SCOPES.length} scope(s): ${
+    customScopes ? REQUESTED_SCOPES.join(', ') : '(all scopes)'
+  }`
+);
 
 // Initialize SDK
 const swc = new SWCombine({
@@ -141,15 +161,22 @@ app.get('/', (req, res) => {
           <a href="/login" class="button">🔐 Authorize App</a>
 
           <h2>Scopes Requested:</h2>
-          <p><strong>All comprehensive access scopes for full testing:</strong></p>
-          <ul>
-            <li><code>CHARACTER_ALL</code> - All character permissions</li>
-            <li><code>MESSAGES_ALL</code> - All message permissions</li>
-            <li><code>PERSONAL_INV_*_ALL</code> - All personal inventory permissions (ships, vehicles, stations, etc.)</li>
-            <li><code>FACTION_ALL</code> - All faction permissions</li>
-            <li><code>FACTION_INV_*_ALL</code> - All faction inventory permissions</li>
-          </ul>
-          <p><em>This grants full read/write access to all resources for comprehensive SDK testing.</em></p>
+          ${customScopes
+            ? `<p><strong>Custom scope list (${REQUESTED_SCOPES.length}):</strong></p>
+               <ul>
+                 ${REQUESTED_SCOPES.map((s) => `<li><code>${s}</code></li>`).join('\n')}
+               </ul>
+               <p><em>Override via <code>SWC_SCOPES</code> env var. Unset it to request all scopes.</em></p>`
+            : `<p><strong>All comprehensive access scopes for full testing:</strong></p>
+               <ul>
+                 <li><code>CHARACTER_ALL</code> - All character permissions</li>
+                 <li><code>MESSAGES_ALL</code> - All message permissions</li>
+                 <li><code>PERSONAL_INV_*_ALL</code> - All personal inventory permissions (ships, vehicles, stations, etc.)</li>
+                 <li><code>FACTION_ALL</code> - All faction permissions</li>
+                 <li><code>FACTION_INV_*_ALL</code> - All faction inventory permissions</li>
+               </ul>
+               <p><em>This grants full read/write access to all resources for comprehensive SDK testing.</em></p>
+               <p><em>To test with a restricted scope set, run with <code>SWC_SCOPES=character_read npm run get-token</code></em></p>`}
         </div>
       </body>
     </html>
@@ -161,15 +188,16 @@ app.get('/login', (req, res) => {
   // Generate random state for CSRF protection
   oauthState = crypto.randomBytes(16).toString('hex');
 
-  // Request ALL available scopes for comprehensive testing
-  const allScopes = getAllScopes();
-
   const authUrl = swc.auth.getAuthorizationUrl({
-    scopes: allScopes,
+    scopes: REQUESTED_SCOPES,
     state: oauthState,
   });
 
-  console.log(`📋 Requesting ${allScopes.length} scopes for comprehensive testing`);
+  console.log(
+    `📋 Requesting ${REQUESTED_SCOPES.length} scope(s)${
+      customScopes ? `: ${REQUESTED_SCOPES.join(', ')}` : ' (all scopes)'
+    }`
+  );
 
   console.log('🔐 Redirecting to OAuth authorization...');
   res.redirect(authUrl);

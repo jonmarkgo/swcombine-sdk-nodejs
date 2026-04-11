@@ -91,14 +91,28 @@ export class SWCError extends Error {
     let type: SWCErrorType;
     let message: string;
 
+    // SW Combine wraps error details inside a `swcapi` envelope on error
+    // responses, e.g.:
+    //   { version, timestamp, resource, request,
+    //     swcapi: { error_code: 403, error_message: "Required permission: X" } }
+    // The success path in HttpClient unwraps the swcapi envelope; the error
+    // path does not (we want to keep the raw envelope around for debugging).
+    // Look inside the envelope for message-bearing fields while still
+    // falling back to top-level fields for non-swcapi error shapes.
+    const swcapi =
+      response && typeof response.swcapi === 'object' && response.swcapi !== null
+        ? (response.swcapi as Record<string, unknown>)
+        : undefined;
+    const envelope: Record<string, unknown> | undefined = swcapi ?? response;
+
     // Check if this is a rate limit error (SW Combine uses HTTP 400 for rate limiting)
     const isRateLimitError =
       statusCode === 400 &&
-      (response?.error === 'rate_limit_exceeded' ||
-        (typeof response?.message === 'string' &&
-          response.message.toLowerCase().includes('rate limit')) ||
-        (typeof response?.error_description === 'string' &&
-          response.error_description.toLowerCase().includes('rate limit')));
+      (envelope?.error === 'rate_limit_exceeded' ||
+        (typeof envelope?.message === 'string' &&
+          envelope.message.toLowerCase().includes('rate limit')) ||
+        (typeof envelope?.error_description === 'string' &&
+          envelope.error_description.toLowerCase().includes('rate limit')));
 
     // Determine error type from status code and content
     if (isRateLimitError) {
@@ -138,19 +152,25 @@ export class SWCError extends Error {
       }
     }
 
-    // Use error message from response if available
-    if (typeof response?.error_description === 'string') {
-      message = response.error_description;
-    } else if (typeof response?.message === 'string') {
-      message = response.message;
-    } else if (response?.error) {
-      message = typeof response.error === 'string' ? response.error : message;
+    // Use error message from response if available. Prefer
+    // swcapi.error_message since SW Combine puts its specific error text
+    // there (e.g. "Required permission: faction_datacards_read; Available
+    // permissions: character_read"). Fall back to generic OAuth-style
+    // fields for other error shapes.
+    if (typeof envelope?.error_message === 'string') {
+      message = envelope.error_message;
+    } else if (typeof envelope?.error_description === 'string') {
+      message = envelope.error_description;
+    } else if (typeof envelope?.message === 'string') {
+      message = envelope.message;
+    } else if (envelope?.error) {
+      message = typeof envelope.error === 'string' ? envelope.error : message;
     }
 
     // Extract retry-after header for rate limit errors
     const retryAfter =
-      type === 'rate_limit' && typeof response?.retry_after === 'number'
-        ? response.retry_after
+      type === 'rate_limit' && typeof envelope?.retry_after === 'number'
+        ? envelope.retry_after
         : undefined;
 
     return new SWCError(message, {

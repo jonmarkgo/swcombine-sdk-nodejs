@@ -251,6 +251,72 @@ describe('HttpClient', () => {
     });
   });
 
+  describe('response interceptor - 401 handling', () => {
+    it('surfaces 401 as a clean auth error when no refresh token is available', async () => {
+      // Access-token-only client: TokenManager has a token but no refreshToken.
+      // This mirrors `new SWCombine({ token: 'access-token-string' })`, which
+      // is a documented usage pattern and was previously masking the real
+      // 401 behind a misleading "no refresh token is available" error.
+      const tm = new TokenManager('access-token-only');
+      new HttpClient({ maxRetries: 0 }, tm);
+      const { onRejected } = getResponseInterceptors();
+
+      const axiosError = {
+        response: {
+          status: 401,
+          data: { error: 'insufficient_scope' },
+          headers: {},
+        },
+        config: { _retryCount: 0 },
+        isAxiosError: true,
+      };
+
+      await expect(onRejected(axiosError)).rejects.toThrow(SWCError);
+      try {
+        await onRejected(axiosError);
+        throw new Error('expected onRejected to throw');
+      } catch (e) {
+        expect(SWCError.isSWCError(e)).toBe(true);
+        const err = e as SWCError;
+        expect(err.type).toBe('auth');
+        expect(err.statusCode).toBe(401);
+        // Must NOT be the misleading refresh-token message.
+        expect(err.message).not.toContain('no refresh token is available');
+      }
+    });
+
+    it('attempts token refresh on 401 when a refresh token is available', async () => {
+      const tm = new TokenManager({
+        accessToken: 'old-token',
+        refreshToken: 'refresh-token',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+      const refreshCallback = vi.fn().mockResolvedValue({
+        accessToken: 'new-token',
+        refreshToken: 'refresh-token',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+      tm.setRefreshCallback(refreshCallback);
+
+      new HttpClient({ maxRetries: 0 }, tm);
+      const instance = getAxiosInstance();
+      // After refresh, the retry should succeed.
+      instance.request.mockResolvedValueOnce({ data: { ok: true } });
+
+      const { onRejected } = getResponseInterceptors();
+      const axiosError = {
+        response: { status: 401, data: {}, headers: {} },
+        config: { _retryCount: 0, url: '/test' },
+        isAxiosError: true,
+      };
+
+      const result = await onRejected(axiosError);
+      expect(refreshCallback).toHaveBeenCalledOnce();
+      expect(instance.request).toHaveBeenCalledOnce();
+      expect(result).toEqual({ data: { ok: true } });
+    });
+  });
+
   describe('HTTP methods', () => {
     it('get() returns response.data', async () => {
       const client = new HttpClient({});

@@ -38,16 +38,34 @@ export class TokenManager {
   }
 
   /**
-   * Set token
+   * Set token.
+   *
+   * If the incoming token does not include a refresh token but we already
+   * have one stored, preserve the existing refresh token. This matches the
+   * SW Combine OAuth2 contract: refresh tokens are only issued the first
+   * time a user authorizes, and the refresh-token grant response also does
+   * not include a new refresh token. Without this merge behavior, a second
+   * `handleCallback` or auto-refresh would silently drop the refresh token
+   * on the floor, leaving the client unable to recover from future 401s.
+   *
+   * To explicitly clear the entire token (including the refresh token),
+   * use {@link clear} instead.
    */
   setToken(token: OAuthToken | string): void {
+    const existingRefreshToken = this.token?.refreshToken;
+
     if (typeof token === 'string') {
       this.token = {
         accessToken: token,
         expiresAt: Date.now() + 3600 * 1000,
       };
     } else {
-      this.token = token;
+      this.token = { ...token };
+    }
+
+    // Preserve an existing refresh token if the new token doesn't carry one.
+    if (!this.token.refreshToken && existingRefreshToken) {
+      this.token.refreshToken = existingRefreshToken;
     }
 
     // Save to storage if available

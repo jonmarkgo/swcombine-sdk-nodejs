@@ -88,6 +88,77 @@ describe('SWCError', () => {
       const err = SWCError.fromHttpResponse(400, body);
       expect(err.response).toBe(body);
     });
+
+    describe('swcapi envelope unwrapping', () => {
+      it('extracts swcapi.error_message for 401 responses', () => {
+        const body = {
+          version: '2.0',
+          timestamp: 1775928005,
+          resource: 'character',
+          request: '/ws/v2.0/character/',
+          swcapi: {
+            error_code: 401,
+            error_message: 'Access Token Not Recognized',
+          },
+        };
+        const err = SWCError.fromHttpResponse(401, body);
+        expect(err.message).toBe('Access Token Not Recognized');
+        expect(err.type).toBe('auth');
+        expect(err.statusCode).toBe(401);
+      });
+
+      it('extracts swcapi.error_message for 403 scope responses', () => {
+        const body = {
+          version: '2.0',
+          timestamp: 1775927605,
+          resource: 'datacard',
+          request: '/ws/v2.0/datacard/14:6421',
+          swcapi: {
+            error_code: 403,
+            error_message:
+              'The request requires higher privileges than provided by the access token. Required permission: faction_datacards_read; Available permissions: character_read',
+          },
+        };
+        const err = SWCError.fromHttpResponse(403, body);
+        expect(err.message).toContain('Required permission: faction_datacards_read');
+        expect(err.message).toContain('Available permissions: character_read');
+        expect(err.type).toBe('auth');
+        expect(err.statusCode).toBe(403);
+      });
+
+      it('preserves the full response body for debugging', () => {
+        const body = {
+          version: '2.0',
+          timestamp: 1775928005,
+          swcapi: {
+            error_code: 401,
+            error_message: 'Access Token Not Recognized',
+          },
+        };
+        const err = SWCError.fromHttpResponse(401, body);
+        // Envelope unwrapping should affect message extraction but NOT
+        // discard the raw response — consumers need the full envelope for
+        // debugging (timestamps, request paths, etc.).
+        expect(err.response).toBe(body);
+      });
+
+      it('falls back to generic message when swcapi envelope has no error_message', () => {
+        const body = {
+          swcapi: {
+            error_code: 500,
+          },
+        };
+        const err = SWCError.fromHttpResponse(500, body);
+        expect(err.message).toBe('Server error occurred. Please try again later.');
+      });
+
+      it('still reads top-level fields when no swcapi envelope is present', () => {
+        // Non-swcapi error shapes (network proxies, gateway errors, etc.)
+        // should still work.
+        const err = SWCError.fromHttpResponse(404, { error_description: 'Not here' });
+        expect(err.message).toBe('Not here');
+      });
+    });
   });
 
   describe('fromNetworkError()', () => {

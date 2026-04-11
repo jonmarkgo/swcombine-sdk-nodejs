@@ -158,8 +158,17 @@ export class HttpClient {
       async (error: AxiosError) => {
         const config = error.config as InternalAxiosRequestConfig & { _retryCount?: number };
 
-        // Handle 401 - attempt token refresh
-        if (error.response?.status === 401 && this.tokenManager) {
+        // Handle 401 - attempt token refresh only if we actually have a
+        // refresh token to use. Without a refresh token we can't recover
+        // from a 401 regardless of its cause (expired token, missing scope,
+        // revoked token, etc.), so attempting the refresh just masks the
+        // real 401 with a misleading "no refresh token" error. Falling
+        // through lets the normal error path surface the real auth error.
+        if (
+          error.response?.status === 401 &&
+          this.tokenManager &&
+          this.tokenManager.hasRefreshToken()
+        ) {
           try {
             await this.tokenManager.refreshToken();
             // Retry the request with new token

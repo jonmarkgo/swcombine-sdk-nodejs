@@ -198,6 +198,75 @@ describe('TokenManager', () => {
       tm.setToken('new-string-token');
       expect(tm.getToken()!.accessToken).toBe('new-string-token');
     });
+
+    it('preserves existing refresh token when new OAuthToken lacks one', () => {
+      // SW Combine only issues refresh tokens on the FIRST authorization
+      // code exchange, and refresh-token grant responses do not include a
+      // new refresh_token. Without this preservation, the SDK would silently
+      // drop the refresh token after the first refresh or re-authorization.
+      const tm = new TokenManager({
+        accessToken: 'old-access',
+        refreshToken: 'the-refresh-token',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+
+      tm.setToken({
+        accessToken: 'new-access',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+
+      expect(tm.getToken()!.accessToken).toBe('new-access');
+      expect(tm.getToken()!.refreshToken).toBe('the-refresh-token');
+      expect(tm.hasRefreshToken()).toBe(true);
+    });
+
+    it('preserves existing refresh token when setting a string token', () => {
+      const tm = new TokenManager({
+        accessToken: 'old-access',
+        refreshToken: 'the-refresh-token',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+
+      tm.setToken('new-access-string');
+
+      expect(tm.getToken()!.accessToken).toBe('new-access-string');
+      expect(tm.getToken()!.refreshToken).toBe('the-refresh-token');
+    });
+
+    it('replaces refresh token when new OAuthToken provides one', () => {
+      const tm = new TokenManager({
+        accessToken: 'old-access',
+        refreshToken: 'old-refresh',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+
+      tm.setToken({
+        accessToken: 'new-access',
+        refreshToken: 'new-refresh',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+
+      expect(tm.getToken()!.refreshToken).toBe('new-refresh');
+    });
+
+    it('does not mutate the caller-supplied token object', () => {
+      const tm = new TokenManager({
+        accessToken: 'old',
+        refreshToken: 'preserved',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+
+      const incoming: OAuthToken = {
+        accessToken: 'new',
+        expiresAt: Date.now() + 3600 * 1000,
+      };
+      tm.setToken(incoming);
+
+      // The incoming object should remain untouched — preservation happens
+      // on our internal copy, not on the caller's reference.
+      expect(incoming.refreshToken).toBeUndefined();
+      expect(tm.getToken()!.refreshToken).toBe('preserved');
+    });
   });
 
   describe('clear()', () => {

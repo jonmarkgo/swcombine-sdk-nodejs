@@ -1,0 +1,26 @@
+src/http/HttpClient.ts
+  8d8f656e10638073 159-162,164-168,172-173,175
+tests/unit/http-client.test.ts
+  8d8f656e10638073 318-350
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "ca6beb1b251c0057bded0eb30cc503422bd78be3",
+  "prompts": {
+    "8d8f656e10638073": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ecef47d8-d131-4b8b-85d2-912edd0bc9a5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 527,
+      "total_deletions": 75,
+      "accepted_lines": 460,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/f3498ebe22ee6ff78390036015500a1331868978f60b4533be67017ed9c86ac3"
+    }
+  }
+}

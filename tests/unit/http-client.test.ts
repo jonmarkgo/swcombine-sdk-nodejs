@@ -315,6 +315,39 @@ describe('HttpClient', () => {
       expect(instance.request).toHaveBeenCalledOnce();
       expect(result).toEqual({ data: { ok: true } });
     });
+
+    it('does not retry refresh on a second 401 (prevents infinite loop)', async () => {
+      const tm = new TokenManager({
+        accessToken: 'old-token',
+        refreshToken: 'refresh-token',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+      const refreshCallback = vi.fn().mockResolvedValue({
+        accessToken: 'new-token',
+        refreshToken: 'refresh-token',
+        expiresAt: Date.now() + 3600 * 1000,
+      });
+      tm.setRefreshCallback(refreshCallback);
+
+      new HttpClient({ maxRetries: 0 }, tm);
+
+      const { onRejected } = getResponseInterceptors();
+
+      // Simulate a 401 that has already been through one refresh attempt.
+      // The _hasAttemptedRefresh flag should prevent a second refresh.
+      const axiosError = {
+        response: {
+          status: 401,
+          data: { error: 'insufficient_scope' },
+          headers: {},
+        },
+        config: { _retryCount: 0, _hasAttemptedRefresh: true },
+        isAxiosError: true,
+      };
+
+      await expect(onRejected(axiosError)).rejects.toThrow(SWCError);
+      expect(refreshCallback).not.toHaveBeenCalled();
+    });
   });
 
   describe('HTTP methods', () => {

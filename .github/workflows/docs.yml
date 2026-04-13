@@ -1,21 +1,19 @@
-name: Deploy API Docs
+name: Generate Docs
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'typedoc.json'
+      - 'scripts/generate-mintlify.ts'
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  contents: write
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,22 +25,17 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run docs:html
+      # TypeDoc markdown → Mintlify resource pages
+      - run: npm run docs
 
-      - run: npm run docs:api
-
-      - run: cp llms.txt llms-full.txt docs/html/
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/html
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit generated docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add mintlify/resources/ docs/api/
+          if git diff --staged --quiet; then
+            echo "No docs changes to commit"
+          else
+            git commit -m "docs: regenerate from JSDoc [skip ci]"
+            git push
+          fi

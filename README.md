@@ -7,7 +7,7 @@
 [![npm version](https://img.shields.io/npm/v/swcombine-sdk.svg)](https://www.npmjs.com/package/swcombine-sdk)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5+-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![API Docs](https://img.shields.io/badge/API_Docs-TypeDoc-blue.svg)](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)
+[![API Docs](https://img.shields.io/badge/Docs-Mintlify-blue.svg)](https://swc-sdk.zeltros.dev/)
 
 [Features](#features) •
 [Installation](#installation) •
@@ -246,21 +246,21 @@ The SDK provides access to all SW Combine API v2.0 resources through a fluent, t
 
 | Resource | Access | Description |
 |---|---|---|
-| [`client.api`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_ApiResource.ApiResource.html) | Utilities | Hello world, permissions, rate limits, time conversion |
-| [`client.character`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_CharacterResource.CharacterResource.html) | Characters | Profile, [messages](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_CharacterResource.CharacterMessagesResource.html), [skills](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_CharacterResource.CharacterSkillsResource.html), [privileges](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_CharacterResource.CharacterPrivilegesResource.html), [credits](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_CharacterResource.CharacterCreditsResource.html), [credit log](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_CharacterResource.CharacterCreditlogResource.html) |
-| [`client.faction`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_FactionResource.FactionResource.html) | Factions | Info, [members](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_FactionResource.FactionMembersResource.html), [budgets](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_FactionResource.FactionBudgetsResource.html), [stockholders](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_FactionResource.FactionStockholdersResource.html), [credits](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_FactionResource.FactionCreditsResource.html), [credit log](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_FactionResource.FactionCreditlogResource.html) |
-| [`client.galaxy`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_GalaxyResource.GalaxyResource.html) | Galaxy | [Systems](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_GalaxyResource.GalaxySystemsResource.html), [sectors](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_GalaxyResource.GalaxySectorsResource.html), [planets](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_GalaxyResource.GalaxyPlanetsResource.html), [stations](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_GalaxyResource.GalaxyStationsResource.html), [cities](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_GalaxyResource.GalaxyCitiesResource.html) |
-| [`client.inventory`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_InventoryResource.InventoryResource.html) | Inventory | [Entity listing](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_InventoryResource.InventoryEntitiesResource.html), management, tagging |
-| [`client.market`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_MarketResource.MarketResource.html) | Market | [Vendor listings](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_MarketResource.MarketVendorsResource.html) |
-| [`client.news`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_NewsResource.NewsResource.html) | News | [GNS](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_NewsResource.GNSResource.html) and [Sim News](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_NewsResource.SimNewsResource.html) feeds |
-| [`client.types`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_TypesResource.TypesResource.html) | Types | [Entity types](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_TypesResource.TypesEntitiesResource.html), [classes](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_TypesResource.TypesClassesResource.html), and detailed type info |
-| [`client.events`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_EventsResource.EventsResource.html) | Events | Personal, faction, inventory, and combat events |
-| [`client.location`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_LocationResource.LocationResource.html) | Location | Entity location lookups |
-| [`client.datacard`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/resources_DatacardResource.DatacardResource.html) | Datacards | Datacard management and assignment |
+| [`client.api`](https://swc-sdk.zeltros.dev/resources/character) | Utilities | Hello world, permissions, rate limits, time conversion |
+| [`client.character`](https://swc-sdk.zeltros.dev/resources/character) | Characters | Profile, messages, skills, privileges, credits, credit log |
+| [`client.faction`](https://swc-sdk.zeltros.dev/resources/faction) | Factions | Info, members, budgets, stockholders, credits, credit log |
+| [`client.galaxy`](https://swc-sdk.zeltros.dev/resources/galaxy) | Galaxy | Systems, sectors, planets, stations, cities |
+| [`client.inventory`](https://swc-sdk.zeltros.dev/resources/inventory) | Inventory | Entity listing, management, tagging |
+| [`client.market`](https://swc-sdk.zeltros.dev/resources/market) | Market | Vendor listings |
+| [`client.news`](https://swc-sdk.zeltros.dev/resources/news) | News | GNS and Sim News feeds |
+| [`client.types`](https://swc-sdk.zeltros.dev/resources/types) | Types | Entity types, classes, and detailed type info |
+| [`client.events`](https://swc-sdk.zeltros.dev/resources/events) | Events | Personal, faction, inventory, and combat events |
+| [`client.location`](https://swc-sdk.zeltros.dev/resources/location) | Location | Entity location lookups |
+| [`client.datacard`](https://swc-sdk.zeltros.dev/resources/datacard) | Datacards | Datacard management and assignment |
 
-Also includes a [`Timestamp`](https://jonmarkgo.github.io/swcombine-sdk-nodejs/classes/Timestamp.Timestamp.html) utility for Combine Galactic Time (CGT) conversion and formatting.
+Also includes a [`Timestamp`](https://swc-sdk.zeltros.dev/guides/timestamp-utility) utility for Combine Galactic Time (CGT) conversion and formatting.
 
-For complete method signatures, parameters, and examples, see the **[API Reference Documentation](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)**.
+For complete method signatures, parameters, and examples, see the **[Documentation](https://swc-sdk.zeltros.dev/)**.
 
 ## Rate Limiting
 
@@ -415,15 +415,12 @@ npm run get-character-uid YourHandle
 
 ## Documentation
 
-- **[API Reference](https://jonmarkgo.github.io/swcombine-sdk-nodejs/)** - Full API reference with all methods, parameters, and examples
-- **[v2 → v3 Migration Guide](docs/MIGRATION-v3.md)** - Breaking changes and upgrade instructions
-- **[Getting Started Guide](docs/GETTING_STARTED.md)** - Detailed setup and usage
-- **[Authentication Guide](docs/AUTHENTICATION.md)** - OAuth 2.0 setup and token management
-- **[OAuth Scopes Reference](docs/SCOPES.md)** - Complete scope documentation
-- **[Getting an OAuth Token](docs/getting-oauth-token.md)** - Step-by-step token guide
+- **[Full Documentation](https://swc-sdk.zeltros.dev/)** - Guides, API reference, and examples
+- **[Quickstart](https://swc-sdk.zeltros.dev/quickstart)** - Install the SDK and make your first API call
+- **[Authentication Guide](https://swc-sdk.zeltros.dev/authentication/overview)** - OAuth 2.0 setup and token management
+- **[v2 → v3 Migration Guide](https://swc-sdk.zeltros.dev/guides/migration-v3)** - Breaking changes and upgrade instructions
 - **[Local Development](docs/LOCAL_DEVELOPMENT.md)** - Development environment setup
 - **[Publishing](docs/PUBLISHING.md)** - NPM publishing guide
-- **[Examples](examples/)** - Working code examples
 
 ## Development
 
@@ -459,7 +456,7 @@ npm run format
 
 ## Links
 
-- [SDK API Reference](https://jonmarkgo.github.io/swcombine-sdk-nodejs/) - Full TypeDoc-generated documentation
+- [SDK Documentation](https://swc-sdk.zeltros.dev/) - Full documentation, guides, and API reference
 - [SW Combine API Documentation](https://www.swcombine.com/ws/developers/) - Official API docs
 - [npm Package](https://www.npmjs.com/package/swcombine-sdk)
 - [GitHub Repository](https://github.com/jonmarkgo/swcombine-sdk-nodejs)

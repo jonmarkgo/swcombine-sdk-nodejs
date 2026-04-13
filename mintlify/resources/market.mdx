@@ -1,96 +1,66 @@
 ---
 title: 'Market'
-description: 'Use client.market to browse and retrieve in-game market vendors that list ships, items, and other assets for sale on the Star Wars Combine marketplace.'
-keywords: ['swcombine sdk', 'market', 'vendors', 'marketplace', 'trading', 'buy', 'sell']
+description: 'Use client.market to browse NPC vendor listings and retrieve item prices in the Star Wars Combine marketplace.'
+keywords:
+  [
+    'swcombine sdk',
+    'market',
+    'vendors',
+    'prices',
+    'shop',
+    'marketplace',
+  ]
 ---
 
-The `client.market` resource provides access to the Star Wars Combine in-game marketplace. Vendors are the sellers on the market — characters or factions that list assets for sale. You can list all vendors to browse the marketplace or fetch a specific vendor by UID to inspect their listings in detail.
+{/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
+{/* Run `npm run docs:mintlify` to regenerate. */}
 
-## Listing vendors
+The `client.market` resource provides access to NPC vendor listings and marketplace data.
+
+## Vendors
+
+### market.vendors.get()
+
+Get a specific vendor by UID.
+Returns the `Vendor` object directly — not wrapped in a `Page`.
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
+</ParamField>
+
+```typescript
+const vendor = await client.market.vendors.get({ uid: 'vendor-uid' });
+console.log(vendor.name); // access properties directly, not vendor.data
+```
 
 ### market.vendors.list()
 
-Returns a paginated list of all active market vendors.
+List all public vendors (paginated)
 
-<ParamField path="start_index" type="number" default="1">
-  1-based index of the first vendor to return.
+<ParamField path="item_count" type="number">
+  The item_count parameter.
 </ParamField>
 
-<ParamField path="item_count" type="number" default="50">
-  Number of vendors per page.
+<ParamField path="pageDelay" type="number">
+  The pageDelay parameter.
+</ParamField>
+
+<ParamField path="start_index" type="number">
+  The start_index parameter.
 </ParamField>
 
 ```typescript
 const vendors = await client.market.vendors.list();
-
-console.log(vendors.total); // Total number of active vendors
-
-for await (const vendor of vendors) {
-  console.log(vendor.name, vendor.uid);
-}
+const moreVendors = await client.market.vendors.list({ start_index: 51, item_count: 50 });
 ```
-
-## Getting a single vendor
-
-### market.vendors.get()
-
-Retrieves a specific vendor and their listings by UID.
-
-<ParamField path="uid" type="string" required>
-  The vendor UID in `"type:id"` format.
-</ParamField>
-
-```typescript
-const vendor = await client.market.vendors.get({ uid: '12:456' });
-
-console.log(vendor.name);
-console.log(vendor.listings);
-```
-
-## Full example
-
-```typescript
-import { SWCombine } from 'swcombine-sdk';
-
-const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
-
-// Browse the first page of vendors
-const firstPage = await client.market.vendors.list({ item_count: 25 });
-
-console.log(`${firstPage.total} vendors on the market`);
-
-// Get details for the first vendor
-if (firstPage.data.length > 0) {
-  const vendor = await client.market.vendors.get({
-    uid: firstPage.data[0].uid,
-  });
-  console.log(`Vendor: ${vendor.name}`);
-}
-
-// Auto-paginate through all vendors
-for await (const vendor of await client.market.vendors.list()) {
-  console.log(vendor.name, vendor.uid);
-}
-```
-
-<Tip>
-  The market can have many vendors. If you need to find a specific seller, paginate through
-  `vendors.list()` and filter client-side, or fetch by UID directly if you already know it.
-</Tip>
 
 ## Related resources
 
 <CardGroup cols={2}>
+  <Card title="Types" icon="tags" href="/resources/types">
+    Look up entity type details for items on sale.
+  </Card>
   <Card title="Inventory" icon="box" href="/resources/inventory">
-    List the assets a character owns that could be listed for sale.
-  </Card>
-  <Card title="Character" icon="user" href="/resources/character">
-    Transfer credits after completing a trade.
-  </Card>
-  <Card title="Types" icon="tag" href="/resources/types">
-    Look up entity type definitions for items listed on the market.
-  </Card>
-  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
-    Learn how Page&lt;T&gt; works and how to auto-paginate vendor lists.
+    Manage purchased entities.
   </Card>
 </CardGroup>

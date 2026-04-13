@@ -1,186 +1,115 @@
 ---
 title: 'Types'
-description: 'Use client.types to list and retrieve entity class hierarchies and type definitions for ships, vehicles, items, NPCs, and all other entity categories.'
+description: 'Use client.types to browse entity types, classes, and detailed type information across all entity categories.'
 keywords:
   [
     'swcombine sdk',
     'types',
     'entity types',
-    'entity classes',
-    'ship types',
-    'item types',
-    'datacards',
-    'factionmodules',
+    'classes',
+    'ships',
+    'vehicles',
+    'facilities',
+    'items',
   ]
 ---
 
-The `client.types` resource gives you access to the entity type system in the Star Wars Combine universe. Every in-game entity — ships, vehicles, items, facilities, and more — belongs to a class and has a specific type definition. Use the `types` resource to enumerate those definitions for display purposes, type lookups, or building entity catalogs.
+{/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
+{/* Run `npm run docs:mintlify` to regenerate. */}
 
-<Warning>
-  Both `types.classes.list()` and `types.entities.list()` return a `404` if you call them without
-  passing `start_index` and `item_count`. Always include explicit pagination parameters.
-</Warning>
+The `client.types` resource provides access to the Star Wars Combine entity type system — categories, classes, and detailed type information for ships, vehicles, facilities, items, and more.
 
-## Entity classes
+### types.listEntityTypes()
 
-Classes are the top-level groupings within each entity category. For example, the `ships` category contains classes like "Capital Ship" and "Freighter".
+Get all entity types
+
+## Classes
 
 ### types.classes.list()
 
-Returns a paginated list of entity classes for the given entity type.
+Get all classes for a specific entity type (paginated)
+NOTE: Official API documentation states "Query String: N/A" and "Parameters: N/A",
+but empirical testing suggests pagination parameters may be required to avoid 404 errors.
+The SDK includes pagination parameters by default for safety.
 
-<ParamField path="entityType" type="string" required>
-  The entity category to list classes for. Must be one of: `ships`, `vehicles`, `stations`,
-  `cities`, `facilities`, `planets`, `items`, `npcs`, `droids`, `creatures`, `materials`,
-  `factionmodules`.
+<ParamField path="entityType" type="TypesEntityType" required>
+  The entityType parameter.
 </ParamField>
 
-<ParamField path="start_index" type="number" required>
-  1-based index of the first class to return. **Required** — omitting this causes a 404.
+<ParamField path="item_count" type="number">
+  The item_count parameter.
 </ParamField>
 
-<ParamField path="item_count" type="number" required>
-  Number of classes per page. **Required** — omitting this causes a 404.
+<ParamField path="pageDelay" type="number">
+  The pageDelay parameter.
 </ParamField>
 
-```typescript
-const shipClasses = await client.types.classes.list({
-  entityType: 'ships',
-  start_index: 1,
-  item_count: 50,
-});
-
-for await (const cls of shipClasses) {
-  console.log(cls.name, cls.uid);
-}
-```
-
-## Entity types
-
-Entity types are the specific definitions within a class — the individual blueprints for ships, items, and so on.
-
-### types.entities.list()
-
-Returns a paginated list of entity type definitions for the given category.
-
-<ParamField path="entityType" type="string" required>
-  The entity category. Same set of values as `types.classes.list()`.
-</ParamField>
-
-<ParamField path="start_index" type="number" required>
-  1-based index of the first type to return. **Required** — omitting this causes a 404.
-</ParamField>
-
-<ParamField path="item_count" type="number" required>
-  Number of types per page. **Required** — omitting this causes a 404.
+<ParamField path="start_index" type="number">
+  The start_index parameter.
 </ParamField>
 
 ```typescript
-const itemTypes = await client.types.entities.list({
-  entityType: 'items',
-  start_index: 1,
-  item_count: 100,
-});
-
-for await (const type of itemTypes) {
-  console.log(type.name, type.uid, type.class);
-}
+const classes = await client.types.classes.list({ entityType: 'vehicles' });
+const moreClasses = await client.types.classes.list({ entityType: 'vehicles', start_index: 51, item_count: 50 });
 ```
+
+## Entity Types
 
 ### types.entities.get()
 
-Retrieves the full definition of a single entity type by category and UID.
+Get specific entity type information by category and UID.
+Returns the entity type object directly — not wrapped in a `Page`.
 
-<ParamField path="entityType" type="string" required>
-  The entity category the type belongs to.
+<ParamField path="entityType" type="T" required>
+  The entityType parameter.
 </ParamField>
 
 <ParamField path="uid" type="string" required>
-  The entity type UID in `"type:id"` format.
+  The uid parameter.
 </ParamField>
 
 ```typescript
-const shipType = await client.types.entities.get({
-  entityType: 'ships',
-  uid: '8:1234',
-});
-
-console.log(shipType.name);
-console.log(shipType.class);
-console.log(shipType.stats);
+const shipType = await client.types.entities.get({ entityType: 'ships', uid: '8:7' });
+console.log(shipType.name); // access properties directly, not shipType.data
 ```
 
-## Supported entity types
+### types.entities.list()
 
-The `entityType` parameter accepts the following values across all `types` methods:
+Get all entities of a type (paginated)
 
-| Value            | Description                                    |
-| ---------------- | ---------------------------------------------- |
-| `ships`          | Spacecraft definitions                         |
-| `vehicles`       | Ground and repulsorlift vehicle definitions    |
-| `stations`       | Space station blueprints                       |
-| `cities`         | City type definitions                          |
-| `facilities`     | Ground facility blueprints                     |
-| `planets`        | Planet type definitions                        |
-| `items`          | Equipment, weapons, and item definitions       |
-| `npcs`           | Non-player character type definitions          |
-| `droids`         | Droid type definitions                         |
-| `creatures`      | Creature type definitions                      |
-| `materials`      | Raw material definitions                       |
-| `factionmodules` | Faction module type definitions (classes only) |
+<ParamField path="class" type="string">
+  The class parameter.
+</ParamField>
 
-## Full example
+<ParamField path="entityType" type="T" required>
+  The entityType parameter.
+</ParamField>
+
+<ParamField path="item_count" type="**item\_count**: number">
+  The item_count parameter.
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+</ParamField>
+
+<ParamField path="start_index" type="**start\_index**: number">
+  The start_index parameter.
+</ParamField>
 
 ```typescript
-import { SWCombine } from 'swcombine-sdk';
-
-const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
-
-// List all ship classes
-const classes = await client.types.classes.list({
-  entityType: 'ships',
-  start_index: 1,
-  item_count: 50,
-});
-
-console.log(`${classes.total} ship classes`);
-
-// List all ship types
-const types = await client.types.entities.list({
-  entityType: 'ships',
-  start_index: 1,
-  item_count: 100,
-});
-
-console.log(`${types.total} ship types`);
-
-// Get a specific ship type
-const ywing = await client.types.entities.get({
-  entityType: 'ships',
-  uid: '8:7',
-});
-
-console.log(ywing.name); // "Y-Wing BTL-A4"
+const ships = await client.types.entities.list({ entityType: 'ships' });
+const moreShips = await client.types.entities.list({ entityType: 'ships', start_index: 51, item_count: 50 });
+const fighters = await client.types.entities.list({ entityType: 'ships', class: 'fighter', start_index: 1, item_count: 50 });
 ```
-
-<Tip>
-  Entity types are the building blocks for understanding what is in a character's inventory. Pair
-  `types.entities.get()` with inventory entity data to enrich your application with full type specs.
-</Tip>
 
 ## Related resources
 
 <CardGroup cols={2}>
   <Card title="Inventory" icon="box" href="/resources/inventory">
-    List entities owned by a character and map them to their type definitions.
-  </Card>
-  <Card title="Datacard" icon="id-card" href="/resources/datacard">
-    List production datacards, which reference entity types.
+    List entities of a given type.
   </Card>
   <Card title="Market" icon="shop" href="/resources/market">
-    Browse vendor listings that reference entity types.
-  </Card>
-  <Card title="Galaxy" icon="globe" href="/resources/galaxy">
-    Browse the galaxy — stations and cities correspond to types here.
+    Find vendors selling a given type.
   </Card>
 </CardGroup>

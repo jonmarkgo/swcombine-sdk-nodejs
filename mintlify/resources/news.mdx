@@ -1,143 +1,174 @@
 ---
 title: 'News'
-description: 'Use client.news to list and retrieve Galactic News Service articles and sim news posts, with optional category filtering for sim news.'
+description: 'Use client.news to read Galactic News Service (GNS) articles and Sim News posts from the Star Wars Combine universe.'
 keywords:
-  ['swcombine sdk', 'news', 'GNS', 'galactic news service', 'sim news', 'articles', 'announcements']
+  [
+    'swcombine sdk',
+    'news',
+    'GNS',
+    'galactic news',
+    'sim news',
+  ]
 ---
 
-The `client.news` resource gives you programmatic access to two distinct news feeds in the Star Wars Combine universe. The Galactic News Service (GNS) carries in-character news written by players, while sim news carries out-of-character announcements and updates from the game administration. Both feeds expose a list method for pagination and a get method for fetching individual articles by numeric ID.
+{/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
+{/* Run `npm run docs:mintlify` to regenerate. */}
+
+The `client.news` resource provides access to the Galactic News Service (GNS) and Sim News feeds — the in-game news system for the Star Wars Combine.
 
 ## Galactic News Service (GNS)
 
-The GNS is the primary in-character news feed — player-authored articles covering galactic events, faction announcements, and political developments.
+### news.gns.get()
+
+Get a specific GNS news item by numeric ID.
+Returns the `NewsItem` object directly — not wrapped in a `Page`.
+Author and faction are normalized to object references with `value`.
+If the API returns an array, the SDK returns the first normalized item.
+
+<ParamField path="id" type="string \| number" required>
+  News item ID from list results (`attributes.id`)
+</ParamField>
+
+```typescript
+const post = await client.news.gns.get({ id: 49108 });
+console.log(post.title);          // access properties directly, not post.data
+console.log(post.author.value);
+console.log(post.faction.value);
+```
 
 ### news.gns.list()
 
-Returns a paginated list of GNS articles, ordered by publication date.
+List GNS news items (paginated with optional filtering)
+Returns a Page of headline metadata entries (`attributes.id`, `attributes.href`, `attributes.title`, `value`).
+Use `page.data` for the current page items, `page.hasMore` / `page.getNextPage()` for pagination,
+or `for await (const item of page)` to iterate through all pages automatically.
 
-<ParamField path="start_index" type="number" default="1">
-  1-based index of the first article to return.
+**Requires:** Authentication
+
+<ParamField path="author" type="string">
+  Author name to filter by [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`author`](ListNewsOptionsBase.md#author)
 </ParamField>
-
-<ParamField path="item_count" type="number" default="50">
-  Number of articles per page.
-</ParamField>
-
-```typescript
-const articles = await client.news.gns.list();
-
-console.log(articles.total); // Total GNS articles
-
-for await (const article of articles) {
-  console.log(article.title, article.author, article.published_at);
-}
-```
-
-### news.gns.get()
-
-Retrieves the full content of a single GNS article by its numeric ID.
-
-<ParamField path="id" type="number" required>
-  The numeric ID of the GNS article. Note this is a `number`, not a string UID.
-</ParamField>
-
-```typescript
-const article = await client.news.gns.get({ id: 4521 });
-
-console.log(article.title);
-console.log(article.body);
-console.log(article.author);
-```
-
-<Note>
-  GNS article IDs are plain numbers, not the `"type:id"` string format used by entity UIDs elsewhere
-  in the SDK.
-</Note>
-
-## Sim news
-
-Sim news carries out-of-character content: game updates, rule changes, event announcements, and administration notices. Articles can be filtered by category.
-
-### news.simNews.list()
-
-Returns a paginated list of sim news posts.
 
 <ParamField path="category" type="string">
-  Optional category filter. Omit to return posts across all categories.
+  News category to filter by [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`category`](ListNewsOptionsBase.md#category)
 </ParamField>
 
-<ParamField path="start_index" type="number" default="1">
-  1-based index of the first post to return.
+<ParamField path="end_date" type="**end\_date**: number">
+  Filter news up to this Unix timestamp [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`end_date`](ListNewsOptionsBase.md#end_date)
 </ParamField>
 
-<ParamField path="item_count" type="number" default="50">
-  Number of posts per page.
+<ParamField path="faction" type="string">
+  Faction name to filter by (GNS only)
+</ParamField>
+
+<ParamField path="faction_type" type="**faction\_type**: string">
+  Faction type to filter by (GNS only)
+</ParamField>
+
+<ParamField path="item_count" type="**item\_count**: number" default="50">
+  Number of items to retrieve. Default: 50, Max: 50 [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`item_count`](ListNewsOptionsBase.md#item_count)
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`pageDelay`](ListNewsOptionsBase.md#pagedelay)
+</ParamField>
+
+<ParamField path="search" type="string">
+  Search term to filter by [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`search`](ListNewsOptionsBase.md#search)
+</ParamField>
+
+<ParamField path="start_date" type="**start\_date**: number">
+  Filter news starting from this Unix timestamp [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`start_date`](ListNewsOptionsBase.md#start_date)
+</ParamField>
+
+<ParamField path="start_index" type="**start\_index**: number" default="1">
+  Starting position (1-based). Default: 1 [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`start_index`](ListNewsOptionsBase.md#start_index)
 </ParamField>
 
 ```typescript
-// All sim news
-const allNews = await client.news.simNews.list();
-
-// Filtered by category
-const updates = await client.news.simNews.list({ category: 'game-update' });
-
-for await (const post of updates) {
-  console.log(post.title, post.category, post.published_at);
-}
+const page = await client.news.gns.list();
+const economyNews = await client.news.gns.list({ category: 'economy' });
+const moreNews = await client.news.gns.list({ start_index: 51, item_count: 50 });
+const searchNews = await client.news.gns.list({ search: 'battle', author: 'John Doe' });
+const factionNews = await client.news.gns.list({ faction: 'Empire', faction_type: 'government' });
+console.log(page.data[0].attributes.title);
+console.log(page.start, page.total, page.count);
 ```
+
+## Sim News
 
 ### news.simNews.get()
 
-Retrieves the full content of a single sim news post by its numeric ID.
+Get a specific Sim News item by numeric ID.
+Returns the `NewsItem` object directly — not wrapped in a `Page`.
+Author and faction are normalized to object references with `value`.
+If the API returns an array, the SDK returns the first normalized item.
 
-<ParamField path="id" type="number" required>
-  The numeric ID of the sim news post.
+<ParamField path="id" type="string \| number" required>
+  News item ID from list results (`attributes.id`)
 </ParamField>
 
 ```typescript
-const post = await client.news.simNews.get({ id: 892 });
-
-console.log(post.title);
-console.log(post.body);
+const post = await client.news.simNews.get({ id: 49108 });
+console.log(post.title);          // access properties directly, not post.data
+console.log(post.author.value);
+console.log(post.faction.value);
 ```
 
-## Full example
+### news.simNews.list()
+
+List Sim News items (paginated with optional filtering)
+Returns a Page of headline metadata entries (`attributes.id`, `attributes.href`, `attributes.title`, `value`).
+Use `page.data` for the current page items, `page.hasMore` / `page.getNextPage()` for pagination,
+or `for await (const item of page)` to iterate through all pages automatically.
+
+**Requires:** Authentication
+
+<ParamField path="author" type="string">
+  Author name to filter by
+</ParamField>
+
+<ParamField path="category" type="string">
+  News category to filter by
+</ParamField>
+
+<ParamField path="end_date" type="**end\_date**: number">
+  Filter news up to this Unix timestamp
+</ParamField>
+
+<ParamField path="item_count" type="**item\_count**: number" default="50">
+  Number of items to retrieve. Default: 50, Max: 50
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+</ParamField>
+
+<ParamField path="search" type="string">
+  Search term to filter by
+</ParamField>
+
+<ParamField path="start_date" type="**start\_date**: number">
+  Filter news starting from this Unix timestamp
+</ParamField>
+
+<ParamField path="start_index" type="**start\_index**: number" default="1">
+  Starting position (1-based). Default: 1
+</ParamField>
 
 ```typescript
-import { SWCombine } from 'swcombine-sdk';
-
-const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
-
-// Fetch the latest 10 GNS articles
-const gns = await client.news.gns.list({ item_count: 10 });
-for (const article of gns.data) {
-  console.log(`[GNS] ${article.title} by ${article.author}`);
-}
-
-// Fetch the latest 10 sim news posts
-const simNews = await client.news.simNews.list({ item_count: 10 });
-for (const post of simNews.data) {
-  console.log(`[Sim] ${post.title}`);
-}
-
-// Get a specific GNS article by ID
-const full = await client.news.gns.get({ id: gns.data[0].id });
-console.log(full.body);
+const page = await client.news.simNews.list();
+const playerNews = await client.news.simNews.list({ category: 'player' });
+const moreNews = await client.news.simNews.list({ start_index: 51, item_count: 50 });
+const searchNews = await client.news.simNews.list({ search: 'update', author: 'Admin' });
+console.log(page.data[0].attributes.title);
+console.log(page.start, page.total, page.count);
 ```
 
 ## Related resources
 
 <CardGroup cols={2}>
   <Card title="Events" icon="bolt" href="/resources/events">
-    Query in-game activity events for characters, factions, and combat.
-  </Card>
-  <Card title="Character" icon="user" href="/resources/character">
-    Identify the author of a GNS article by character UID.
-  </Card>
-  <Card title="Faction" icon="flag" href="/resources/faction">
-    Look up faction details referenced in galactic news articles.
-  </Card>
-  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
-    Learn how Page&lt;T&gt; works and how to auto-paginate news feeds.
+    Query personal and faction event logs.
   </Card>
 </CardGroup>

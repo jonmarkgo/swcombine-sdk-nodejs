@@ -1,6 +1,6 @@
 {
   "name": "swcombine-sdk",
-  "version": "3.2.5",
+  "version": "3.2.6",
   "description": "Comprehensive TypeScript SDK for Star Wars Combine API v2.0",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -37,10 +37,8 @@
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "docs:api": "typedoc && tsx scripts/generate-llms-txt.ts",
-    "docs:api:watch": "typedoc --watch",
-    "docs:html": "typedoc --options typedoc.html.json",
-    "docs:llms": "tsx scripts/generate-llms-txt.ts",
+    "docs": "typedoc && tsx scripts/generate-mintlify.ts",
+    "docs:watch": "typedoc --watch",
     "get-token": "tsx scripts/get-oauth-token.ts",
     "get-character-uid": "tsx scripts/get-character-uid.ts",
     "refresh-token": "tsx scripts/refresh-token.ts",
@@ -68,7 +66,7 @@
   "bugs": {
     "url": "https://github.com/jonmarkgo/swcombine-sdk-nodejs/issues"
   },
-  "homepage": "https://jonmarkgo.github.io/swcombine-sdk-nodejs/",
+  "homepage": "https://swc-sdk.zeltros.dev/",
   "engines": {
     "node": ">=18.0.0"
   },

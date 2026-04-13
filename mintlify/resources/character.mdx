@@ -14,421 +14,384 @@ keywords:
   ]
 ---
 
-The `client.character` resource gives you access to the core player identity in the Star Wars Combine universe. You can look up characters by UID or handle, read the authenticated user's own profile, exchange in-game messages, transfer credits, and inspect the fine-grained privilege and permission system. Most methods require the `CHARACTER_READ` OAuth scope; the `getByHandle` method is the only publicly available endpoint that needs no authentication at all.
+{/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
+{/* Run `npm run docs:mintlify` to regenerate. */}
 
-## Character profile methods
+The `client.character` resource gives you access to the core player identity in the Star Wars Combine universe. You can look up characters by UID or handle, read the authenticated user's own profile, exchange in-game messages, transfer credits, and inspect the fine-grained privilege and permission system.
 
-### me()
+### character.get()
 
-Fetches the full profile for the character associated with the current access token. No UID required.
-
-**Requires:** `CHARACTER_READ`
-
-```typescript
-const me = await client.character.me();
-
-console.log(me.name); // "Luke Skywalker"
-console.log(me.credits); // 42000
-console.log(me.faction); // faction info object
-```
-
-### get()
-
-Fetches the full profile for any character by UID.
+Get character by UID.
+Returns the `Character` object directly — not wrapped in a `Page`.
 
 **Requires:** `CHARACTER_READ`
 
 <ParamField path="uid" type="string" required>
-  The character's unique identifier in `"type:id"` format, e.g. `"1:12345"`.
+  The uid parameter.
 </ParamField>
 
 ```typescript
 const character = await client.character.get({ uid: '1:12345' });
-
-console.log(character.name);
-console.log(character.faction);
+console.log(character.name); // access properties directly, not character.data
 ```
 
-### getByHandle()
+### character.getByHandle()
 
-Resolves a character's handle (username) to their UID. This endpoint is **public** — no access token or authentication is needed.
+Look up a character's UID by their handle (username).
+This endpoint is public — no authentication required — and is the primary
+way to resolve a handle to the `uid` used by every other character endpoint.
 
 <ParamField path="handle" type="string" required>
-  The character's in-game handle (username), e.g. `"luke-skywalker"`.
+  The handle parameter.
 </ParamField>
 
 ```typescript
-// No auth needed — works with a public client
-const publicClient = new SWCombine();
+const { uid, handle } = await client.character.getByHandle({ handle: 'Dreks Selmur' });
+console.log(uid);    // "1:46931"
+console.log(handle); // "Dreks Selmur"
 
-const { uid, handle } = await publicClient.character.getByHandle({
-  handle: 'luke-skywalker',
-});
-
-console.log(uid); // "1:12345"
-console.log(handle); // "luke-skywalker"
+// Chain into a full profile fetch (requires CHARACTER_READ)
+const character = await client.character.get({ uid });
 ```
 
-<Tip>
-  Use `getByHandle` to resolve a known handle to a UID before making authenticated calls. This is
-  safe to call without any credentials.
-</Tip>
+### character.hasPermission()
 
-### hasPermission()
-
-Checks whether a character holds a specific permission.
-
-**Requires:** `CHARACTER_READ`
-
-<ParamField path="uid" type="string" required>
-  The character UID to check.
-</ParamField>
+Check if the API client has a specific permission for this character
 
 <ParamField path="permission" type="string" required>
-  The permission name to test.
+  Permission scope to check (e.g., 'CHARACTER_READ', 'MESSAGES_SEND')
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  Character UID
 </ParamField>
 
 ```typescript
-const allowed = await client.character.hasPermission({
-  uid: '1:12345',
-  permission: 'MANAGE_FACTION',
-});
-
-if (allowed) {
-  console.log('Character has permission');
+const canRead = await client.character.hasPermission({ uid: '1:12345', permission: 'CHARACTER_READ' });
+if (canRead) {
+  const character = await client.character.get({ uid: '1:12345' });
 }
 ```
 
-## Messages
+### character.me()
 
-The `client.character.messages` sub-resource lets you list, read, send, and delete in-game messages for a character.
+Get the currently authenticated user's character
 
-### messages.list()
+**Requires:** `CHARACTER_READ`
 
-Returns a paginated list of messages for a character's inbox or sent box.
+```typescript
+const myCharacter = await client.character.me();
+```
+
+## Credit Log
+
+### character.creditlog.list()
+
+Get character's credit log (paginated)
+
+**Requires:** `CHARACTER_CREDITS`
+
+<ParamField path="item_count" type="**item\_count**: number" default="50">
+  Number of items to retrieve. Default: 50, Max: 1000
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+</ParamField>
+
+<ParamField path="start_id" type="**start\_id**: number">
+  Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000)
+</ParamField>
+
+<ParamField path="start_index" type="**start\_index**: number" default="1">
+  Starting position for pagination (1-based). Default: 1
+</ParamField>
 
 <ParamField path="uid" type="string" required>
-  The character UID whose messages to list.
+  The uid parameter.
 </ParamField>
 
-<ParamField path="mode" type="MessageMode">
-  Filter by message direction. Use `MessageMode.Sent` or `MessageMode.Received`. Omit to return both
-  sent and received messages.
+```typescript
+const creditlog = await client.character.creditlog.list({ uid: '1:12345' });
+const moreLogs = await client.character.creditlog.list({ uid: '1:12345', start_index: 51, item_count: 100 });
+const oldestLogs = await client.character.creditlog.list({ uid: '1:12345', start_id: 1 });
+// Fetch up to 1000 credit log entries at once
+const manyLogs = await client.character.creditlog.list({ uid: '1:12345', item_count: 1000 });
+
+// Iterate through all pages automatically
+for await (const entry of creditlog) {
+  console.log(entry);
+}
+```
+
+## Credits
+
+### character.credits.get()
+
+Get character's credit balance
+
+**Requires:** `CHARACTER_CREDITS`
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
 </ParamField>
 
-<ParamField path="start_index" type="number" default="1">
-  1-based index of the first item to return.
+```typescript
+const credits = await client.character.credits.get({ uid: '1:12345' });
+console.log(`Credits: ${credits}`); // Credits: 320089347
+```
+
+### character.credits.transfer()
+
+Transfer credits from character to another character or faction
+
+<ParamField path="amount" type="number" required>
+  Amount to transfer
 </ParamField>
 
-<ParamField path="item_count" type="number" default="50">
-  Number of items per page.
+<ParamField path="reason" type="string">
+  Reason for transfer (optional, API will auto-append client name) @requires_auth Yes @requires_scope CHARACTER_CREDITS_WRITE
+</ParamField>
+
+<ParamField path="recipient" type="string" required>
+  Recipient character or faction name/UID (REQUIRED)
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  Character UID
+</ParamField>
+
+## Messages
+
+### character.messages.create()
+
+Send a message
+
+**Requires:** `MESSAGES_SEND`
+
+<ParamField path="communication" type="string" required>
+  Message text content
+</ParamField>
+
+<ParamField path="receivers" type="string" required>
+  Semicolon-separated list of recipient character handles (max 25). Example: 'handle1;handle2'
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
+</ParamField>
+
+```typescript
+// Valid: handles
+await client.character.messages.create({
+  uid: '1:12345',
+  receivers: 'recipient_handle_1;recipient_handle_2',
+  communication: 'Hello from the SDK!'
+});
+```
+
+```typescript
+// Invalid: UIDs are rejected by the API and pre-validated by this SDK
+await client.character.messages.create({
+  uid: '1:12345',
+  receivers: '1:12345',
+  communication: 'Test'
+});
+```
+
+### character.messages.delete()
+
+Delete a message
+
+**Requires:** `MESSAGES_DELETE`
+
+<ParamField path="messageId" type="string" required>
+  The messageId parameter.
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
+</ParamField>
+
+### character.messages.get()
+
+Get a specific message
+
+**Requires:** `MESSAGES_READ`
+
+<ParamField path="messageId" type="string" required>
+  The messageId parameter.
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
 </ParamField>
 
 ```typescript
 import { MessageMode } from 'swcombine-sdk';
 
-// List received messages
-const inbox = await client.character.messages.list({
-  uid: '1:12345',
-  mode: MessageMode.Received,
-});
+const messages = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received });
+const messageId = messages.data[0]?.attributes.uid;
 
-// List sent messages
-const sent = await client.character.messages.list({
-  uid: '1:12345',
-  mode: MessageMode.Sent,
-});
-
-for await (const msg of inbox) {
-  console.log(msg.subject, msg.sender);
+if (messageId) {
+  const message = await client.character.messages.get({ uid: '1:12345', messageId });
+  console.log(message.communication);
 }
 ```
 
-### messages.get()
+### character.messages.list()
 
-Fetches the full content of a single message.
+List messages sent or received by character (paginated)
+Note: list responses return `MessageListItem[]` metadata objects and do not
+guarantee a `communication` field. Use `get()` for full message content.
 
-<ParamField path="uid" type="string" required>
-  The character UID.
+**Requires:** `MESSAGES_READ`
+
+<ParamField path="item_count" type="**item\_count**: number">
+  The item_count parameter.
 </ParamField>
 
-<ParamField path="messageId" type="string" required>
-  The ID of the message to retrieve.
+<ParamField path="mode" type="MessageMode">
+  Message mode: `MessageMode.Sent` or `MessageMode.Received`. If omitted, returns both sent and received messages.
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+</ParamField>
+
+<ParamField path="start_index" type="**start\_index**: number">
+  The start_index parameter.
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
 </ParamField>
 
 ```typescript
-const message = await client.character.messages.get({
-  uid: '1:12345',
-  messageId: 'msg-789',
-});
+import { MessageMode } from 'swcombine-sdk';
 
-console.log(message.subject);
-console.log(message.body);
-```
+const allMessages = await client.character.messages.list({ uid: '1:12345' });
+const received = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received });
+const moreMessages = await client.character.messages.list({ uid: '1:12345', mode: MessageMode.Received, start_index: 51, item_count: 50 });
 
-### messages.create()
-
-Sends a new in-game message to one or more recipients.
-
-<ParamField path="uid" type="string" required>
-  The sending character's UID.
-</ParamField>
-
-<ParamField path="receivers" type="string" required>
-  A semicolon-separated list of recipient **handles** (not UIDs). Maximum 25 recipients.
-</ParamField>
-
-<ParamField path="communication" type="string" required>
-  The message text content to send.
-</ParamField>
-
-<Warning>
-  The `receivers` field takes character **handles** separated by semicolons, not UIDs. Sending to
-  UIDs will fail. Maximum 25 recipients per message.
-</Warning>
-
-```typescript
-const message = await client.character.messages.create({
-  uid: '1:12345',
-  receivers: 'han-solo;leia-organa',
-  communication: 'Meeting at the cantina — be there at 0800.',
-});
-```
-
-### messages.delete()
-
-Deletes a message.
-
-<ParamField path="uid" type="string" required>
-  The character UID.
-</ParamField>
-
-<ParamField path="messageId" type="string" required>
-  The ID of the message to delete.
-</ParamField>
-
-```typescript
-await client.character.messages.delete({
-  uid: '1:12345',
-  messageId: 'msg-789',
-});
-```
-
-## Skills
-
-### skills.list()
-
-Returns all skills for a character, including current levels and experience.
-
-<ParamField path="uid" type="string" required>
-  The character UID.
-</ParamField>
-
-```typescript
-const skills = await client.character.skills.list({ uid: '1:12345' });
-
-console.log(skills.piloting);
-console.log(skills.combat);
-```
-
-## Credits
-
-### credits.get()
-
-Returns the current credit balance for a character.
-
-<ParamField path="uid" type="string" required>
-  The character UID.
-</ParamField>
-
-```typescript
-const balance = await client.character.credits.get({ uid: '1:12345' });
-console.log(`Balance: ${balance} credits`);
-```
-
-### credits.transfer()
-
-Transfers credits from the authenticated character to a recipient.
-
-<ParamField path="uid" type="string" required>
-  The sending character's UID.
-</ParamField>
-
-<ParamField path="amount" type="number" required>
-  The number of credits to transfer.
-</ParamField>
-
-<ParamField path="recipient" type="string" required>
-  The recipient character's UID.
-</ParamField>
-
-<ParamField path="reason" type="string">
-  An optional note or reason for the transfer, recorded in the credit log.
-</ParamField>
-
-<Warning>
-  Credit transfers are irreversible. Double-check the recipient UID before executing.
-</Warning>
-
-```typescript
-await client.character.credits.transfer({
-  uid: '1:12345',
-  amount: 10000,
-  recipient: '1:67890',
-  reason: 'Payment for ship repairs',
-});
-```
-
-### creditlog.list()
-
-Returns a paginated history of credit transactions for a character.
-
-<ParamField path="uid" type="string" required>
-  The character UID.
-</ParamField>
-
-<ParamField path="start_index" type="number" default="1">
-  1-based index of the first entry to return.
-</ParamField>
-
-<ParamField path="item_count" type="number" default="50">
-  Number of entries per page.
-</ParamField>
-
-<ParamField path="start_id" type="number">
-  Optional transaction ID threshold. Use `1` for oldest 1000 entries; `0` or omit for the newest
-  1000.
-</ParamField>
-
-```typescript
-const log = await client.character.creditlog.list({ uid: '1:12345' });
-
-for await (const entry of log) {
-  console.log(entry.amount, entry.description, entry.timestamp);
+const firstMessageId = received.data[0]?.attributes.uid;
+if (firstMessageId) {
+  const detail = await client.character.messages.get({ uid: '1:12345', messageId: firstMessageId });
+  console.log(detail.communication);
 }
-```
 
-## Privileges
-
-The privileges system controls what actions a character can perform, optionally scoped to a faction.
-
-### privileges.list()
-
-Lists all privilege groups and their entries for a character.
-
-<ParamField path="uid" type="string" required>
-  The character UID.
-</ParamField>
-
-<ParamField path="faction_id" type="string">
-  Optional faction UID to scope privilege results to a specific faction.
-</ParamField>
-
-```typescript
-const privs = await client.character.privileges.list({ uid: '1:12345' });
-```
-
-### privileges.get()
-
-Returns the detail of a specific privilege for a character.
-
-<ParamField path="uid" type="string" required>
-  The character UID.
-</ParamField>
-
-<ParamField path="privilegeGroup" type="string" required>
-  The privilege group name.
-</ParamField>
-
-<ParamField path="privilege" type="string" required>
-  The privilege name within the group.
-</ParamField>
-
-<ParamField path="faction_id" type="string">
-  Optional faction UID to scope the query.
-</ParamField>
-
-```typescript
-const detail = await client.character.privileges.get({
-  uid: '1:12345',
-  privilegeGroup: 'faction',
-  privilege: 'MANAGE_MEMBERS',
-});
-```
-
-### privileges.update()
-
-Grants or revokes a specific privilege for a character.
-
-<ParamField path="uid" type="string" required>
-  The character UID.
-</ParamField>
-
-<ParamField path="privilegeGroup" type="string" required>
-  The privilege group name.
-</ParamField>
-
-<ParamField path="privilege" type="string" required>
-  The privilege name within the group.
-</ParamField>
-
-<ParamField path="revoke" type="boolean">
-  Set to `true` to revoke the privilege. Omit or set to `false` to grant it.
-</ParamField>
-
-<ParamField path="faction_id" type="string">
-  Optional faction UID to scope the update.
-</ParamField>
-
-```typescript
-// Grant a privilege
-await client.character.privileges.update({
-  uid: '1:12345',
-  privilegeGroup: 'faction',
-  privilege: 'MANAGE_MEMBERS',
-});
-
-// Revoke a privilege
-await client.character.privileges.update({
-  uid: '1:12345',
-  privilegeGroup: 'faction',
-  privilege: 'MANAGE_MEMBERS',
-  revoke: true,
-});
+// Iterate through all pages automatically
+for await (const msg of allMessages) {
+  console.log(msg.attributes.uid);
+}
 ```
 
 ## Permissions
 
-### permissions.list()
+### character.permissions.getScopes()
 
-Returns all OAuth permissions associated with a character's token.
+Get flat list of granted scope names
 
 <ParamField path="uid" type="string" required>
-  The character UID.
+  The uid parameter.
+</ParamField>
+
+### character.permissions.list()
+
+Get permissions granted to API client for this character
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
 </ParamField>
 
 ```typescript
 const perms = await client.character.permissions.list({ uid: '1:12345' });
+const scopes = perms.permission[0]?.scopes.scope || [];
+console.log('Granted scopes:', scopes.join(', '));
 ```
 
-### permissions.getScopes()
+## Privileges
 
-Returns the list of OAuth scope strings granted for the character's current token.
+### character.privileges.get()
+
+Get a specific privilege.
+Returns the `PrivilegeDetail` object directly — not wrapped in a `Page`.
+
+**Requires:** `CHARACTER_PRIVILEGES`
+
+<ParamField path="faction_id" type="number">
+  Optional faction ID to view privileges for (defaults to token owner's primary faction)
+</ParamField>
+
+<ParamField path="privilege" type="string" required>
+  Privilege name
+</ParamField>
+
+<ParamField path="privilegeGroup" type="string" required>
+  Privilege group name
+</ParamField>
 
 <ParamField path="uid" type="string" required>
-  The character UID.
+  Character UID
+</ParamField>
+
+### character.privileges.list()
+
+Get character's privileges organized by group
+
+**Requires:** `CHARACTER_PRIVILEGES`
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
 </ParamField>
 
 ```typescript
-const scopes = await client.character.permissions.getScopes({ uid: '1:12345' });
-
-console.log(scopes); // ["CHARACTER_READ", "CREDITS_WRITE", ...]
+const privs = await client.character.privileges.list({ uid: '1:12345' });
+privs.privilegegroup.forEach(g => {
+  console.log(`${g.attributes.name}: ${g.attributes.count} privileges`);
+});
 ```
 
-<Note>
-  Use `getScopes()` to verify at runtime that your token has the scopes needed before calling
-  protected endpoints.
-</Note>
+### character.privileges.update()
+
+Update a specific privilege (grant or revoke)
+
+<ParamField path="faction_id" type="number">
+  Optional faction ID to view privileges for (defaults to token owner's primary faction)
+</ParamField>
+
+<ParamField path="privilege" type="string" required>
+  Privilege name
+</ParamField>
+
+<ParamField path="privilegeGroup" type="string" required>
+  Privilege group name
+</ParamField>
+
+<ParamField path="revoke" type="boolean">
+  Set to true to revoke the privilege, false/undefined to grant it
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  Character UID
+</ParamField>
+
+## Skills
+
+### character.skills.list()
+
+Get character's skills organized by category
+
+**Requires:** `CHARACTER_SKILLS`
+
+<ParamField path="uid" type="string" required>
+  The uid parameter.
+</ParamField>
+
+```typescript
+const skills = await client.character.skills.list({ uid: '1:12345' });
+skills.general?.[0].skill.forEach(s => console.log(s.attributes.type, s.value));
+```
 
 ## Related resources
 

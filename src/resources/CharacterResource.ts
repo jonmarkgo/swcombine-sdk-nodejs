@@ -320,13 +320,17 @@ export class CharacterPrivilegesResource extends BaseResource {
   }
 
   /**
-   * Get a specific privilege
+   * Get a specific privilege.
+   *
+   * Returns the `PrivilegeDetail` object directly — not wrapped in a `Page`.
+   *
    * @requires_auth Yes
    * @requires_scope CHARACTER_PRIVILEGES
    * @param options.uid - Character UID
    * @param options.privilegeGroup - Privilege group name
    * @param options.privilege - Privilege name
    * @param options.faction_id - Optional faction ID to view privileges for (defaults to token owner's primary faction)
+   * @returns The `PrivilegeDetail` entity.
    */
   async get(options: {
     uid: string;
@@ -571,12 +575,17 @@ export class CharacterResource extends BaseResource {
   }
 
   /**
-   * Get character by UID
+   * Get character by UID.
+   *
+   * Returns the `Character` object directly — not wrapped in a `Page`.
+   *
    * @requires_auth Yes
    * @requires_scope CHARACTER_READ
    * @param options - Character UID
+   * @returns The `Character` entity.
    * @example
    * const character = await client.character.get({ uid: '1:12345' });
+   * console.log(character.name); // access properties directly, not character.data
    */
   async get(options: GetCharacterOptions): Promise<Character> {
     return this.request<Character>('GET', `/character/${options.uid}`);

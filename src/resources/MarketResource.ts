@@ -51,7 +51,14 @@ export class MarketVendorsResource extends BaseResource {
   }
 
   /**
-   * Get vendor by UID
+   * Get a specific vendor by UID.
+   *
+   * Returns the `Vendor` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `Vendor` entity.
+   * @example
+   * const vendor = await client.market.vendors.get({ uid: 'vendor-uid' });
+   * console.log(vendor.name); // access properties directly, not vendor.data
    */
   async get(options: GetVendorOptions): Promise<Vendor> {
     return this.request<Vendor>('GET', `/market/vendors/${options.uid}`);

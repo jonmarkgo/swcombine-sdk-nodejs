@@ -1,4 +1,4 @@
-# swcombine-sdk v3.1.1
+# swcombine-sdk v3.2.4
 
 > Comprehensive TypeScript SDK for Star Wars Combine API v2.0
 
@@ -942,7 +942,10 @@ https://www.swcombine.com/ws/v2.0/documentation/character/uid/privileges/ SW Com
 
 > **get**(`options`): `Promise`\<`PrivilegeDetail`\>
 
-Get a specific privilege
+Get a specific privilege.
+
+Returns the `PrivilegeDetail` object directly — not wrapped in a `Page`.
+
 @requires_auth Yes
 @requires_scope CHARACTER_PRIVILEGES
 
@@ -977,6 +980,8 @@ Character UID
 #### Returns
 
 `Promise`\<`PrivilegeDetail`\>
+
+The `PrivilegeDetail` entity.
 
 ***
 
@@ -1129,7 +1134,10 @@ https://www.swcombine.com/ws/v2.0/documentation/character/uid/ SW Combine API Do
 
 > **get**(`options`): `Promise`\<`Character`\>
 
-Get character by UID
+Get character by UID.
+
+Returns the `Character` object directly — not wrapped in a `Page`.
+
 @requires_auth Yes
 @requires_scope CHARACTER_READ
 
@@ -1145,10 +1153,13 @@ Character UID
 
 `Promise`\<`Character`\>
 
+The `Character` entity.
+
 #### Example
 
 ```ts
 const character = await client.character.get({ uid: '1:12345' });
+console.log(character.name); // access properties directly, not character.data
 ```
 
 ***
@@ -1349,7 +1360,9 @@ https://www.swcombine.com/ws/v2.0/documentation/faction/uid/budgets/ SW Combine 
 
 > **get**(`options`): `Promise`\<`Budget`\>
 
-Get specific budget
+Get a specific faction budget.
+
+Returns the `Budget` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -1366,6 +1379,15 @@ Get specific budget
 #### Returns
 
 `Promise`\<`Budget`\>
+
+The `Budget` entity.
+
+#### Example
+
+```ts
+const budget = await client.faction.budgets.get({ factionId: '20:123', budgetId: 'budget-uid' });
+console.log(budget); // access properties directly, not budget.data
+```
 
 ***
 
@@ -1538,7 +1560,9 @@ https://www.swcombine.com/ws/v2.0/documentation/faction/uid/credits/ SW Combine 
 
 > **get**(`options`): `Promise`\<`FactionCredits`\>
 
-Get faction credits
+Get faction credit balance.
+
+Returns the `FactionCredits` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -1549,6 +1573,15 @@ Get faction credits
 #### Returns
 
 `Promise`\<`FactionCredits`\>
+
+The `FactionCredits` data.
+
+#### Example
+
+```ts
+const credits = await client.faction.credits.get({ factionId: '20:123' });
+console.log(credits); // access properties directly, not credits.data
+```
 
 ***
 
@@ -1751,7 +1784,10 @@ https://www.swcombine.com/ws/v2.0/documentation/faction/uid/ SW Combine API Docu
 
 > **get**(`options?`): `Promise`\<`FactionDetail`\>
 
-Get faction by UID
+Get faction by UID.
+
+Returns the `FactionDetail` object directly — not wrapped in a `Page`.
+
 @requires_auth Yes
 @requires_scope FACTION_READ
 
@@ -1767,11 +1803,15 @@ Optional faction UID. If omitted or uid not provided, returns the authenticated 
 
 `Promise`\<`FactionDetail`\>
 
+The `FactionDetail` entity.
+
 #### Example
 
 ```ts
 // Get a specific faction
 const faction = await client.faction.get({ uid: '20:123' });
+console.log(faction.name); // access properties directly, not faction.data
+
 // Get the authenticated user's faction
 const myFaction = await client.faction.get();
 ```
@@ -1925,7 +1965,9 @@ https://www.swcombine.com/ws/v2.0/documentation/galaxy/cities/ SW Combine API Do
 
 > **get**(`options`): `Promise`\<`City`\>
 
-Get city by UID
+Get city by UID.
+
+Returns the `City` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -1936,6 +1978,15 @@ Get city by UID
 #### Returns
 
 `Promise`\<`City`\>
+
+The `City` entity.
+
+#### Example
+
+```ts
+const city = await client.galaxy.cities.get({ uid: '13:123' });
+console.log(city.name); // access properties directly, not city.data
+```
 
 ***
 
@@ -2012,7 +2063,9 @@ https://www.swcombine.com/ws/v2.0/documentation/galaxy/planets/ SW Combine API D
 
 > **get**(`options`): `Promise`\<`Planet`\>
 
-Get planet by UID
+Get planet by UID.
+
+Returns the `Planet` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -2023,6 +2076,15 @@ Get planet by UID
 #### Returns
 
 `Promise`\<`Planet`\>
+
+The `Planet` entity.
+
+#### Example
+
+```ts
+const planet = await client.galaxy.planets.get({ uid: '9:123' });
+console.log(planet.name); // access properties directly, not planet.data
+```
 
 ***
 
@@ -2184,7 +2246,9 @@ https://www.swcombine.com/ws/v2.0/documentation/galaxy/sectors/ SW Combine API D
 
 > **get**(`options`): `Promise`\<`Sector`\>
 
-Get sector by name or UID
+Get sector by name or UID.
+
+Returns the `Sector` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -2198,10 +2262,13 @@ Sector identifier (use lowercase sector name, e.g., 'seswenna')
 
 `Promise`\<`Sector`\>
 
+The `Sector` entity.
+
 #### Example
 
 ```ts
 const sector = await client.galaxy.sectors.get({ uid: 'seswenna' });
+console.log(sector.name); // access properties directly, not sector.data
 ```
 
 ***
@@ -2279,7 +2346,9 @@ https://www.swcombine.com/ws/v2.0/documentation/galaxy/stations/ SW Combine API 
 
 > **get**(`options`): `Promise`\<`Station`\>
 
-Get station by UID
+Get station by UID.
+
+Returns the `Station` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -2290,6 +2359,15 @@ Get station by UID
 #### Returns
 
 `Promise`\<`Station`\>
+
+The `Station` entity.
+
+#### Example
+
+```ts
+const station = await client.galaxy.stations.get({ uid: '12:123' });
+console.log(station.name); // access properties directly, not station.data
+```
 
 ***
 
@@ -2366,7 +2444,9 @@ https://www.swcombine.com/ws/v2.0/documentation/galaxy/systems/ SW Combine API D
 
 > **get**(`options`): `Promise`\<`System`\>
 
-Get system by UID
+Get system by UID.
+
+Returns the `System` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -2377,6 +2457,15 @@ Get system by UID
 #### Returns
 
 `Promise`\<`System`\>
+
+The `System` entity.
+
+#### Example
+
+```ts
+const system = await client.galaxy.systems.get({ uid: '7:123' });
+console.log(system.name); // access properties directly, not system.data
+```
 
 ***
 
@@ -2485,7 +2574,9 @@ Add tag to entity
 
 > **get**(`options`): `Promise`\<`Entity`\>
 
-Get specific entity
+Get a specific inventory entity by type and UID.
+
+Returns the `Entity` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -2496,6 +2587,15 @@ Get specific entity
 #### Returns
 
 `Promise`\<`Entity`\>
+
+The `Entity`.
+
+#### Example
+
+```ts
+const ship = await client.inventory.entities.get({ entityType: 'ships', uid: '8:123' });
+console.log(ship.name); // access properties directly, not ship.data
+```
 
 ***
 
@@ -2684,7 +2784,9 @@ https://www.swcombine.com/ws/v2.0/documentation/inventory/uid/ SW Combine API Do
 
 > **get**(`options`): `Promise`\<`Record`\<`string`, `unknown`\>\>
 
-Get inventory by UID
+Get inventory summary by UID.
+
+Returns the inventory summary object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -2697,6 +2799,15 @@ Get inventory by UID
 #### Returns
 
 `Promise`\<`Record`\<`string`, `unknown`\>\>
+
+The inventory summary.
+
+#### Example
+
+```ts
+const overview = await client.inventory.get({ uid: '1:12345' });
+console.log(overview); // access properties directly, not overview.data
+```
 
 ---
 
@@ -2778,7 +2889,9 @@ https://www.swcombine.com/ws/v2.0/documentation/market/vendors/ SW Combine API D
 
 > **get**(`options`): `Promise`\<`Vendor`\>
 
-Get vendor by UID
+Get a specific vendor by UID.
+
+Returns the `Vendor` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -2789,6 +2902,15 @@ Get vendor by UID
 #### Returns
 
 `Promise`\<`Vendor`\>
+
+The `Vendor` entity.
+
+#### Example
+
+```ts
+const vendor = await client.market.vendors.get({ uid: 'vendor-uid' });
+console.log(vendor.name); // access properties directly, not vendor.data
+```
 
 ***
 
@@ -2870,6 +2992,8 @@ https://www.swcombine.com/ws/v2.0/documentation/news/gns/category/ SW Combine AP
 > **get**(`options`): `Promise`\<`NewsItem`\>
 
 Get a specific GNS news item by numeric ID.
+
+Returns the `NewsItem` object directly — not wrapped in a `Page`.
 Author and faction are normalized to object references with `value`.
 If the API returns an array, the SDK returns the first normalized item.
 
@@ -2883,10 +3007,13 @@ If the API returns an array, the SDK returns the first normalized item.
 
 `Promise`\<`NewsItem`\>
 
+The `NewsItem` entity.
+
 #### Example
 
 ```ts
 const post = await client.news.gns.get({ id: 49108 });
+console.log(post.title);          // access properties directly, not post.data
 console.log(post.author.value);
 console.log(post.faction.value);
 ```
@@ -3010,6 +3137,8 @@ https://www.swcombine.com/ws/v2.0/documentation/news/simnews/category/ SW Combin
 > **get**(`options`): `Promise`\<`NewsItem`\>
 
 Get a specific Sim News item by numeric ID.
+
+Returns the `NewsItem` object directly — not wrapped in a `Page`.
 Author and faction are normalized to object references with `value`.
 If the API returns an array, the SDK returns the first normalized item.
 
@@ -3023,10 +3152,13 @@ If the API returns an array, the SDK returns the first normalized item.
 
 `Promise`\<`NewsItem`\>
 
+The `NewsItem` entity.
+
 #### Example
 
 ```ts
 const post = await client.news.simNews.get({ id: 49108 });
+console.log(post.title);          // access properties directly, not post.data
 console.log(post.author.value);
 console.log(post.faction.value);
 ```
@@ -3185,7 +3317,9 @@ https://www.swcombine.com/ws/v2.0/documentation/types/entity_type/ SW Combine AP
 
 > **get**\<`T`\>(`options`): `Promise`\<`TypesEntityGetResponseMap`\[`T`\]\>
 
-Get specific entity type information
+Get specific entity type information by category and UID.
+
+Returns the entity type object directly — not wrapped in a `Page`.
 
 #### Type Parameters
 
@@ -3202,6 +3336,15 @@ Get specific entity type information
 #### Returns
 
 `Promise`\<`TypesEntityGetResponseMap`\[`T`\]\>
+
+The entity type detail (e.g. `TypesShipEntity`, `TypesVehicleEntity`, etc.).
+
+#### Example
+
+```ts
+const shipType = await client.types.entities.get({ entityType: 'ships', uid: '8:7' });
+console.log(shipType.name); // access properties directly, not shipType.data
+```
 
 ***
 
@@ -3335,7 +3478,9 @@ https://www.swcombine.com/ws/v2.0/documentation/events/event_mode/event_type/ SW
 
 > **get**(`options`): `Promise`\<`Event`\>
 
-Get specific event
+Get a specific event by UID.
+
+Returns the `Event` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -3348,6 +3493,15 @@ Get specific event
 #### Returns
 
 `Promise`\<`Event`\>
+
+The `Event` entity.
+
+#### Example
+
+```ts
+const event = await client.events.get({ uid: '5:99001' });
+console.log(event.type); // access properties directly, not event.data
+```
 
 ***
 
@@ -3464,7 +3618,9 @@ https://www.swcombine.com/ws/v2.0/documentation/location/entity_type/uid/ SW Com
 
 > **get**(`options`): `Promise`\<`Location`\>
 
-Get entity location
+Get an entity's current location.
+
+Returns the `Location` object directly — not wrapped in a `Page`.
 
 #### Parameters
 
@@ -3481,6 +3637,15 @@ Get entity location
 #### Returns
 
 `Promise`\<`Location`\>
+
+The `Location` data.
+
+#### Example
+
+```ts
+const location = await client.location.get({ entityType: 'character', uid: '1:12345' });
+console.log(location); // access properties directly, not location.data
+```
 
 ---
 
@@ -3592,7 +3757,10 @@ Datacard UID
 
 > **get**(`options`): `Promise`\<`Datacard`\>
 
-Get specific datacard
+Get a specific datacard by UID.
+
+Returns the `Datacard` object directly — not wrapped in a `Page`.
+Access properties like `.name` and `.uid` on the result itself.
 
 #### Parameters
 
@@ -3606,13 +3774,24 @@ Get specific datacard
 
 `Promise`\<`Datacard`\>
 
+The `Datacard` entity.
+
+#### Example
+
+```typescript
+const card = await client.datacard.get({ uid: 'datacard-uid' });
+console.log(card.name); // access properties directly, not card.data
+```
+
 ***
 
 ### list()
 
 > **list**(`options`): `Promise`\<`Page`\<`Datacard`\>\>
 
-List datacards owned by faction
+List datacards owned by faction.
+
+Returns a `Page<Datacard>` — access the array of datacards via `.data`.
 
 #### Parameters
 
@@ -3629,6 +3808,20 @@ List datacards owned by faction
 #### Returns
 
 `Promise`\<`Page`\<`Datacard`\>\>
+
+A `Page<Datacard>` with `.data`, `.total`, `.hasMore`, and `.getNextPage()`.
+
+#### Example
+
+```typescript
+const page = await client.datacard.list({ factionId: '20:123' });
+console.log(page.data);   // Datacard[] — items on this page
+console.log(page.total);  // total datacards across all pages
+
+for await (const card of page) {
+  console.log(card.name); // auto-paginates
+}
+```
 
 ---
 

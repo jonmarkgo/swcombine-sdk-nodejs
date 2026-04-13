@@ -154,7 +154,14 @@ export class FactionBudgetsResource extends BaseResource {
   }
 
   /**
-   * Get specific budget
+   * Get a specific faction budget.
+   *
+   * Returns the `Budget` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `Budget` entity.
+   * @example
+   * const budget = await client.faction.budgets.get({ factionId: '20:123', budgetId: 'budget-uid' });
+   * console.log(budget); // access properties directly, not budget.data
    */
   async get(options: { factionId: string; budgetId: string }): Promise<Budget> {
     return this.request<Budget>('GET', `/faction/${options.factionId}/budget/${options.budgetId}`);
@@ -214,7 +221,14 @@ export class FactionStockholdersResource extends BaseResource {
  */
 export class FactionCreditsResource extends BaseResource {
   /**
-   * Get faction credits
+   * Get faction credit balance.
+   *
+   * Returns the `FactionCredits` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `FactionCredits` data.
+   * @example
+   * const credits = await client.faction.credits.get({ factionId: '20:123' });
+   * console.log(credits); // access properties directly, not credits.data
    */
   async get(options: GetFactionCreditsOptions): Promise<FactionCredits> {
     return this.request<FactionCredits>('GET', `/faction/${options.factionId}/credits`);
@@ -329,13 +343,19 @@ export class FactionResource extends BaseResource {
   }
 
   /**
-   * Get faction by UID
+   * Get faction by UID.
+   *
+   * Returns the `FactionDetail` object directly — not wrapped in a `Page`.
+   *
    * @requires_auth Yes
    * @requires_scope FACTION_READ
    * @param options - Optional faction UID. If omitted or uid not provided, returns the authenticated user's primary faction.
+   * @returns The `FactionDetail` entity.
    * @example
    * // Get a specific faction
    * const faction = await client.faction.get({ uid: '20:123' });
+   * console.log(faction.name); // access properties directly, not faction.data
+   *
    * // Get the authenticated user's faction
    * const myFaction = await client.faction.get();
    */

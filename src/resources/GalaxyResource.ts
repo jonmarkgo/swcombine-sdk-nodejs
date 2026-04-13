@@ -63,7 +63,14 @@ export class GalaxyPlanetsResource extends BaseResource {
   }
 
   /**
-   * Get planet by UID
+   * Get planet by UID.
+   *
+   * Returns the `Planet` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `Planet` entity.
+   * @example
+   * const planet = await client.galaxy.planets.get({ uid: '9:123' });
+   * console.log(planet.name); // access properties directly, not planet.data
    */
   async get(options: GetPlanetOptions): Promise<Planet> {
     return this.request<Planet>('GET', `/galaxy/planets/${options.uid}`);
@@ -110,10 +117,15 @@ export class GalaxySectorsResource extends BaseResource {
   }
 
   /**
-   * Get sector by name or UID
+   * Get sector by name or UID.
+   *
+   * Returns the `Sector` object directly — not wrapped in a `Page`.
+   *
    * @param options - Sector identifier (use lowercase sector name, e.g., 'seswenna')
+   * @returns The `Sector` entity.
    * @example
    * const sector = await client.galaxy.sectors.get({ uid: 'seswenna' });
+   * console.log(sector.name); // access properties directly, not sector.data
    */
   async get(options: GetSectorOptions): Promise<Sector> {
     return this.request<Sector>('GET', `/galaxy/sectors/${options.uid}`);
@@ -160,7 +172,14 @@ export class GalaxySystemsResource extends BaseResource {
   }
 
   /**
-   * Get system by UID
+   * Get system by UID.
+   *
+   * Returns the `System` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `System` entity.
+   * @example
+   * const system = await client.galaxy.systems.get({ uid: '7:123' });
+   * console.log(system.name); // access properties directly, not system.data
    */
   async get(options: GetSystemOptions): Promise<System> {
     return this.request<System>('GET', `/galaxy/systems/${options.uid}`);
@@ -209,7 +228,14 @@ export class GalaxyStationsResource extends BaseResource {
   }
 
   /**
-   * Get station by UID
+   * Get station by UID.
+   *
+   * Returns the `Station` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `Station` entity.
+   * @example
+   * const station = await client.galaxy.stations.get({ uid: '12:123' });
+   * console.log(station.name); // access properties directly, not station.data
    */
   async get(options: GetStationOptions): Promise<Station> {
     return this.request<Station>('GET', `/galaxy/stations/${options.uid}`);
@@ -256,7 +282,14 @@ export class GalaxyCitiesResource extends BaseResource {
   }
 
   /**
-   * Get city by UID
+   * Get city by UID.
+   *
+   * Returns the `City` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `City` entity.
+   * @example
+   * const city = await client.galaxy.cities.get({ uid: '13:123' });
+   * console.log(city.name); // access properties directly, not city.data
    */
   async get(options: GetCityOptions): Promise<City> {
     return this.request<City>('GET', `/galaxy/cities/${options.uid}`);

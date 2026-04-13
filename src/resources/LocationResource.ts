@@ -12,7 +12,14 @@ import { Location } from '../types/index.js';
  */
 export class LocationResource extends BaseResource {
   /**
-   * Get entity location
+   * Get an entity's current location.
+   *
+   * Returns the `Location` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `Location` data.
+   * @example
+   * const location = await client.location.get({ entityType: 'character', uid: '1:12345' });
+   * console.log(location); // access properties directly, not location.data
    */
   async get(options: { entityType: string; uid: string }): Promise<Location> {
     return this.request<Location>('GET', `/location/${options.entityType}/${options.uid}`);

@@ -19,7 +19,22 @@ export interface Datacard {
  */
 export class DatacardResource extends BaseResource {
   /**
-   * List datacards owned by faction
+   * List datacards owned by faction.
+   *
+   * Returns a `Page<Datacard>` — access the array of datacards via `.data`.
+   *
+   * @returns A `Page<Datacard>` with `.data`, `.total`, `.hasMore`, and `.getNextPage()`.
+   *
+   * @example
+   * ```typescript
+   * const page = await client.datacard.list({ factionId: '20:123' });
+   * console.log(page.data);   // Datacard[] — items on this page
+   * console.log(page.total);  // total datacards across all pages
+   *
+   * for await (const card of page) {
+   *   console.log(card.name); // auto-paginates
+   * }
+   * ```
    */
   async list(options: { factionId: string; pageDelay?: number }): Promise<Page<Datacard>> {
     const makeRequest = async (_startIndex: number): Promise<Page<Datacard>> => {
@@ -51,7 +66,18 @@ export class DatacardResource extends BaseResource {
   }
 
   /**
-   * Get specific datacard
+   * Get a specific datacard by UID.
+   *
+   * Returns the `Datacard` object directly — not wrapped in a `Page`.
+   * Access properties like `.name` and `.uid` on the result itself.
+   *
+   * @returns The `Datacard` entity.
+   *
+   * @example
+   * ```typescript
+   * const card = await client.datacard.get({ uid: 'datacard-uid' });
+   * console.log(card.name); // access properties directly, not card.data
+   * ```
    */
   async get(options: { uid: string }): Promise<Datacard> {
     return this.request<Datacard>('GET', `/datacard/${options.uid}`);

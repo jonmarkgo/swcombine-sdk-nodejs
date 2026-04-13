@@ -199,10 +199,15 @@ export class GNSResource extends BaseResource {
 
   /**
    * Get a specific GNS news item by numeric ID.
+   *
+   * Returns the `NewsItem` object directly — not wrapped in a `Page`.
    * Author and faction are normalized to object references with `value`.
    * If the API returns an array, the SDK returns the first normalized item.
+   *
+   * @returns The `NewsItem` entity.
    * @example
    * const post = await client.news.gns.get({ id: 49108 });
+   * console.log(post.title);          // access properties directly, not post.data
    * console.log(post.author.value);
    * console.log(post.faction.value);
    */
@@ -271,10 +276,15 @@ export class SimNewsResource extends BaseResource {
 
   /**
    * Get a specific Sim News item by numeric ID.
+   *
+   * Returns the `NewsItem` object directly — not wrapped in a `Page`.
    * Author and faction are normalized to object references with `value`.
    * If the API returns an array, the SDK returns the first normalized item.
+   *
+   * @returns The `NewsItem` entity.
    * @example
    * const post = await client.news.simNews.get({ id: 49108 });
+   * console.log(post.title);          // access properties directly, not post.data
    * console.log(post.author.value);
    * console.log(post.faction.value);
    */

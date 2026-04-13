@@ -93,7 +93,14 @@ export class InventoryEntitiesResource extends BaseResource {
   }
 
   /**
-   * Get specific entity
+   * Get a specific inventory entity by type and UID.
+   *
+   * Returns the `Entity` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `Entity`.
+   * @example
+   * const ship = await client.inventory.entities.get({ entityType: 'ships', uid: '8:123' });
+   * console.log(ship.name); // access properties directly, not ship.data
    */
   async get(options: GetEntityOptions): Promise<Entity> {
     return this.request<Entity>('GET', `/inventory/${options.entityType}/${options.uid}`);
@@ -180,7 +187,14 @@ export class InventoryResource extends BaseResource {
   }
 
   /**
-   * Get inventory by UID
+   * Get inventory summary by UID.
+   *
+   * Returns the inventory summary object directly — not wrapped in a `Page`.
+   *
+   * @returns The inventory summary.
+   * @example
+   * const overview = await client.inventory.get({ uid: '1:12345' });
+   * console.log(overview); // access properties directly, not overview.data
    */
   async get(options: { uid: string }): Promise<Record<string, unknown>> {
     return this.request<Record<string, unknown>>('GET', `/inventory/${options.uid}`);

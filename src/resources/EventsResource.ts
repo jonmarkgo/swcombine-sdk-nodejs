@@ -91,7 +91,14 @@ export class EventsResource extends BaseResource {
   }
 
   /**
-   * Get specific event
+   * Get a specific event by UID.
+   *
+   * Returns the `Event` object directly — not wrapped in a `Page`.
+   *
+   * @returns The `Event` entity.
+   * @example
+   * const event = await client.events.get({ uid: '5:99001' });
+   * console.log(event.type); // access properties directly, not event.data
    */
   async get(options: { uid: string }): Promise<Event> {
     return this.request<Event>('GET', `/event/${options.uid}`);

@@ -141,7 +141,14 @@ export class TypesEntitiesResource extends BaseResource {
   }
 
   /**
-   * Get specific entity type information
+   * Get specific entity type information by category and UID.
+   *
+   * Returns the entity type object directly — not wrapped in a `Page`.
+   *
+   * @returns The entity type detail (e.g. `TypesShipEntity`, `TypesVehicleEntity`, etc.).
+   * @example
+   * const shipType = await client.types.entities.get({ entityType: 'ships', uid: '8:7' });
+   * console.log(shipType.name); // access properties directly, not shipType.data
    */
   async get<T extends TypesEntityType>(
     options: GetTypesEntityOptions<T>

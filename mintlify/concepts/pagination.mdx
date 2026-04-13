@@ -16,6 +16,20 @@ keywords:
 
 Every `list()` method in the SW Combine SDK returns a `Page<T>` object rather than a plain array. This gives you both the items for the current page and the metadata you need to fetch subsequent pages — either manually, one page at a time, or automatically by iterating with `for await...of`.
 
+<Info>
+  **`list()` vs `get()` return types:** `list()` methods return a `Page<T>` — access the items array via `.data`. Single-item `get()` methods return the entity directly — no `.data` wrapper.
+
+  ```typescript
+  // list() → Page<T> — use .data to access items
+  const sectors = await client.galaxy.sectors.list();
+  console.log(sectors.data[0].name);
+
+  // get() → T — the result IS the entity
+  const sector = await client.galaxy.sectors.get({ uid: '7:123' });
+  console.log(sector.name);
+  ```
+</Info>
+
 ## The Page\<T\> object
 
 When you call any `list()` method, you receive a `Page<T>` with the following shape:

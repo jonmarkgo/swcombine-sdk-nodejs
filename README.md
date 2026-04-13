@@ -126,12 +126,14 @@ const faction = await authenticatedClient.faction.get({
 
 ### 4. Pagination
 
-All `list()` methods return a `Page<T>` with built-in pagination support:
+All `list()` methods return a `Page<T>` with built-in pagination support. Single-item `get()` methods return the entity directly — no wrapper.
 
 ```typescript
-import { Page } from 'swcombine-sdk';
+// get() returns the entity directly — no .data needed
+const character = await client.character.get({ uid: '1:12345' });
+console.log(character.name);
 
-// Access page data and metadata
+// list() returns Page<T> — access items via .data
 const ships = await client.inventory.entities.list({
   entityType: 'ships',
   uid: '1:12345',

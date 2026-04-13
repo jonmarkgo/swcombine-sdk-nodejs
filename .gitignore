@@ -12,6 +12,7 @@ build/
 # Environment variables
 .env
 .env.local
+.swc-tokens.json
 .env.*.local
 
 # IDE

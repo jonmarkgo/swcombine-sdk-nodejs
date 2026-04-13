@@ -28,6 +28,27 @@ for await (const card of datacards) {
 }
 ```
 
+## Getting a single datacard
+
+### datacard.get()
+
+Retrieves a specific datacard by its UID.
+
+<ParamField path="uid" type="string" required>
+  The datacard UID.
+</ParamField>
+
+```typescript
+const card = await client.datacard.get({ uid: 'datacard-uid' });
+
+console.log(card.name);
+console.log(card.uid);
+```
+
+<Info>
+  `get()` returns the datacard object directly — not a `Page<T>` wrapper. Access properties like `card.name` directly, not via `card.data`.
+</Info>
+
 ## Full example
 
 ```typescript

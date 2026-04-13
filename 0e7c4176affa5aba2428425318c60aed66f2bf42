@@ -1,0 +1,44 @@
+mintlify/resources/datacard.mdx
+  d7edcafb91dbd659 31-51
+.gitignore
+  8d8f656e10638073 15
+README.md
+  d7edcafb91dbd659 129,132-134,136
+mintlify/concepts/pagination.mdx
+  d7edcafb91dbd659 19-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "0e7c4176affa5aba2428425318c60aed66f2bf42",
+  "prompts": {
+    "8d8f656e10638073": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ecef47d8-d131-4b8b-85d2-912edd0bc9a5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 111,
+      "total_deletions": 33,
+      "accepted_lines": 493,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/5c0234161a0e03358dbb3b69ade50242024749a92c68397465dfcd69ab59cc4f"
+    },
+    "d7edcafb91dbd659": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18177723-973d-4a76-aced-c24781e3a605",
+        "model": "<synthetic>"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 40,
+      "total_deletions": 3,
+      "accepted_lines": 40,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/2f44ba48a626127d437f1c2a675304cb160c5cb013d44d1e7269e6951c62a843"
+    }
+  }
+}

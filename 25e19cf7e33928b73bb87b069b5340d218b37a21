@@ -1,0 +1,58 @@
+src/resources/CharacterResource.ts
+  d7edcafb91dbd659 323-326,333,578-581,585,588
+src/resources/MarketResource.ts
+  d7edcafb91dbd659 54-61
+src/resources/EventsResource.ts
+  d7edcafb91dbd659 94-101
+src/resources/LocationResource.ts
+  d7edcafb91dbd659 15-22
+src/resources/FactionResource.ts
+  d7edcafb91dbd659 157-164,224-231,346-349,353,357-358
+src/resources/InventoryResource.ts
+  d7edcafb91dbd659 96-103,190-197
+src/resources/NewsResource.ts
+  d7edcafb91dbd659 202-203,206-207,210,279-280,283-284,287
+llms-full.txt
+  d7edcafb91dbd659 1,945-948,984,1137-1140,1156-1157,1162,1363,1365,1383-1391,1563,1565,1577-1585,1787,1789-1790,1806-1807,1813-1814,1968,1970,1982-1984,1986-1990,2066,2068,2080-2082,2084-2088,2249,2251,2265,2271,2349,2351,2363,2365-2371,2447,2449,2461,2463-2469,2577,2579,2591-2598,2787,2789,2803-2810,2892,2894,2906-2913,2995-2996,3010-3011,3016,3140-3141,3155-3156,3161,3320,3322,3340-3347,3481,3483,3497-3504,3621,3623,3641-3648,3760,3762-3763,3777-3784,3792,3794,3812-3824
+src/resources/DatacardResource.ts
+  d7edcafb91dbd659 22-37,69-80
+src/resources/TypesResource.ts
+  d7edcafb91dbd659 144-151
+src/resources/GalaxyResource.ts
+  d7edcafb91dbd659 66-73,120-123,125,128,175-182,231-238,285-292
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "25e19cf7e33928b73bb87b069b5340d218b37a21",
+  "prompts": {
+    "8d8f656e10638073": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ecef47d8-d131-4b8b-85d2-912edd0bc9a5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 492,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/5c0234161a0e03358dbb3b69ade50242024749a92c68397465dfcd69ab59cc4f"
+    },
+    "d7edcafb91dbd659": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18177723-973d-4a76-aced-c24781e3a605",
+        "model": "<synthetic>"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 370,
+      "total_deletions": 37,
+      "accepted_lines": 370,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/386e3d2ce4dfb483cdb5fe41dcd69fc7d357ddd75ce5df4d6455a84642b86dce"
+    }
+  }
+}

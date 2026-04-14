@@ -84,10 +84,8 @@ npm run get-token          # Interactive OAuth flow to get access token
 npm run get-character-uid  # Get character UID from handle
 npm run refresh-token      # Refresh an existing token
 
-npm run docs:api           # Regenerate TypeDoc markdown + llms.txt
-npm run docs:api:watch     # TypeDoc in watch mode
-npm run docs:html          # Regenerate HTML docs (gh-pages site)
-npm run docs:llms          # Regenerate llms.txt only
+npm run docs               # Full pipeline: TypeDoc markdown → Mintlify resource pages
+npm run docs:watch         # TypeDoc in watch mode
 ```
 
 These scripts use `tsx` to run TypeScript directly and are located in `scripts/`.
@@ -286,7 +284,7 @@ scripts/                     # Developer utilities
 ├── get-oauth-token.ts       # Interactive OAuth flow
 ├── get-character-uid.ts     # UID lookup
 ├── refresh-token.ts         # Token refresh
-├── generate-llms-txt.ts     # Generates llms.txt from TypeDoc output
+├── generate-mintlify.ts     # Generates Mintlify resource pages from TypeDoc output
 ├── test-sectors.ts          # Dev harness for /galaxy/sectors
 └── test-entities.ts         # Dev harness for /inventory entities
 ```

@@ -1,204 +1,276 @@
 ---
 title: 'Faction'
-description: 'Use client.faction to list and retrieve factions, browse members and stockholders, inspect budget allocations, and page through credit history.'
+description: 'Use client.faction to retrieve faction details, list members, manage budgets and stockholders, and query credit logs.'
 keywords:
-  ['swcombine sdk', 'faction', 'members', 'budgets', 'stockholders', 'creditlog', 'faction uid']
+  [
+    'swcombine sdk',
+    'faction',
+    'members',
+    'budgets',
+    'stockholders',
+    'credits',
+    'FACTION_READ',
+  ]
 ---
 
-The `client.faction` resource exposes the faction layer of the Star Wars Combine economy and organization system. Factions are the primary organizational unit in the game — governments, corporations, crime syndicates, and more. You can list all factions, retrieve a specific one by UID, browse membership, inspect financial budgets, query stockholders, and page through the full credit transaction history for any faction.
+{/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
+{/* Run `npm run docs:mintlify` to regenerate. */}
 
-## Listing factions
-
-### faction.list()
-
-Returns a paginated list of all factions in the game.
-
-```typescript
-const factions = await client.faction.list();
-
-console.log(factions.total); // Total number of factions
-console.log(factions.data[0]); // First FactionListItem
-
-for await (const faction of factions) {
-  console.log(faction.name, faction.uid);
-}
-```
-
-<ResponseField name="uid" type="string">
-  The faction's unique identifier in `"type:id"` format, e.g. `"20:123"`.
-</ResponseField>
-
-<ResponseField name="name" type="string">
-  The faction's display name.
-</ResponseField>
-
-## Getting a single faction
+The `client.faction` resource provides access to faction data including membership rosters, budgets, stockholder lists, and credit transaction history.
 
 ### faction.get()
 
-Retrieves full details for a faction by UID.
+Get faction by UID.
+Returns the `FactionDetail` object directly — not wrapped in a `Page`.
 
-<ParamField path="uid" type="string" required>
-  The faction UID in `"type:id"` format, e.g. `"20:123"`.
+**Requires:** `FACTION_READ`
+
+<ParamField path="uid" type="string">
+  Faction UID. If omitted, defaults to the authenticated user's primary faction.
 </ParamField>
 
 ```typescript
+// Get a specific faction
 const faction = await client.faction.get({ uid: '20:123' });
+console.log(faction.name); // access properties directly, not faction.data
 
-console.log(faction.name);
-console.log(faction.credits);
-console.log(faction.leader);
+// Get the authenticated user's faction
+const myFaction = await client.faction.get();
 ```
 
-<Note>
-  Faction UIDs use type prefix `20`, e.g. `"20:123"`. Character UIDs use type prefix `1`, e.g.
-  `"1:12345"`. Always use the correct prefix for the resource type you are querying.
-</Note>
+### faction.list()
+
+List all factions (paginated)
+
+**Requires:** Authentication
+
+<ParamField path="item_count" type="**item\_count**: number" default="50">
+  Number of items to retrieve. Default: 50
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+</ParamField>
+
+<ParamField path="start_index" type="**start\_index**: number" default="1">
+  Starting position for pagination (1-based). Default: 1
+</ParamField>
+
+```typescript
+const page = await client.faction.list();
+console.log(page.total);
+console.log(page.data[0]?.value);
+
+// Iterate all pages:
+for await (const faction of page) { console.log(faction); }
+```
+
+## Budgets
+
+### faction.budgets.get()
+
+Get a specific faction budget.
+Returns the `Budget` object directly — not wrapped in a `Page`.
+
+<ParamField path="budgetId" type="string" required>
+  The budgetId parameter.
+</ParamField>
+
+<ParamField path="factionId" type="string" required>
+  The factionId parameter.
+</ParamField>
+
+```typescript
+const budget = await client.faction.budgets.get({ factionId: '20:123', budgetId: 'budget-uid' });
+console.log(budget); // access properties directly, not budget.data
+```
+
+### faction.budgets.list()
+
+List faction budgets (paginated)
+
+<ParamField path="factionId" type="string" required>
+  The factionId parameter.
+</ParamField>
+
+<ParamField path="item_count" type="number">
+  The item_count parameter.
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  The pageDelay parameter.
+</ParamField>
+
+<ParamField path="start_index" type="number">
+  The start_index parameter.
+</ParamField>
+
+```typescript
+const page = await client.faction.budgets.list({ factionId: '20:123' });
+console.log(page.data); // Budget[]
+// Iterate all pages:
+for await (const budget of page) { console.log(budget); }
+```
+
+## Credit Log
+
+### faction.creditlog.list()
+
+Get faction credit log (paginated)
+
+<ParamField path="factionId" type="string" required>
+  Faction UID
+</ParamField>
+
+<ParamField path="item_count" type="number" default="50">
+  Number of items to retrieve. Default: 50, Max: 1000
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+</ParamField>
+
+<ParamField path="start_id" type="number">
+  Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000)
+</ParamField>
+
+<ParamField path="start_index" type="number" default="1">
+  Starting position (1-based). Default: 1
+</ParamField>
+
+```typescript
+const creditlog = await client.faction.creditlog.list({ factionId: '20:123' });
+const moreLogs = await client.faction.creditlog.list({ factionId: '20:123', start_index: 51, item_count: 100 });
+const oldestLogs = await client.faction.creditlog.list({ factionId: '20:123', start_id: 1 });
+// Fetch up to 1000 credit log entries at once
+const manyLogs = await client.faction.creditlog.list({ factionId: '20:123', item_count: 1000 });
+```
+
+## Credits
+
+### faction.credits.get()
+
+Get faction credit balance.
+Returns the `FactionCredits` object directly — not wrapped in a `Page`.
+
+<ParamField path="factionId" type="string" required>
+  The factionId parameter.
+</ParamField>
+
+```typescript
+const credits = await client.faction.credits.get({ factionId: '20:123' });
+console.log(credits); // access properties directly, not credits.data
+```
+
+### faction.credits.transfer()
+
+Transfer faction credits
+
+<ParamField path="amount" type="number" required>
+  The amount parameter.
+</ParamField>
+
+<ParamField path="budget" type="string">
+  The budget parameter.
+</ParamField>
+
+<ParamField path="factionId" type="string" required>
+  The factionId parameter.
+</ParamField>
+
+<ParamField path="reason" type="string">
+  The reason parameter.
+</ParamField>
+
+<ParamField path="recipient" type="string" required>
+  The recipient parameter.
+</ParamField>
 
 ## Members
 
 ### faction.members.list()
 
-Returns a paginated list of characters who are members of the faction.
+List faction members (paginated)
 
-<ParamField path="uid" type="string" required>
-  The faction UID.
+<ParamField path="factionId" type="string" required>
+  The factionId parameter.
 </ParamField>
 
-<ParamField path="start_index" type="number" default="1">
-  1-based index of the first member to return.
+<ParamField path="item_count" type="number">
+  The item_count parameter.
 </ParamField>
 
-<ParamField path="item_count" type="number" default="50">
-  Number of members per page.
+<ParamField path="pageDelay" type="number">
+  The pageDelay parameter.
 </ParamField>
 
-```typescript
-const members = await client.faction.members.list({ uid: '20:123' });
-
-console.log(members.total); // Total member count
-
-for await (const member of members) {
-  console.log(member.name, member.uid, member.rank);
-}
-```
-
-## Budgets
-
-### faction.budgets.list()
-
-Returns all budget allocations for the faction. Budgets are returned as a flat array rather than a paginated result.
-
-<ParamField path="uid" type="string" required>
-  The faction UID.
+<ParamField path="start_index" type="number">
+  The start_index parameter.
 </ParamField>
 
 ```typescript
-const budgets = await client.faction.budgets.list({ uid: '20:123' });
-
-for (const budget of budgets) {
-  console.log(budget.name, budget.allocated, budget.spent);
-}
+const page = await client.faction.members.list({ factionId: '20:123' });
+console.log(page.data); // FactionMember[]
+// Iterate all pages:
+for await (const member of page) { console.log(member); }
 ```
 
-<Note>
-  `budgets.list()` returns a plain `FactionBudget[]` array, not a `Page<T>`. There is no pagination — all budgets are returned in a single response.
-</Note>
+### faction.members.updateMemberInfo()
+
+Update faction member info field
+
+<ParamField path="factionId" type="string" required>
+  Faction UID
+</ParamField>
+
+<ParamField path="new_value" type="string" required>
+  New value for the info field
+</ParamField>
+
+<ParamField path="property" type=""info1" \| "info2" \| "info3"" required>
+  Which info field to update (info1, info2, or info3)
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  Character UID to update
+</ParamField>
 
 ## Stockholders
 
 ### faction.stockholders.list()
 
-Returns a paginated list of stockholders in the faction, ordered by share count.
+List faction stockholders (paginated)
 
-<ParamField path="uid" type="string" required>
-  The faction UID.
+<ParamField path="factionId" type="string" required>
+  The factionId parameter.
 </ParamField>
 
-<ParamField path="start_index" type="number" default="1">
-  1-based index of the first stockholder to return.
+<ParamField path="item_count" type="number">
+  The item_count parameter.
 </ParamField>
 
-<ParamField path="item_count" type="number" default="50">
-  Number of stockholders per page.
+<ParamField path="pageDelay" type="number">
+  The pageDelay parameter.
 </ParamField>
 
-```typescript
-const stockholders = await client.faction.stockholders.list({ uid: '20:123' });
-
-for await (const holder of stockholders) {
-  console.log(holder.name, holder.shares);
-}
-```
-
-## Credit log
-
-### faction.creditlog.list()
-
-Returns a paginated history of credit transactions for the faction.
-
-<ParamField path="uid" type="string" required>
-  The faction UID.
-</ParamField>
-
-<ParamField path="start_index" type="number" default="1">
-  1-based index of the first log entry to return.
-</ParamField>
-
-<ParamField path="item_count" type="number" default="50">
-  Number of entries per page.
+<ParamField path="start_index" type="number">
+  The start_index parameter.
 </ParamField>
 
 ```typescript
-const creditLog = await client.faction.creditlog.list({ uid: '20:123' });
-
-for await (const entry of creditLog) {
-  console.log(entry.amount, entry.description, entry.timestamp);
-}
-```
-
-<Tip>
-  The credit log can be very large for active factions. Use `item_count` to control page size and
-  consider adding a `pageDelay` when auto-paginating to avoid hitting the 600 requests/hour rate
-  limit.
-</Tip>
-
-## Full example
-
-```typescript
-import { SWCombine } from 'swcombine-sdk';
-
-const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
-
-// Find a faction and inspect it
-const factions = await client.faction.list();
-const first = factions.data[0];
-
-const faction = await client.faction.get({ uid: first.uid });
-console.log(`${faction.name} has ${faction.credits} credits`);
-
-// List its members
-const members = await client.faction.members.list({ uid: first.uid });
-console.log(`${members.total} total members`);
-
-// Inspect budgets
-const budgets = await client.faction.budgets.list({ uid: first.uid });
-budgets.forEach((b) => console.log(b.name, b.allocated));
+const page = await client.faction.stockholders.list({ factionId: '20:123' });
+console.log(page.data); // Stockholder[]
+// Iterate all pages:
+for await (const stockholder of page) { console.log(stockholder); }
 ```
 
 ## Related resources
 
 <CardGroup cols={2}>
   <Card title="Character" icon="user" href="/resources/character">
-    Look up individual characters and their faction privileges.
+    Access character profiles and their faction associations.
   </Card>
-  <Card title="Datacard" icon="id-card" href="/resources/datacard">
-    List production datacards licensed to a faction.
-  </Card>
-  <Card title="Events" icon="bolt" href="/resources/events">
-    Query the event log filtered by faction activity.
-  </Card>
-  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
-    Learn how Page&lt;T&gt; works and how to auto-paginate.
+  <Card title="Inventory" icon="box" href="/resources/inventory">
+    List entities owned by a faction.
   </Card>
 </CardGroup>

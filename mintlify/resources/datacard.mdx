@@ -1,99 +1,98 @@
 ---
 title: 'Datacard'
-description: 'Use client.datacard to list all production datacards licensed to a faction, including the entity types a faction is authorized to manufacture.'
+description: 'Use client.datacard to manage datacards — production licenses that allow factions to manufacture entities.'
 keywords:
-  ['swcombine sdk', 'datacard', 'production', 'faction', 'license', 'manufacturing', 'entity types']
+  [
+    'swcombine sdk',
+    'datacard',
+    'datacards',
+    'production',
+    'manufacturing',
+  ]
 ---
 
-The `client.datacard` resource exposes the production license system in the Star Wars Combine universe. A datacard is a manufacturing license that authorizes a faction to produce a specific type of entity — a ship class, a weapon, a droid, and so on. By calling `datacard.list()` with a faction ID, you get the full list of entity types that faction is authorized to manufacture.
+{/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
+{/* Run `npm run docs:mintlify` to regenerate. */}
 
-## Listing datacards
+The `client.datacard` resource provides access to datacards — production licenses that control which entity types a faction can manufacture.
 
-### datacard.list()
+### datacard.create()
 
-Returns a paginated list of all datacards held by a faction.
+Create/assign datacard to production entity
 
-<ParamField path="factionId" type="string" required>
-  The faction UID in `"type:id"` format, e.g. `"20:123"`. Note this parameter is named `factionId`,
-  not `uid`.
+<ParamField path="production_entity_uid" type="string" required>
+  The entity UID to assign this datacard to
 </ParamField>
 
-```typescript
-const datacards = await client.datacard.list({ factionId: '20:123' });
+<ParamField path="uid" type="string" required>
+  Datacard UID
+</ParamField>
 
-console.log(datacards.total); // Total datacards held by this faction
+<ParamField path="unlimited" type="boolean">
+  Set to true for unlimited uses (optional, use this OR uses)
+</ParamField>
 
-for await (const card of datacards) {
-  console.log(card.name, card.entityType, card.uid);
-}
-```
+<ParamField path="uses" type="number">
+  Number of uses (optional, use this OR unlimited)
+</ParamField>
 
-## Getting a single datacard
+### datacard.delete()
+
+Delete datacard assignment
+
+<ParamField path="production_entity_uid" type="string" required>
+  Production entity UID to revoke from (required)
+</ParamField>
+
+<ParamField path="uid" type="string" required>
+  Datacard UID
+</ParamField>
 
 ### datacard.get()
 
-Retrieves a specific datacard by its UID.
+Get a specific datacard by UID.
+Returns the `Datacard` object directly — not wrapped in a `Page`.
+Access properties like `.name` and `.uid` on the result itself.
 
 <ParamField path="uid" type="string" required>
-  The datacard UID.
+  The uid parameter.
 </ParamField>
 
 ```typescript
 const card = await client.datacard.get({ uid: 'datacard-uid' });
-
-console.log(card.name);
-console.log(card.uid);
+console.log(card.name); // access properties directly, not card.data
 ```
 
-<Info>
-  `get()` returns the datacard object directly — not a `Page<T>` wrapper. Access properties like `card.name` directly, not via `card.data`.
-</Info>
+### datacard.list()
 
-## Full example
+List datacards owned by faction.
+Returns a `Page<Datacard>` — access the array of datacards via `.data`.
+
+<ParamField path="factionId" type="string" required>
+  The factionId parameter.
+</ParamField>
+
+<ParamField path="pageDelay" type="number">
+  The pageDelay parameter.
+</ParamField>
 
 ```typescript
-import { SWCombine } from 'swcombine-sdk';
+const page = await client.datacard.list({ factionId: '20:123' });
+console.log(page.data);   // Datacard[] — items on this page
+console.log(page.total);  // total datacards across all pages
 
-const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
-
-const factionId = '20:123';
-
-// Get faction details
-const faction = await client.faction.get({ uid: factionId });
-console.log(`${faction.name} datacards:`);
-
-// List all datacards
-const datacards = await client.datacard.list({ factionId });
-console.log(`${datacards.total} production licenses`);
-
-for await (const card of datacards) {
-  console.log(`  ${card.name} (${card.entityType})`);
+for await (const card of page) {
+  console.log(card.name); // auto-paginates
 }
 ```
-
-<Tip>
-  Combine `datacard.list()` with `types.entities.get()` to enrich each datacard with the full
-  technical specifications of the entity type it licenses.
-</Tip>
-
-<Note>
-  The parameter name for `datacard.list()` is `factionId`, not `uid`. This differs from other
-  resource methods that use `uid` for their primary identifier.
-</Note>
 
 ## Related resources
 
 <CardGroup cols={2}>
+  <Card title="Types" icon="tags" href="/resources/types">
+    Look up entity type details for datacards.
+  </Card>
   <Card title="Faction" icon="flag" href="/resources/faction">
-    Retrieve faction details using the same faction UID.
-  </Card>
-  <Card title="Types" icon="tag" href="/resources/types">
-    Look up full entity type definitions for the entities a datacard covers.
-  </Card>
-  <Card title="Inventory" icon="box" href="/resources/inventory">
-    List the ships and items a faction has already produced.
-  </Card>
-  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
-    Learn how Page&lt;T&gt; works and how to auto-paginate datacard lists.
+    Access faction details for datacard ownership.
   </Card>
 </CardGroup>

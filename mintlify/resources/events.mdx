@@ -1,179 +1,90 @@
 ---
 title: 'Events'
-description: 'Use client.events to query the Star Wars Combine event log by mode — character, faction, inventory, or combat — and retrieve individual game events.'
+description: 'Use client.events to query personal, faction, inventory, and combat event logs with filtering and pagination.'
 keywords:
   [
     'swcombine sdk',
     'events',
     'event log',
-    'game events',
+    'personal',
+    'faction',
     'combat',
-    'faction events',
-    'character events',
-    'inventory events',
+    'inventory',
   ]
 ---
 
-The `client.events` resource exposes the in-game event log — a stream of timestamped activity records covering everything that happens to a character, faction, inventory, or in combat. You filter by `eventMode` to select the scope of events you want and by `eventType` to narrow down to specific activity types. Use this resource to build activity dashboards, audit logs, or combat reporters.
+{/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
+{/* Run `npm run docs:mintlify` to regenerate. */}
 
-<Warning>
-  The events endpoint uses **0-based `start_index`** (start with `start_index: 0` for the first
-  page). This is the only resource in the SDK that does not use 1-based pagination. All other
-  resources start at `start_index: 1`.
-</Warning>
+The `client.events` resource lets you query the event log for personal, faction, inventory, and combat events.
 
-## Listing events
-
-### events.list()
-
-Returns a paginated list of game events filtered by mode and type.
-
-<ParamField path="eventMode" type="string" required>
-  The scope of events to return. Must be one of: - `character` — events related to a character's
-  personal activity - `faction` — events related to faction operations - `inventory` — events
-  related to entities in the character's inventory - `combat` — combat-related events
-</ParamField>
-
-<ParamField path="eventType" type="string" required>
-  The type of event to filter for. Use `"all"` to return all event types within the selected mode,
-  or pass a specific type string.
-</ParamField>
-
-<ParamField path="start_index" type="number" default="0">
-  **0-based** index of the first event to return. Use `0` for the first page.
-</ParamField>
-
-<ParamField path="item_count" type="number" default="50">
-  Number of events per page.
-</ParamField>
-
-```typescript
-// List all character events
-const events = await client.events.list({
-  eventMode: 'character',
-  eventType: 'all',
-  start_index: 0,
-});
-
-console.log(events.total);
-
-for await (const event of events) {
-  console.log(event.type, event.description, event.timestamp);
-}
-```
-
-```typescript
-// List faction events only
-const factionEvents = await client.events.list({
-  eventMode: 'faction',
-  eventType: 'all',
-  start_index: 0,
-  item_count: 25,
-});
-```
-
-```typescript
-// List combat events
-const combatEvents = await client.events.list({
-  eventMode: 'combat',
-  eventType: 'all',
-  start_index: 0,
-});
-```
-
-## Getting a single event
+<Note>
+  The Events endpoint uses **0-based indexing** (`start_index: 0`) unlike all other endpoints which use 1-based indexing.
+</Note>
 
 ### events.get()
 
-Retrieves a single game event by its UID.
+Get a specific event by UID.
+Returns the `Event` object directly — not wrapped in a `Page`.
 
 <ParamField path="uid" type="string" required>
-  The event UID in `"type:id"` format.
+  The uid parameter.
 </ParamField>
 
 ```typescript
 const event = await client.events.get({ uid: '5:99001' });
-
-console.log(event.type);
-console.log(event.description);
-console.log(event.timestamp);
+console.log(event.type); // access properties directly, not event.data
 ```
 
-## 0-based pagination
+### events.list()
 
-The events endpoint is unique in the SDK: it uses 0-based indexing for `start_index`. The first page is `start_index: 0`, the second page starts at `item_count`, and so on. If you use `for await...of`, the SDK handles this automatically — but if you paginate manually, be sure to start at `0`.
+List events by type and mode (paginated)
+**Note:** This endpoint uses 0-based indexing (unlike most other endpoints which use 1-based).
 
-```typescript
-// Manual pagination — note start_index starts at 0
-let startIndex = 0;
-const pageSize = 50;
+<ParamField path="eventMode" type="string" required>
+  Event mode: 'personal', 'faction', 'inventory', or 'combat'
+</ParamField>
 
-while (true) {
-  const page = await client.events.list({
-    eventMode: 'character',
-    eventType: 'all',
-    start_index: startIndex,
-    item_count: pageSize,
-  });
+<ParamField path="eventType" type="string">
+  Event type filter (optional, only for personal/faction modes)
+</ParamField>
 
-  for (const event of page.data) {
-    process(event);
-  }
+<ParamField path="faction_id" type="string">
+  Faction ID for faction mode
+</ParamField>
 
-  if (!page.hasMore) break;
-  startIndex += pageSize;
-}
-```
+<ParamField path="item_count" type="number" default="50">
+  Number of items to retrieve. Default: 50, Max: 1000
+</ParamField>
 
-<Tip>
-  When using `for await...of`, you do not need to manage `start_index` yourself — the SDK advances
-  it correctly regardless of whether the endpoint uses 0-based or 1-based indexing.
-</Tip>
+<ParamField path="pageDelay" type="number">
+  Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
+</ParamField>
 
-## Event modes
+<ParamField path="start_index" type="number" default="0">
+  Starting position (0-based). Default: 0
+</ParamField>
 
-| Mode        | Description                                                                              |
-| ----------- | ---------------------------------------------------------------------------------------- |
-| `character` | Personal activity for the authenticated character: movement, communication, transactions |
-| `faction`   | Faction-level operations: member changes, credits, production                            |
-| `inventory` | Activity involving entities in the character's inventory: ship movements, repairs        |
-| `combat`    | Combat engagements, battle outcomes, and damage reports                                  |
-
-## Full example
+<ParamField path="start_time" type="number">
+  Unix timestamp to filter events after this time
+</ParamField>
 
 ```typescript
-import { SWCombine } from 'swcombine-sdk';
-
-const client = new SWCombine({ token: process.env.SWC_ACCESS_TOKEN! });
-
-// Stream the last 100 character events
-const events = await client.events.list({
-  eventMode: 'character',
-  eventType: 'all',
-  start_index: 0,
-  item_count: 100,
-});
-
-console.log(`${events.total} total character events`);
-
-for (const event of events.data) {
-  console.log(`[${event.timestamp}] ${event.type}: ${event.description}`);
-}
+const events = await client.events.list({ eventMode: 'personal' });
+const moreEvents = await client.events.list({ eventMode: 'personal', start_index: 50, item_count: 100 });
+const recentEvents = await client.events.list({ eventMode: 'personal', start_time: 1640000000 });
+const factionEvents = await client.events.list({ eventMode: 'faction', faction_id: '20:123' });
+// Fetch up to 1000 events at once
+const manyEvents = await client.events.list({ eventMode: 'personal', item_count: 1000 });
 ```
 
 ## Related resources
 
 <CardGroup cols={2}>
   <Card title="Character" icon="user" href="/resources/character">
-    Fetch character profiles referenced in events.
+    Access the character whose events you are querying.
   </Card>
   <Card title="Faction" icon="flag" href="/resources/faction">
-    Retrieve faction details for faction-mode events.
-  </Card>
-  <Card title="Inventory" icon="box" href="/resources/inventory">
-    Inspect the inventory entities involved in inventory events.
-  </Card>
-  <Card title="Pagination" icon="arrows-rotate" href="/concepts/pagination">
-    Understand 0-based indexing and the Page&lt;T&gt; pattern.
+    Access faction details for faction events.
   </Card>
 </CardGroup>

@@ -742,7 +742,10 @@ function generateMethodMdx(method: ParsedMethod, accessorPrefix: string): string
 
   // Parameters
   for (const param of method.params) {
-    const typeAttr = param.type ? ` type="${param.type}"` : '';
+    // TypeDoc renders TS string-literal unions with double quotes (e.g. `"info1" | "info2"`),
+    // which would produce invalid JSX inside `type="..."`. Normalize inner `"` to `'`.
+    const safeType = param.type.replace(/"/g, "'");
+    const typeAttr = safeType ? ` type="${safeType}"` : '';
     const requiredAttr = param.required ? ' required' : '';
     const defaultMatch = param.description.match(/Default:\s*(\d+)/i);
     const defaultAttr = defaultMatch ? ` default="${defaultMatch[1]}"` : '';

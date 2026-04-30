@@ -50,6 +50,8 @@ interface ResourceConfig {
   mainClass: string;
   /** Sub-resource display config: maps class name → section label + accessor prefix */
   subResources?: Record<string, { label: string; accessor: string }>;
+  /** Optional MDX appended after sub-resources, before "Related resources". Use for cross-resource patterns that need full code examples (not just a related-card link). */
+  appendix?: string;
   /** Related resource cards */
   related?: RelatedCard[];
 }
@@ -108,9 +110,36 @@ const RESOURCES: ResourceConfig[] = [
       FactionCreditsResource: { label: 'Credits', accessor: 'faction.credits' },
       FactionCreditlogResource: { label: 'Credit Log', accessor: 'faction.creditlog' },
     },
+    appendix: [
+      '## Faction-owned entities',
+      '',
+      'Ships, vehicles, facilities, stations, cities, and other entities owned by a faction are listed through the [Inventory resource](/resources/inventory) — there is no `client.faction.entities` accessor. Pass the faction UID as the `uid` argument:',
+      '',
+      '```typescript',
+      "// All ships owned by faction 20:123",
+      "const ships = await client.inventory.entities.list({",
+      "  uid: '20:123',",
+      "  entityType: 'ships',",
+      "  assignType: 'owner',",
+      "});",
+      '',
+      "// All facilities owned by the faction",
+      "const facilities = await client.inventory.entities.list({",
+      "  uid: '20:123',",
+      "  entityType: 'facilities',",
+      "  assignType: 'owner',",
+      "});",
+      '',
+      "// Faction inventory summary",
+      "const summary = await client.inventory.get({ uid: '20:123' });",
+      '```',
+      '',
+      'See the [Inventory resource](/resources/inventory) for the full list of supported `entityType` values, filtering options, and pagination.',
+      '',
+    ].join('\n'),
     related: [
       { title: 'Character', icon: 'user', href: '/resources/character', description: 'Access character profiles and their faction associations.' },
-      { title: 'Inventory', icon: 'box', href: '/resources/inventory', description: 'List entities owned by a faction.' },
+      { title: 'Inventory', icon: 'box', href: '/resources/inventory', description: 'List ships, facilities, and other entities owned by a faction.' },
     ],
   },
   {
@@ -145,9 +174,9 @@ const RESOURCES: ResourceConfig[] = [
     title: 'Inventory',
     description:
       'Use client.inventory to list and manage entities (ships, vehicles, facilities, etc.) owned or assigned to characters and factions.',
-    keywords: ['swcombine sdk', 'inventory', 'entities', 'ships', 'vehicles', 'facilities', 'items'],
+    keywords: ['swcombine sdk', 'inventory', 'entities', 'ships', 'vehicles', 'facilities', 'items', 'faction inventory'],
     intro:
-      'The `client.inventory` resource lets you list and inspect entities — ships, vehicles, facilities, items, NPCs, and more — that belong to your character or faction.',
+      'The `client.inventory` resource lets you list and inspect entities — ships, vehicles, facilities, items, NPCs, and more — that belong to a character or a faction. The `uid` parameter on every method accepts either a character UID (e.g. `1:12345`) or a faction UID (e.g. `20:123`); the SDK does not have a separate `client.faction.entities` accessor — faction-owned entities are queried through this resource.',
     accessor: 'client.inventory',
     mainClass: 'InventoryResource',
     subResources: {
@@ -155,6 +184,7 @@ const RESOURCES: ResourceConfig[] = [
     },
     related: [
       { title: 'Character', icon: 'user', href: '/resources/character', description: 'Access the character who owns or pilots these entities.' },
+      { title: 'Faction', icon: 'flag', href: '/resources/faction', description: 'Access the faction whose entities you are listing.' },
       { title: 'Types', icon: 'tags', href: '/resources/types', description: 'Look up entity type details and stats.' },
       { title: 'Location', icon: 'location-dot', href: '/resources/location', description: 'Look up entity locations.' },
     ],
@@ -812,6 +842,11 @@ function generateResourceMdx(config: ResourceConfig): string {
     for (const method of subClass.methods) {
       parts.push(generateMethodMdx(method, subConfig.accessor));
     }
+  }
+
+  // Appendix (cross-resource notes / examples)
+  if (config.appendix) {
+    parts.push(config.appendix);
   }
 
   // Related resources

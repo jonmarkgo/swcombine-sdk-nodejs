@@ -10,26 +10,32 @@ keywords:
     'vehicles',
     'facilities',
     'items',
+    'faction inventory',
   ]
 ---
 
 {/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
 {/* Run `npm run docs:mintlify` to regenerate. */}
 
-The `client.inventory` resource lets you list and inspect entities — ships, vehicles, facilities, items, NPCs, and more — that belong to your character or faction.
+The `client.inventory` resource lets you list and inspect entities — ships, vehicles, facilities, items, NPCs, and more — that belong to a character or a faction. The `uid` parameter on every method accepts either a character UID (e.g. `1:12345`) or a faction UID (e.g. `20:123`); the SDK does not have a separate `client.faction.entities` accessor — faction-owned entities are queried through this resource.
 
 ### inventory.get()
 
 Get inventory summary by UID.
 Returns the inventory summary object directly — not wrapped in a `Page`.
+Accepts either a character UID or a faction UID.
 
 <ParamField path="uid" type="string" required>
   The uid parameter.
 </ParamField>
 
 ```typescript
-const overview = await client.inventory.get({ uid: '1:12345' });
-console.log(overview); // access properties directly, not overview.data
+// Character inventory summary
+const characterOverview = await client.inventory.get({ uid: '1:12345' });
+
+// Faction inventory summary
+const factionOverview = await client.inventory.get({ uid: '20:123' });
+console.log(factionOverview); // access properties directly, not factionOverview.data
 ```
 
 ## Entities
@@ -72,6 +78,9 @@ console.log(ship.name); // access properties directly, not ship.data
 
 List entities in inventory (paginated with optional filtering)
 Supports filtering by various entity properties. Filter arrays must have matching lengths.
+The `uid` argument accepts either a character UID (e.g. `1:12345`) or a faction UID
+(e.g. `20:123`) — there is no separate `client.faction.entities` accessor; faction-owned
+entities are queried through this method.
 
 <ParamField path="assignType" type="InventoryAssignType" required>
   Assignment type: 'owner', 'commander', or 'pilot'
@@ -110,9 +119,21 @@ Supports filtering by various entity properties. Filter arrays must have matchin
 </ParamField>
 
 ```typescript
-const entities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot' });
+// Character-owned ships
+const myShips = await client.inventory.entities.list({ uid: '1:12345', entityType: 'ships', assignType: 'owner' });
+
+// Faction-owned ships — pass a faction UID instead of a character UID
+const factionShips = await client.inventory.entities.list({ uid: '20:123', entityType: 'ships', assignType: 'owner' });
+
+// Faction facilities
+const factionFacilities = await client.inventory.entities.list({ uid: '20:123', entityType: 'facilities', assignType: 'owner' });
+
+// Vehicles a character is piloting
+const pilotedVehicles = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot' });
+
 // Fetch up to 200 entities at once
-const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot', start_index: 1, item_count: 200 });
+const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot', start_index: 1, item_count: 200 });
+
 // Filter by multiple criteria
 const multiFiltered = await client.inventory.entities.list({
   uid: '1:12345',
@@ -181,6 +202,9 @@ Update entity property
 <CardGroup cols={2}>
   <Card title="Character" icon="user" href="/resources/character">
     Access the character who owns or pilots these entities.
+  </Card>
+  <Card title="Faction" icon="flag" href="/resources/faction">
+    Access the faction whose entities you are listing.
   </Card>
   <Card title="Types" icon="tags" href="/resources/types">
     Look up entity type details and stats.

@@ -25,6 +25,10 @@ export class InventoryEntitiesResource extends BaseResource {
    *
    * Supports filtering by various entity properties. Filter arrays must have matching lengths.
    *
+   * The `uid` argument accepts either a character UID (e.g. `1:12345`) or a faction UID
+   * (e.g. `20:123`) — there is no separate `client.faction.entities` accessor; faction-owned
+   * entities are queried through this method.
+   *
    * @param options - Inventory UID, entity type, assign type, and optional pagination/filtering parameters
    * @param options.uid - Character or Faction UID
    * @param options.entityType - Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials'
@@ -35,9 +39,21 @@ export class InventoryEntitiesResource extends BaseResource {
    * @param options.filter_value - Array of values corresponding to each filter type
    * @param options.filter_inclusion - Array specifying 'includes' or 'excludes' for each filter
    * @example
-   * const entities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot' });
+   * // Character-owned ships
+   * const myShips = await client.inventory.entities.list({ uid: '1:12345', entityType: 'ships', assignType: 'owner' });
+   *
+   * // Faction-owned ships — pass a faction UID instead of a character UID
+   * const factionShips = await client.inventory.entities.list({ uid: '20:123', entityType: 'ships', assignType: 'owner' });
+   *
+   * // Faction facilities
+   * const factionFacilities = await client.inventory.entities.list({ uid: '20:123', entityType: 'facilities', assignType: 'owner' });
+   *
+   * // Vehicles a character is piloting
+   * const pilotedVehicles = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot' });
+   *
    * // Fetch up to 200 entities at once
-   * const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicle', assignType: 'pilot', start_index: 1, item_count: 200 });
+   * const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot', start_index: 1, item_count: 200 });
+   *
    * // Filter by multiple criteria
    * const multiFiltered = await client.inventory.entities.list({
    *   uid: '1:12345',
@@ -191,10 +207,16 @@ export class InventoryResource extends BaseResource {
    *
    * Returns the inventory summary object directly — not wrapped in a `Page`.
    *
+   * Accepts either a character UID or a faction UID.
+   *
    * @returns The inventory summary.
    * @example
-   * const overview = await client.inventory.get({ uid: '1:12345' });
-   * console.log(overview); // access properties directly, not overview.data
+   * // Character inventory summary
+   * const characterOverview = await client.inventory.get({ uid: '1:12345' });
+   *
+   * // Faction inventory summary
+   * const factionOverview = await client.inventory.get({ uid: '20:123' });
+   * console.log(factionOverview); // access properties directly, not factionOverview.data
    */
   async get(options: { uid: string }): Promise<Record<string, unknown>> {
     return this.request<Record<string, unknown>>('GET', `/inventory/${options.uid}`);

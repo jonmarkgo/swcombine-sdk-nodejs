@@ -264,6 +264,31 @@ console.log(page.data); // Stockholder[]
 for await (const stockholder of page) { console.log(stockholder); }
 ```
 
+## Faction-owned entities
+
+Ships, vehicles, facilities, stations, cities, and other entities owned by a faction are listed through the [Inventory resource](/resources/inventory) — there is no `client.faction.entities` accessor. Pass the faction UID as the `uid` argument:
+
+```typescript
+// All ships owned by faction 20:123
+const ships = await client.inventory.entities.list({
+  uid: '20:123',
+  entityType: 'ships',
+  assignType: 'owner',
+});
+
+// All facilities owned by the faction
+const facilities = await client.inventory.entities.list({
+  uid: '20:123',
+  entityType: 'facilities',
+  assignType: 'owner',
+});
+
+// Faction inventory summary
+const summary = await client.inventory.get({ uid: '20:123' });
+```
+
+See the [Inventory resource](/resources/inventory) for the full list of supported `entityType` values, filtering options, and pagination.
+
 ## Related resources
 
 <CardGroup cols={2}>
@@ -271,6 +296,6 @@ for await (const stockholder of page) { console.log(stockholder); }
     Access character profiles and their faction associations.
   </Card>
   <Card title="Inventory" icon="box" href="/resources/inventory">
-    List entities owned by a faction.
+    List ships, facilities, and other entities owned by a faction.
   </Card>
 </CardGroup>

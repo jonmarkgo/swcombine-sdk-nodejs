@@ -1,0 +1,24 @@
+.github/workflows/docs.yml
+  2e6eb636c5a9697a 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "49f296f641f39c85e77bf79e4073750378ecbfcc",
+  "prompts": {
+    "2e6eb636c5a9697a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a479cd7-7773-4dbb-b82b-c2aaf05a6ca1",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/549635d663d26f8db8a0710a9e4d6ecdaee9f92694c0daadb2d5dde93287470a"
+    }
+  }
+}

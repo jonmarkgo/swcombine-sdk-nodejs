@@ -1,0 +1,24 @@
+mintlify/index.mdx
+  2e6eb636c5a9697a 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "3abae68b649f98c6d3baa2d300ca9bfa36c9902c",
+  "prompts": {
+    "2e6eb636c5a9697a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a479cd7-7773-4dbb-b82b-c2aaf05a6ca1",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Jonathan Gottfried",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/2ccf18e63f6de8be35c26ba46be5adbf3ec3ed7993aff4b97f889c7c99070bf7"
+    }
+  }
+}

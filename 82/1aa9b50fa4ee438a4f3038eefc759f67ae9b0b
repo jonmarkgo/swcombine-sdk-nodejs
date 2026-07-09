@@ -1,0 +1,21 @@
+package-lock.json
+  s_68d952219f919d::t_26f02401a62222 3,9
+package.json
+  s_68d952219f919d::t_2e6b3063170f0b 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "821aa9b50fa4ee438a4f3038eefc759f67ae9b0b",
+  "prompts": {},
+  "sessions": {
+    "s_68d952219f919d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4be15583-ec4d-4b51-bae1-709275ca4549",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+mintlify/resources/types.mdx
+  s_68d952219f919d::t_ebe0cfb3cb27e4 81-89
+src/types/index.ts
+  s_68d952219f919d::t_d2ffc09830e42e 1326-1336
+src/resources/TypesResource.ts
+  s_68d952219f919d::t_891100e7aeb08c 30-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "2c18c3b80c8e4b69136c57a5f5fa7b6275725a7e",
+  "prompts": {},
+  "sessions": {
+    "s_68d952219f919d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4be15583-ec4d-4b51-bae1-709275ca4549",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

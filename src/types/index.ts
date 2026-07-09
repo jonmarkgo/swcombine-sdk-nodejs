@@ -1323,6 +1323,17 @@ export interface ListTypesClassesOptions<T extends TypesEntityType = TypesEntity
 
 export interface ListTypesEntitiesOptions<T extends TypesEntityType = TypesEntityType> {
   entityType: T;
+  /**
+   * Filter by class. Accepts a class name (e.g. `'fighter'`) or a numeric class id.
+   *
+   * @remarks
+   * **Class ids were renumbered by the SW Combine API.** The numeric identifiers for
+   * ship and vehicle classes shifted with a server-side sync — ship classes by +1
+   * (e.g. Super Capital `0 → 1`, Capital Ship `1 → 2`, Frigate `2 → 3`) and vehicle
+   * classes by +21 (e.g. Ground Vehicles `0 → 21`, Speeders `1 → 22`, Barges `2 → 23`).
+   * This SDK passes the value through unchanged, so if you previously stored numeric
+   * class ids, update them to the new numbering. Filtering by class name is unaffected.
+   */
   class?: string;
   start_index?: number;
   item_count?: number;

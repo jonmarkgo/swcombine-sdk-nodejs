@@ -46,3 +46,6 @@ tests/integration/api-responses/
 
 # Environment variables
 .env
+
+# Superpowers SDD scratch (ledger, briefs, review packages)
+.superpowers/

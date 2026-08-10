@@ -848,11 +848,25 @@ export interface Location {
   [key: string]: unknown;
 }
 
+/**
+ * An inventory entity as returned by `GET /inventory/{entity_type}/{uid}`.
+ *
+ * Note the distinction between the two type-ish fields, which is easy to get wrong:
+ * - `entitytype` is the entity *kind* as a plain string (`"Ship"`, `"NPC"`, `"Planet"`).
+ * - `type` is a *reference* to the entity's type/class, e.g. `Lambda-class T-4a Shuttle`.
+ *
+ * `type` was previously declared as a required `string`. The API has always returned an
+ * object here, so reading `entity.type` as a string was broken at runtime; use
+ * `entity.entitytype` for the string form.
+ */
 export interface Entity {
   uid: string;
-  type: string;
+  /** Entity kind as a plain string, e.g. `"Ship"`, `"NPC"`, `"Facility"`. */
+  entitytype?: string;
+  /** Reference to the entity's type/class. */
+  type?: EntityTypeRef;
   name?: string;
-  owner?: Character | Faction | string;
+  owner?: EntityReference;
   [key: string]: unknown;
 }
 

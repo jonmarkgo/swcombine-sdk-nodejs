@@ -35,10 +35,10 @@ never received the same treatment. This design closes that gap.
 ## Evidence
 
 All shapes below were captured live on 2026-08-10 from character `1:46931` and faction
-`20:502`, 143 API calls total. Raw payloads are in the capture set (see Testing).
+`20:502`, 145 API calls total. Raw payloads are in the capture set (see Testing).
 
-Coverage: all 11 entity types, 100+ detail payloads (61 facilities alone), including 6
-targeted known-busy entities covering five distinct action types.
+Coverage: all 11 entity types, 100+ detail payloads (61 facilities alone), including 10
+targeted known-busy entities covering six distinct action types.
 
 ### The actions envelope
 
@@ -99,6 +99,18 @@ seen. Any closed union over `attributes.type` would be wrong on arrival — see 
 and `CargoDelayAction` carry nothing beyond `actiontype`, `status` and `delay`. Only
 `MiningAction`, `EntityProductionAction` and `RetoolingAction` add fields. The base shape
 is therefore the common case, not the fallback.
+
+**Asteroid mining reports no resource or yield.** Ships `2:6516362` and `2:6516607` mine
+*different* resources for the same station, yet their payloads are byte-identical apart
+from `uid`, action `id`, timer values, coordinates and cargo fill. `AsteroidMiningSoloAction`
+carries only `actiontype`/`status`/`delay`, while the facility-side `MiningAction` reports
+`expected-yield`, `expected-cost`, `workers` and `droids`. There is no supported way to
+learn what a mining ship is extracting.
+
+Correlating a ship's `location.coordinates.system.{x,y}` against the station's
+`deposits[].attributes.{x,y}` identifies the resource only when the ship is parked on its
+square — it matched for 1 of 3 mining ships tested. It is a heuristic, not a reliable
+inference, and the SDK should not ship a helper that implies otherwise.
 
 **Actions attach to the entity doing the work, not the one benefiting.** Station
 `5:61544` is an asteroid mining station, but returns *no* `actions` — only `deposits`.
@@ -172,8 +184,21 @@ interface EntityGender { attributes: { gender: string }; value: string }
 interface EntityCreationDate {
   years: number; days: number; hours: number; mins: number; secs: number; timestamp: number;
 }
+/**
+ * Capacity only — the route never reports cargo *contents*, just how full a hold is.
+ * Each capacity is a {total, remaining} pair, NOT a plain number.
+ *
+ * Which keys appear varies by entity type:
+ *   ships / stations / vehicles → weight, volume, passenger
+ *   droids / items / npcs       → weight, volume
+ *   facilities                  → volume, passenger (no weight)
+ *   cities / creatures / materials / planets → `cargo` is `{}`
+ */
+interface EntityCapacity { total: number; remaining: number }
 interface EntityCargo {
-  weightcapacity?: number; volumecapacity?: number; passengercapacity?: number;
+  weightcapacity?: EntityCapacity;
+  volumecapacity?: EntityCapacity;
+  passengercapacity?: EntityCapacity;
 }
 interface EntitySkill { attributes: { type: string }; value: number }
 interface EntitySkillGroup {
@@ -354,7 +379,7 @@ per entity type in `tests/integration/`, run only on demand.
    observed; adding to them is always additive.
 
    Method note: 60 *random* detail fetches surfaced one action payload (~1-in-60, since
-   almost all entities are idle), while 8 *targeted* fetches of known-busy UIDs surfaced
+   almost all entities are idle), while 10 *targeted* fetches of known-busy UIDs surfaced
    six distinct action types. Future gap-filling should ask the account holder for UIDs
    rather than sweep.
 

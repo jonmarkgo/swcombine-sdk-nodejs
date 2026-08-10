@@ -145,6 +145,27 @@ describe('inventory entity detail shape', () => {
     });
   });
 
+  describe('cargo', () => {
+    // Capacities are {total, remaining} pairs, not plain numbers.
+    it('reports capacity as total/remaining pairs', async () => {
+      const cargo = (await getEntity('ship-cargo-delay.json')).cargo as any;
+      expect(cargo.weightcapacity).toEqual({ total: 80000, remaining: 8 });
+      expect(cargo.volumecapacity.total).toBe(120000);
+      expect(typeof cargo.passengercapacity.remaining).toBe('number');
+    });
+
+    // The route says how full a hold is, never what is in it.
+    it('does not expose cargo contents', async () => {
+      const entity = await getEntity('ship-cargo-delay.json');
+      const keys = Object.keys(entity);
+      expect(keys).toContain('cargo');
+      expect(keys.some((k) => /manifest|contents|carrying/i.test(k))).toBe(false);
+      expect(Object.keys(entity.cargo as any)).toEqual(
+        expect.arrayContaining(['weightcapacity', 'volumecapacity', 'passengercapacity'])
+      );
+    });
+  });
+
   describe('per-type fields the SDK does not yet model', () => {
     it('npc carries race, gender, level and skills', async () => {
       const npc = await getEntity('npc.json');

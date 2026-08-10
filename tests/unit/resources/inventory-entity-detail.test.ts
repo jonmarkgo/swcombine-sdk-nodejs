@@ -57,8 +57,8 @@ describe('inventory entity detail shape', () => {
     });
 
     it('wraps a single action in an array', async () => {
-      const entity = await getEntity('ship-sublight-travel.json');
-      const actions = (entity.actions as any).action;
+      const entity = (await getEntity('ship-sublight-travel.json')) as any;
+      const actions = entity.actions.action;
       expect(Array.isArray(actions)).toBe(true);
       expect(actions).toHaveLength(1);
       expect(actions[0].attributes.type).toBe('SublightTravelAction');
@@ -67,8 +67,8 @@ describe('inventory entity detail shape', () => {
     });
 
     it('returns multiple actions for an entity running more than one', async () => {
-      const entity = await getEntity('station-multi-action.json');
-      const actions = (entity.actions as any).action;
+      const entity = (await getEntity('station-multi-action.json')) as any;
+      const actions = entity.actions.action;
       expect(actions).toHaveLength(2);
       expect(actions.map((a: any) => a.attributes.type)).toEqual([
         'EntityProductionAction',
@@ -78,7 +78,7 @@ describe('inventory entity detail shape', () => {
 
     it('treats status and delay as optional', async () => {
       const [production, retooling] = (
-        await getEntity('station-multi-action.json')
+        (await getEntity('station-multi-action.json')) as any
       ).actions!.action as any[];
 
       expect(production.value.status).toBeUndefined();
@@ -90,7 +90,7 @@ describe('inventory entity detail shape', () => {
     });
 
     it('exposes the retooling target as a reference, not a string', async () => {
-      const actions = (await getEntity('station-multi-action.json')).actions!.action as any[];
+      const actions = ((await getEntity('station-multi-action.json')) as any).actions!.action as any[];
       const retooling = actions.find((a) => a.attributes.type === 'RetoolingAction');
       // NB: `value.type` is an object ref, unlike the sibling `attributes.type` string.
       expect(typeof retooling.value.type).toBe('object');
@@ -99,7 +99,7 @@ describe('inventory entity detail shape', () => {
     });
 
     it('carries mining-specific fields', async () => {
-      const [mining] = (await getEntity('facility-mining.json')).actions!.action as any[];
+      const [mining] = ((await getEntity('facility-mining.json')) as any).actions!.action as any[];
       expect(mining.value.actiontype).toBe('Mining');
       expect(mining.value.status).toBe('running');
       expect(mining.value['expected-yield']).toBe(9363.25);
@@ -109,11 +109,11 @@ describe('inventory entity detail shape', () => {
     });
 
     it('carries production refs, and tolerates an empty producing list', async () => {
-      const [producing] = (await getEntity('station-producing.json')).actions!.action as any[];
+      const [producing] = ((await getEntity('station-producing.json')) as any).actions!.action as any[];
       expect(producing.value.producing.entity[0].attributes.type).toBe('ship');
 
       const idleSlot = (
-        (await getEntity('station-multi-action.json')).actions!.action as any[]
+        ((await getEntity('station-multi-action.json')) as any).actions!.action as any[]
       ).find((a) => a.attributes.type === 'EntityProductionAction');
       expect(idleSlot.value.producing.entity).toEqual([]);
     });
@@ -123,7 +123,7 @@ describe('inventory entity detail shape', () => {
     // AsteroidMiningSoloAction was discovered only after four other types were already
     // observed. Any closed union over attributes.type would have broken on it.
     it('carries an action type beyond the first four observed', async () => {
-      const [action] = (await getEntity('ship-asteroid-mining.json')).actions!.action as any[];
+      const [action] = ((await getEntity('ship-asteroid-mining.json')) as any).actions!.action as any[];
       expect(action.attributes.type).toBe('AsteroidMiningSoloAction');
       expect(action.value.actiontype).toBe('Asteroid Mining Solo');
       expect(action.value.delay.remaining).toBeGreaterThan(0);
@@ -132,28 +132,28 @@ describe('inventory entity detail shape', () => {
     // The same attributes.type does NOT imply the same value shape: an NPC running
     // Entity Production has none of the production fields a facility/station carries.
     it('varies an action type\'s value shape by carrying entity', async () => {
-      const [npcAction] = (await getEntity('npc-producing.json')).actions!.action as any[];
+      const [npcAction] = ((await getEntity('npc-producing.json')) as any).actions!.action as any[];
       expect(npcAction.attributes.type).toBe('EntityProductionAction');
       expect(Object.keys(npcAction.value).sort()).toEqual(['actiontype', 'delay', 'status']);
       expect(npcAction.value.quantity).toBeUndefined();
       expect(npcAction.value.workers).toBeUndefined();
       expect(npcAction.value.producing).toBeUndefined();
 
-      const [facAction] = (await getEntity('facility-producing-batch.json')).actions!
-        .action as any[];
+      const [facAction] = (((await getEntity('facility-producing-batch.json')) as any).actions!
+        .action as any[]);
       expect(facAction.attributes.type).toBe('EntityProductionAction');
       expect(facAction.value.producing.entity).toHaveLength(12);
     });
 
     it('carries an eighth action type, found after the design was drafted', async () => {
-      const [action] = (await getEntity('ship-asteroid-prospecting.json')).actions!
-        .action as any[];
+      const [action] = (((await getEntity('ship-asteroid-prospecting.json')) as any).actions!
+        .action as any[]);
       expect(action.attributes.type).toBe('AsteroidProspectingAction');
       expect(action.value.actiontype).toBe('Asteroid Prospecting');
     });
 
     it('handles timer-only action types with no extra fields', async () => {
-      const [action] = (await getEntity('ship-cargo-delay.json')).actions!.action as any[];
+      const [action] = ((await getEntity('ship-cargo-delay.json')) as any).actions!.action as any[];
       expect(action.attributes.type).toBe('CargoDelayAction');
       expect(action.value.actiontype).toBe('Cargo Delay');
       // Timer-only: nothing beyond actiontype/status/delay.
@@ -162,15 +162,15 @@ describe('inventory entity detail shape', () => {
 
     // The mining action lives on the ship doing the work, not the station it mines for.
     it('does not report actions on the station being mined for', async () => {
-      const station = await getEntity('station-asteroid-deposits.json');
+      const station = (await getEntity('station-asteroid-deposits.json')) as any;
       expect(station.actions).toBeUndefined();
-      expect((station.deposits as any).deposit.length).toBeGreaterThan(0);
+      expect(station.deposits.deposit.length).toBeGreaterThan(0);
     });
   });
 
   describe('facilities', () => {
     it('reports a batch production as one action with many produced entities', async () => {
-      const [action] = (await getEntity('facility-producing-batch.json')).actions!.action as any[];
+      const [action] = ((await getEntity('facility-producing-batch.json')) as any).actions!.action as any[];
       expect(action.attributes.type).toBe('EntityProductionAction');
       expect(action.value.quantity).toBe(12);
       // producing.entity length tracks quantity — a genuine variable-length array.
@@ -184,7 +184,7 @@ describe('inventory entity detail shape', () => {
     });
 
     it('carries a seventh action type with only workers beyond the timer', async () => {
-      const [action] = (await getEntity('facility-construction.json')).actions!.action as any[];
+      const [action] = ((await getEntity('facility-construction.json')) as any).actions!.action as any[];
       expect(action.attributes.type).toBe('FacilityConstructionAction');
       expect(action.value.actiontype).toBe('Facility Construction');
       expect(action.value.workers).toBe(1);
@@ -209,8 +209,8 @@ describe('inventory entity detail shape', () => {
 
     // Facility deposits lack the x/y that planet and station deposits carry.
     it('omits x/y on facility deposits', async () => {
-      const [deposit] = (await getEntity('facility-mining-deposits.json')).deposits!
-        .deposit as any[];
+      const [deposit] = (((await getEntity('facility-mining-deposits.json')) as any).deposits!
+        .deposit as any[]);
       expect(deposit.value).toBe('alazhi');
       expect(deposit.attributes.quantity).toBeGreaterThan(0);
       expect(deposit.attributes.x).toBeUndefined();
@@ -218,8 +218,8 @@ describe('inventory entity detail shape', () => {
     });
 
     it('includes x/y on station deposits', async () => {
-      const [deposit] = (await getEntity('station-asteroid-deposits.json')).deposits!
-        .deposit as any[];
+      const [deposit] = (((await getEntity('station-asteroid-deposits.json')) as any).deposits!
+        .deposit as any[]);
       expect(typeof deposit.attributes.x).toBe('number');
       expect(typeof deposit.attributes.y).toBe('number');
     });
@@ -267,9 +267,9 @@ describe('inventory entity detail shape', () => {
 
     // Action ids are shared by every entity participating in the action.
     it('shares an action id between a facility and its worker NPC', async () => {
-      const [facilityAction] = (await getEntity('facility-mining.json')).actions!
-        .action as any[];
-      const [npcAction] = (await getEntity('npc-mining-worker.json')).actions!.action as any[];
+      const [facilityAction] = (((await getEntity('facility-mining.json')) as any).actions!
+        .action as any[]);
+      const [npcAction] = (((await getEntity('npc-mining-worker.json')) as any).actions!.action as any[]);
 
       expect(npcAction.attributes.id).toBe(facilityAction.attributes.id);
       // The facility holds the rich view; the worker's copy is stripped.
@@ -278,7 +278,7 @@ describe('inventory entity detail shape', () => {
     });
 
     it('reports a stripped mining action on droids too', async () => {
-      const [action] = (await getEntity('droid-mining.json')).actions!.action as any[];
+      const [action] = ((await getEntity('droid-mining.json')) as any).actions!.action as any[];
       expect(action.attributes.type).toBe('MiningAction');
       expect(Object.keys(action.value).sort()).toEqual(['actiontype', 'delay', 'status']);
     });

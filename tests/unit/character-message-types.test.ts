@@ -1,13 +1,13 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import { Message, MessageListItem, SWCombine } from '../../src/index.js';
+import { Message, MessageListItem, SWCombine, Page } from '../../src/index.js';
 
 type MessageListResponse = Awaited<ReturnType<SWCombine['character']['messages']['list']>>;
 type MessageGetResponse = Awaited<ReturnType<SWCombine['character']['messages']['get']>>;
 type MessageCreateResponse = Awaited<ReturnType<SWCombine['character']['messages']['create']>>;
 
 describe('Character.messages typing', () => {
-  it('list() returns MessageListItem[]', () => {
-    expectTypeOf<MessageListResponse>().toEqualTypeOf<MessageListItem[]>();
+  it('list() returns Page<MessageListItem>', () => {
+    expectTypeOf<MessageListResponse>().toEqualTypeOf<Page<MessageListItem>>();
   });
 
   it('get() returns Message', () => {

@@ -23,6 +23,7 @@
     "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json",
     "build:types": "tsc -p tsconfig.types.json",
     "build:watch": "tsc -p tsconfig.esm.json --watch",
+    "typecheck": "tsc -p tsconfig.typecheck.json",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:integration": "vitest run --config vitest.integration.config.ts",

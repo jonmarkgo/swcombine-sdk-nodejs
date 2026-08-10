@@ -1,0 +1,22 @@
+tests/unit/inventory-detail-types.test.ts
+  s_e0a86d68eab627::t_cbe7ff4dceb61e 1-54
+src/types/inventory-detail.ts
+  s_e0a86d68eab627::t_5d3125f58ec530 8-15
+  s_e0a86d68eab627::t_ed08d859611b41 102-375
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "c83b8637a8b3fdfeb6b73feea44f6b3ee05262ee",
+  "prompts": {},
+  "sessions": {
+    "s_e0a86d68eab627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6908dc-8994-4ee5-9241-0f8e34da658e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

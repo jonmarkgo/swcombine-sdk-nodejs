@@ -2320,3 +2320,5 @@ export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = In
   /** Whether each filter should include or exclude matches. Default: 'includes' */
   filter_inclusion?: InventoryFilterInclusion[];
 }
+
+export * from './inventory-detail.js';

@@ -5,7 +5,14 @@
  * corresponding fixtures live in `tests/integration/api-responses/inventory/`.
  */
 
-import type { EntityTypeRef } from './index.js';
+import type {
+  EntityTypeRef,
+  EntityReference,
+  EntityLocation,
+  EntityImages,
+  EntityStat,
+  EntityTags,
+} from './index.js';
 
 /** Timer attached to an action. Absent on actions that are not counting down. */
 export interface EntityActionDelay {
@@ -91,4 +98,278 @@ export interface EntityAction {
 /** Always an array, even for a single action. */
 export interface EntityActions {
   action: EntityAction[];
+}
+
+// ============================================================================
+// Shared building blocks
+// ============================================================================
+
+/** A capacity is a total/remaining pair, never a bare number. */
+export interface EntityCapacity {
+  total: number;
+  remaining: number;
+}
+
+/**
+ * Cargo capacities, plus container fields on cargo-container items.
+ *
+ * Which capacities appear varies by entity type:
+ * ships/stations/vehicles get all three, droids/items/npcs get weight+volume,
+ * facilities get volume+passenger, and cities/creatures/materials/planets
+ * return an empty object.
+ */
+export interface EntityCargo {
+  weightcapacity?: EntityCapacity;
+  volumecapacity?: EntityCapacity;
+  passengercapacity?: EntityCapacity;
+  /** Cargo-container items: what the container holds. */
+  entitytype?: EntityTypeRef;
+  maxuses?: number;
+  remaininguses?: number;
+}
+
+/** Combine Galactic Time breakdown attached to most entities. */
+export interface EntityCreationDate {
+  years: number;
+  days: number;
+  hours: number;
+  mins: number;
+  secs: number;
+  timestamp: number;
+}
+
+/** e.g. `{ attributes: { gender: 'M' }, value: 'Male' }` */
+export interface EntityGender {
+  attributes: { gender: string };
+  value: string;
+}
+
+export interface EntitySkill {
+  attributes: { type: string };
+  value: number;
+}
+
+export interface EntitySkillGroup {
+  attributes: { force: string; count: number };
+  skill: EntitySkill[];
+}
+
+export interface EntitySkills {
+  general?: EntitySkillGroup[];
+  space?: EntitySkillGroup[];
+  ground?: EntitySkillGroup[];
+  social?: EntitySkillGroup[];
+  science?: EntitySkillGroup[];
+}
+
+/**
+ * `x`/`y` are present on planet and station deposits but absent on facility
+ * deposits, so they are optional.
+ */
+export interface EntityDeposit {
+  attributes: {
+    uid: string;
+    href: string;
+    quantity: number;
+    x?: number;
+    y?: number;
+  };
+  value: string;
+}
+
+export interface EntityDeposits {
+  deposit: EntityDeposit[];
+}
+
+export interface PlanetaryStats {
+  crime?: number;
+  morale?: number;
+  taxLevel?: number;
+  er?: number;
+  population?: number;
+  hireable?: number;
+  civLevel?: number;
+}
+
+/**
+ * Facility income ("FI") data.
+ *
+ * `income` and `paiddebt` are absent on some facilities. `warnings` is an object
+ * in detail payloads but a number in list payloads.
+ */
+export interface FacilityIncome {
+  currentdebt?: number;
+  income?: number;
+  paiddebt?: number;
+  warnings?: number | Record<string, unknown>;
+}
+
+export interface EntityCrewList {
+  entry: unknown[];
+}
+
+/** Power generators the entity draws from. Absent entirely when unpowered. */
+export interface EntityPoweredBy {
+  pg: EntityReference[];
+}
+
+export interface EntityQueueItem {
+  entity?: EntityTypeRef;
+  name?: string;
+  workers?: { attributes: { ideal_workers: number }; value: number };
+  controller?: EntityReference;
+  status?: string;
+  quantity?: number;
+  queueorder?: number;
+  producedentities?: { producedentity: Record<string, unknown>[] };
+  [key: string]: unknown;
+}
+
+export interface EntityQueueItems {
+  queueitem: EntityQueueItem[];
+}
+
+// ============================================================================
+// Per-entity-type detail interfaces
+// ============================================================================
+
+/**
+ * Fields shared by essentially every inventory entity detail response.
+ * Only `uid` is guaranteed; the API omits the rest freely.
+ */
+export interface BaseEntityDetail {
+  uid: string;
+  /** Entity kind as a plain string, e.g. "Ship". Distinct from `type`. */
+  entitytype?: string;
+  name?: string;
+  owner?: EntityReference;
+  commander?: EntityReference;
+  pilot?: EntityReference;
+  controller?: string;
+  infotext?: string;
+  images?: EntityImages;
+  protected?: string;
+  location?: EntityLocation;
+  /** Reference to the entity's type/class. */
+  type?: EntityTypeRef;
+  tags?: EntityTags;
+  cargo?: EntityCargo;
+  creationdate?: EntityCreationDate;
+  weight?: number;
+  volume?: number;
+  actions?: EntityActions;
+  [key: string]: unknown;
+}
+
+/** Fields shared by hulled, pilotable craft. */
+export interface VesselEntityDetail extends BaseEntityDetail {
+  opento?: string;
+  wrecked?: string;
+  hull?: EntityStat;
+  shield?: EntityStat;
+  ionic?: EntityStat;
+  underconstruction?: string;
+  crewlist?: EntityCrewList;
+}
+
+export interface ShipEntityDetail extends VesselEntityDetail {
+  entitytype?: 'Ship';
+  datablocksused?: number;
+  datablockstotal?: number;
+}
+
+export interface VehicleEntityDetail extends VesselEntityDetail {
+  entitytype?: 'Vehicle';
+}
+
+export interface StationEntityDetail extends VesselEntityDetail {
+  entitytype?: 'Station';
+  /** Present while producing: the type the station is tooled to build. */
+  tooledto?: EntityTypeRef;
+  queueitems?: EntityQueueItems;
+  assigneddcs?: Record<string, unknown>;
+  deposits?: EntityDeposits;
+}
+
+export interface FacilityEntityDetail extends BaseEntityDetail {
+  entitytype?: 'Facility';
+  opento?: string;
+  wrecked?: string;
+  hull?: EntityStat;
+  shield?: EntityStat;
+  ionic?: EntityStat;
+  orientation?: string;
+  underconstruction?: string;
+  crewlist?: EntityCrewList;
+  /** "Yes"/"No" on consumers; absent on power generators. */
+  ispowered?: string;
+  /** Absent entirely when unpowered, not empty. */
+  poweredby?: EntityPoweredBy;
+  powergenconnectedto?: EntityReference;
+  /** Present on power generators, which have no `ispowered`. */
+  energyremaining?: number;
+  facilityincome?: FacilityIncome;
+  deposits?: EntityDeposits;
+  tooledto?: EntityTypeRef;
+  queueitems?: EntityQueueItems;
+}
+
+export interface CityEntityDetail extends BaseEntityDetail {
+  entitytype?: 'City';
+  buildings?: { building: Record<string, unknown>[] };
+  layout?: string;
+  hidden?: string;
+}
+
+export interface PlanetEntityDetail extends BaseEntityDetail {
+  entitytype?: 'Planet';
+  planetaryStats?: PlanetaryStats;
+  deposits?: EntityDeposits;
+}
+
+export interface ItemEntityDetail extends BaseEntityDetail {
+  entitytype?: 'Item';
+}
+
+export interface MaterialEntityDetail extends BaseEntityDetail {
+  entitytype?: 'Material';
+  quantity?: number;
+}
+
+export interface NpcEntityDetail extends BaseEntityDetail {
+  entitytype?: 'NPC';
+  race?: EntityTypeRef;
+  gender?: EntityGender;
+  level?: number;
+  hp?: EntityStat;
+  skills?: EntitySkills;
+}
+
+export interface DroidEntityDetail extends BaseEntityDetail {
+  entitytype?: 'Droid';
+  wrecked?: string;
+  hull?: EntityStat;
+  shield?: EntityStat;
+  ionic?: EntityStat;
+}
+
+export interface CreatureEntityDetail extends BaseEntityDetail {
+  entitytype?: 'Creature';
+  hp?: EntityStat;
+  skills?: EntitySkills;
+}
+
+/** Maps an inventory entity type to its detail response shape. */
+export interface InventoryEntityDetailMap {
+  ships: ShipEntityDetail;
+  vehicles: VehicleEntityDetail;
+  stations: StationEntityDetail;
+  cities: CityEntityDetail;
+  facilities: FacilityEntityDetail;
+  planets: PlanetEntityDetail;
+  items: ItemEntityDetail;
+  npcs: NpcEntityDetail;
+  droids: DroidEntityDetail;
+  creatures: CreatureEntityDetail;
+  materials: MaterialEntityDetail;
 }

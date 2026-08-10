@@ -1,0 +1,29 @@
+docs/superpowers/specs/2026-08-10-inventory-entity-detail-types-design.md
+  s_e0a86d68eab627::t_611ff4750b23d6 40-41,363,365
+  s_e0a86d68eab627::t_4a8b6fbaf84d89 90,97,103-106
+  s_e0a86d68eab627::t_d12bd7f26d5566 271-289
+  s_e0a86d68eab627::t_53e4754b08af0c 350-354,359-362
+  s_e0a86d68eab627::t_259067c7852b04 142-156
+  s_e0a86d68eab627::t_00b28c452d2b78 239-246,250-257,260
+  s_e0a86d68eab627::t_8a8d5a532b11f8 247
+  s_e0a86d68eab627::t_294bbb9edfe2b8 38,88-89,91-96,98-102,248-249,349,357-358
+tests/unit/resources/inventory-entity-detail.test.ts
+  s_e0a86d68eab627::t_fb97bd5cb8c5e3 122-131,140-147
+  s_e0a86d68eab627::t_0d37aa6eb00a02 132-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fb21c924b47a9113439464dbdc77b97e6afb028a",
+  "prompts": {},
+  "sessions": {
+    "s_e0a86d68eab627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6908dc-8994-4ee5-9241-0f8e34da658e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

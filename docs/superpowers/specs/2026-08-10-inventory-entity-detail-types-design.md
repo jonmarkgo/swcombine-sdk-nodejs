@@ -35,10 +35,10 @@ never received the same treatment. This design closes that gap.
 ## Evidence
 
 All shapes below were captured live on 2026-08-10 from character `1:46931` and faction
-`20:502`, 137 API calls total. Raw payloads are in the capture set (see Testing).
+`20:502`, 143 API calls total. Raw payloads are in the capture set (see Testing).
 
-Coverage: all 11 entity types — 10 sampled at 3 entities each, plus 5 planets and 3
-known-busy entities — for 38 detail payloads.
+Coverage: all 11 entity types, 100+ detail payloads (61 facilities alone), including 6
+targeted known-busy entities covering five distinct action types.
 
 ### The actions envelope
 
@@ -85,8 +85,25 @@ entity under construction (the array is empty when the slot is idle):
   "attributes": { "uid": "2:7119317", "type": "ship", "href": "..." } } ] }
 ```
 
-Observed action types so far: `MiningAction`, `EntityProductionAction`,
-`RetoolingAction`.
+Observed action types so far (6): `MiningAction`, `EntityProductionAction`,
+`RetoolingAction`, `SublightTravelAction`, `AsteroidMiningSoloAction`, `CargoDelayAction`.
+
+**The action type set is open, and we have proof.** Targeted fetches kept yielding new
+types right up to the last one: the 6th fetch produced `AsteroidMiningSoloAction`, the
+8th produced `CargoDelayAction`. Six types from eight fetches, with no sign of
+saturation, and `AsteroidMiningSoloAction` implies non-solo variants we still have not
+seen. Any closed union over `attributes.type` would be wrong on arrival — see the
+`EntityActionType` open union in the design below.
+
+**Most action types are timer-only.** `SublightTravelAction`, `AsteroidMiningSoloAction`
+and `CargoDelayAction` carry nothing beyond `actiontype`, `status` and `delay`. Only
+`MiningAction`, `EntityProductionAction` and `RetoolingAction` add fields. The base shape
+is therefore the common case, not the fallback.
+
+**Actions attach to the entity doing the work, not the one benefiting.** Station
+`5:61544` is an asteroid mining station, but returns *no* `actions` — only `deposits`.
+The `AsteroidMiningSoloAction` lives on ship `2:6516289`, which mines for it. Consumers
+looking for "what is this station doing" cannot rely on the station's own `actions`.
 
 **Naming collision to be careful about:** `attributes.type` is a *string* class name
 (`"RetoolingAction"`), while a Retooling action's `value.type` is an *object ref* to the
@@ -122,8 +139,21 @@ undocumented and needs a JSDoc note on `list()`.
   (number), `hp`, `skills`, `controller`. `type` is sometimes `{}` rather than a ref.
 - **planets** — `planetaryStats` (`crime`, `morale`, `taxLevel`, `er`, `population`,
   `hireable`, `civLevel` — all numbers), `deposits`.
-- **facilities** — `deposits`, `energyremaining`, `ispowered`, `poweredby`, `crewlist`,
-  `orientation`, `underconstruction`. Only some facilities carry each.
+- **facilities** (61 samples, so the optionality rates below are meaningful) —
+  `facilityincome` 37/61, `ispowered` 46/61, `poweredby` 45/61, `energyremaining` 15/61,
+  `powergenconnectedto` 8/61, `deposits` 2/61, `actions` 2/61. `crewlist`, `orientation`
+  and `underconstruction` are always present.
+
+  **`facilityincome` is the "FI data" Clarr referred to** — FI being facility income /
+  tax income:
+
+  ```json
+  "facilityincome": { "currentdebt": 0, "income": 10013, "paiddebt": 0, "warnings": 0 }
+  ```
+
+  Two shape hazards: `income` and `paiddebt` are **absent** on some facilities
+  (`{ currentdebt, warnings }` only), and `warnings` is a **number in list payloads but
+  an object (`{}`) in detail payloads**. It must be typed `number | Record<string, unknown>`.
 - **creatures** — `hp`, `skills`, no hull/shield.
 - **ships** — `datablockstotal` / `datablocksused`, `crewlist`.
 - **materials** — `quantity`, no `creationdate`.
@@ -206,9 +236,28 @@ interface EntityActionValue {
   [key: string]: unknown;
 }
 
+/**
+ * Observed action types. This list is NOT exhaustive — the server has action types
+ * we have not seen, so it must never be modelled as a closed union.
+ */
+type KnownActionType =
+  | 'MiningAction'
+  | 'EntityProductionAction'
+  | 'RetoolingAction'
+  | 'SublightTravelAction'
+  | 'AsteroidMiningSoloAction'
+  | 'CargoDelayAction';
+
+/**
+ * `(string & {})` preserves autocomplete for the known literals while still accepting
+ * any string, so a new server-side action type degrades to the base shape rather than
+ * becoming a compile error for users on an older SDK version.
+ */
+type EntityActionType = KnownActionType | (string & {});
+
 interface EntityAction {
   /** `type` is the action class discriminator, e.g. "MiningAction". */
-  attributes: { type: string; id: number };
+  attributes: { type: EntityActionType; id: number };
   value: EntityActionValue;
 }
 
@@ -218,6 +267,25 @@ interface EntityActions { action: EntityAction[] }
 
 Action-specific fields are typed as optional properties on `EntityActionValue` once
 observed. The index signature keeps unobserved variants usable without a type assertion.
+
+**Narrowing via exported type guards**, rather than a discriminated union that would go
+stale the moment the server adds an action type:
+
+```ts
+export function isMiningAction(a: EntityAction): a is EntityAction & { value: MiningActionValue };
+export function isRetoolingAction(a: EntityAction): a is EntityAction & { value: RetoolingActionValue };
+export function isEntityProductionAction(a: EntityAction): a is EntityAction & { value: EntityProductionActionValue };
+```
+
+```ts
+if (isRetoolingAction(action)) {
+  action.value.type.value;  // EntityRef — "Behemoth-class Star Dreadnaught"
+}
+action.value.actiontype;    // always available, whatever the type
+```
+
+The guiding property: **an unrecognised action type degrades to the base shape rather
+than breaking the build.**
 
 ### 3. Per-type detail interfaces
 
@@ -278,18 +346,23 @@ per entity type in `tests/integration/`, run only on demand.
 
 ## Open items
 
-1. **Travel/movement actions uncaptured.** Mining, entity production, retooling and the
-   multi-action case are all captured from real payloads. A moving ship (and any docking
-   or hyperspace variant) has not been observed, so those remain typed only through the
-   index signature.
+1. **The action type set is open and only partially mapped.** Six types are captured;
+   `AsteroidMiningSoloAction` implies non-solo variants, and hyperspace travel, docking
+   and combat actions have not been observed. This is accepted by design rather than
+   treated as a blocker — the open union plus index signature means unseen types are
+   usable, just not narrowable. `KnownActionType` and the guard list grow as types are
+   observed; adding to them is always additive.
 
    Method note: 60 *random* detail fetches surfaced one action payload (~1-in-60, since
-   almost all entities are idle), while 3 *targeted* fetches of known-busy UIDs surfaced
-   every variant. Future gap-filling should ask the account holder for UIDs rather than
-   sweep.
-2. **Assign-type coverage.** Only `owner` was swept (plus `pilot`/`commander` for
+   almost all entities are idle), while 8 *targeted* fetches of known-busy UIDs surfaced
+   six distinct action types. Future gap-filling should ask the account holder for UIDs
+   rather than sweep.
+
+2. **Ask Clarr:** is a station's asteroid mining meant to be discoverable from the
+   station, or only from the mining ship? Today it is only on the ship.
+3. **Assign-type coverage.** Only `owner` was swept (plus `pilot`/`commander` for
    planets). Whether `commander`/`pilot` details differ is unverified.
-3. **`cities` and `creatures`** were sampled at 3 each from one account; field
+4. **`cities` and `creatures`** were sampled at 3 each from one account; field
    optionality across a wider population is inferred, not proven.
 
 ## Non-goals

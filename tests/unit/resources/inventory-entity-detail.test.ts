@@ -119,6 +119,32 @@ describe('inventory entity detail shape', () => {
     });
   });
 
+  describe('the action type set is open', () => {
+    // AsteroidMiningSoloAction was discovered only after four other types were already
+    // observed. Any closed union over attributes.type would have broken on it.
+    it('carries an action type beyond the first four observed', async () => {
+      const [action] = (await getEntity('ship-asteroid-mining.json')).actions!.action as any[];
+      expect(action.attributes.type).toBe('AsteroidMiningSoloAction');
+      expect(action.value.actiontype).toBe('Asteroid Mining Solo');
+      expect(action.value.delay.remaining).toBeGreaterThan(0);
+    });
+
+    it('handles timer-only action types with no extra fields', async () => {
+      const [action] = (await getEntity('ship-cargo-delay.json')).actions!.action as any[];
+      expect(action.attributes.type).toBe('CargoDelayAction');
+      expect(action.value.actiontype).toBe('Cargo Delay');
+      // Timer-only: nothing beyond actiontype/status/delay.
+      expect(Object.keys(action.value).sort()).toEqual(['actiontype', 'delay', 'status']);
+    });
+
+    // The mining action lives on the ship doing the work, not the station it mines for.
+    it('does not report actions on the station being mined for', async () => {
+      const station = await getEntity('station-asteroid-deposits.json');
+      expect(station.actions).toBeUndefined();
+      expect((station.deposits as any).deposit.length).toBeGreaterThan(0);
+    });
+  });
+
   describe('per-type fields the SDK does not yet model', () => {
     it('npc carries race, gender, level and skills', async () => {
       const npc = await getEntity('npc.json');

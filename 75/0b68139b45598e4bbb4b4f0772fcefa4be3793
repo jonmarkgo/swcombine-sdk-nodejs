@@ -1,0 +1,45 @@
+tests/unit/BaseResource.createPage.test.ts
+  s_e0a86d68eab627::t_81119ed5be39fb 27
+  s_e0a86d68eab627::t_3410ae6a4a0e25 187
+tests/unit/character-message-types.test.ts
+  s_e0a86d68eab627::t_110c6b08c0ec76 2,9-10
+package.json
+  s_e0a86d68eab627::t_1087579b235783 26
+tsconfig.typecheck.json
+  s_e0a86d68eab627::t_af9db980c8f837 1-3,6-9
+  s_e0a86d68eab627::t_55f3f0c0a86935 4-5
+tests/unit/resources/inventory-entity-detail.test.ts
+  s_e0a86d68eab627::t_07cb5734c1844c 270-272
+  s_e0a86d68eab627::t_3bfbc8a3126cea 81
+  s_e0a86d68eab627::t_3feb9ce5c6b035 112,116
+  s_e0a86d68eab627::t_fff0729a9a82a2 135,142-143
+  s_e0a86d68eab627::t_ba31b27025510f 156
+  s_e0a86d68eab627::t_4661cb9e7e6ace 187
+  s_e0a86d68eab627::t_41a5ba52bf2ea8 70-71
+  s_e0a86d68eab627::t_2b7763b9939fdc 126
+  s_e0a86d68eab627::t_df71a505f806f3 173
+  s_e0a86d68eab627::t_8c1f52480bb05e 60-61
+  s_e0a86d68eab627::t_1cbf4f7a8dad85 102
+  s_e0a86d68eab627::t_84779ed86d0f35 281
+  s_e0a86d68eab627::t_5ca0ae9b463209 221-222
+  s_e0a86d68eab627::t_cf70bca17fae63 149-150
+  s_e0a86d68eab627::t_73471d777b2e0e 165,167
+  s_e0a86d68eab627::t_7c6d7973a11629 212-213
+  s_e0a86d68eab627::t_ddaf879f21cb84 93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "750b68139b45598e4bbb4b4f0772fcefa4be3793",
+  "prompts": {},
+  "sessions": {
+    "s_e0a86d68eab627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6908dc-8994-4ee5-9241-0f8e34da658e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

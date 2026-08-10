@@ -129,6 +129,22 @@ describe('inventory entity detail shape', () => {
       expect(action.value.delay.remaining).toBeGreaterThan(0);
     });
 
+    // The same attributes.type does NOT imply the same value shape: an NPC running
+    // Entity Production has none of the production fields a facility/station carries.
+    it('varies an action type\'s value shape by carrying entity', async () => {
+      const [npcAction] = (await getEntity('npc-producing.json')).actions!.action as any[];
+      expect(npcAction.attributes.type).toBe('EntityProductionAction');
+      expect(Object.keys(npcAction.value).sort()).toEqual(['actiontype', 'delay', 'status']);
+      expect(npcAction.value.quantity).toBeUndefined();
+      expect(npcAction.value.workers).toBeUndefined();
+      expect(npcAction.value.producing).toBeUndefined();
+
+      const [facAction] = (await getEntity('facility-producing-batch.json')).actions!
+        .action as any[];
+      expect(facAction.attributes.type).toBe('EntityProductionAction');
+      expect(facAction.value.producing.entity).toHaveLength(12);
+    });
+
     it('carries an eighth action type, found after the design was drafted', async () => {
       const [action] = (await getEntity('ship-asteroid-prospecting.json')).actions!
         .action as any[];

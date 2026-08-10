@@ -35,7 +35,7 @@ never received the same treatment. This design closes that gap.
 ## Evidence
 
 All shapes below were captured live on 2026-08-10 from character `1:46931` and faction
-`20:502`, 150 API calls total. Raw payloads are in the capture set (see Testing).
+`20:502`, 156 API calls total. Raw payloads are in the capture set (see Testing).
 
 Coverage: all 11 entity types, 100+ detail payloads (61 facilities alone), including 10
 targeted known-busy entities covering six distinct action types.
@@ -124,6 +124,22 @@ inference, and the SDK should not ship a helper that implies otherwise.
 `5:61544` is an asteroid mining station, but returns *no* `actions` — only `deposits`.
 The `AsteroidMiningSoloAction` lives on ship `2:6516289`, which mines for it. Consumers
 looking for "what is this station doing" cannot rely on the station's own `actions`.
+
+**The same action type has different value shapes on different entities.** An
+`EntityProductionAction` carries `quantity`, `workers` and `producing` on facilities and
+stations, but on NPC `10:19841393` it carries only `actiontype`, `status` and `delay`:
+
+| Carrying entity | `EntityProductionAction` value keys |
+| --- | --- |
+| NPC `10:19841393` | `actiontype, status, delay` |
+| facility `4:5648314` | `actiontype, status, delay, quantity, workers, producing` |
+| station `5:13116` | `actiontype, status, delay, quantity, workers, producing` |
+| station `5:718` | `actiontype, quantity, workers, producing` |
+
+This is decisive for the type design: **every action-specific field must be optional even
+within a known action type.** A type guard may tell you *which* action you have; it can
+never guarantee a field is present. Per-action value interfaces therefore declare all
+extras as optional and callers must still check.
 
 **Naming collision to be careful about:** `attributes.type` is a *string* class name
 (`"RetoolingAction"`), while a Retooling action's `value.type` is an *object ref* to the

@@ -35,7 +35,7 @@ never received the same treatment. This design closes that gap.
 ## Evidence
 
 All shapes below were captured live on 2026-08-10 from character `1:46931` and faction
-`20:502`, 156 API calls total. Raw payloads are in the capture set (see Testing).
+`20:502`, 430 API calls total. Raw payloads are in the capture set (see Testing).
 
 Coverage: all 11 entity types, 100+ detail payloads (61 facilities alone), including 10
 targeted known-busy entities covering six distinct action types.
@@ -141,6 +141,13 @@ within a known action type.** A type guard may tell you *which* action you have;
 never guarantee a field is present. Per-action value interfaces therefore declare all
 extras as optional and callers must still check.
 
+**`attributes.id` links an action across participating entities.** Facility `4:3497164`
+and NPC `10:11522468` both report a `MiningAction` with id `183524884` — the NPC is a
+worker on that facility's operation. The facility carries the rich view (`expected-yield`,
+`expected-cost`, `workers`, `droids`); the worker's copy is stripped to
+`actiontype`/`status`/`delay`. Droid `13:1463521` shows the same stripped form. Consumers
+can group related actions by `attributes.id`.
+
 **Naming collision to be careful about:** `attributes.type` is a *string* class name
 (`"RetoolingAction"`), while a Retooling action's `value.type` is an *object ref* to the
 type being retooled to. Same key name, different level, different shape.
@@ -217,6 +224,15 @@ undocumented and needs a JSDoc note on `list()`.
 
 ```ts
 interface EntityRef { attributes: { uid: string; href: string }; value: string }
+
+/**
+ * Only `small` and `large` are guaranteed. Facilities (73/73), materials, NPCs and
+ * creatures return just those two; some cities return `customsmall` with no
+ * `customlarge`. The existing `EntityImages` declared all four as required — fixed.
+ */
+interface EntityImages {
+  small: string; large: string; customsmall?: string; customlarge?: string;
+}
 interface EntityGender { attributes: { gender: string }; value: string }
 interface EntityCreationDate {
   years: number; days: number; hours: number; mins: number; secs: number; timestamp: number;
@@ -236,6 +252,13 @@ interface EntityCargo {
   weightcapacity?: EntityCapacity;
   volumecapacity?: EntityCapacity;
   passengercapacity?: EntityCapacity;
+  /**
+   * Cargo-container items only (16 of 32 items sampled): what the container holds and
+   * how many uses remain. `cargo` is therefore not purely a capacity block.
+   */
+  entitytype?: EntityTypeRef;
+  maxuses?: number;
+  remaininguses?: number;
 }
 interface EntitySkill { attributes: { type: string }; value: number }
 interface EntitySkillGroup {

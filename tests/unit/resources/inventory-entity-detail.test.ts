@@ -246,6 +246,62 @@ describe('inventory entity detail shape', () => {
     });
   });
 
+  describe('shapes found by broad sampling', () => {
+    // EntityImages declared all four keys as required; most entities return only two.
+    it('omits custom image variants on most entity types', async () => {
+      const facility = await getEntity('facility-mining.json');
+      expect(Object.keys(facility.images as any).sort()).toEqual(['large', 'small']);
+
+      const ship = await getEntity('ship-idle.json');
+      expect(ship.images).toHaveProperty('customlarge');
+    });
+
+    // `cargo` is not purely a capacity block on cargo-container items.
+    it('carries container contents and use counts inside cargo', async () => {
+      const cargo = (await getEntity('item-cargo-container.json')).cargo as any;
+      expect(cargo.entitytype.value).toBe('Standard Flight Suit');
+      expect(cargo.maxuses).toBe(35);
+      expect(cargo.remaininguses).toBe(35);
+      expect(cargo.weightcapacity).toEqual({ total: 0, remaining: 0 });
+    });
+
+    // Action ids are shared by every entity participating in the action.
+    it('shares an action id between a facility and its worker NPC', async () => {
+      const [facilityAction] = (await getEntity('facility-mining.json')).actions!
+        .action as any[];
+      const [npcAction] = (await getEntity('npc-mining-worker.json')).actions!.action as any[];
+
+      expect(npcAction.attributes.id).toBe(facilityAction.attributes.id);
+      // The facility holds the rich view; the worker's copy is stripped.
+      expect(facilityAction.value.workers).toBe(12);
+      expect(npcAction.value.workers).toBeUndefined();
+    });
+
+    it('reports a stripped mining action on droids too', async () => {
+      const [action] = (await getEntity('droid-mining.json')).actions!.action as any[];
+      expect(action.attributes.type).toBe('MiningAction');
+      expect(Object.keys(action.value).sort()).toEqual(['actiontype', 'delay', 'status']);
+    });
+
+    // Three-state power model: generators carry energyremaining and no ispowered;
+    // consumers carry ispowered + poweredby pointing back at their generator.
+    it('identifies a power generator by energyremaining', async () => {
+      const pg = await getEntity('facility-powergen.json');
+      expect(typeof pg.energyremaining).toBe('number');
+      expect(pg.ispowered).toBeUndefined();
+      expect(pg.poweredby).toBeUndefined();
+    });
+
+    it('links a powered consumer back to its generator', async () => {
+      const consumer = await getEntity('facility-powered-consumer.json');
+      const generator = await getEntity('facility-powergen.json');
+
+      expect(consumer.ispowered).toBe('Yes');
+      expect(consumer.energyremaining).toBeUndefined();
+      expect((consumer.poweredby as any).pg[0].attributes.uid).toBe(generator.uid);
+    });
+  });
+
   describe('per-type fields the SDK does not yet model', () => {
     it('npc carries race, gender, level and skills', async () => {
       const npc = await getEntity('npc.json');

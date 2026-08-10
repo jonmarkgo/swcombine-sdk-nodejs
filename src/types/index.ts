@@ -1061,11 +1061,19 @@ export interface EntityReference {
 /**
  * Entity image URLs
  */
+/**
+ * Entity image URLs.
+ *
+ * Only `small` and `large` are always present. The custom variants depend on entity
+ * type and on whether a custom image has been uploaded — facilities, materials, NPCs
+ * and creatures return `{small, large}` only, and some cities return `customsmall`
+ * without `customlarge`.
+ */
 export interface EntityImages {
   small: string;
   large: string;
-  customsmall: string;
-  customlarge: string;
+  customsmall?: string;
+  customlarge?: string;
 }
 
 /**

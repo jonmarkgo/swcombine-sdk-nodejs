@@ -1,0 +1,24 @@
+docs/superpowers/specs/2026-08-10-inventory-entity-detail-types-design.md
+  s_e0a86d68eab627::t_a8e7af7cd6640f 89,100-109,233-236,238,299
+  s_e0a86d68eab627::t_c384abcaac5887 174-186
+  s_e0a86d68eab627::t_5a77f424221e7f 38,88,90,94-96,300-301,401
+tests/unit/resources/inventory-entity-detail.test.ts
+  s_e0a86d68eab627::t_b67f6abd907144 132-138
+  s_e0a86d68eab627::t_aaaa856ee7c3a6 155-211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "fb3933c57e08cea04e9b73763479e4d1c812ce16",
+  "prompts": {},
+  "sessions": {
+    "s_e0a86d68eab627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6908dc-8994-4ee5-9241-0f8e34da658e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

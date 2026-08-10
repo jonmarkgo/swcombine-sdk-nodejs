@@ -129,6 +129,13 @@ describe('inventory entity detail shape', () => {
       expect(action.value.delay.remaining).toBeGreaterThan(0);
     });
 
+    it('carries an eighth action type, found after the design was drafted', async () => {
+      const [action] = (await getEntity('ship-asteroid-prospecting.json')).actions!
+        .action as any[];
+      expect(action.attributes.type).toBe('AsteroidProspectingAction');
+      expect(action.value.actiontype).toBe('Asteroid Prospecting');
+    });
+
     it('handles timer-only action types with no extra fields', async () => {
       const [action] = (await getEntity('ship-cargo-delay.json')).actions!.action as any[];
       expect(action.attributes.type).toBe('CargoDelayAction');
@@ -142,6 +149,63 @@ describe('inventory entity detail shape', () => {
       const station = await getEntity('station-asteroid-deposits.json');
       expect(station.actions).toBeUndefined();
       expect((station.deposits as any).deposit.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('facilities', () => {
+    it('reports a batch production as one action with many produced entities', async () => {
+      const [action] = (await getEntity('facility-producing-batch.json')).actions!.action as any[];
+      expect(action.attributes.type).toBe('EntityProductionAction');
+      expect(action.value.quantity).toBe(12);
+      // producing.entity length tracks quantity — a genuine variable-length array.
+      expect(action.value.producing.entity).toHaveLength(12);
+    });
+
+    it('exposes tooledto alongside production', async () => {
+      const facility = await getEntity('facility-producing-batch.json');
+      expect((facility.tooledto as any).value).toBe('Toscan 8-Q Starfighter');
+      expect((facility.tooledto as any).attributes.uid).toBe('2:123');
+    });
+
+    it('carries a seventh action type with only workers beyond the timer', async () => {
+      const [action] = (await getEntity('facility-construction.json')).actions!.action as any[];
+      expect(action.attributes.type).toBe('FacilityConstructionAction');
+      expect(action.value.actiontype).toBe('Facility Construction');
+      expect(action.value.workers).toBe(1);
+      expect(action.value.status).toBe('paused');
+    });
+
+    it('omits income and paiddebt on some facilityincome payloads', async () => {
+      const income = (await getEntity('facility-construction.json')).facilityincome as any;
+      expect(income.currentdebt).toBe(0);
+      expect(income.income).toBeUndefined();
+      expect(income.paiddebt).toBeUndefined();
+      // `warnings` is an object here but a number in list payloads.
+      expect(typeof income.warnings).toBe('object');
+    });
+
+    it('omits poweredby entirely when unpowered', async () => {
+      const facility = await getEntity('facility-unpowered.json');
+      expect(facility.ispowered).toBe('No');
+      expect(facility.poweredby).toBeUndefined();
+      expect(facility.energyremaining).toBeUndefined();
+    });
+
+    // Facility deposits lack the x/y that planet and station deposits carry.
+    it('omits x/y on facility deposits', async () => {
+      const [deposit] = (await getEntity('facility-mining-deposits.json')).deposits!
+        .deposit as any[];
+      expect(deposit.value).toBe('alazhi');
+      expect(deposit.attributes.quantity).toBeGreaterThan(0);
+      expect(deposit.attributes.x).toBeUndefined();
+      expect(deposit.attributes.y).toBeUndefined();
+    });
+
+    it('includes x/y on station deposits', async () => {
+      const [deposit] = (await getEntity('station-asteroid-deposits.json')).deposits!
+        .deposit as any[];
+      expect(typeof deposit.attributes.x).toBe('number');
+      expect(typeof deposit.attributes.y).toBe('number');
     });
   });
 

@@ -35,7 +35,7 @@ never received the same treatment. This design closes that gap.
 ## Evidence
 
 All shapes below were captured live on 2026-08-10 from character `1:46931` and faction
-`20:502`, 145 API calls total. Raw payloads are in the capture set (see Testing).
+`20:502`, 150 API calls total. Raw payloads are in the capture set (see Testing).
 
 Coverage: all 11 entity types, 100+ detail payloads (61 facilities alone), including 10
 targeted known-busy entities covering six distinct action types.
@@ -85,20 +85,28 @@ entity under construction (the array is empty when the slot is idle):
   "attributes": { "uid": "2:7119317", "type": "ship", "href": "..." } } ] }
 ```
 
-Observed action types so far (6): `MiningAction`, `EntityProductionAction`,
-`RetoolingAction`, `SublightTravelAction`, `AsteroidMiningSoloAction`, `CargoDelayAction`.
+Observed action types so far (8): `MiningAction`, `EntityProductionAction`,
+`RetoolingAction`, `SublightTravelAction`, `AsteroidMiningSoloAction`, `CargoDelayAction`,
+`FacilityConstructionAction`, `AsteroidProspectingAction`.
 
 **The action type set is open, and we have proof.** Targeted fetches kept yielding new
 types right up to the last one: the 6th fetch produced `AsteroidMiningSoloAction`, the
-8th produced `CargoDelayAction`. Six types from eight fetches, with no sign of
-saturation, and `AsteroidMiningSoloAction` implies non-solo variants we still have not
+8th `CargoDelayAction`, the 13th `FacilityConstructionAction`, the 15th
+`AsteroidProspectingAction`. **Eight types from fifteen targeted fetches, still finding
+new ones on the last attempt** — the set is nowhere near enumerated, and `AsteroidMiningSoloAction` implies non-solo variants we still have not
 seen. Any closed union over `attributes.type` would be wrong on arrival — see the
 `EntityActionType` open union in the design below.
 
-**Most action types are timer-only.** `SublightTravelAction`, `AsteroidMiningSoloAction`
-and `CargoDelayAction` carry nothing beyond `actiontype`, `status` and `delay`. Only
-`MiningAction`, `EntityProductionAction` and `RetoolingAction` add fields. The base shape
-is therefore the common case, not the fallback.
+**Many action types are timer-only.** `SublightTravelAction`, `AsteroidMiningSoloAction`
+and `CargoDelayAction` carry nothing beyond `actiontype`, `status` and `delay`.
+`FacilityConstructionAction` adds only `workers`. The base shape is therefore the common
+case, not the fallback.
+
+**`producing.entity[]` length tracks `quantity`.** Facility `4:5648314` runs a single
+`EntityProductionAction` with `quantity: 12` and twelve ship refs in `producing.entity`.
+Earlier samples showed one and zero, so this is a genuine variable-length array. Note
+also that `EntityProductionAction` appears on **facilities as well as stations**, and
+that `tooledto` (a ref to the type being built) accompanies it on both.
 
 **Asteroid mining reports no resource or yield.** Ships `2:6516362` and `2:6516607` mine
 *different* resources for the same station, yet their payloads are byte-identical apart
@@ -163,6 +171,19 @@ undocumented and needs a JSDoc note on `list()`.
   "facilityincome": { "currentdebt": 0, "income": 10013, "paiddebt": 0, "warnings": 0 }
   ```
 
+  **Facility power is a three-state pattern**, verified across all 65 facility samples
+  and mutually exclusive:
+
+  | Count | `ispowered` | `poweredby` | `energyremaining` | Meaning |
+  | --- | --- | --- | --- | --- |
+  | 48 | `"Yes"` | present | absent | consumer, externally powered |
+  | 15 | *absent* | absent | present | the facility **is** a power generator |
+  | 2 | `"No"` | absent | absent | unpowered |
+
+  So `energyremaining` identifies generators, while `ispowered`/`poweredby` describe
+  consumers. All three fields must be optional, and `poweredby` is absent rather than
+  empty when a facility is unpowered.
+
   Two shape hazards: `income` and `paiddebt` are **absent** on some facilities
   (`{ currentdebt, warnings }` only), and `warnings` is a **number in list payloads but
   an object (`{}`) in detail payloads**. It must be typed `number | Record<string, unknown>`.
@@ -209,8 +230,12 @@ interface EntitySkills {
   general?: EntitySkillGroup[]; space?: EntitySkillGroup[]; ground?: EntitySkillGroup[];
   social?: EntitySkillGroup[]; science?: EntitySkillGroup[];
 }
+/**
+ * `x`/`y` are present on planet and station deposits (63/63 observed) but absent on
+ * facility deposits (3/3 observed), so they must be optional.
+ */
 interface EntityDeposit {
-  attributes: { uid: string; href: string; quantity: number; x: number; y: number };
+  attributes: { uid: string; href: string; quantity: number; x?: number; y?: number };
   value: string;
 }
 interface EntityDeposits { deposit: EntityDeposit[] }
@@ -271,7 +296,9 @@ type KnownActionType =
   | 'RetoolingAction'
   | 'SublightTravelAction'
   | 'AsteroidMiningSoloAction'
-  | 'CargoDelayAction';
+  | 'CargoDelayAction'
+  | 'FacilityConstructionAction'
+  | 'AsteroidProspectingAction';
 
 /**
  * `(string & {})` preserves autocomplete for the known literals while still accepting
@@ -371,7 +398,7 @@ per entity type in `tests/integration/`, run only on demand.
 
 ## Open items
 
-1. **The action type set is open and only partially mapped.** Six types are captured;
+1. **The action type set is open and only partially mapped.** Eight types are captured;
    `AsteroidMiningSoloAction` implies non-solo variants, and hyperspace travel, docking
    and combat actions have not been observed. This is accepted by design rather than
    treated as a blocker — the open union plus index signature means unseen types are

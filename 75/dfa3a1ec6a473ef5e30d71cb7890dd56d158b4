@@ -1,0 +1,100 @@
+tests/unit/inventory-detail-types.test.ts
+  s_e0a86d68eab627::t_ceb0fadf87e6bb 24-25,29-32,41-42
+  s_e0a86d68eab627::t_787342780f4cfe 14
+  s_e0a86d68eab627::t_d26271030729af 13
+  s_e0a86d68eab627::t_360b699b49b719 26-28,33-40
+src/inventory-actions.ts
+  s_e0a86d68eab627::t_6b14c5f12b2b8e 9-14
+docs/superpowers/plans/2026-08-10-inventory-entity-detail-types.md
+  s_e0a86d68eab627::t_4c8598eac4957c 11-18
+tests/unit/inventory-actions.test.ts
+  s_e0a86d68eab627::t_9ffd7f24b837f2 12
+src/types/inventory-detail.ts
+  s_e0a86d68eab627::t_fc853f96e41870 155-161
+  s_e0a86d68eab627::t_335d6b261e2d39 236-240
+  s_e0a86d68eab627::t_8f75facbea1aa6 5
+tests/unit/resources/inventory-entity-detail.test.ts
+  s_e0a86d68eab627::t_7aedc041340a0c 9
+  s_e0a86d68eab627::t_6dce97e705b0a7 368-389
+  s_e0a86d68eab627::t_70d0afaafa190f 440-503
+docs/superpowers/specs/2026-08-10-inventory-entity-detail-types-design.md
+  s_e0a86d68eab627::t_a42ffa87f035da 418-421
+CHANGELOG.md
+  s_e0a86d68eab627::t_caf21a4054ff89 38-42
+package-lock.json
+  s_e0a86d68eab627::t_7817fefe69c477 3,9
+tests/unit/fixtures/inventory/README.md
+  s_e0a86d68eab627::t_85873d5f49d4e7 1-35
+tests/unit/fixtures/inventory/city.json
+  s_e0a86d68eab627::t_358f07d7ea7b8c 1-784
+tests/unit/fixtures/inventory/creature.json
+  s_e0a86d68eab627::t_b6a0ff69393757 1-327
+tests/unit/fixtures/inventory/droid-mining.json
+  s_e0a86d68eab627::t_6b571c9d1d4076 1-171
+tests/unit/fixtures/inventory/droid.json
+  s_e0a86d68eab627::t_da84ebed773549 1-142
+tests/unit/fixtures/inventory/facility-construction.json
+  s_e0a86d68eab627::t_4e6a35709d1e98 1-195
+tests/unit/fixtures/inventory/facility-mining-deposits.json
+  s_e0a86d68eab627::t_4f3783ab7dd293 1-207
+tests/unit/fixtures/inventory/facility-mining-paused.json
+  s_e0a86d68eab627::t_2bd3d12d3a43b3 1-212
+tests/unit/fixtures/inventory/facility-mining.json
+  s_e0a86d68eab627::t_0e2adac75c6712 1-212
+tests/unit/fixtures/inventory/facility-powered-consumer.json
+  s_e0a86d68eab627::t_d7fe88b8c92192 1-172
+tests/unit/fixtures/inventory/facility-powergen.json
+  s_e0a86d68eab627::t_562129db046923 1-160
+tests/unit/fixtures/inventory/facility-producing-batch.json
+  s_e0a86d68eab627::t_90f9b5cc42d68f 1-711
+tests/unit/fixtures/inventory/facility-unpowered.json
+  s_e0a86d68eab627::t_8959ebddc3f192 1-164
+tests/unit/fixtures/inventory/item-cargo-container.json
+  s_e0a86d68eab627::t_41e39da25fd369 1-115
+tests/unit/fixtures/inventory/item.json
+  s_e0a86d68eab627::t_f6c616622fb0f7 1-114
+tests/unit/fixtures/inventory/material.json
+  s_e0a86d68eab627::t_d4a0045f7781b8 1-81
+tests/unit/fixtures/inventory/npc-mining-worker.json
+  s_e0a86d68eab627::t_fa77a8b5ca78e9 1-382
+tests/unit/fixtures/inventory/npc-producing.json
+  s_e0a86d68eab627::t_d2001da4346abb 1-354
+tests/unit/fixtures/inventory/npc.json
+  s_e0a86d68eab627::t_ec8f85f7d72793 1-364
+tests/unit/fixtures/inventory/planet.json
+  s_e0a86d68eab627::t_9a2e837bbd542e 1-145
+tests/unit/fixtures/inventory/ship-asteroid-mining.json
+  s_e0a86d68eab627::t_cb86216ddba064 1-157
+tests/unit/fixtures/inventory/ship-asteroid-prospecting.json
+  s_e0a86d68eab627::t_0ab93d7dd2b63c 1-164
+tests/unit/fixtures/inventory/ship-cargo-delay.json
+  s_e0a86d68eab627::t_f27c917ff34015 1-157
+tests/unit/fixtures/inventory/ship-idle.json
+  s_e0a86d68eab627::t_5bd95f6fdcf0b8 1-148
+tests/unit/fixtures/inventory/ship-sublight-travel.json
+  s_e0a86d68eab627::t_8068716c0f7462 1-157
+tests/unit/fixtures/inventory/station-asteroid-deposits.json
+  s_e0a86d68eab627::t_fbf884a2fd63ae 1-371
+tests/unit/fixtures/inventory/station-multi-action.json
+  s_e0a86d68eab627::t_48e495bfb99031 1-403
+tests/unit/fixtures/inventory/station-producing.json
+  s_e0a86d68eab627::t_c7e9caab273936 1-366
+tests/unit/fixtures/inventory/vehicle.json
+  s_e0a86d68eab627::t_abd80896a642cd 1-151
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "75dfa3a1ec6a473ef5e30d71cb7890dd56d158b4",
+  "prompts": {},
+  "sessions": {
+    "s_e0a86d68eab627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6908dc-8994-4ee5-9241-0f8e34da658e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

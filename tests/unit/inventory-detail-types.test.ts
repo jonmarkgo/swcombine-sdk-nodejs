@@ -13,6 +13,17 @@ import type {
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures/inventory');
 const load = <T>(file: string): T => JSON.parse(readFileSync(join(FIXTURES, file), 'utf8')) as T;
 
+// Compile-time only: never called. Proves get() narrows by entityType — an
+// NPC-only field is not reachable on a ships result. `ship` here keeps its
+// real `ShipEntityDetail` type (unlike a narrowed-to-`never` runtime guard
+// would), so the suppressed error below is the genuine one: `race` resolves
+// through BaseEntityDetail's `[key: string]: unknown` index signature, and
+// chaining `.value` off `unknown` is a type error.
+function _assertShipDoesNotExposeNpcFields(ship: ShipEntityDetail) {
+  // @ts-expect-error - `race` is NPC-only; on a ship it is `unknown`, so chaining errors.
+  void ship.race.value;
+}
+
 describe('inventory detail interfaces', () => {
   it('types a ship', () => {
     const ship = load<ShipEntityDetail>('ship-idle.json');
@@ -29,15 +40,13 @@ describe('inventory detail interfaces', () => {
     // `race` is not declared on ShipEntityDetail. BaseEntityDetail's
     // `[key: string]: unknown` index signature lets `ship.race` compile (as
     // `unknown`), but chaining into `.value` the way NpcEntityDetail callers do
-    // must fail to compile — that is the whole point of per-type narrowing. If
-    // this `@ts-expect-error` ever reports as unused, narrowing has regressed and
-    // that should be reported, not silently deleted.
-    // Guarded by an always-false runtime check so `npm run typecheck` still
-    // checks this branch, but it never actually executes (ship.race is undefined).
-    if (typeof ship === 'undefined') {
-      // @ts-expect-error - `race` is `unknown` here, not a ref object with `.value`.
-      void ship.race.value;
-    }
+    // must fail to compile — that is the whole point of per-type narrowing. See
+    // `_assertShipDoesNotExposeNpcFields` above: it is never called (this is a
+    // compile-time-only check), which keeps `ship`'s real `ShipEntityDetail`
+    // type intact so the suppressed error is the genuine narrowing failure,
+    // not an unrelated `never`-has-no-properties error. If the
+    // `@ts-expect-error` there ever reports as unused, narrowing has
+    // regressed and that should be reported, not silently deleted.
   });
 
   it('types an npc including race, gender and level', () => {

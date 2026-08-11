@@ -1099,6 +1099,16 @@ export interface EntityTypeRef {
  * Coordinate set with galaxy, system, surface, and ground positions
  * Fields are optional to guard against unpredictable API responses.
  */
+/**
+ * Coordinate set with galaxy, system, surface, and ground positions.
+ *
+ * **A ship in hyperspace has no coordinates.** While a `HyperspaceTravelAction` is
+ * running, every coordinate entry is returned as an empty object `{}` — as are
+ * `sector`, `system`, `planet` and `city` on the surrounding `EntityLocation`. Only
+ * `EntityLocation.container` stays populated. Always guard before reading, e.g.
+ * `entity.location?.coordinates?.galaxy?.attributes?.x`, or a ship that happens to
+ * jump to hyperspace will throw at runtime.
+ */
 export interface EntityCoordinates {
   galaxy?: { attributes?: { x: number; y: number } | null };
   system?: { attributes?: { x: string; y: string } | null };

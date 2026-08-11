@@ -122,6 +122,46 @@ describe('inventory entity detail shape', () => {
     });
   });
 
+  describe('hyperspace travel', () => {
+    it('reports a ninth action type, found after v3.4.0 shipped', async () => {
+      const [action] = (await getEntity('ship-hyperspace-travel.json', 'ships')).actions!
+        .action as unknown as Array<Record<string, never>>;
+      const a = action as unknown as {
+        attributes: { type: string };
+        value: Record<string, unknown>;
+      };
+      expect(a.attributes.type).toBe('HyperspaceTravelAction');
+      expect(a.value.actiontype).toBe('Hyperspace Travel');
+      // Timer-only, like the other travel actions.
+      expect(Object.keys(a.value).sort()).toEqual(['actiontype', 'delay', 'status']);
+    });
+
+    // A ship in hyperspace loses every coordinate and location ref except container.
+    // Code doing coordinates.galaxy.attributes.x would throw on this payload.
+    it('returns empty coordinates and location refs while in hyperspace', async () => {
+      const ship = await getEntity('ship-hyperspace-travel.json', 'ships');
+      const loc = ship.location!;
+
+      expect(loc.coordinates!.galaxy).toEqual({});
+      expect(loc.coordinates!.system).toEqual({});
+      expect(loc.coordinates!.surface).toEqual({});
+      expect(loc.coordinates!.ground).toEqual({});
+      expect(loc.sector).toEqual({});
+      expect(loc.planet).toEqual({});
+
+      // container is the one thing that survives
+      expect((loc.container as { attributes: { type: string } }).attributes.type).toBe('system');
+
+      // The optional-chaining guard the JSDoc recommends stays safe.
+      expect(ship.location?.coordinates?.galaxy?.attributes?.x).toBeUndefined();
+    });
+
+    it('still populates coordinates for a ship travelling sublight', async () => {
+      const ship = await getEntity('ship-sublight-travel.json', 'ships');
+      expect(ship.location?.coordinates?.galaxy?.attributes).toBeTruthy();
+    });
+  });
+
   describe('the action type set is open', () => {
     // AsteroidMiningSoloAction was discovered only after four other types were already
     // observed. Any closed union over attributes.type would have broken on it.

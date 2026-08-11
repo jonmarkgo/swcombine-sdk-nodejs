@@ -33,3 +33,4 @@ Owner/commander/pilot identities, crew lists and infotext are scrubbed.
 | `item-cargo-container.json` | cargo container: entitytype/maxuses/remaininguses inside cargo |
 | `facility-powergen.json` | power generator: energyremaining, no ispowered/poweredby |
 | `facility-powered-consumer.json` | consumer: ispowered=Yes, poweredby -> the generator above |
+| `ship-hyperspace-travel.json` | HyperspaceTravelAction (9th type, timer-only) |

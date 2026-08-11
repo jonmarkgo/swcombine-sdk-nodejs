@@ -49,3 +49,6 @@ tests/integration/api-responses/
 
 # Superpowers SDD scratch (ledger, briefs, review packages)
 .superpowers/
+
+# Superpowers planning docs (kept locally, not published)
+docs/superpowers/

@@ -1,5 +1,24 @@
 # Changelog
 
+## 3.4.1
+
+### Added
+
+- `HyperspaceTravelAction` added to `KnownActionType`, bringing the observed set to
+  nine. It was found the day after 3.4.0 shipped. Because `EntityActionType` is an
+  open union, 3.4.0 consumers could already read this action type — this only adds
+  autocomplete for it.
+- Documented that **a ship in hyperspace has no coordinates.** While a
+  `HyperspaceTravelAction` is running, every entry in `EntityCoordinates` is returned
+  as an empty object, as are `sector`, `system`, `planet` and `city` on
+  `EntityLocation`; only `container` stays populated. Code reading
+  `location.coordinates.galaxy.attributes.x` without optional chaining will throw when
+  a ship jumps to hyperspace.
+
+### Changed
+
+- Planning documents under `docs/superpowers/` are no longer tracked in the repository.
+
 ## 3.4.0
 
 ### Added

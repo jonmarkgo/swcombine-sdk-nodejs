@@ -1,0 +1,21 @@
+tests/unit/inventory-detail-types.test.ts
+  s_e0a86d68eab627::t_b69feeb91efad9 16-26
+  s_e0a86d68eab627::t_d0fc96706b803d 44
+  s_e0a86d68eab627::t_f40549dc5aabc0 43,45-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "ece1f547fbaefc8501e4a6251eff49b6da41b600",
+  "prompts": {},
+  "sessions": {
+    "s_e0a86d68eab627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6908dc-8994-4ee5-9241-0f8e34da658e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

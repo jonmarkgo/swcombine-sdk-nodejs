@@ -833,7 +833,119 @@ In `src/resources/InventoryResource.ts`, add `InventoryEntityDetailMap` to the e
   }
 ```
 
-- [ ] **Step 5: Verify**
+- [ ] **Step 5: Normalize skill values**
+
+The API returns non-zero skill values inconsistently as `number` or `string` — the
+identical value arrives as both `1` and `"1"`, across all five skill groups, with no
+predictable rule. Zero is always a number. Verified across 39 NPC/creature captures:
+68 of 875 values were strings.
+
+Per an explicit decision from the repo owner, the SDK normalizes these to `number`
+rather than exposing `number | string`. This is the only place the SDK rewrites an API
+response, so keep it narrow and well-commented.
+
+Add to `src/resources/InventoryResource.ts`, above the class:
+
+```ts
+/**
+ * Coerce skill values to numbers.
+ *
+ * The API returns non-zero skill values inconsistently — the same value appears as
+ * both `1` and `"1"`, in every skill group, with no rule that predicts which. Zero is
+ * always numeric. Normalizing here lets `EntitySkill.value` be honestly typed
+ * `number` for consumers.
+ *
+ * This mutates nothing the caller owns: it operates on the freshly parsed response.
+ */
+function normalizeSkillValues(entity: unknown): void {
+  const skills = (entity as { skills?: Record<string, unknown> })?.skills;
+  if (!skills || typeof skills !== 'object') return;
+
+  for (const group of Object.values(skills)) {
+    if (!Array.isArray(group)) continue;
+    for (const set of group) {
+      const list = (set as { skill?: unknown })?.skill;
+      if (!Array.isArray(list)) continue;
+      for (const skill of list) {
+        const entry = skill as { value?: unknown };
+        if (typeof entry?.value === 'string' && entry.value.trim() !== '') {
+          const asNumber = Number(entry.value);
+          if (!Number.isNaN(asNumber)) entry.value = asNumber;
+        }
+      }
+    }
+  }
+}
+```
+
+Then call it in `get()` before returning:
+
+```ts
+  async get<T extends InventoryEntityType>(
+    options: GetEntityOptions<T>
+  ): Promise<InventoryEntityDetailMap[T]> {
+    const entity = await this.request<InventoryEntityDetailMap[T]>(
+      'GET',
+      `/inventory/${options.entityType}/${options.uid}`
+    );
+    normalizeSkillValues(entity);
+    return entity;
+  }
+```
+
+- [ ] **Step 6: Test the normalization**
+
+Append to `tests/unit/resources/inventory-entity-detail.test.ts`, inside the outermost `describe`:
+
+```ts
+  describe('skill value normalization', () => {
+    it('coerces string skill values to numbers', async () => {
+      const http = createMockHttpClient();
+      http.get.mockResolvedValue({
+        uid: '10:1',
+        entitytype: 'NPC',
+        skills: {
+          social: [{ attributes: { force: 'false', count: 2 },
+                     skill: [{ attributes: { type: 'crafting' }, value: '3' },
+                             { attributes: { type: 'medical' }, value: 0 }] }],
+        },
+      });
+      const resource = new InventoryEntitiesResource(http as never);
+      const npc = await resource.get({ entityType: 'npcs', uid: '10:1' });
+
+      const social = npc.skills!.social![0].skill;
+      expect(social[0].value).toBe(3);
+      expect(typeof social[0].value).toBe('number');
+      expect(social[1].value).toBe(0);
+    });
+
+    it('leaves entities without skills untouched', async () => {
+      const http = createMockHttpClient();
+      http.get.mockResolvedValue(fixture('ship-idle.json'));
+      const resource = new InventoryEntitiesResource(http as never);
+      const ship = await resource.get({ entityType: 'ships', uid: '2:283' });
+      expect(ship.uid).toBe('2:283');
+      expect(ship.skills).toBeUndefined();
+    });
+
+    it('normalizes real captured NPC skill values', async () => {
+      const http = createMockHttpClient();
+      http.get.mockResolvedValue(fixture('npc.json'));
+      const resource = new InventoryEntitiesResource(http as never);
+      const npc = await resource.get({ entityType: 'npcs', uid: '10:1219' });
+
+      for (const group of Object.values(npc.skills ?? {})) {
+        for (const set of group ?? []) {
+          for (const skill of set.skill) {
+            expect(typeof skill.value).toBe('number');
+          }
+        }
+      }
+    });
+  });
+```
+
+- [ ] **Step 7: Verify**
 
 Run: `npm run typecheck`
 Expected: exit 0.
@@ -841,11 +953,11 @@ Expected: exit 0.
 Run: `npm test && npm run build && npm run lint`
 Expected: all exit 0.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
 git add src/resources/InventoryResource.ts src/types/index.ts tests/unit/resources/inventory-entity-detail.test.ts
-git commit -m "feat(inventory): narrow get() return type by entity type"
+git commit -m "feat(inventory): narrow get() return type and normalize skill values"
 ```
 
 ---

@@ -8,11 +8,42 @@ import { Page } from '../pagination/Page.js';
 import {
   Entity,
   GetEntityOptions,
+  InventoryEntityDetailMap,
   InventoryEntityType,
   InventoryEntityTypeMap,
   ListInventoryEntitiesOptions,
   QueryParams,
 } from '../types/index.js';
+
+/**
+ * Coerce skill values to numbers.
+ *
+ * The API returns non-zero skill values inconsistently — the same value appears as
+ * both `1` and `"1"`, in every skill group, with no rule that predicts which. Zero is
+ * always numeric. Normalizing here lets `EntitySkill.value` be honestly typed
+ * `number` for consumers.
+ *
+ * This mutates nothing the caller owns: it operates on the freshly parsed response.
+ */
+function normalizeSkillValues(entity: unknown): void {
+  const skills = (entity as { skills?: Record<string, unknown> })?.skills;
+  if (!skills || typeof skills !== 'object') return;
+
+  for (const group of Object.values(skills)) {
+    if (!Array.isArray(group)) continue;
+    for (const set of group) {
+      const list = (set as { skill?: unknown })?.skill;
+      if (!Array.isArray(list)) continue;
+      for (const skill of list) {
+        const entry = skill as { value?: unknown };
+        if (typeof entry?.value === 'string' && entry.value.trim() !== '') {
+          const asNumber = Number(entry.value);
+          if (!Number.isNaN(asNumber)) entry.value = asNumber;
+        }
+      }
+    }
+  }
+}
 
 /**
  * Inventory entities resource
@@ -111,15 +142,31 @@ export class InventoryEntitiesResource extends BaseResource {
   /**
    * Get a specific inventory entity by type and UID.
    *
-   * Returns the `Entity` object directly — not wrapped in a `Page`.
+   * Returns the entity object directly — not wrapped in a `Page`. The return type
+   * is narrowed by `entityType`, so `entityType: 'npcs'` yields an `NpcEntityDetail`
+   * with `race`, `gender` and `level`.
    *
-   * @returns The `Entity`.
+   * @returns The entity detail for the requested type.
    * @example
-   * const ship = await client.inventory.entities.get({ entityType: 'ships', uid: '8:123' });
-   * console.log(ship.name); // access properties directly, not ship.data
+   * const ship = await client.inventory.entities.get({ entityType: 'ships', uid: '2:283' });
+   * console.log(ship.name);
+   *
+   * @example
+   * // Actions are always an array, even when there is only one.
+   * const facility = await client.inventory.entities.get({ entityType: 'facilities', uid: '4:3497164' });
+   * for (const action of facility.actions?.action ?? []) {
+   *   console.log(action.value.actiontype);
+   * }
    */
-  async get(options: GetEntityOptions): Promise<Entity> {
-    return this.request<Entity>('GET', `/inventory/${options.entityType}/${options.uid}`);
+  async get<T extends InventoryEntityType>(
+    options: GetEntityOptions<T>
+  ): Promise<InventoryEntityDetailMap[T]> {
+    const entity = await this.request<InventoryEntityDetailMap[T]>(
+      'GET',
+      `/inventory/${options.entityType}/${options.uid}`
+    );
+    normalizeSkillValues(entity);
+    return entity;
   }
 
   /**

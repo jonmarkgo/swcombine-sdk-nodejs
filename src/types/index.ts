@@ -2296,8 +2296,10 @@ export type ListSimNewsOptions = ListNewsOptionsBase;
  */
 export type ListNewsOptions = ListGNSOptions;
 
-export interface GetEntityOptions {
-  entityType: string;
+export interface GetEntityOptions<T extends InventoryEntityType = InventoryEntityType> {
+  /** Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials' */
+  entityType: T;
+  /** Entity UID, e.g. "2:283" */
   uid: string;
 }
 

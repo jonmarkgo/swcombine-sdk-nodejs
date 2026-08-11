@@ -1,0 +1,364 @@
+{
+  "uid": "10:1219",
+  "entitytype": "NPC",
+  "name": "Bob the Builder",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "[scrubbed]",
+  "images": {
+    "small": "http://img.swcombine.com/races/18/npc_m1.jpg",
+    "large": "https://images.swcombine.com//noImageLarge.jpg"
+  },
+  "protected": "no",
+  "hp": {
+    "attributes": {
+      "max": 56
+    },
+    "value": 56
+  },
+  "location": {
+    "container": {
+      "value": "Drekstopia",
+      "attributes": {
+        "uid": "7:2818",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/drekstopia/"
+      }
+    },
+    "sector": {
+      "value": "Garis",
+      "attributes": {
+        "uid": "25:185",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/garis/"
+      }
+    },
+    "system": {
+      "value": "Gazzari",
+      "attributes": {
+        "uid": "9:226",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/gazzari/"
+      }
+    },
+    "planet": {
+      "value": "Gazzari",
+      "attributes": {
+        "uid": "8:1118",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/gazzari/"
+      }
+    },
+    "city": {
+      "value": "Drekstopia",
+      "attributes": {
+        "uid": "7:2818",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/drekstopia/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 83,
+          "y": -320
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "10",
+          "y": "8"
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": "1",
+          "y": "6"
+        }
+      },
+      "ground": {
+        "attributes": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "10:7",
+      "href": "https://www.swcombine.com/ws/v2.0/types/npcs/criminal/"
+    },
+    "value": "Criminal"
+  },
+  "race": {
+    "attributes": {
+      "uid": "22:18",
+      "href": "https://www.swcombine.com/ws/v2.0/types/races/hutt/"
+    },
+    "value": "Hutt"
+  },
+  "gender": {
+    "attributes": {
+      "gender": "M"
+    },
+    "value": "Male"
+  },
+  "level": 1,
+  "tags": {
+    "tag": []
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 0.07,
+      "remaining": 0.07
+    },
+    "volumecapacity": {
+      "total": 8,
+      "remaining": 8
+    }
+  },
+  "controller": "unmanned",
+  "skills": {
+    "general": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "strength"
+            },
+            "value": 2
+          },
+          {
+            "attributes": {
+              "type": "dexterity"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "speed"
+            },
+            "value": 3
+          },
+          {
+            "attributes": {
+              "type": "dodge"
+            },
+            "value": 2
+          },
+          {
+            "attributes": {
+              "type": "projectile"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "nonProjectile"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "space": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 5
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "fighterPiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "fighterCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "capitalPiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "capitalCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "spaceCommand"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "ground": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 5
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "vehiclePiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "vehicleCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "infantryCommand"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "vehicleCommand"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "heavyWeapons"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "social": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "medical"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "diplomacy"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "crafting"
+            },
+            "value": "1"
+          },
+          {
+            "attributes": {
+              "type": "management"
+            },
+            "value": "3"
+          },
+          {
+            "attributes": {
+              "type": "perception"
+            },
+            "value": 2
+          },
+          {
+            "attributes": {
+              "type": "stealth"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "science": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "rndHull"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "rndElectronics"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "rndEngines"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "rndWeapons"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "repair"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "compOps"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ]
+  }
+}

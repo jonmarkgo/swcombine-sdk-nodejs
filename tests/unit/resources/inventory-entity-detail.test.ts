@@ -6,10 +6,7 @@ import { InventoryEntitiesResource } from '../../../src/resources/InventoryResou
 import { createMockHttpClient } from '../helpers/mock-http.js';
 import type { InventoryEntityDetailMap, InventoryEntityType } from '../../../src/types/index.js';
 
-const FIXTURES = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '../../integration/api-responses/inventory'
-);
+const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), '../fixtures/inventory');
 const fixture = (name: string) => JSON.parse(readFileSync(join(FIXTURES, name), 'utf8'));
 
 async function getEntity<T extends InventoryEntityType>(
@@ -368,6 +365,28 @@ describe('inventory entity detail shape', () => {
     });
   });
 
+  describe('request URL', () => {
+    // A typo in the `/inventory/${entityType}/${uid}` template would still pass
+    // every other test in this file, since they only assert on the parsed body.
+    it('requests the exact path for the given entity type and uid', async () => {
+      const http = createMockHttpClient();
+      http.get.mockResolvedValue(fixture('ship-idle.json'));
+      const resource = new InventoryEntitiesResource(http as never);
+
+      await resource.get({ entityType: 'ships', uid: '2:283' });
+      expect(http.get).toHaveBeenCalledWith('/inventory/ships/2:283');
+    });
+
+    it('requests the exact path for a different entity type and uid', async () => {
+      const http = createMockHttpClient();
+      http.get.mockResolvedValue(fixture('npc.json'));
+      const resource = new InventoryEntitiesResource(http as never);
+
+      await resource.get({ entityType: 'npcs', uid: '10:1219' });
+      expect(http.get).toHaveBeenCalledWith('/inventory/npcs/10:1219');
+    });
+  });
+
   describe('skill value normalization', () => {
     it('coerces string skill values to numbers', async () => {
       const http = createMockHttpClient();
@@ -417,6 +436,70 @@ describe('inventory entity detail shape', () => {
           }
         }
       }
+    });
+
+    // Defensive guards inside normalizeSkillValues — none of these should throw,
+    // and each malformed shape should be left exactly as the API sent it.
+    describe('defensive guards', () => {
+      it('tolerates a skill group that is not an array', async () => {
+        const http = createMockHttpClient();
+        http.get.mockResolvedValue({
+          uid: '10:2',
+          entitytype: 'NPC',
+          skills: { general: 'not-an-array' },
+        });
+        const resource = new InventoryEntitiesResource(http as never);
+
+        const npc = await resource.get({ entityType: 'npcs', uid: '10:2' });
+        expect(npc.skills!.general).toBe('not-an-array');
+      });
+
+      it('tolerates a skill property that is not an array', async () => {
+        const http = createMockHttpClient();
+        http.get.mockResolvedValue({
+          uid: '10:3',
+          entitytype: 'NPC',
+          skills: {
+            general: [{ attributes: { force: 'false', count: 1 }, skill: 'not-an-array' }],
+          },
+        });
+        const resource = new InventoryEntitiesResource(http as never);
+
+        const npc = await resource.get({ entityType: 'npcs', uid: '10:3' });
+        expect(npc.skills!.general![0].skill).toBe('not-an-array');
+      });
+
+      it('leaves empty, whitespace-only and non-numeric string values alone', async () => {
+        const http = createMockHttpClient();
+        http.get.mockResolvedValue({
+          uid: '10:4',
+          entitytype: 'NPC',
+          skills: {
+            general: [
+              {
+                attributes: { force: 'false', count: 5 },
+                skill: [
+                  { attributes: { type: 'empty' }, value: '' },
+                  { attributes: { type: 'whitespace' }, value: '   ' },
+                  { attributes: { type: 'nonnumeric' }, value: 'n/a' },
+                  { attributes: { type: 'number' }, value: 5 },
+                  { attributes: { type: 'zero' }, value: 0 },
+                ],
+              },
+            ],
+          },
+        });
+        const resource = new InventoryEntitiesResource(http as never);
+
+        const npc = await resource.get({ entityType: 'npcs', uid: '10:4' });
+        const [empty, whitespace, nonnumeric, number, zero] = npc.skills!.general![0].skill;
+
+        expect(empty.value).toBe('');
+        expect(whitespace.value).toBe('   ');
+        expect(nonnumeric.value).toBe('n/a');
+        expect(number.value).toBe(5);
+        expect(zero.value).toBe(0);
+      });
     });
   });
 });

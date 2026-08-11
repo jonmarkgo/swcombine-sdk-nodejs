@@ -9,10 +9,7 @@ import {
 } from '../../src/inventory-actions.js';
 import type { EntityAction } from '../../src/types/index.js';
 
-const FIXTURES = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '../integration/api-responses/inventory'
-);
+const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures/inventory');
 const actionsOf = (file: string): EntityAction[] =>
   JSON.parse(readFileSync(join(FIXTURES, file), 'utf8')).actions.action;
 

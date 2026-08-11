@@ -1,0 +1,151 @@
+{
+  "uid": "3:128354",
+  "entitytype": "Vehicle",
+  "name": "X-rides 2",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//vehicles/80/main.jpg",
+    "large": "https://images.swcombine.com//vehicles/80/large.jpg",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 4
+    },
+    "value": 4
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 3
+    },
+    "value": 3
+  },
+  "location": {
+    "container": {
+      "value": "Test Character Ardent",
+      "attributes": {
+        "uid": "2:2040729",
+        "type": "ship",
+        "href": "https://www.swcombine.com/ws/v2.0/inventory/ships/2%3A2040729/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zeldiis",
+      "attributes": {
+        "uid": "8:4532",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zeldiis/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "12",
+          "y": "13"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "3:80",
+      "href": "https://www.swcombine.com/ws/v2.0/types/vehicles/skybird%20racing%20swoop/"
+    },
+    "value": "Skybird Racing Swoop"
+  },
+  "underconstruction": "no",
+  "tags": {
+    "tag": []
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 0.05,
+      "remaining": 0.05
+    },
+    "volumecapacity": {
+      "total": 0.62,
+      "remaining": 0.62
+    },
+    "passengercapacity": {
+      "total": 1,
+      "remaining": 1
+    }
+  },
+  "creationdate": {
+    "years": 10,
+    "days": 63,
+    "hours": 16,
+    "mins": 35,
+    "secs": 37,
+    "timestamp": 1233444937
+  },
+  "controller": "unmanned",
+  "weight": 3,
+  "volume": 4
+}

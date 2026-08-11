@@ -6,8 +6,12 @@
  * the entity carrying it, so every action-specific field stays optional.
  */
 
-import type { EntityAction, EntityActionValue, EntityProducingRef } from './types/index.js';
-import type { EntityTypeRef } from './types/index.js';
+import type {
+  EntityAction,
+  EntityActionValue,
+  EntityProducingRef,
+  EntityTypeRef,
+} from './types/index.js';
 
 /** Narrowed value for a MiningAction. All fields remain optional by design. */
 export interface MiningActionValue extends EntityActionValue {

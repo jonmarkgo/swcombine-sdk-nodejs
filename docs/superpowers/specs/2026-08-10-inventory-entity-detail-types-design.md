@@ -415,9 +415,10 @@ rather than introducing a break. It will be called out in the changelog.
 ## Testing
 
 **Fixtures.** Promote the capture script to `scripts/capture-inventory-entities.ts` and
-commit the captured payloads to `tests/integration/api-responses/inventory/` — a
-directory AGENTS.md already documents but which does not exist. Owner/commander/pilot
-references and `infotext` are scrubbed before commit.
+commit the captured payloads to `tests/unit/fixtures/inventory/`. (An earlier draft of
+this plan proposed `tests/integration/api-responses/inventory/`, but that path is
+gitignored — see AGENTS.md — so curated fixtures were relocated to keep them tracked
+by git.) Owner/commander/pilot references and `infotext` are scrubbed before commit.
 
 **Unit tests** (`tests/unit/resources/inventory-entity-detail.test.ts`) assert each
 fixture parses into its interface, with explicit coverage of:

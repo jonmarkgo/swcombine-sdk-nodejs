@@ -1,0 +1,81 @@
+{
+  "uid": "16:437735",
+  "entitytype": "Material",
+  "name": "New Durelium Pile 437735",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//materials/17/main.png",
+    "large": "https://images.swcombine.com//materials/17/large.png"
+  },
+  "protected": "no",
+  "location": {
+    "container": {
+      "value": "Test Character",
+      "attributes": {
+        "uid": "5:53264",
+        "type": "station",
+        "href": "https://www.swcombine.com/ws/v2.0/inventory/stations/5%3A53264/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {},
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "15",
+          "y": "9"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "quantity": 66502,
+  "type": {
+    "attributes": {
+      "uid": "16:17",
+      "href": "https://www.swcombine.com/ws/v2.0/types/materials/durelium/"
+    },
+    "value": "durelium"
+  },
+  "tags": {
+    "tag": []
+  },
+  "cargo": {},
+  "weight": 532016,
+  "volume": 66502
+}

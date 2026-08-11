@@ -1,0 +1,171 @@
+{
+  "uid": "13:1463521",
+  "entitytype": "Droid",
+  "name": "[No Name]",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//droids/25/main.jpg",
+    "large": "https://images.swcombine.com//droids/25/large.jpg"
+  },
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 60
+    },
+    "value": 60
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 60
+    },
+    "value": 60
+  },
+  "location": {
+    "container": {
+      "value": "Rockivory Mine Zelvahn 6-3",
+      "attributes": {
+        "uid": "4:3502314",
+        "type": "facility",
+        "href": "https://www.swcombine.com/ws/v2.0/inventory/facilities/4%3A3502314/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zelvahn",
+      "attributes": {
+        "uid": "8:4534",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zelvahn/"
+      }
+    },
+    "city": {
+      "value": "Rockivory Mining Zelvahn 6-3",
+      "attributes": {
+        "uid": "7:180463",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/rockivory%20mining%20zelvahn%206-3/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "3",
+          "y": "4"
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": "6",
+          "y": "3"
+        }
+      },
+      "ground": {
+        "attributes": {
+          "x": 1,
+          "y": 2
+        }
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "13:25",
+      "href": "https://www.swcombine.com/ws/v2.0/types/droids/lin-series%20miner/"
+    },
+    "value": "LIN-series Miner"
+  },
+  "tags": {
+    "tag": []
+  },
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "MiningAction",
+          "id": 183746858
+        },
+        "value": {
+          "actiontype": "Mining",
+          "status": "paused",
+          "delay": {
+            "total": 604800,
+            "remaining": 604799
+          }
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 0,
+      "remaining": 0
+    },
+    "volumecapacity": {
+      "total": 0,
+      "remaining": 0
+    }
+  },
+  "creationdate": {
+    "years": 26,
+    "days": 106,
+    "hours": 17,
+    "mins": 2,
+    "secs": 58,
+    "timestamp": 1741737778
+  },
+  "controller": "unmanned",
+  "weight": 0.31,
+  "volume": 2
+}

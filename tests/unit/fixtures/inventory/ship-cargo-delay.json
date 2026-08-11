@@ -1,0 +1,157 @@
+{
+  "uid": "2:5136061",
+  "entitytype": "Ship",
+  "name": "RSD Claudius Depot #1",
+  "owner": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "infotext": "[scrubbed]",
+  "images": {
+    "small": "https://custom.swcombine.com/static/2/41/34-13715-1741790066-small.png",
+    "large": "https://custom.swcombine.com/static/2/41/34-13715-1741790066-large.png",
+    "customsmall": "https://custom.swcombine.com/static/2/41/34-13715-1741790066-small.png",
+    "customlarge": "https://custom.swcombine.com/static/2/41/34-13715-1741790066-large.png"
+  },
+  "opento": "Crewlist Only",
+  "protected": "yes",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 1000
+    },
+    "value": 1000
+  },
+  "shield": {
+    "attributes": {
+      "max": 735
+    },
+    "value": 735
+  },
+  "ionic": {
+    "attributes": {
+      "max": 470
+    },
+    "value": 470
+  },
+  "location": {
+    "container": {
+      "value": "Cularin",
+      "attributes": {
+        "uid": "9:1223",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/cularin/"
+      }
+    },
+    "sector": {
+      "value": "Hevvrol",
+      "attributes": {
+        "uid": "25:18",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/hevvrol/"
+      }
+    },
+    "system": {
+      "value": "Cularin",
+      "attributes": {
+        "uid": "9:1223",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/cularin/"
+      }
+    },
+    "planet": {
+      "value": "Cularin",
+      "attributes": {
+        "uid": "8:210",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/cularin/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": -120,
+          "y": 160
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "11",
+          "y": "8"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "2:41",
+      "href": "https://www.swcombine.com/ws/v2.0/types/ships/modular%20conveyor/"
+    },
+    "value": "Modular Conveyor"
+  },
+  "underconstruction": "no",
+  "tags": {
+    "tag": [
+      "NPC Transport"
+    ]
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "datablocksused": 0,
+  "datablockstotal": 500,
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "CargoDelayAction",
+          "id": 240138040
+        },
+        "value": {
+          "actiontype": "Cargo Delay",
+          "status": "running",
+          "delay": {
+            "total": 5400,
+            "remaining": 1238
+          }
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 80000,
+      "remaining": 8
+    },
+    "volumecapacity": {
+      "total": 120000,
+      "remaining": 112728
+    },
+    "passengercapacity": {
+      "total": 60,
+      "remaining": 60
+    }
+  },
+  "creationdate": {
+    "years": 25,
+    "days": 323,
+    "hours": 2,
+    "mins": 13,
+    "secs": 7,
+    "timestamp": 1728897187
+  },
+  "controller": "unmanned",
+  "weight": 107326,
+  "volume": 265903
+}

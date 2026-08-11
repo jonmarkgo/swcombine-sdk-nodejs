@@ -8,6 +8,14 @@
 
 **Tech Stack:** TypeScript 5.5 strict, Vitest, triple build (CJS/ESM/types).
 
+> **Post-hoc note:** this plan (and the code snippets below) originally targeted
+> `tests/integration/api-responses/inventory/` for the curated fixtures. That path is
+> gitignored (see `.gitignore`), so the fixtures were relocated to
+> `tests/unit/fixtures/inventory/` to keep them tracked by git. This document is kept
+> as a historical record and was not rewritten path-by-path; see
+> `docs/superpowers/specs/2026-08-10-inventory-entity-detail-types-design.md` and the
+> current source for the corrected path.
+
 ## Global Constraints
 
 - Target version for this work: **3.4.0** (minor bump from 3.3.0).

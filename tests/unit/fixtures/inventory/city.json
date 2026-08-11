@@ -1,0 +1,784 @@
+{
+  "uid": "7:3269",
+  "entitytype": "City",
+  "name": "Tibanna Mine Zellone 6-6",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "[scrubbed]",
+  "images": {
+    "small": "https://images.swcombine.com//client/cities/development_level_5.png",
+    "large": "https://images.swcombine.com//noImageLarge.jpg",
+    "customsmall": ""
+  },
+  "protected": "no",
+  "location": {
+    "container": {
+      "value": "Zellone",
+      "attributes": {
+        "uid": "8:165",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zellone/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zellone",
+      "attributes": {
+        "uid": "8:165",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zellone/"
+      }
+    },
+    "city": {
+      "value": "Tibanna Mine Zellone 6-6",
+      "attributes": {
+        "uid": "7:3269",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/tibanna%20mine%20zellone%206-6/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": 17,
+          "y": 2
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": 6,
+          "y": 6
+        }
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "hidden": "no",
+  "tags": {
+    "tag": [
+      "Random4"
+    ]
+  },
+  "layout": "20,1,0,h;49,6,0,v;1,1,1,v;69,3,1,v;49,13,1,v;44,0,2,v;24,0,8,v;24,3,8,v;24,6,8,v;24,9,8,v;24,12,9,v;69,16,9,v;20,17,10,h;6,17,11,v;76,0,12,v;76,7,12,v;69,15,12,v;69,15,13,v;36,15,15,v;|15|v",
+  "buildings": {
+    "building": [
+      {
+        "uid": "4:5324615",
+        "entitytype": "Facility",
+        "name": "Power Generator",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/20/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/20/horizontal_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:20",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/power%20generator/"
+          },
+          "value": "Power Generator"
+        },
+        "orientation": "h",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 2,
+          "y": 1
+        }
+      },
+      {
+        "uid": "4:398314",
+        "entitytype": "Facility",
+        "name": "100 Flat",
+        "owner": {
+          "value": "Test Faction",
+          "attributes": {
+            "uid": "20:502",
+            "type": "faction",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/49/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/49/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:49",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/skyscraper%20100%20flats/"
+          },
+          "value": "Skyscraper 100 flats"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 7,
+          "y": 1
+        }
+      },
+      {
+        "uid": "4:210754",
+        "entitytype": "Facility",
+        "name": "Personal Residence",
+        "owner": {
+          "value": "Test Faction",
+          "attributes": {
+            "uid": "20:502",
+            "type": "faction",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/1/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/1/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:1",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/personal%20residence/"
+          },
+          "value": "Personal Residence"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 2,
+          "y": 2
+        }
+      },
+      {
+        "uid": "4:5324617",
+        "entitytype": "Facility",
+        "name": "Chapel",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/69/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/69/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:69",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/chapel/"
+          },
+          "value": "Chapel"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 4,
+          "y": 2
+        }
+      },
+      {
+        "uid": "4:398321",
+        "entitytype": "Facility",
+        "name": "100 Flat",
+        "owner": {
+          "value": "Test Faction",
+          "attributes": {
+            "uid": "20:502",
+            "type": "faction",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/49/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/49/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:49",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/skyscraper%20100%20flats/"
+          },
+          "value": "Skyscraper 100 flats"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 14,
+          "y": 2
+        }
+      },
+      {
+        "uid": "4:5324616",
+        "entitytype": "Facility",
+        "name": "High Rise Building 50 flats",
+        "owner": {
+          "value": "Test Faction",
+          "attributes": {
+            "uid": "20:502",
+            "type": "faction",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/44/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/44/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:44",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/high%20rise%20building%2050%20flats/"
+          },
+          "value": "High Rise Building 50 flats"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 1,
+          "y": 3
+        }
+      },
+      {
+        "uid": "4:5324635",
+        "entitytype": "Facility",
+        "name": "Church",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/24/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/24/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:24",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/church/"
+          },
+          "value": "Church"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 1,
+          "y": 9
+        }
+      },
+      {
+        "uid": "4:5324637",
+        "entitytype": "Facility",
+        "name": "Church",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/24/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/24/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:24",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/church/"
+          },
+          "value": "Church"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 4,
+          "y": 9
+        }
+      },
+      {
+        "uid": "4:5324645",
+        "entitytype": "Facility",
+        "name": "Church",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/24/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/24/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:24",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/church/"
+          },
+          "value": "Church"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 7,
+          "y": 9
+        }
+      },
+      {
+        "uid": "4:5324646",
+        "entitytype": "Facility",
+        "name": "Church",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/24/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/24/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:24",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/church/"
+          },
+          "value": "Church"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 10,
+          "y": 9
+        }
+      },
+      {
+        "uid": "4:5324649",
+        "entitytype": "Facility",
+        "name": "Church",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/24/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/24/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:24",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/church/"
+          },
+          "value": "Church"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 13,
+          "y": 10
+        }
+      },
+      {
+        "uid": "4:5324650",
+        "entitytype": "Facility",
+        "name": "Chapel",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/69/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/69/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:69",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/chapel/"
+          },
+          "value": "Chapel"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 17,
+          "y": 10
+        }
+      },
+      {
+        "uid": "4:222898",
+        "entitytype": "Facility",
+        "name": "Dead Mine PG Zellone 6-6",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/20/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/20/horizontal_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:20",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/power%20generator/"
+          },
+          "value": "Power Generator"
+        },
+        "orientation": "h",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 18,
+          "y": 11
+        }
+      },
+      {
+        "uid": "4:222897",
+        "entitytype": "Facility",
+        "name": "Warehouse for Depleted Mine Zellone 6-6",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/6/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/6/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:6",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/warehouse/"
+          },
+          "value": "Warehouse"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 18,
+          "y": 12
+        }
+      },
+      {
+        "uid": "4:5324638",
+        "entitytype": "Facility",
+        "name": "Test Character",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/76/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/76/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:76",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/cathedral/"
+          },
+          "value": "Cathedral"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 1,
+          "y": 13
+        }
+      },
+      {
+        "uid": "4:5324644",
+        "entitytype": "Facility",
+        "name": "Test Character",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/76/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/76/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:76",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/cathedral/"
+          },
+          "value": "Cathedral"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 8,
+          "y": 13
+        }
+      },
+      {
+        "uid": "4:5324653",
+        "entitytype": "Facility",
+        "name": "Chapel",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/69/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/69/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:69",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/chapel/"
+          },
+          "value": "Chapel"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 16,
+          "y": 13
+        }
+      },
+      {
+        "uid": "4:5324654",
+        "entitytype": "Facility",
+        "name": "Chapel",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/69/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/69/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:69",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/chapel/"
+          },
+          "value": "Chapel"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 16,
+          "y": 14
+        }
+      },
+      {
+        "uid": "4:222895",
+        "entitytype": "Facility",
+        "name": "Tibanna Mine Zellone 6-6",
+        "owner": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "type": "character",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "images": {
+          "small": "https://images.swcombine.com//facilities/36/main_1.gif",
+          "large": "https://images.swcombine.com//facilities/36/vertical_1.gif"
+        },
+        "wrecked": "no",
+        "type": {
+          "attributes": {
+            "uid": "4:36",
+            "href": "https://www.swcombine.com/ws/v2.0/types/facilities/mine/"
+          },
+          "value": "Mine"
+        },
+        "ispowered": "Yes",
+        "orientation": "v",
+        "underconstruction": "no",
+        "tags": {
+          "tag": []
+        },
+        "attributes": {
+          "x": 16,
+          "y": 16
+        }
+      }
+    ]
+  },
+  "cargo": {},
+  "creationdate": {
+    "years": 11,
+    "days": 301,
+    "hours": 6,
+    "mins": 42,
+    "secs": 43,
+    "timestamp": 1285508563
+  }
+}

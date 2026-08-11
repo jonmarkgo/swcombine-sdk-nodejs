@@ -1,0 +1,327 @@
+{
+  "uid": "11:8750579",
+  "entitytype": "Creature",
+  "name": "Mr. Pickles",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//creatures/337/main.jpg",
+    "large": "https://images.swcombine.com//creatures/337/large.jpg"
+  },
+  "protected": "no",
+  "hp": {
+    "attributes": {
+      "max": 990
+    },
+    "value": 990
+  },
+  "location": {
+    "container": {
+      "value": "Dreks Acc",
+      "attributes": {
+        "uid": "2:1740013",
+        "type": "ship",
+        "href": "https://www.swcombine.com/ws/v2.0/inventory/ships/2%3A1740013/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zeltros",
+      "attributes": {
+        "uid": "8:4531",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zeltros/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "14",
+          "y": "8"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "11:337",
+      "href": "https://www.swcombine.com/ws/v2.0/types/creatures/rancor/"
+    },
+    "value": "Rancor"
+  },
+  "tags": {
+    "tag": []
+  },
+  "cargo": {},
+  "creationdate": {
+    "years": 21,
+    "days": 270,
+    "hours": 20,
+    "mins": 7,
+    "secs": 45,
+    "timestamp": 1598238465
+  },
+  "skills": {
+    "general": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "strength"
+            },
+            "value": 4
+          },
+          {
+            "attributes": {
+              "type": "dexterity"
+            },
+            "value": 2
+          },
+          {
+            "attributes": {
+              "type": "speed"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "dodge"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "projectile"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "nonProjectile"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "space": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 5
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "fighterPiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "fighterCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "capitalPiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "capitalCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "spaceCommand"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "ground": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 5
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "vehiclePiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "vehicleCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "infantryCommand"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "vehicleCommand"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "heavyWeapons"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "social": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "medical"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "diplomacy"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "crafting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "management"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "perception"
+            },
+            "value": 3
+          },
+          {
+            "attributes": {
+              "type": "stealth"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "science": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "rndHull"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "rndElectronics"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "rndEngines"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "rndWeapons"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "repair"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "compOps"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ]
+  }
+}

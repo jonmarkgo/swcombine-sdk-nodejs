@@ -35,6 +35,11 @@ runtime data is unchanged, but code reading these fields may need updating.
   `EntityReference`.
 - `EntityImages.customsmall` and `.customlarge` are now optional. Facilities,
   materials, NPCs and creatures return only `small` and `large`.
+- `inventory.entities.get()`'s `entityType` option no longer accepts an arbitrary
+  `string` — it is now generic and must be one of the 11 literal `InventoryEntityType`
+  values (`'ships'`, `'npcs'`, etc.), matching what `list()` already required. Callers
+  holding the entity type in a `string`-typed variable will need to narrow it, e.g.
+  `entityType: entityType as InventoryEntityType`.
 
 ### Notes
 

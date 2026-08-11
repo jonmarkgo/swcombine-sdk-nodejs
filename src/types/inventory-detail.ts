@@ -2,7 +2,7 @@
  * Types for `GET /inventory/{entity_type}/{uid}`.
  *
  * Every shape here was derived from real payloads captured on 2026-08-10; the
- * corresponding fixtures live in `tests/integration/api-responses/inventory/`.
+ * corresponding fixtures live in `tests/unit/fixtures/inventory/`.
  */
 
 import type {
@@ -152,8 +152,13 @@ export interface EntityGender {
  * skill group, with no rule that predicts which). Zero is always a number.
  *
  * `value` is declared `number` because `InventoryEntitiesResource.get()` normalizes
- * string values before returning. Do not "fix" this to `number | string` — consumers
- * are guaranteed a number.
+ * numeric-looking string values before returning. This is a best-effort guarantee, not
+ * an absolute one: values that cannot be parsed as numbers (`""`, whitespace-only
+ * strings, `"n/a"`, etc.) are deliberately left as-is by `normalizeSkillValues`, so a
+ * malformed API response could still surface a string here. Do not "fix" this to
+ * `number | string` — the declared type reflects the well-formed case the SDK coerces
+ * for, and widening it would make every consumer re-guard against a case that normal
+ * responses never hit.
  */
 export interface EntitySkill {
   attributes: { type: string };
@@ -228,7 +233,11 @@ export interface EntityQueueItem {
   entity?: EntityTypeRef;
   name?: string;
   workers?: { attributes: { ideal_workers: number }; value: number };
-  controller?: EntityReference;
+  /**
+   * Fixture-verified shape (`station-producing.json`): `attributes` here is only
+   * `{ uid, href }`, unlike `EntityReference`, which requires `attributes.type`.
+   */
+  controller?: EntityTypeRef;
   status?: string;
   quantity?: number;
   queueorder?: number;

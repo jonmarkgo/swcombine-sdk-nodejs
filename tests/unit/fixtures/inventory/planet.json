@@ -1,0 +1,145 @@
+{
+  "uid": "8:165",
+  "entitytype": "Planet",
+  "name": "Zellone",
+  "owner": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "commander": {
+    "value": "Trade Federation",
+    "attributes": {
+      "uid": "20:478",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/trade%20federation/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//galaxy/planets/custom/large/165.gif",
+    "large": "https://images.swcombine.com//galaxy/planets/custom/large/165.gif",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "location": {
+    "container": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zellone",
+      "attributes": {
+        "uid": "8:165",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zellone/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": 17,
+          "y": 2
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "8:8",
+      "href": "https://www.swcombine.com/ws/v2.0/types/planets/gas%20giant/"
+    },
+    "value": "gas giant"
+  },
+  "tags": {
+    "tag": []
+  },
+  "planetaryStats": {
+    "crime": 0.0399,
+    "morale": 1,
+    "taxLevel": 0.05,
+    "er": 1.5504,
+    "population": 2490906180,
+    "hireable": 1000,
+    "civLevel": 0.0847
+  },
+  "deposits": {
+    "deposit": [
+      {
+        "attributes": {
+          "uid": "16:11",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/tibannagas/",
+          "quantity": 37044,
+          "x": 5,
+          "y": 6
+        },
+        "value": "tibannagas"
+      },
+      {
+        "attributes": {
+          "uid": "16:11",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/tibannagas/",
+          "quantity": 167989,
+          "x": 6,
+          "y": 6
+        },
+        "value": "tibannagas"
+      },
+      {
+        "attributes": {
+          "uid": "16:11",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/tibannagas/",
+          "quantity": 120828,
+          "x": 9,
+          "y": 9
+        },
+        "value": "tibannagas"
+      }
+    ]
+  },
+  "cargo": {}
+}

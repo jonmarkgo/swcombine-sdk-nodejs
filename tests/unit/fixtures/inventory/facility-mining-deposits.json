@@ -1,0 +1,207 @@
+{
+  "uid": "4:3525675",
+  "entitytype": "Facility",
+  "name": "Test Character",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Trade Federation",
+    "attributes": {
+      "uid": "20:478",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/trade%20federation/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//facilities/65/main_1.gif",
+    "large": "https://images.swcombine.com//facilities/65/vertical_1.gif"
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 25000
+    },
+    "value": 25000
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 25000
+    },
+    "value": 25000
+  },
+  "location": {
+    "container": {
+      "value": "Zeltros Alazhi 1-5",
+      "attributes": {
+        "uid": "7:181036",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/zeltros%20alazhi%201-5/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zeltros",
+      "attributes": {
+        "uid": "8:4531",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zeltros/"
+      }
+    },
+    "city": {
+      "value": "Zeltros Alazhi 1-5",
+      "attributes": {
+        "uid": "7:181036",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/zeltros%20alazhi%201-5/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": 14,
+          "y": 8
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": 1,
+          "y": 5
+        }
+      },
+      "ground": {
+        "attributes": {
+          "x": 9,
+          "y": 1
+        }
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "4:65",
+      "href": "https://www.swcombine.com/ws/v2.0/types/facilities/alazhi%20farm/"
+    },
+    "value": "Alazhi Farm"
+  },
+  "ispowered": "Yes",
+  "poweredby": {
+    "pg": [
+      {
+        "value": "Power Generator",
+        "attributes": {
+          "uid": "4:5659286",
+          "type": "facility",
+          "href": "https://www.swcombine.com/ws/v2.0/inventory/facilities/4%3A5659286/"
+        }
+      }
+    ]
+  },
+  "orientation": "v",
+  "underconstruction": "no",
+  "tags": {
+    "tag": []
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "MiningAction",
+          "id": 183373021
+        },
+        "value": {
+          "actiontype": "Mining",
+          "status": "running",
+          "delay": {
+            "total": 604800,
+            "remaining": 535124
+          },
+          "repeating": "yes",
+          "expected-yield": 2404.861875,
+          "expected-cost": 4910156,
+          "workers": 12,
+          "droids": 0
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "volumecapacity": {
+      "total": 35000,
+      "remaining": 22980
+    },
+    "passengercapacity": {
+      "total": 20,
+      "remaining": 8
+    }
+  },
+  "creationdate": {
+    "years": 21,
+    "days": 118,
+    "hours": 9,
+    "mins": 47,
+    "secs": 30,
+    "timestamp": 1585068450
+  },
+  "controller": "unmanned",
+  "weight": 2934,
+  "volume": 144375,
+  "deposits": {
+    "deposit": [
+      {
+        "attributes": {
+          "uid": "16:7",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/alazhi/",
+          "quantity": 117596
+        },
+        "value": "alazhi"
+      }
+    ]
+  }
+}

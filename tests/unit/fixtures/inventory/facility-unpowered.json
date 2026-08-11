@@ -1,0 +1,164 @@
+{
+  "uid": "4:717908",
+  "entitytype": "Facility",
+  "name": "Personal Residence",
+  "owner": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "commander": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "pilot": {
+    "value": "Nohv Schiller",
+    "attributes": {
+      "uid": "1:1267747",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/nohv%20schiller/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//facilities/1/main_1.gif",
+    "large": "https://images.swcombine.com//facilities/1/vertical_1.gif"
+  },
+  "opento": "Crewlist Only",
+  "protected": "yes",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 1000
+    },
+    "value": 1000
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 1000
+    },
+    "value": 1000
+  },
+  "location": {
+    "container": {
+      "value": "Ulbasca 04-02",
+      "attributes": {
+        "uid": "7:32318",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/ulbasca%2004-02/"
+      }
+    },
+    "sector": {
+      "value": "Hevvrol",
+      "attributes": {
+        "uid": "25:18",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/hevvrol/"
+      }
+    },
+    "system": {
+      "value": "Cularin",
+      "attributes": {
+        "uid": "9:1223",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/cularin/"
+      }
+    },
+    "planet": {
+      "value": "Ulbasca",
+      "attributes": {
+        "uid": "8:211",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/ulbasca/"
+      }
+    },
+    "city": {
+      "value": "Ulbasca 04-02",
+      "attributes": {
+        "uid": "7:32318",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/ulbasca%2004-02/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": -120,
+          "y": 160
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": 5,
+          "y": 10
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": 4,
+          "y": 2
+        }
+      },
+      "ground": {
+        "attributes": {
+          "x": 20,
+          "y": 20
+        }
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "4:1",
+      "href": "https://www.swcombine.com/ws/v2.0/types/facilities/personal%20residence/"
+    },
+    "value": "Personal Residence"
+  },
+  "ispowered": "No",
+  "orientation": "v",
+  "underconstruction": "no",
+  "tags": {
+    "tag": []
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "cargo": {
+    "volumecapacity": {
+      "total": 150,
+      "remaining": 150
+    },
+    "passengercapacity": {
+      "total": 8,
+      "remaining": 8
+    }
+  },
+  "creationdate": {
+    "years": 10,
+    "days": 257,
+    "hours": 21,
+    "mins": 1,
+    "secs": 1,
+    "timestamp": 1250222461
+  },
+  "controller": "unmanned",
+  "weight": 1732,
+  "volume": 538,
+  "facilityincome": {
+    "currentdebt": 0,
+    "warnings": {}
+  }
+}

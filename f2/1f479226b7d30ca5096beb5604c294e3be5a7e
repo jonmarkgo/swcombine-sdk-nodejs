@@ -1,0 +1,25 @@
+src/types/index.ts
+  s_e0a86d68eab627::t_34548dd7da7936 2299-2302
+tests/unit/resources/inventory-entity-detail.test.ts
+  s_e0a86d68eab627::t_54069847e70ade 7,15-18,23,31-35,41,49,58,63-64,73-74,76,83-84,90-91,95-97,100-101,105-106,116-118,120-124,132-133,136,141-143,150-151,153,157-158,164-165,174,176,182-183,187,191-193,197-198,206-207,216,224-225,233-234,243-244,246-247,252,256,265-266,268,274-276,284-287,296-297,305,312-313,317,323-326,328,332-335,339-340,343-419
+src/resources/InventoryResource.ts
+  s_e0a86d68eab627::t_9ae430ae2ba2ab 11,18-46
+  s_e0a86d68eab627::t_c40cbd7b57c3ea 145-152,155-159,161-169
+  s_e0a86d68eab627::t_c3765e7176ba3c 47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "f21f479226b7d30ca5096beb5604c294e3be5a7e",
+  "prompts": {},
+  "sessions": {
+    "s_e0a86d68eab627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6908dc-8994-4ee5-9241-0f8e34da658e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

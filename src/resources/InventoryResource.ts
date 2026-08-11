@@ -64,6 +64,10 @@ export class InventoryEntitiesResource extends BaseResource {
    * @param options.uid - Character or Faction UID
    * @param options.entityType - Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials'
    * @param options.assignType - Assignment type: 'owner', 'commander', or 'pilot'
+   *
+   * **Quirk:** planets a character administers are returned under `assignType: 'pilot'`.
+   * Both `'owner'` and `'commander'` return 0 for them.
+   *
    * @param options.start_index - Starting position (1-based). Default: 1
    * @param options.item_count - Number of items to retrieve. Default: 50, Max: 200
    * @param options.filter_type - Array of filter types (e.g., 'class', 'name', 'tags', 'powered')
@@ -84,6 +88,9 @@ export class InventoryEntitiesResource extends BaseResource {
    *
    * // Fetch up to 200 entities at once
    * const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot', start_index: 1, item_count: 200 });
+   *
+   * // Administered planets — note the assign type
+   * const planets = await client.inventory.entities.list({ uid: '1:12345', entityType: 'planets', assignType: 'pilot' });
    *
    * // Filter by multiple criteria
    * const multiFiltered = await client.inventory.entities.list({

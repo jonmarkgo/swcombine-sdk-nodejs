@@ -1,0 +1,23 @@
+AGENTS.md
+  s_e0a86d68eab627::t_b7bd14b19229cc 41-42
+CHANGELOG.md
+  s_e0a86d68eab627::t_0a52c047633ced 1-43
+package.json
+  s_e0a86d68eab627::t_6011648162af2e 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9900171c286599d9468ee4bb7bc1c372ecbbf66b",
+  "prompts": {},
+  "sessions": {
+    "s_e0a86d68eab627": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a6908dc-8994-4ee5-9241-0f8e34da658e",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jonathan Gottfried <jonmarkgo@gmail.com>"
+    }
+  }
+}

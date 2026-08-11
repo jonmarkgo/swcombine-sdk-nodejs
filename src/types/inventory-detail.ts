@@ -144,6 +144,17 @@ export interface EntityGender {
   value: string;
 }
 
+/**
+ * A single skill value.
+ *
+ * The API is inconsistent here: non-zero skill values are returned as either a
+ * number or a quoted string (the same value appears as both `1` and `"1"`, in every
+ * skill group, with no rule that predicts which). Zero is always a number.
+ *
+ * `value` is declared `number` because `InventoryEntitiesResource.get()` normalizes
+ * string values before returning. Do not "fix" this to `number | string` — consumers
+ * are guaranteed a number.
+ */
 export interface EntitySkill {
   attributes: { type: string };
   value: number;

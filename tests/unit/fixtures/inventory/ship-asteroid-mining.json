@@ -1,0 +1,157 @@
+{
+  "uid": "2:6516289",
+  "entitytype": "Ship",
+  "name": "Test Character Order",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//ships/244/main.png",
+    "large": "https://images.swcombine.com//ships/244/large.png",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 400
+    },
+    "value": 400
+  },
+  "shield": {
+    "attributes": {
+      "max": 450
+    },
+    "value": 450
+  },
+  "ionic": {
+    "attributes": {
+      "max": 200
+    },
+    "value": 200
+  },
+  "location": {
+    "container": {
+      "value": "Asteroid Field WK 129+90",
+      "attributes": {
+        "uid": "9:7740",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/asteroid%20field%20wk%20129%2B90/"
+      }
+    },
+    "sector": {},
+    "system": {
+      "value": "Asteroid Field WK 129+90",
+      "attributes": {
+        "uid": "9:7740",
+        "type": "asteroid field",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/asteroid%20field%20wk%20129%2B90/"
+      }
+    },
+    "planet": {},
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 129,
+          "y": 90
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "12",
+          "y": "16"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "2:244",
+      "href": "https://www.swcombine.com/ws/v2.0/types/ships/y-8%20mining%20vessel/"
+    },
+    "value": "Y-8 Mining Vessel"
+  },
+  "underconstruction": "no",
+  "tags": {
+    "tag": []
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "datablocksused": 0,
+  "datablockstotal": 500,
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "AsteroidMiningSoloAction",
+          "id": 238556537
+        },
+        "value": {
+          "actiontype": "Asteroid Mining Solo",
+          "status": "running",
+          "delay": {
+            "total": 227903,
+            "remaining": 42681
+          }
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 30000,
+      "remaining": 5840
+    },
+    "volumecapacity": {
+      "total": 55000,
+      "remaining": 52584
+    },
+    "passengercapacity": {
+      "total": 11,
+      "remaining": 11
+    }
+  },
+  "creationdate": {
+    "years": 26,
+    "days": 343,
+    "hours": 20,
+    "mins": 9,
+    "secs": 48,
+    "timestamp": 1762225788
+  },
+  "controller": "unmanned",
+  "weight": 45000,
+  "volume": 109600
+}

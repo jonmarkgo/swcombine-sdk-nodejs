@@ -1,0 +1,403 @@
+{
+  "uid": "5:718",
+  "entitytype": "Station",
+  "name": "Kutol-8",
+  "owner": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "commander": {
+    "value": "Trade Federation",
+    "attributes": {
+      "uid": "20:478",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/trade%20federation/"
+    }
+  },
+  "pilot": {
+    "value": "Jacob Jansen",
+    "attributes": {
+      "uid": "1:1155875",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/jacob%20jansen/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://custom.swcombine.com/static/5/8/34-13715-1741739889-small.png",
+    "large": "https://custom.swcombine.com/static/5/8/34-13715-1741739889-large.png",
+    "customsmall": "https://custom.swcombine.com/static/5/8/34-13715-1741739889-small.png",
+    "customlarge": "https://custom.swcombine.com/static/5/8/34-13715-1741739889-large.png"
+  },
+  "opento": "Crewlist Only",
+  "protected": "yes",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 6250
+    },
+    "value": 6250
+  },
+  "shield": {
+    "attributes": {
+      "max": 4600
+    },
+    "value": 4600
+  },
+  "ionic": {
+    "attributes": {
+      "max": 2815
+    },
+    "value": 2815
+  },
+  "location": {
+    "container": {
+      "value": "Cularin",
+      "attributes": {
+        "uid": "9:1223",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/cularin/"
+      }
+    },
+    "sector": {
+      "value": "Hevvrol",
+      "attributes": {
+        "uid": "25:18",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/hevvrol/"
+      }
+    },
+    "system": {
+      "value": "Cularin",
+      "attributes": {
+        "uid": "9:1223",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/cularin/"
+      }
+    },
+    "planet": {
+      "value": "Cularin Belt I",
+      "attributes": {
+        "uid": "8:3661",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/cularin%20belt%20i/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": -120,
+          "y": 160
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "12",
+          "y": "13"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "5:8",
+      "href": "https://www.swcombine.com/ws/v2.0/types/stations/shipyard%20iv/"
+    },
+    "value": "Shipyard IV"
+  },
+  "underconstruction": "no",
+  "tags": {
+    "tag": [
+      "Kutol Group",
+      "Cularin Yards"
+    ]
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "EntityProductionAction",
+          "id": 239614058
+        },
+        "value": {
+          "actiontype": "Entity Production",
+          "quantity": 1,
+          "workers": 0,
+          "producing": {
+            "entity": []
+          }
+        }
+      },
+      {
+        "attributes": {
+          "type": "RetoolingAction",
+          "id": 239614059
+        },
+        "value": {
+          "actiontype": "Retooling",
+          "status": "running",
+          "delay": {
+            "total": 363600,
+            "remaining": 34909
+          },
+          "type": {
+            "attributes": {
+              "uid": "2:316",
+              "href": "https://www.swcombine.com/ws/v2.0/types/ships/behemoth-class%20star%20dreadnaught/"
+            },
+            "value": "Behemoth-class Star Dreadnaught"
+          }
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 6400000,
+      "remaining": 6400000
+    },
+    "volumecapacity": {
+      "total": 520000,
+      "remaining": 520000
+    },
+    "passengercapacity": {
+      "total": 1000,
+      "remaining": 548
+    }
+  },
+  "creationdate": {
+    "years": 0,
+    "days": 1,
+    "hours": 0,
+    "mins": 0,
+    "secs": 0,
+    "timestamp": 912668400
+  },
+  "controller": "unmanned",
+  "weight": 10930080,
+  "volume": 6420000,
+  "assigneddcs": {
+    "card": [
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:316",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/behemoth-class%20star%20dreadnaught/"
+          },
+          "value": "Behemoth-class Star Dreadnaught"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:478",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/trade%20federation/"
+          },
+          "value": "Trade Federation"
+        },
+        "uses": 1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:314",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/endurance-class%20fleet%20carrier/"
+          },
+          "value": "Endurance-Class Fleet Carrier"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:478",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/trade%20federation/"
+          },
+          "value": "Trade Federation"
+        },
+        "uses": -1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:253",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/colossal-class%20heavy%20carrier/"
+          },
+          "value": "Colossal-class Heavy Carrier"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:502",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/rendili%20stardrive/"
+          },
+          "value": "Rendili StarDrive"
+        },
+        "uses": -1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:244",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/y-8%20mining%20vessel/"
+          },
+          "value": "Y-8 Mining Vessel"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:502",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/rendili%20stardrive/"
+          },
+          "value": "Rendili StarDrive"
+        },
+        "uses": -1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:13",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/ef76%20nebulon-b%20escort%20frigate/"
+          },
+          "value": "EF76 Nebulon-B Escort Frigate"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:478",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/trade%20federation/"
+          },
+          "value": "Trade Federation"
+        },
+        "uses": -1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:38",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/yv-666%20light%20freighter/"
+          },
+          "value": "YV-666 Light Freighter"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:514",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/kuat%20drive%20yards/"
+          },
+          "value": "Kuat Drive Yards"
+        },
+        "uses": -1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:48",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/c-3%20passenger%20liner/"
+          },
+          "value": "C-3 Passenger Liner"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:502",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/rendili%20stardrive/"
+          },
+          "value": "Rendili StarDrive"
+        },
+        "uses": -1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:6",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/dreadnaught-class%20heavy%20cruiser/"
+          },
+          "value": "Dreadnaught-class Heavy Cruiser"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:502",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/rendili%20stardrive/"
+          },
+          "value": "Rendili StarDrive"
+        },
+        "uses": -1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:12",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/neutron%20star-class%20bulk%20cruiser/"
+          },
+          "value": "Neutron Star-class Bulk Cruiser"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:502",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/rendili%20stardrive/"
+          },
+          "value": "Rendili StarDrive"
+        },
+        "uses": -1
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:67",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/lictor-class%20dungeon%20ship/"
+          },
+          "value": "Lictor-class Dungeon Ship"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:502",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/rendili%20stardrive/"
+          },
+          "value": "Rendili StarDrive"
+        },
+        "uses": -1
+      }
+    ]
+  },
+  "queueitems": {
+    "queueitem": [
+      {
+        "entity": {
+          "attributes": {
+            "uid": "2:316",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/behemoth-class%20star%20dreadnaught/"
+          },
+          "value": "Behemoth-class Star Dreadnaught"
+        },
+        "name": "Behemoth-class Star Dreadnaught",
+        "workers": {
+          "attributes": {
+            "ideal_workers": 400
+          },
+          "value": 400
+        },
+        "images": {
+          "customsmall": "",
+          "customlarge": ""
+        },
+        "controller": {
+          "attributes": {
+            "uid": "1:1155875",
+            "href": "https://www.swcombine.com/ws/v2.0/character/jacob%20jansen/"
+          },
+          "value": "Jacob Jansen"
+        },
+        "status": "queued",
+        "multiname": 0,
+        "quantity": 1,
+        "tags": "",
+        "queueorder": 1
+      }
+    ]
+  }
+}

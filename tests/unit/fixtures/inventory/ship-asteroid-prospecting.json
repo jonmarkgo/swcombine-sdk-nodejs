@@ -1,0 +1,164 @@
+{
+  "uid": "2:7029592",
+  "entitytype": "Ship",
+  "name": "Test Character Order #01",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://custom.swcombine.com/static/2/244/34-88449-1653876864-small.png",
+    "large": "https://custom.swcombine.com/static/2/244/34-88449-1653876864-large.png",
+    "customsmall": "https://custom.swcombine.com/static/2/244/34-88449-1653876864-small.png",
+    "customlarge": "https://custom.swcombine.com/static/2/244/34-88449-1653876864-large.png"
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 400
+    },
+    "value": 400
+  },
+  "shield": {
+    "attributes": {
+      "max": 450
+    },
+    "value": 450
+  },
+  "ionic": {
+    "attributes": {
+      "max": 200
+    },
+    "value": 200
+  },
+  "location": {
+    "container": {
+      "value": "Asteroid Field CJ 155+74M",
+      "attributes": {
+        "uid": "9:407064",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/asteroid%20field%20cj%20155%2B74m/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Asteroid Field CJ 155+74M",
+      "attributes": {
+        "uid": "9:407064",
+        "type": "asteroid field",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/asteroid%20field%20cj%20155%2B74m/"
+      }
+    },
+    "planet": {},
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 155,
+          "y": 74
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "15",
+          "y": "15"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "2:244",
+      "href": "https://www.swcombine.com/ws/v2.0/types/ships/y-8%20mining%20vessel/"
+    },
+    "value": "Y-8 Mining Vessel"
+  },
+  "underconstruction": "no",
+  "tags": {
+    "tag": []
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "datablocksused": 0,
+  "datablockstotal": 500,
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "AsteroidProspectingAction",
+          "id": 240147175
+        },
+        "value": {
+          "actiontype": "Asteroid Prospecting",
+          "status": "running",
+          "delay": {
+            "total": 7290,
+            "remaining": 5729
+          }
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 30000,
+      "remaining": 30000
+    },
+    "volumecapacity": {
+      "total": 55000,
+      "remaining": 55000
+    },
+    "passengercapacity": {
+      "total": 11,
+      "remaining": 10
+    }
+  },
+  "creationdate": {
+    "years": 27,
+    "days": 155,
+    "hours": 15,
+    "mins": 56,
+    "secs": 23,
+    "timestamp": 1777503383
+  },
+  "controller": "player",
+  "weight": 45000,
+  "volume": 109600
+}

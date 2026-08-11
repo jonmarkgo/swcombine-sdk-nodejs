@@ -1,0 +1,212 @@
+{
+  "uid": "4:3497164",
+  "entitytype": "Facility",
+  "name": "Varmigio Mine Zelvahn 0-0",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "[scrubbed]",
+  "images": {
+    "small": "https://images.swcombine.com//facilities/36/main_1.gif",
+    "large": "https://images.swcombine.com//facilities/36/vertical_1.gif"
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 25000
+    },
+    "value": 25000
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 25000
+    },
+    "value": 25000
+  },
+  "location": {
+    "container": {
+      "value": "Varmigio Mining Zelvahn 0-0",
+      "attributes": {
+        "uid": "7:11176",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/varmigio%20mining%20zelvahn%200-0/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zelvahn",
+      "attributes": {
+        "uid": "8:4534",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zelvahn/"
+      }
+    },
+    "city": {
+      "value": "Varmigio Mining Zelvahn 0-0",
+      "attributes": {
+        "uid": "7:11176",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/varmigio%20mining%20zelvahn%200-0/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": 3,
+          "y": 4
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "ground": {
+        "attributes": {
+          "x": 11,
+          "y": 2
+        }
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "4:36",
+      "href": "https://www.swcombine.com/ws/v2.0/types/facilities/mine/"
+    },
+    "value": "Mine"
+  },
+  "ispowered": "Yes",
+  "poweredby": {
+    "pg": [
+      {
+        "value": "Varmigio PG Zelvahn 3-4",
+        "attributes": {
+          "uid": "4:854184",
+          "type": "facility",
+          "href": "https://www.swcombine.com/ws/v2.0/inventory/facilities/4%3A854184/"
+        }
+      }
+    ]
+  },
+  "orientation": "v",
+  "underconstruction": "no",
+  "tags": {
+    "tag": [
+      "HAS DROID",
+      "MINE",
+      "rm:varmigio",
+      "status:paused"
+    ]
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "MiningAction",
+          "id": 183524884
+        },
+        "value": {
+          "actiontype": "Mining",
+          "status": "running",
+          "delay": {
+            "total": 604800,
+            "remaining": 486887
+          },
+          "repeating": "yes",
+          "expected-yield": 9363.25,
+          "expected-cost": 2102679,
+          "workers": 12,
+          "droids": 1
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "volumecapacity": {
+      "total": 30000,
+      "remaining": 11274
+    },
+    "passengercapacity": {
+      "total": 200,
+      "remaining": 187
+    }
+  },
+  "creationdate": {
+    "years": 21,
+    "days": 85,
+    "hours": 7,
+    "mins": 10,
+    "secs": 53,
+    "timestamp": 1582207853
+  },
+  "controller": "unmanned",
+  "weight": 5868,
+  "volume": 296130,
+  "deposits": {
+    "deposit": [
+      {
+        "attributes": {
+          "uid": "16:14",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varmigio/",
+          "quantity": 62607
+        },
+        "value": "varmigio"
+      }
+    ]
+  }
+}

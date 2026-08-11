@@ -1,0 +1,212 @@
+{
+  "uid": "4:222895",
+  "entitytype": "Facility",
+  "name": "Tibanna Mine Zellone 6-6",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "[scrubbed]",
+  "images": {
+    "small": "https://images.swcombine.com//facilities/36/main_1.gif",
+    "large": "https://images.swcombine.com//facilities/36/vertical_1.gif"
+  },
+  "opento": "Crewlist And Faction",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 25000
+    },
+    "value": 25000
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 25000
+    },
+    "value": 25000
+  },
+  "location": {
+    "container": {
+      "value": "Tibanna Mine Zellone 6-6",
+      "attributes": {
+        "uid": "7:3269",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/tibanna%20mine%20zellone%206-6/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zellone",
+      "attributes": {
+        "uid": "8:165",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zellone/"
+      }
+    },
+    "city": {
+      "value": "Tibanna Mine Zellone 6-6",
+      "attributes": {
+        "uid": "7:3269",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/tibanna%20mine%20zellone%206-6/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": 17,
+          "y": 2
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": 6,
+          "y": 6
+        }
+      },
+      "ground": {
+        "attributes": {
+          "x": 16,
+          "y": 16
+        }
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "4:36",
+      "href": "https://www.swcombine.com/ws/v2.0/types/facilities/mine/"
+    },
+    "value": "Mine"
+  },
+  "ispowered": "Yes",
+  "poweredby": {
+    "pg": [
+      {
+        "value": "Dead Mine PG Zellone 6-6",
+        "attributes": {
+          "uid": "4:222898",
+          "type": "facility",
+          "href": "https://www.swcombine.com/ws/v2.0/inventory/facilities/4%3A222898/"
+        }
+      }
+    ]
+  },
+  "orientation": "v",
+  "underconstruction": "no",
+  "tags": {
+    "tag": [
+      "HAS DROID",
+      "MINE",
+      "rm:tibanna gas",
+      "status:paused"
+    ]
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "MiningAction",
+          "id": 184163909
+        },
+        "value": {
+          "actiontype": "Mining",
+          "status": "paused",
+          "delay": {
+            "total": 604800,
+            "remaining": 604800
+          },
+          "repeating": "yes",
+          "expected-yield": 2112,
+          "expected-cost": 615332,
+          "workers": 12,
+          "droids": 1
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "volumecapacity": {
+      "total": 30000,
+      "remaining": 0
+    },
+    "passengercapacity": {
+      "total": 200,
+      "remaining": 186
+    }
+  },
+  "creationdate": {
+    "years": 7,
+    "days": 12,
+    "hours": 19,
+    "mins": 26,
+    "secs": 59,
+    "timestamp": 1134440819
+  },
+  "controller": "unmanned",
+  "weight": 5868,
+  "volume": 296130,
+  "deposits": {
+    "deposit": [
+      {
+        "attributes": {
+          "uid": "16:11",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/tibannagas/",
+          "quantity": 167989
+        },
+        "value": "tibannagas"
+      }
+    ]
+  }
+}

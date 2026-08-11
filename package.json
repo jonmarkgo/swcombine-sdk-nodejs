@@ -1,6 +1,6 @@
 {
   "name": "swcombine-sdk",
-  "version": "3.2.6",
+  "version": "3.4.0",
   "description": "Comprehensive TypeScript SDK for Star Wars Combine API v2.0",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -23,6 +23,7 @@
     "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json",
     "build:types": "tsc -p tsconfig.types.json",
     "build:watch": "tsc -p tsconfig.esm.json --watch",
+    "typecheck": "tsc -p tsconfig.typecheck.json",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:integration": "vitest run --config vitest.integration.config.ts",

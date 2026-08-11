@@ -1,0 +1,172 @@
+{
+  "uid": "4:222897",
+  "entitytype": "Facility",
+  "name": "Warehouse for Depleted Mine Zellone 6-6",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//facilities/6/main_1.gif",
+    "large": "https://images.swcombine.com//facilities/6/vertical_1.gif"
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 9000
+    },
+    "value": 9000
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 9000
+    },
+    "value": 9000
+  },
+  "location": {
+    "container": {
+      "value": "Tibanna Mine Zellone 6-6",
+      "attributes": {
+        "uid": "7:3269",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/tibanna%20mine%20zellone%206-6/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zellone",
+      "attributes": {
+        "uid": "8:165",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zellone/"
+      }
+    },
+    "city": {
+      "value": "Tibanna Mine Zellone 6-6",
+      "attributes": {
+        "uid": "7:3269",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/tibanna%20mine%20zellone%206-6/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": 17,
+          "y": 2
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": 6,
+          "y": 6
+        }
+      },
+      "ground": {
+        "attributes": {
+          "x": 18,
+          "y": 12
+        }
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "4:6",
+      "href": "https://www.swcombine.com/ws/v2.0/types/facilities/warehouse/"
+    },
+    "value": "Warehouse"
+  },
+  "ispowered": "Yes",
+  "poweredby": {
+    "pg": [
+      {
+        "value": "Dead Mine PG Zellone 6-6",
+        "attributes": {
+          "uid": "4:222898",
+          "type": "facility",
+          "href": "https://www.swcombine.com/ws/v2.0/inventory/facilities/4%3A222898/"
+        }
+      }
+    ]
+  },
+  "orientation": "v",
+  "underconstruction": "no",
+  "tags": {
+    "tag": []
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "cargo": {
+    "volumecapacity": {
+      "total": 40000,
+      "remaining": 2112
+    },
+    "passengercapacity": {
+      "total": 40,
+      "remaining": 40
+    }
+  },
+  "creationdate": {
+    "years": 7,
+    "days": 12,
+    "hours": 19,
+    "mins": 37,
+    "secs": 2,
+    "timestamp": 1134441422
+  },
+  "controller": "unmanned",
+  "weight": 6709.5,
+  "volume": 440000
+}

@@ -1,0 +1,195 @@
+{
+  "uid": "4:5657607",
+  "entitytype": "Facility",
+  "name": "Hotel",
+  "owner": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//facilities/3/main_1.gif",
+    "large": "https://images.swcombine.com//facilities/3/horizontal_1.gif"
+  },
+  "opento": "All",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 3000
+    },
+    "value": 3000
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 3000
+    },
+    "value": 3000
+  },
+  "location": {
+    "container": {
+      "value": "Ardanium Mining Zeltros 7-3",
+      "attributes": {
+        "uid": "7:180257",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/ardanium%20mining%20zeltros%207-3/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "deep space",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zeltros",
+      "attributes": {
+        "uid": "8:4531",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zeltros/"
+      }
+    },
+    "city": {
+      "value": "Ardanium Mining Zeltros 7-3",
+      "attributes": {
+        "uid": "7:180257",
+        "type": "city",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/cities/ardanium%20mining%20zeltros%207-3/"
+      }
+    },
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": 14,
+          "y": 8
+        }
+      },
+      "surface": {
+        "attributes": {
+          "x": 7,
+          "y": 3
+        }
+      },
+      "ground": {
+        "attributes": {
+          "x": 4,
+          "y": 7
+        }
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "4:3",
+      "href": "https://www.swcombine.com/ws/v2.0/types/facilities/hotel/"
+    },
+    "value": "Hotel"
+  },
+  "ispowered": "Yes",
+  "poweredby": {
+    "pg": [
+      {
+        "value": "Power Generator",
+        "attributes": {
+          "uid": "4:5657576",
+          "type": "facility",
+          "href": "https://www.swcombine.com/ws/v2.0/inventory/facilities/4%3A5657576/"
+        }
+      }
+    ]
+  },
+  "orientation": "h",
+  "underconstruction": "yes",
+  "tags": {
+    "tag": []
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "FacilityConstructionAction",
+          "id": 198205876
+        },
+        "value": {
+          "actiontype": "Facility Construction",
+          "status": "paused",
+          "delay": {
+            "total": 344808,
+            "remaining": 344801
+          },
+          "workers": 1
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "volumecapacity": {
+      "total": 1200,
+      "remaining": 1200
+    },
+    "passengercapacity": {
+      "total": 60,
+      "remaining": 60
+    }
+  },
+  "creationdate": {
+    "years": 27,
+    "days": 4,
+    "hours": 15,
+    "mins": 23,
+    "secs": 5,
+    "timestamp": 1764454985
+  },
+  "controller": "unmanned",
+  "weight": 3303,
+  "volume": 4950,
+  "facilityincome": {
+    "currentdebt": 0,
+    "warnings": {}
+  }
+}

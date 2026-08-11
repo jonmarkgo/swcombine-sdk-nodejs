@@ -1,0 +1,148 @@
+{
+  "uid": "2:283",
+  "entitytype": "Ship",
+  "name": "Royal Selmurian Shuttle",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//ships/20/main.jpg",
+    "large": "https://images.swcombine.com//ships/20/large.jpg",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 90
+    },
+    "value": 90
+  },
+  "shield": {
+    "attributes": {
+      "max": 130
+    },
+    "value": 130
+  },
+  "ionic": {
+    "attributes": {
+      "max": 50
+    },
+    "value": 50
+  },
+  "location": {
+    "container": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {},
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "16",
+          "y": "8"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "2:20",
+      "href": "https://www.swcombine.com/ws/v2.0/types/ships/lambda-class%20t-4a%20shuttle/"
+    },
+    "value": "Lambda-class T-4a Shuttle"
+  },
+  "underconstruction": "no",
+  "tags": {
+    "tag": [
+      "favorite"
+    ]
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "datablocksused": 5,
+  "datablockstotal": 300,
+  "cargo": {
+    "weightcapacity": {
+      "total": 80,
+      "remaining": 77.2165
+    },
+    "volumecapacity": {
+      "total": 90,
+      "remaining": 23.221999999999966
+    },
+    "passengercapacity": {
+      "total": 26,
+      "remaining": 26
+    }
+  },
+  "creationdate": {
+    "years": 0,
+    "days": 1,
+    "hours": 0,
+    "mins": 0,
+    "secs": 0,
+    "timestamp": 912668400
+  },
+  "controller": "unmanned",
+  "weight": 224,
+  "volume": 1500
+}

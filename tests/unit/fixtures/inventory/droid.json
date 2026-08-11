@@ -1,0 +1,142 @@
+{
+  "uid": "13:14550",
+  "entitytype": "Droid",
+  "name": "R4",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//droids/3/main.jpg",
+    "large": "https://images.swcombine.com//droids/3/large.jpg",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 55
+    },
+    "value": 55
+  },
+  "shield": {
+    "attributes": {
+      "max": 0
+    },
+    "value": 0
+  },
+  "ionic": {
+    "attributes": {
+      "max": 55
+    },
+    "value": 55
+  },
+  "location": {
+    "container": {
+      "value": "Dreksicus Rex",
+      "attributes": {
+        "uid": "2:153479",
+        "type": "ship",
+        "href": "https://www.swcombine.com/ws/v2.0/inventory/ships/2%3A153479/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zelvahn",
+      "attributes": {
+        "uid": "8:4534",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zelvahn/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "3",
+          "y": "4"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "13:3",
+      "href": "https://www.swcombine.com/ws/v2.0/types/droids/r4%20series%20astromech/"
+    },
+    "value": "R4 Series Astromech"
+  },
+  "tags": {
+    "tag": []
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 0,
+      "remaining": 0
+    },
+    "volumecapacity": {
+      "total": 0,
+      "remaining": 0
+    }
+  },
+  "creationdate": {
+    "years": 9,
+    "days": 123,
+    "hours": 9,
+    "mins": 16,
+    "secs": 1,
+    "timestamp": 1207066561
+  },
+  "controller": "unmanned",
+  "weight": 0.06,
+  "volume": 0.5
+}

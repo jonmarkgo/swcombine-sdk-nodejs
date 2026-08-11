@@ -27,6 +27,15 @@ export interface EntityType {
   [key: string]: unknown;
 }
 
+/**
+ * A single entity class returned by {@link TypesClassesResource.list}.
+ *
+ * @remarks
+ * The numeric class identifiers exposed by the SW Combine API were renumbered in a
+ * server-side sync: ship classes shifted by +1 (e.g. Super Capital `0 → 1`) and
+ * vehicle classes by +21 (e.g. Ground Vehicles `0 → 21`). The SDK relays whatever the
+ * API returns, so callers that cached the old numeric ids should refresh them.
+ */
 export interface EntityClass {
   name: string;
   description?: string;

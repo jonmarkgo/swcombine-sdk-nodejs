@@ -1,0 +1,115 @@
+{
+  "uid": "12:535737",
+  "entitytype": "Item",
+  "name": "Standard Flight Suit",
+  "owner": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//items/131/main.png",
+    "large": "https://images.swcombine.com//items/131/large.png",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "protected": "no",
+  "location": {
+    "container": {
+      "value": "Claudius Depot",
+      "attributes": {
+        "uid": "5:39498",
+        "type": "station",
+        "href": "https://www.swcombine.com/ws/v2.0/inventory/stations/5%3A39498/"
+      }
+    },
+    "sector": {
+      "value": "Hevvrol",
+      "attributes": {
+        "uid": "25:18",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/hevvrol/"
+      }
+    },
+    "system": {
+      "value": "Cularin",
+      "attributes": {
+        "uid": "9:1223",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/cularin/"
+      }
+    },
+    "planet": {
+      "value": "Cularin",
+      "attributes": {
+        "uid": "8:210",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/cularin/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": -120,
+          "y": 160
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "11",
+          "y": "8"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "12:131",
+      "href": "https://www.swcombine.com/ws/v2.0/types/items/cargo%20container/"
+    },
+    "value": "Cargo Container"
+  },
+  "cargo": {
+    "entitytype": {
+      "attributes": {
+        "uid": "12:52",
+        "href": "https://www.swcombine.com/ws/v2.0/types/items/standard%20flight%20suit/"
+      },
+      "value": "Standard Flight Suit"
+    },
+    "maxuses": 35,
+    "remaininguses": 35,
+    "weightcapacity": {
+      "total": 0,
+      "remaining": 0
+    },
+    "volumecapacity": {
+      "total": 0,
+      "remaining": 0
+    }
+  },
+  "tags": {
+    "tag": []
+  },
+  "creationdate": {
+    "years": 9,
+    "days": 210,
+    "hours": 22,
+    "mins": 46,
+    "secs": 1,
+    "timestamp": 1214631961
+  },
+  "weight": 0.42,
+  "volume": 4.55
+}

@@ -848,11 +848,25 @@ export interface Location {
   [key: string]: unknown;
 }
 
+/**
+ * An inventory entity as returned by `GET /inventory/{entity_type}/{uid}`.
+ *
+ * Note the distinction between the two type-ish fields, which is easy to get wrong:
+ * - `entitytype` is the entity *kind* as a plain string (`"Ship"`, `"NPC"`, `"Planet"`).
+ * - `type` is a *reference* to the entity's type/class, e.g. `Lambda-class T-4a Shuttle`.
+ *
+ * `type` was previously declared as a required `string`. The API has always returned an
+ * object here, so reading `entity.type` as a string was broken at runtime; use
+ * `entity.entitytype` for the string form.
+ */
 export interface Entity {
   uid: string;
-  type: string;
+  /** Entity kind as a plain string, e.g. `"Ship"`, `"NPC"`, `"Facility"`. */
+  entitytype?: string;
+  /** Reference to the entity's type/class. */
+  type?: EntityTypeRef;
   name?: string;
-  owner?: Character | Faction | string;
+  owner?: EntityReference;
   [key: string]: unknown;
 }
 
@@ -1047,11 +1061,19 @@ export interface EntityReference {
 /**
  * Entity image URLs
  */
+/**
+ * Entity image URLs.
+ *
+ * Only `small` and `large` are always present. The custom variants depend on entity
+ * type and on whether a custom image has been uploaded — facilities, materials, NPCs
+ * and creatures return `{small, large}` only, and some cities return `customsmall`
+ * without `customlarge`.
+ */
 export interface EntityImages {
   small: string;
   large: string;
-  customsmall: string;
-  customlarge: string;
+  customsmall?: string;
+  customlarge?: string;
 }
 
 /**
@@ -1323,6 +1345,17 @@ export interface ListTypesClassesOptions<T extends TypesEntityType = TypesEntity
 
 export interface ListTypesEntitiesOptions<T extends TypesEntityType = TypesEntityType> {
   entityType: T;
+  /**
+   * Filter by class. Accepts a class name (e.g. `'fighter'`) or a numeric class id.
+   *
+   * @remarks
+   * **Class ids were renumbered by the SW Combine API.** The numeric identifiers for
+   * ship and vehicle classes shifted with a server-side sync — ship classes by +1
+   * (e.g. Super Capital `0 → 1`, Capital Ship `1 → 2`, Frigate `2 → 3`) and vehicle
+   * classes by +21 (e.g. Ground Vehicles `0 → 21`, Speeders `1 → 22`, Barges `2 → 23`).
+   * This SDK passes the value through unchanged, so if you previously stored numeric
+   * class ids, update them to the new numbering. Filtering by class name is unaffected.
+   */
   class?: string;
   start_index?: number;
   item_count?: number;
@@ -2263,8 +2296,10 @@ export type ListSimNewsOptions = ListNewsOptionsBase;
  */
 export type ListNewsOptions = ListGNSOptions;
 
-export interface GetEntityOptions {
-  entityType: string;
+export interface GetEntityOptions<T extends InventoryEntityType = InventoryEntityType> {
+  /** Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials' */
+  entityType: T;
+  /** Entity UID, e.g. "2:283" */
   uid: string;
 }
 
@@ -2287,3 +2322,5 @@ export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = In
   /** Whether each filter should include or exclude matches. Default: 'includes' */
   filter_inclusion?: InventoryFilterInclusion[];
 }
+
+export * from './inventory-detail.js';

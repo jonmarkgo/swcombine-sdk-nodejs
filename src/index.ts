@@ -15,6 +15,18 @@ export { Timestamp } from './Timestamp.js';
 // Pagination
 export { Page } from './pagination/Page.js';
 
+// Inventory action type guards
+export {
+  isMiningAction,
+  isEntityProductionAction,
+  isRetoolingAction,
+} from './inventory-actions.js';
+export type {
+  MiningActionValue,
+  EntityProductionActionValue,
+  RetoolingActionValue,
+} from './inventory-actions.js';
+
 // Types
 export * from './types/index.js';
 

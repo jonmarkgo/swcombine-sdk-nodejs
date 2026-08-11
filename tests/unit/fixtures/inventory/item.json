@@ -1,0 +1,114 @@
+{
+  "uid": "12:1979",
+  "entitytype": "Item",
+  "name": "Purchased Worker Coverall",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//items/59/main.jpg",
+    "large": "https://images.swcombine.com//noImageLarge.jpg",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "protected": "no",
+  "location": {
+    "container": {
+      "value": "Dreksgasm",
+      "attributes": {
+        "uid": "2:2396",
+        "type": "ship",
+        "href": "https://www.swcombine.com/ws/v2.0/inventory/ships/2%3A2396/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zeltros",
+      "attributes": {
+        "uid": "8:4531",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zeltros/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "14",
+          "y": "8"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "12:59",
+      "href": "https://www.swcombine.com/ws/v2.0/types/items/clothing/"
+    },
+    "value": "Clothing"
+  },
+  "tags": {
+    "tag": []
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 0.004,
+      "remaining": 0.004
+    },
+    "volumecapacity": {
+      "total": 0.4,
+      "remaining": 0.4
+    }
+  },
+  "creationdate": {
+    "years": 0,
+    "days": 1,
+    "hours": 0,
+    "mins": 0,
+    "secs": 0,
+    "timestamp": 912668400
+  },
+  "weight": 0.003,
+  "volume": 0.5
+}

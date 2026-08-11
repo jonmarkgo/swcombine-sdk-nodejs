@@ -38,8 +38,8 @@ Unit tests live in `tests/unit/` and use mocked HTTP clients (see `tests/unit/he
 
 ### Integration tests (use sparingly)
 
-> **Rate-limit-sensitive.** Integration tests hit the real SW Combine API and share the
-> global 600 req/hour budget. Do NOT run them as part of normal development, CI on every
+> **Rate-limit-sensitive.** Integration tests hit the real SW Combine API and share a
+> 600 req/hour budget per endpoint pattern (the API enforces limits per pattern, not one global pool). Do NOT run them as part of normal development, CI on every
 > PR, or `prepublishOnly`. Run them only when validating changes against real API shapes,
 > and prefer the narrowest per-resource subset for the change you're working on.
 

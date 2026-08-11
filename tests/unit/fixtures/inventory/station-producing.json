@@ -1,0 +1,366 @@
+{
+  "uid": "5:13116",
+  "entitytype": "Station",
+  "name": "Dreksicus XXL",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//stations/8/main.jpg",
+    "large": "https://images.swcombine.com//stations/8/large.jpg",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 6250
+    },
+    "value": 6250
+  },
+  "shield": {
+    "attributes": {
+      "max": 4600
+    },
+    "value": 4600
+  },
+  "ionic": {
+    "attributes": {
+      "max": 2815
+    },
+    "value": 2815
+  },
+  "location": {
+    "container": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {
+      "value": "Zeltros",
+      "attributes": {
+        "uid": "8:4531",
+        "type": "planet",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/planets/zeltros/"
+      }
+    },
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "14",
+          "y": "8"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "5:8",
+      "href": "https://www.swcombine.com/ws/v2.0/types/stations/shipyard%20iv/"
+    },
+    "value": "Shipyard IV"
+  },
+  "underconstruction": "no",
+  "tags": {
+    "tag": [
+      "collect",
+      "needs queue"
+    ]
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "EntityProductionAction",
+          "id": 195708640
+        },
+        "value": {
+          "actiontype": "Entity Production",
+          "status": "running",
+          "delay": {
+            "total": 16830000,
+            "remaining": 2880790
+          },
+          "quantity": 1,
+          "workers": 240,
+          "producing": {
+            "entity": [
+              {
+                "value": "[No Name]",
+                "attributes": {
+                  "uid": "2:7119317",
+                  "type": "ship",
+                  "href": "https://www.swcombine.com/ws/v2.0/inventory/ships/2%3A7119317/"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 6400000,
+      "remaining": 6370341.7394
+    },
+    "volumecapacity": {
+      "total": 520000,
+      "remaining": 421259.262
+    },
+    "passengercapacity": {
+      "total": 1000,
+      "remaining": 640
+    }
+  },
+  "creationdate": {
+    "years": 14,
+    "days": 274,
+    "hours": 20,
+    "mins": 26,
+    "secs": 46,
+    "timestamp": 1377833206
+  },
+  "controller": "unmanned",
+  "weight": 10930080,
+  "volume": 6420000,
+  "tooledto": {
+    "attributes": {
+      "uid": "2:8",
+      "href": "https://www.swcombine.com/ws/v2.0/types/ships/mc-80a%20star%20cruiser/"
+    },
+    "value": "MC-80a Star Cruiser"
+  },
+  "assigneddcs": {
+    "card": [
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:314",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/endurance-class%20fleet%20carrier/"
+          },
+          "value": "Endurance-Class Fleet Carrier"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:478",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/trade%20federation/"
+          },
+          "value": "Trade Federation"
+        },
+        "uses": 3
+      },
+      {
+        "type": {
+          "attributes": {
+            "uid": "2:316",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/behemoth-class%20star%20dreadnaught/"
+          },
+          "value": "Behemoth-class Star Dreadnaught"
+        },
+        "assigner": {
+          "attributes": {
+            "uid": "20:478",
+            "href": "https://www.swcombine.com/ws/v2.0/faction/trade%20federation/"
+          },
+          "value": "Trade Federation"
+        },
+        "uses": 1
+      }
+    ]
+  },
+  "queueitems": {
+    "queueitem": [
+      {
+        "entity": {
+          "attributes": {
+            "uid": "2:8",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/mc-80a%20star%20cruiser/"
+          },
+          "value": "MC-80a Star Cruiser"
+        },
+        "name": "[No Name]",
+        "workers": {
+          "attributes": {
+            "ideal_workers": 240
+          },
+          "value": 240
+        },
+        "images": {
+          "customsmall": "",
+          "customlarge": ""
+        },
+        "controller": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "status": "producing",
+        "multiname": 0,
+        "quantity": 1,
+        "tags": "",
+        "queueorder": 1,
+        "producedentities": {
+          "producedentity": [
+            {
+              "uid": "2:7119317",
+              "entitytype": "Ship",
+              "name": "[No Name]",
+              "owner": {
+                "value": "Test Character",
+                "attributes": {
+                  "uid": "1:46931",
+                  "type": "character",
+                  "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+                }
+              },
+              "images": {
+                "small": "https://custom.swcombine.com/static/2/8/34-8894-1784080517-small.png",
+                "large": "https://custom.swcombine.com/static/2/8/34-8894-1784080517-large.png",
+                "customsmall": "https://custom.swcombine.com/static/2/8/34-8894-1784080517-small.png",
+                "customlarge": "https://custom.swcombine.com/static/2/8/34-8894-1784080517-large.png"
+              },
+              "wrecked": "no",
+              "type": {
+                "attributes": {
+                  "uid": "2:8",
+                  "href": "https://www.swcombine.com/ws/v2.0/types/ships/mc-80a%20star%20cruiser/"
+                },
+                "value": "MC-80a Star Cruiser"
+              },
+              "underconstruction": "yes",
+              "tags": {
+                "tag": []
+              }
+            }
+          ]
+        }
+      },
+      {
+        "entity": {
+          "attributes": {
+            "uid": "2:316",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/behemoth-class%20star%20dreadnaught/"
+          },
+          "value": "Behemoth-class Star Dreadnaught"
+        },
+        "name": "[No Name]",
+        "workers": {
+          "attributes": {
+            "ideal_workers": 400
+          },
+          "value": 400
+        },
+        "images": {
+          "customsmall": "",
+          "customlarge": ""
+        },
+        "controller": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "status": "queued",
+        "multiname": 0,
+        "quantity": 1,
+        "tags": "",
+        "queueorder": 2
+      },
+      {
+        "entity": {
+          "attributes": {
+            "uid": "2:314",
+            "href": "https://www.swcombine.com/ws/v2.0/types/ships/endurance-class%20fleet%20carrier/"
+          },
+          "value": "Endurance-Class Fleet Carrier"
+        },
+        "name": "[No Name]",
+        "workers": {
+          "attributes": {
+            "ideal_workers": 208
+          },
+          "value": 208
+        },
+        "images": {
+          "customsmall": "",
+          "customlarge": ""
+        },
+        "controller": {
+          "value": "Test Character",
+          "attributes": {
+            "uid": "1:46931",
+            "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+          }
+        },
+        "status": "queued",
+        "multiname": 0,
+        "quantity": 1,
+        "tags": "",
+        "queueorder": 3
+      }
+    ]
+  }
+}

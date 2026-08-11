@@ -1,0 +1,371 @@
+{
+  "uid": "5:61544",
+  "entitytype": "Station",
+  "name": "Depot Station I",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Faction",
+    "attributes": {
+      "uid": "20:502",
+      "type": "faction",
+      "href": "https://www.swcombine.com/ws/v2.0/faction/test%20faction/"
+    }
+  },
+  "pilot": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//stations/46/main.jpg",
+    "large": "https://images.swcombine.com//stations/46/large.jpg",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 1400
+    },
+    "value": 1400
+  },
+  "shield": {
+    "attributes": {
+      "max": 1100
+    },
+    "value": 1100
+  },
+  "ionic": {
+    "attributes": {
+      "max": 750
+    },
+    "value": 750
+  },
+  "location": {
+    "container": {
+      "value": "Asteroid Field WK 129+90",
+      "attributes": {
+        "uid": "9:7740",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/asteroid%20field%20wk%20129%2B90/"
+      }
+    },
+    "sector": {},
+    "system": {
+      "value": "Asteroid Field WK 129+90",
+      "attributes": {
+        "uid": "9:7740",
+        "type": "asteroid field",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/asteroid%20field%20wk%20129%2B90/"
+      }
+    },
+    "planet": {},
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 129,
+          "y": 90
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "19",
+          "y": "19"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "5:46",
+      "href": "https://www.swcombine.com/ws/v2.0/types/stations/depot%20station%20i/"
+    },
+    "value": "Depot Station I"
+  },
+  "underconstruction": "no",
+  "tags": {
+    "tag": []
+  },
+  "crewlist": {
+    "entry": []
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 5000000,
+      "remaining": 4520060
+    },
+    "volumecapacity": {
+      "total": 500000,
+      "remaining": 456290
+    },
+    "passengercapacity": {
+      "total": 55,
+      "remaining": 55
+    }
+  },
+  "creationdate": {
+    "years": 27,
+    "days": 80,
+    "hours": 20,
+    "mins": 52,
+    "secs": 8,
+    "timestamp": 1771041128
+  },
+  "controller": "unmanned",
+  "weight": 8377037,
+  "volume": 730522,
+  "deposits": {
+    "deposit": [
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 261525,
+          "x": 16,
+          "y": 2
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:10",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/rockivory/",
+          "quantity": 5313,
+          "x": 1,
+          "y": 3
+        },
+        "value": "rockivory"
+      },
+      {
+        "attributes": {
+          "uid": "16:1",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/quantum/",
+          "quantity": 36036,
+          "x": 7,
+          "y": 4
+        },
+        "value": "quantum"
+      },
+      {
+        "attributes": {
+          "uid": "16:10",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/rockivory/",
+          "quantity": 10758,
+          "x": 3,
+          "y": 6
+        },
+        "value": "rockivory"
+      },
+      {
+        "attributes": {
+          "uid": "16:13",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varium/",
+          "quantity": 32373,
+          "x": 11,
+          "y": 6
+        },
+        "value": "varium"
+      },
+      {
+        "attributes": {
+          "uid": "16:14",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varmigio/",
+          "quantity": 31944,
+          "x": 5,
+          "y": 8
+        },
+        "value": "varmigio"
+      },
+      {
+        "attributes": {
+          "uid": "16:13",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varium/",
+          "quantity": 5671,
+          "x": 8,
+          "y": 8
+        },
+        "value": "varium"
+      },
+      {
+        "attributes": {
+          "uid": "16:13",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varium/",
+          "quantity": 26679,
+          "x": 13,
+          "y": 8
+        },
+        "value": "varium"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 331100,
+          "x": 3,
+          "y": 9
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:13",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varium/",
+          "quantity": 28759,
+          "x": 4,
+          "y": 9
+        },
+        "value": "varium"
+      },
+      {
+        "attributes": {
+          "uid": "16:16",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/hibridium/",
+          "quantity": 11827,
+          "x": 12,
+          "y": 10
+        },
+        "value": "hibridium"
+      },
+      {
+        "attributes": {
+          "uid": "16:1",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/quantum/",
+          "quantity": 37251,
+          "x": 1,
+          "y": 11
+        },
+        "value": "quantum"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 71225,
+          "x": 3,
+          "y": 11
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 405350,
+          "x": 13,
+          "y": 12
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 357775,
+          "x": 17,
+          "y": 12
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:1",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/quantum/",
+          "quantity": 29529,
+          "x": 3,
+          "y": 13
+        },
+        "value": "quantum"
+      },
+      {
+        "attributes": {
+          "uid": "16:19",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/vertex/",
+          "quantity": 35508,
+          "x": 15,
+          "y": 13
+        },
+        "value": "vertex"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 121825,
+          "x": 9,
+          "y": 14
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 119900,
+          "x": 11,
+          "y": 15
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:14",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varmigio/",
+          "quantity": 191004,
+          "x": 9,
+          "y": 16
+        },
+        "value": "varmigio"
+      },
+      {
+        "attributes": {
+          "uid": "16:13",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varium/",
+          "quantity": 4058,
+          "x": 12,
+          "y": 16
+        },
+        "value": "varium"
+      },
+      {
+        "attributes": {
+          "uid": "16:1",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/quantum/",
+          "quantity": 8437,
+          "x": 0,
+          "y": 17
+        },
+        "value": "quantum"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 234300,
+          "x": 1,
+          "y": 17
+        },
+        "value": "meleenium"
+      }
+    ]
+  }
+}

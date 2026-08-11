@@ -1,0 +1,354 @@
+{
+  "uid": "10:19841393",
+  "entitytype": "NPC",
+  "name": "Aalya Lohgun",
+  "owner": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//races/47/npc_f1.jpg",
+    "large": "https://images.swcombine.com//noImageLarge.jpg"
+  },
+  "protected": "no",
+  "hp": {
+    "attributes": {
+      "max": 92
+    },
+    "value": 92
+  },
+  "location": {
+    "container": {
+      "value": "Dreksicus A",
+      "attributes": {
+        "uid": "5:53267",
+        "type": "station",
+        "href": "https://www.swcombine.com/ws/v2.0/inventory/stations/5%3A53267/"
+      }
+    },
+    "sector": {
+      "value": "Airon",
+      "attributes": {
+        "uid": "25:207",
+        "type": "sector",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/sectors/airon/"
+      }
+    },
+    "system": {
+      "value": "Zel",
+      "attributes": {
+        "uid": "9:1117",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/zel/"
+      }
+    },
+    "planet": {},
+    "city": {},
+    "coordinates": {
+      "galaxy": {
+        "attributes": {
+          "x": 151,
+          "y": 49
+        }
+      },
+      "system": {
+        "attributes": {
+          "x": "16",
+          "y": "8"
+        }
+      },
+      "surface": {
+        "attributes": null
+      },
+      "ground": {
+        "attributes": null
+      }
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "10:62",
+      "href": "https://www.swcombine.com/ws/v2.0/types/npcs/worker/"
+    },
+    "value": "Worker"
+  },
+  "race": {
+    "attributes": {
+      "uid": "22:47",
+      "href": "https://www.swcombine.com/ws/v2.0/types/races/geonosian/"
+    },
+    "value": "Geonosian"
+  },
+  "gender": {
+    "attributes": {
+      "gender": "F"
+    },
+    "value": "Female"
+  },
+  "level": 1,
+  "tags": {
+    "tag": []
+  },
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "EntityProductionAction",
+          "id": 180903100
+        },
+        "value": {
+          "actiontype": "Entity Production",
+          "status": "running",
+          "delay": {
+            "total": 10193400,
+            "remaining": 9075698
+          }
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 0.09,
+      "remaining": 0.09
+    },
+    "volumecapacity": {
+      "total": 8.25,
+      "remaining": 8.25
+    }
+  },
+  "controller": "unmanned",
+  "skills": {
+    "general": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "strength"
+            },
+            "value": 3
+          },
+          {
+            "attributes": {
+              "type": "dexterity"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "speed"
+            },
+            "value": 3
+          },
+          {
+            "attributes": {
+              "type": "dodge"
+            },
+            "value": 2
+          },
+          {
+            "attributes": {
+              "type": "projectile"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "nonProjectile"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "space": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 5
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "fighterPiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "fighterCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "capitalPiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "capitalCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "spaceCommand"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "ground": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 5
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "vehiclePiloting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "vehicleCombat"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "infantryCommand"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "vehicleCommand"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "heavyWeapons"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "social": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "medical"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "diplomacy"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "crafting"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "management"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "perception"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "stealth"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "science": [
+      {
+        "attributes": {
+          "force": "false",
+          "count": 6
+        },
+        "skill": [
+          {
+            "attributes": {
+              "type": "rndHull"
+            },
+            "value": "1"
+          },
+          {
+            "attributes": {
+              "type": "rndElectronics"
+            },
+            "value": "1"
+          },
+          {
+            "attributes": {
+              "type": "rndEngines"
+            },
+            "value": "1"
+          },
+          {
+            "attributes": {
+              "type": "rndWeapons"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "repair"
+            },
+            "value": 0
+          },
+          {
+            "attributes": {
+              "type": "compOps"
+            },
+            "value": 0
+          }
+        ]
+      }
+    ]
+  }
+}

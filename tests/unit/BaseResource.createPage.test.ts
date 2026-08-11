@@ -24,7 +24,7 @@ function makeResource(): TestResource {
 }
 
 describe('BaseResource.createPage()', () => {
-  const noopFetcher = vi.fn() as (start: number) => Promise<Page<unknown>>;
+  const noopFetcher = vi.fn() as any;
 
   // ─── String coercion ──────────────────────────────────────────────
 
@@ -184,6 +184,7 @@ describe('BaseResource.createPage()', () => {
       total: 10,
       start: 6,
       count: 5,
+      hasMore: false,
       fetcher: noopFetcher,
     });
     const fetcher = vi.fn().mockResolvedValue(nextPage);

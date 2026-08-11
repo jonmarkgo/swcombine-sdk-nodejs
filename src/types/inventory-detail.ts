@@ -35,6 +35,7 @@ export type KnownActionType =
   | 'EntityProductionAction'
   | 'RetoolingAction'
   | 'SublightTravelAction'
+  | 'HyperspaceTravelAction'
   | 'AsteroidMiningSoloAction'
   | 'CargoDelayAction'
   | 'FacilityConstructionAction'

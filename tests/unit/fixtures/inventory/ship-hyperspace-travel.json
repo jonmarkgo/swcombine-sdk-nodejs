@@ -1,0 +1,133 @@
+{
+  "uid": "2:5419890",
+  "entitytype": "Ship",
+  "name": "BTL-A4 Y-wing Longprobe",
+  "owner": {
+    "value": "Ace Mannix",
+    "attributes": {
+      "uid": "1:1472342",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/ace%20mannix/"
+    }
+  },
+  "commander": {
+    "value": "Test Character",
+    "attributes": {
+      "uid": "1:46931",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/test%20character/"
+    }
+  },
+  "pilot": {
+    "value": "Ace Mannix",
+    "attributes": {
+      "uid": "1:1472342",
+      "type": "character",
+      "href": "https://www.swcombine.com/ws/v2.0/character/ace%20mannix/"
+    }
+  },
+  "infotext": "",
+  "images": {
+    "small": "https://images.swcombine.com//ships/111/main.png",
+    "large": "https://images.swcombine.com//ships/111/large.png",
+    "customsmall": "",
+    "customlarge": ""
+  },
+  "opento": "Crewlist Only",
+  "protected": "no",
+  "wrecked": "no",
+  "hull": {
+    "attributes": {
+      "max": 70
+    },
+    "value": 70
+  },
+  "shield": {
+    "attributes": {
+      "max": 29
+    },
+    "value": 29
+  },
+  "ionic": {
+    "attributes": {
+      "max": 25
+    },
+    "value": 25
+  },
+  "location": {
+    "container": {
+      "value": "Asrat",
+      "attributes": {
+        "uid": "9:63",
+        "type": "system",
+        "href": "https://www.swcombine.com/ws/v2.0/galaxy/systems/asrat/"
+      }
+    },
+    "sector": {},
+    "system": {},
+    "planet": {},
+    "city": {},
+    "coordinates": {
+      "galaxy": {},
+      "system": {},
+      "surface": {},
+      "ground": {}
+    }
+  },
+  "type": {
+    "attributes": {
+      "uid": "2:111",
+      "href": "https://www.swcombine.com/ws/v2.0/types/ships/btl-a4%20y-wing%20longprobe/"
+    },
+    "value": "BTL-A4 Y-wing Longprobe"
+  },
+  "underconstruction": "no",
+  "crewlist": {
+    "entry": []
+  },
+  "datablocksused": 0,
+  "datablockstotal": 250,
+  "actions": {
+    "action": [
+      {
+        "attributes": {
+          "type": "HyperspaceTravelAction",
+          "id": 240084472
+        },
+        "value": {
+          "actiontype": "Hyperspace Travel",
+          "status": "running",
+          "delay": {
+            "total": 67819,
+            "remaining": 30272
+          }
+        }
+      }
+    ]
+  },
+  "cargo": {
+    "weightcapacity": {
+      "total": 0,
+      "remaining": 0
+    },
+    "volumecapacity": {
+      "total": 3,
+      "remaining": 3
+    },
+    "passengercapacity": {
+      "total": 1,
+      "remaining": 0
+    }
+  },
+  "creationdate": {
+    "years": 26,
+    "days": 18,
+    "hours": 18,
+    "mins": 47,
+    "secs": 39,
+    "timestamp": 1734140859
+  },
+  "controller": "player",
+  "weight": 65,
+  "volume": 743
+}

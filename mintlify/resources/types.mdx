@@ -78,15 +78,7 @@ console.log(shipType.name); // access properties directly, not shipType.data
 Get all entities of a type (paginated)
 
 <ParamField path="class" type="string">
-  Filter by class. Accepts a class name (e.g. `'fighter'`) or a numeric class id.
-
-  <Warning>
-    Class ids were renumbered by the SW Combine API in a server-side sync. Ship class ids
-    shifted by +1 (e.g. Super Capital `0 → 1`, Capital Ship `1 → 2`) and vehicle class ids
-    by +21 (e.g. Ground Vehicles `0 → 21`, Speeders `1 → 22`). The SDK passes the value
-    through unchanged, so if you cached numeric class ids, update them to the new numbering.
-    Filtering by class name is unaffected.
-  </Warning>
+  Filter by class. Accepts a class name (e.g. `'fighter'`) or a numeric class id. **Class ids were renumbered by the SW Combine API.** The numeric identifiers for ship and vehicle classes shifted with a server-side sync — ship classes by +1 (e.g. Super Capital `0 → 1`, Capital Ship `1 → 2`, Frigate `2 → 3`) and vehicle classes by +21 (e.g. Ground Vehicles `0 → 21`, Speeders `1 → 22`, Barges `2 → 23`). This SDK passes the value through unchanged, so if you previously stored numeric class ids, update them to the new numbering. Filtering by class name is unaffected.
 </ParamField>
 
 <ParamField path="entityType" type="T" required>

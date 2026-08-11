@@ -59,19 +59,29 @@ Add tag to entity
 ### inventory.entities.get()
 
 Get a specific inventory entity by type and UID.
-Returns the `Entity` object directly — not wrapped in a `Page`.
+Returns the entity object directly — not wrapped in a `Page`. The return type
+is narrowed by `entityType`, so `entityType: 'npcs'` yields an `NpcEntityDetail`
+with `race`, `gender` and `level`.
 
-<ParamField path="entityType" type="string" required>
-  The entityType parameter.
+<ParamField path="entityType" type="T" required>
+  Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials'
 </ParamField>
 
 <ParamField path="uid" type="string" required>
-  The uid parameter.
+  Entity UID, e.g. "2:283"
 </ParamField>
 
 ```typescript
-const ship = await client.inventory.entities.get({ entityType: 'ships', uid: '8:123' });
-console.log(ship.name); // access properties directly, not ship.data
+const ship = await client.inventory.entities.get({ entityType: 'ships', uid: '2:283' });
+console.log(ship.name);
+```
+
+```typescript
+// Actions are always an array, even when there is only one.
+const facility = await client.inventory.entities.get({ entityType: 'facilities', uid: '4:3497164' });
+for (const action of facility.actions?.action ?? []) {
+  console.log(action.value.actiontype);
+}
 ```
 
 ### inventory.entities.list()
@@ -134,6 +144,9 @@ const pilotedVehicles = await client.inventory.entities.list({ uid: '1:12345', e
 // Fetch up to 200 entities at once
 const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot', start_index: 1, item_count: 200 });
 
+// Administered planets — note the assign type
+const planets = await client.inventory.entities.list({ uid: '1:12345', entityType: 'planets', assignType: 'pilot' });
+
 // Filter by multiple criteria
 const multiFiltered = await client.inventory.entities.list({
   uid: '1:12345',
@@ -185,7 +198,7 @@ Update entity property
   New value for the property
 </ParamField>
 
-<ParamField path="property" type="'name' \| 'owner' \| 'infotext' \| 'commander' \| 'pilot' \| 'open-to' \| 'action' \| 'crewlist-add' \| 'crewlist-remove' \| 'crewlist-clear'" required>
+<ParamField path="property" type="'name' \| 'owner' \| 'commander' \| 'pilot' \| 'infotext' \| 'open-to' \| 'action' \| 'crewlist-add' \| 'crewlist-remove' \| 'crewlist-clear'" required>
   Property to update
 </ParamField>
 

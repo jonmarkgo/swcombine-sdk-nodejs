@@ -214,6 +214,21 @@ if (result.success) {
 }
 ```
 
+#### PKCE (optional)
+
+SW Combine supports [PKCE](https://oauth.net/2/pkce/). Generate a pair per login, send the
+challenge with the authorization URL, and keep the verifier (like `state`) for the callback:
+
+```typescript
+import { createPkcePair } from 'swcombine-sdk';
+
+const { codeVerifier, codeChallenge } = createPkcePair();
+const authUrl = client.auth.getAuthorizationUrl({ scopes, state, codeChallenge });
+
+// in the callback handler
+const result = await client.auth.handleCallback(req.query, codeVerifier);
+```
+
 ## Type-Safe OAuth Scopes
 
 ```typescript

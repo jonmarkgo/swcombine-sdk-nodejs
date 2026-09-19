@@ -55,7 +55,10 @@ export class SWCombine {
   // Auth property for OAuth operations
   public readonly auth: {
     getAuthorizationUrl: (options: OAuthAuthorizationOptions) => string;
-    handleCallback: (query: OAuthCallbackQuery) => Promise<AuthorizationResult>;
+    handleCallback: (
+      query: OAuthCallbackQuery,
+      codeVerifier?: string
+    ) => Promise<AuthorizationResult>;
     revokeToken: (refreshToken: string) => Promise<void>;
   };
 
@@ -126,9 +129,9 @@ export class SWCombine {
         const oauthClient = this.requireOAuthCredentials('generate an authorization URL');
         return oauthClient.getAuthorizationUrl(options);
       },
-      handleCallback: async (query: OAuthCallbackQuery) => {
+      handleCallback: async (query: OAuthCallbackQuery, codeVerifier?: string) => {
         const oauthClient = this.requireOAuthCredentials('handle OAuth callbacks');
-        const result = await oauthClient.handleCallback(query);
+        const result = await oauthClient.handleCallback(query, codeVerifier);
         if (result.success && result.token) {
           this.tokenManager.setToken(result.token);
         }

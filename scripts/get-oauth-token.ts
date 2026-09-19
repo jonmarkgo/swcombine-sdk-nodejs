@@ -13,7 +13,7 @@
 
 import express from 'express';
 import { config } from 'dotenv';
-import { SWCombine, AccessType } from '../src/index.js';
+import { SWCombine, AccessType, createPkcePair } from '../src/index.js';
 import { getAllScopes } from '../src/auth/scopes.js';
 import type { AllScopes } from '../src/auth/scopes.js';
 import * as crypto from 'crypto';
@@ -22,7 +22,7 @@ import * as crypto from 'crypto';
 config();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 // Check for required credentials
 if (!process.env.SWC_CLIENT_ID || !process.env.SWC_CLIENT_SECRET) {
@@ -68,8 +68,9 @@ const swc = new SWCombine({
   accessType: AccessType.Offline, // Get refresh token for long-lived access
 });
 
-// Store state for CSRF protection
+// Store state for CSRF protection, and the PKCE verifier for the token exchange
 let oauthState: string;
+let codeVerifier: string;
 
 // Home page
 app.get('/', (req, res) => {
@@ -187,10 +188,13 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   // Generate random state for CSRF protection
   oauthState = crypto.randomBytes(16).toString('hex');
+  const pkce = createPkcePair();
+  codeVerifier = pkce.codeVerifier;
 
   const authUrl = swc.auth.getAuthorizationUrl({
     scopes: REQUESTED_SCOPES,
     state: oauthState,
+    codeChallenge: pkce.codeChallenge,
   });
 
   console.log(
@@ -214,7 +218,7 @@ app.get('/callback', async (req, res) => {
     console.log('📥 Received OAuth callback...');
 
     // Exchange code for token
-    const result = await swc.auth.handleCallback(req.query);
+    const result = await swc.auth.handleCallback(req.query, codeVerifier);
 
     if (!result.success) {
       throw new Error(result.error || 'OAuth authorization failed');

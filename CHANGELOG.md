@@ -1,5 +1,22 @@
 # Changelog
 
+## 3.5.0
+
+### Added
+
+- **PKCE support** for the OAuth authorization code flow (RFC 7636, S256). New
+  `createPkcePair()` helper; pass `codeChallenge` to `auth.getAuthorizationUrl()` and the
+  matching verifier as the new optional second argument to `auth.handleCallback()`.
+  Optional and backwards compatible. Verified against the live API.
+- **PvP fields on galaxy endpoints.** Planets and systems (list and detail) now include a
+  `combat` block, typed as `GalaxyCombat`: `groundpvp`, `groundpve`, `showdown`,
+  `pvpsafezone`, plus `spacepvp` and `spacepve` on systems only. Sectors, stations and
+  cities do not return it.
+
+### Changed
+
+- `npm run get-token` now uses PKCE and honours a `PORT` environment variable.
+
 ## 3.4.1
 
 ### Added

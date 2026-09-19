@@ -5,12 +5,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import {
-  createTestClient,
-  saveResponse,
-  TEST_CONFIG,
-  expectFields,
-} from './setup.js';
+import { createTestClient, saveResponse, TEST_CONFIG, expectFields } from './setup.js';
 
 function expectPageShape(response: unknown): void {
   expect(response).toBeDefined();
@@ -23,6 +18,22 @@ function expectListItemAttributes(items: unknown[]): void {
   if (items.length > 0) {
     expect(items[0]).toHaveProperty('attributes.uid');
     expect(items[0]).toHaveProperty('attributes.name');
+  }
+}
+
+const PLANET_COMBAT_FIELDS = ['groundpvp', 'groundpve', 'showdown', 'pvpsafezone'];
+const SYSTEM_COMBAT_FIELDS = [
+  'spacepvp',
+  'spacepve',
+  'groundpvp',
+  'groundpve',
+  'showdown',
+  'pvpsafezone',
+];
+
+function expectCombat(combat: unknown, fields: string[]) {
+  for (const field of fields) {
+    expect(typeof (combat as Record<string, unknown>)?.[field]).toBe('boolean');
   }
 }
 
@@ -41,6 +52,7 @@ describe('Galaxy Resource Integration Tests', () => {
       expectPageShape(response);
       expect(response.data.length).toBeGreaterThanOrEqual(1);
       expectListItemAttributes(response.data);
+      expectCombat(response.data[0].combat, PLANET_COMBAT_FIELDS);
     });
 
     it('should list planets with pagination metadata', async () => {
@@ -55,6 +67,7 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-planet-get', response);
 
       expectFields(response, ['uid', 'name']);
+      expectCombat(response.combat, PLANET_COMBAT_FIELDS);
     });
   });
 
@@ -91,6 +104,7 @@ describe('Galaxy Resource Integration Tests', () => {
       expectPageShape(response);
       expect(response.data.length).toBeGreaterThanOrEqual(1);
       expectListItemAttributes(response.data);
+      expectCombat(response.data[0].combat, SYSTEM_COMBAT_FIELDS);
     });
 
     it('should list systems with pagination metadata', async () => {
@@ -105,6 +119,7 @@ describe('Galaxy Resource Integration Tests', () => {
       saveResponse('galaxy-system-get', response);
 
       expectFields(response, ['uid', 'name']);
+      expectCombat(response.combat, SYSTEM_COMBAT_FIELDS);
     });
   });
 

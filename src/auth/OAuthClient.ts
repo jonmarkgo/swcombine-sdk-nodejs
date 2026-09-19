@@ -3,6 +3,7 @@
  */
 
 import axios from 'axios';
+import { createHash, randomBytes } from 'node:crypto';
 import {
   OAuthToken,
   OAuthAuthorizationOptions,
@@ -25,6 +26,17 @@ export interface OAuthClientConfig {
   accessType?: AccessType;
   /** Whether to renew previously granted permissions */
   renewPreviouslyGranted?: boolean;
+}
+
+/**
+ * Generate a PKCE verifier/challenge pair (RFC 7636, S256).
+ * Pass `codeChallenge` to `getAuthorizationUrl` and keep `codeVerifier`
+ * (e.g. in the session, like `state`) to pass to `handleCallback`.
+ */
+export function createPkcePair(): { codeVerifier: string; codeChallenge: string } {
+  const codeVerifier = randomBytes(32).toString('base64url');
+  const codeChallenge = createHash('sha256').update(codeVerifier).digest('base64url');
+  return { codeVerifier, codeChallenge };
 }
 
 /**
@@ -67,14 +79,23 @@ export class OAuthClient {
       params.renew_previously_granted = 'yes';
     }
 
+    if (options.codeChallenge) {
+      params.code_challenge = options.codeChallenge;
+      params.code_challenge_method = 'S256';
+    }
+
     const searchParams = new URLSearchParams(params);
     return `${OAUTH_ENDPOINT_AUTH}?${searchParams.toString()}`;
   }
 
   /**
    * Handle OAuth callback and exchange code for token
+   * @param codeVerifier PKCE verifier, required if a `codeChallenge` was sent
    */
-  async handleCallback(query: OAuthCallbackQuery): Promise<AuthorizationResult> {
+  async handleCallback(
+    query: OAuthCallbackQuery,
+    codeVerifier?: string
+  ): Promise<AuthorizationResult> {
     // Check for error in callback
     if (query.error) {
       return {
@@ -95,7 +116,7 @@ export class OAuthClient {
 
     try {
       // Exchange code for token
-      const token = await this.exchangeCodeForToken(query.code);
+      const token = await this.exchangeCodeForToken(query.code, codeVerifier);
 
       return {
         success: true,
@@ -114,7 +135,7 @@ export class OAuthClient {
   /**
    * Exchange authorization code for access token
    */
-  private async exchangeCodeForToken(code: string): Promise<OAuthToken> {
+  private async exchangeCodeForToken(code: string, codeVerifier?: string): Promise<OAuthToken> {
     if (!this.redirectUri) {
       throw new Error('redirectUri is required for token exchange');
     }
@@ -128,6 +149,9 @@ export class OAuthClient {
       grant_type: GrantType.AuthorizationCode,
       access_type: this.accessType,
     });
+    if (codeVerifier) {
+      params.set('code_verifier', codeVerifier);
+    }
 
     try {
       const response = await axios.post(OAUTH_ENDPOINT_TOKEN, params.toString(), {

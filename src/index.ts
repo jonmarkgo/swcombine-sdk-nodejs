@@ -59,3 +59,4 @@ export type {
 
 // Auth types
 export type { TokenStorage } from './auth/TokenManager.js';
+export { createPkcePair } from './auth/OAuthClient.js';

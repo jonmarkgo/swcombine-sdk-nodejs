@@ -129,6 +129,11 @@ export interface OAuthAuthorizationOptions {
   scopes: AllScopes[];
   /** State parameter for CSRF protection */
   state: string;
+  /**
+   * PKCE code challenge (S256). Generate with `createPkcePair()` and keep the
+   * matching `codeVerifier` to pass to `handleCallback`.
+   */
+  codeChallenge?: string;
 }
 
 export interface OAuthCallbackQuery {
@@ -642,6 +647,19 @@ export interface GalaxyLocation {
   coordinates?: GalaxyCoordinates;
 }
 
+/**
+ * Combat rules for a planet or system. `spacepvp`/`spacepve` are only present on systems.
+ */
+export interface GalaxyCombat {
+  spacepvp?: boolean;
+  spacepve?: boolean;
+  groundpvp?: boolean;
+  groundpve?: boolean;
+  showdown?: boolean;
+  pvpsafezone?: boolean;
+  [key: string]: unknown;
+}
+
 export interface GalaxySectorListItem {
   attributes: GalaxyAttributes;
   controlledby?: GalaxyReference;
@@ -653,6 +671,7 @@ export interface GalaxySectorListItem {
 export interface GalaxySystemListItem {
   attributes: GalaxyAttributes;
   controlledby?: GalaxyReference;
+  combat?: GalaxyCombat;
   population?: number;
   location?: GalaxyLocation;
   [key: string]: unknown;
@@ -661,6 +680,7 @@ export interface GalaxySystemListItem {
 export interface GalaxyPlanetListItem {
   attributes: GalaxyAttributes;
   controlledby?: GalaxyReference;
+  combat?: GalaxyCombat;
   location?: GalaxyLocation;
   cities?: number;
   population?: number;
@@ -774,6 +794,7 @@ export interface Planet {
   name: string;
   description?: string;
   controlledby?: GalaxyReference;
+  combat?: GalaxyCombat;
   governor?: GalaxyReference | Record<string, never>;
   magistrate?: GalaxyReference | Record<string, never>;
   type?: GalaxyReference;
@@ -809,6 +830,7 @@ export interface System {
   name: string;
   description?: string;
   controlledby?: GalaxyReference;
+  combat?: GalaxyCombat;
   planets?: GalaxyPlanetsCollection;
   stations?: GalaxyStationsCollection;
   location?: GalaxyLocation;

@@ -1148,6 +1148,9 @@ export type InventoryFilterValue = string | number | boolean;
  * - `cargocontaineritems` / `cargocontainerdroids` (items): an item / droid *type* UID; matches
  *   cargo containers holding that type.
  *
+ * The SDK rejects a non-numeric value for any UID filter: the API would read it as ID 0 ("None"),
+ * so a name given to `pilot` would silently return entities with no pilot.
+ *
  * Behaviour observed on the live API:
  * - For UID filters only the number after the colon is used, so a UID of the wrong kind is
  *   not rejected: it silently matches whatever has that number (e.g. `12:26` in

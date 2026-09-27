@@ -86,8 +86,35 @@ function toFilterValue(type: InventoryFilterType, value: unknown): string {
   if (value === null || value === undefined || value === '')
     return type === 'container' ? '0:0' : '';
   if (typeof value === 'boolean') return value ? '1' : '0';
-  return String(value);
+  const str = String(value);
+  // The API reads any non-numeric value for these as ID 0, i.e. "None": a name given to
+  // `pilot` silently returns entities with no pilot, and to `owner` it matches nothing.
+  if (ID_FILTERS.has(type) && !/^\d+(:\d+)?$/.test(str)) {
+    throw new SWCError(
+      `Inventory filter "${type}" needs a UID like "1:12345" (or numeric ID), not "${str}". Use null for "None".`,
+      { type: 'validation' }
+    );
+  }
+  return str;
 }
+
+const ID_FILTERS = new Set<InventoryFilterType>([
+  'class',
+  'city',
+  'planet',
+  'sector',
+  'system',
+  'type',
+  'id',
+  'pilot',
+  'deposit',
+  'cargocontaineritems',
+  'cargocontainerdroids',
+  'race',
+  'owner',
+  'commander',
+  'container',
+]);
 
 /** Builds query params for inventory filters. Throws before any request on invalid input. */
 function buildFilterParams(

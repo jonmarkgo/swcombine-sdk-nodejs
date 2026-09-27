@@ -129,6 +129,10 @@ describe('inventory.entities.list() filters', () => {
       'a legacy filter that does not apply',
       { entityType: 'planets', filter_type: ['protected'], filter_value: ['1'] },
     ],
+    // The API reads a non-numeric UID filter value as ID 0 ("None"): for pilot that silently
+    // returns the entities with no pilot.
+    ['a name where a UID is needed', { filters: [{ type: 'pilot', value: 'Dreks Selmur' }] }],
+    ['a name in a legacy UID filter', { filter_type: ['class'], filter_value: ['Fighter'] }],
   ])('rejects %s before sending a request', async (_label, opts) => {
     const { http, list } = setup();
     await expect(list(opts as Partial<ListInventoryEntitiesOptions>)).rejects.toSatisfy(
@@ -150,6 +154,10 @@ describe('inventory.entities.list() filters', () => {
     ).resolves.toBeDefined();
     await expect(
       list({ entityType: 'facilities', filters: [{ type: 'powered', value: true }] })
+    ).resolves.toBeDefined();
+    // UIDs, bare numeric IDs and numbers are all fine.
+    await expect(
+      list({ filters: [{ type: 'pilot', value: ['1:46931', '46931', 3] }] })
     ).resolves.toBeDefined();
   });
 });

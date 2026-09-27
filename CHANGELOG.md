@@ -12,6 +12,9 @@
   - Booleans are sent as `1` / `0`; `inclusion` defaults to `includes`.
   - Filters are checked against the entity type before the request, so a mistake throws a
     `validation` `SWCError` instead of the API's retried 500.
+  - UID filters must be a UID or numeric ID. The API reads any other value as ID 0 ("None"):
+    a character name given to `pilot` returned the ships with _no_ pilot, and to `owner` or
+    `commander` matched nothing. This also applies to the deprecated positional arrays.
 
 ### Fixed
 

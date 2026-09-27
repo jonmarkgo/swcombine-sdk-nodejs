@@ -1139,12 +1139,19 @@ export type InventoryFilterValue = string | number | boolean;
  * Value formats, per the API:
  * - UIDs (or numeric IDs): `class`, `city`, `planet`, `sector`, `system`, `type`, `id`, `pilot`,
  *   `deposit`, `cargocontaineritems`, `cargocontainerdroids`, `race`
- * - UIDs only: `owner`, `commander`, `container`
+ * - UIDs only: `owner`, `commander`, `container`. Owner and commander may be a character or a
+ *   faction.
  * - Names: `name`, `infotext`, `tags`
  * - Booleans: `underconstruction`, `protected`, `wreck`, `powered`, `debt`, `working`
  * - `opento`: `0` none, `1` faction, `2` all. `gender`: `'M'` / `'F'`. `level`: integer.
+ * - `deposit` (facilities): a material type UID; matches facilities on a deposit of it.
+ * - `cargocontaineritems` / `cargocontainerdroids` (items): an item / droid *type* UID; matches
+ *   cargo containers holding that type.
  *
  * Behaviour observed on the live API:
+ * - For UID filters only the number after the colon is used, so a UID of the wrong kind is
+ *   not rejected: it silently matches whatever has that number (e.g. `12:26` in
+ *   `cargocontainerdroids` matches droid type `13:26`).
  * - `excludes` never matches entities that have no value for the field (e.g. ships in
  *   hyperspace have no system).
  * - `container` means the containing *entity* (ship, station, facility). Entities sitting

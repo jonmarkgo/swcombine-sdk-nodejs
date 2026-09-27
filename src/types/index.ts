@@ -2521,6 +2521,7 @@ export interface GetEntityOptions<T extends InventoryEntityType = InventoryEntit
 }
 
 export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = InventoryEntityType> {
+  /** Whose inventory: a character or faction UID (`1:12345`, `20:123`) or their name. */
   uid: string;
   /** Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials' */
   entityType: T;

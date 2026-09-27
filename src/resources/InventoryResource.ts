@@ -182,7 +182,7 @@ export class InventoryEntitiesResource extends BaseResource {
    * entities are queried through this method.
    *
    * @param options - Inventory UID, entity type, assign type, and optional pagination/filtering parameters
-   * @param options.uid - Character or Faction UID
+   * @param options.uid - Whose inventory: a character or faction UID, or their name (e.g. `'kira vane'`)
    * @param options.entityType - Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials'
    * @param options.assignType - Assignment type: 'owner', 'commander', or 'pilot'
    *

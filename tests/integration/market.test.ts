@@ -50,7 +50,7 @@ describe('Market Resource Integration Tests', () => {
       expect(vendors.data.length).toBeGreaterThan(0);
 
       // Vendor ID is in attributes.id
-      const vendorId = (vendors.data[0] as any).attributes.id;
+      const vendorId = vendors.data[0].attributes.id;
       const response = await client.market.vendors.get({ uid: String(vendorId) });
       saveResponse('market-vendor-get', response);
 

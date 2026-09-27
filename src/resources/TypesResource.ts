@@ -21,9 +21,9 @@ function getTypesEntityPathSegment(entityType: TypesEntityType): string {
   return entityType;
 }
 
+/** Entry from `listEntityTypes()`. `href` is present only for types with a `/types` endpoint. */
 export interface EntityType {
-  name: string;
-  description?: string;
+  attributes: { id: number; name: string; href?: string };
   [key: string]: unknown;
 }
 
@@ -319,7 +319,7 @@ export class TypesResource extends BaseResource {
    */
   async listEntityTypes(): Promise<EntityType[]> {
     const response = await this.http.get<Record<string, unknown>>('/types/entitytypes');
-    // API returns { entitytype: [...], count: 76 }, extract just the array
+    // API returns { entitytype: [{ attributes: { id, name, href? } }, ...] }
     if (response.entitytype && Array.isArray(response.entitytype)) {
       return response.entitytype as EntityType[];
     }

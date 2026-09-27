@@ -7,7 +7,10 @@ import { BaseResource } from './BaseResource.js';
 import { Page } from '../pagination/Page.js';
 import {
   FactionDetail,
-  Character,
+  FactionDetailReference,
+  FactionDetailTimestamp,
+  CharacterMePrivileges,
+  CreditTransferResult,
   GetFactionOptions,
   GetFactionCreditsOptions,
   TransferFactionCreditsOptions,
@@ -17,28 +20,44 @@ import {
 } from '../types/index.js';
 
 export interface FactionMember {
-  character: Character | string;
-  rank?: string;
-  joinDate?: string;
+  attributes: { href: string };
+  uid: string;
+  name: string;
+  active: 'true' | 'false';
+  race?: FactionDetailReference;
+  gender?: string;
+  salary?: number;
+  lastlogin?: FactionDetailTimestamp;
+  factionjoindate?: FactionDetailTimestamp;
+  infofields?: { infofield?: { attributes: { index: number }; value: string }[] };
+  privileges?: CharacterMePrivileges;
+  [key: string]: unknown;
+}
+
+/** Budget row from `budgets.list()`. Use `budgets.get()` for balance and assignees. */
+export interface BudgetListItem {
+  attributes: { uid: string; href: string };
+  value: string;
   [key: string]: unknown;
 }
 
 export interface Budget {
   uid: string;
   name: string;
-  amount: number;
+  description?: string;
+  balance: number;
+  maxbalance?: number;
+  refreshintervalweeks?: number;
+  refreshamount?: { value: string; attributes?: { units?: string } };
+  assignees?: { assignee?: FactionDetailReference[] } | Record<string, never>;
   [key: string]: unknown;
 }
 
+/** A character or faction holding stock. Character and faction holders are returned together. */
 export interface Stockholder {
-  character: Character | string;
-  shares: number;
+  stockholder: FactionDetailReference;
+  stocks: number;
   percentage: number;
-  [key: string]: unknown;
-}
-
-export interface FactionCredits {
-  amount: number;
   [key: string]: unknown;
 }
 
@@ -93,14 +112,15 @@ export class FactionMembersResource extends BaseResource {
    * @param options.uid - Character UID to update
    * @param options.property - Which info field to update (info1, info2, or info3)
    * @param options.new_value - New value for the info field
+   * @returns The UID of the updated member.
    */
   async updateMemberInfo(options: {
     factionId: string;
     uid: string;
     property: 'info1' | 'info2' | 'info3';
     new_value: string;
-  }): Promise<Record<string, unknown>> {
-    return this.request('POST', `/faction/${options.factionId}/members`, {
+  }): Promise<string> {
+    return this.request<string>('POST', `/faction/${options.factionId}/members`, {
       uid: options.uid,
       property: options.property,
       new_value: options.new_value,
@@ -128,8 +148,8 @@ export class FactionBudgetsResource extends BaseResource {
     start_index?: number;
     item_count?: number;
     pageDelay?: number;
-  }): Promise<Page<Budget>> {
-    const makeRequest = async (startIndex: number): Promise<Page<Budget>> => {
+  }): Promise<Page<BudgetListItem>> {
+    const makeRequest = async (startIndex: number): Promise<Page<BudgetListItem>> => {
       const params = {
         start_index: startIndex,
         item_count: options.item_count ?? 50,
@@ -138,7 +158,7 @@ export class FactionBudgetsResource extends BaseResource {
         `/faction/${options.factionId}/budgets`,
         { params }
       );
-      const data = (response.budget ?? []) as Budget[];
+      const data = (response.budget ?? []) as BudgetListItem[];
       const attrs = (response.attributes ?? {}) as Record<string, unknown>;
 
       return this.createPage({
@@ -198,7 +218,10 @@ export class FactionStockholdersResource extends BaseResource {
         `/faction/${options.factionId}/stockholders`,
         { params }
       );
-      const data = (response.stockholder ?? []) as Stockholder[];
+      // API returns { attributes, characters: { character: [...] }, factions: { faction: [...] } }
+      const characters = response.characters as { character?: Stockholder[] } | undefined;
+      const factions = response.factions as { faction?: Stockholder[] } | undefined;
+      const data = [...(characters?.character ?? []), ...(factions?.faction ?? [])];
       const attrs = (response.attributes ?? {}) as Record<string, unknown>;
 
       return this.createPage({
@@ -223,15 +246,13 @@ export class FactionCreditsResource extends BaseResource {
   /**
    * Get faction credit balance.
    *
-   * Returns the `FactionCredits` object directly — not wrapped in a `Page`.
-   *
-   * @returns The `FactionCredits` data.
+   * @returns The balance as a plain number.
    * @example
    * const credits = await client.faction.credits.get({ factionId: '20:123' });
-   * console.log(credits); // access properties directly, not credits.data
+   * console.log(credits); // 1467069314
    */
-  async get(options: GetFactionCreditsOptions): Promise<FactionCredits> {
-    return this.request<FactionCredits>('GET', `/faction/${options.factionId}/credits`);
+  async get(options: GetFactionCreditsOptions): Promise<number> {
+    return this.request<number>('GET', `/faction/${options.factionId}/credits`);
   }
 
   /**
@@ -242,7 +263,7 @@ export class FactionCreditsResource extends BaseResource {
    * @param options.budget - Budget UID to transfer from (optional)
    * @param options.reason - Reason for transfer (optional, API will auto-append client name)
    */
-  async transfer(options: TransferFactionCreditsOptions): Promise<unknown> {
+  async transfer(options: TransferFactionCreditsOptions): Promise<CreditTransferResult> {
     const data: Record<string, unknown> = {
       amount: options.amount,
       recipient: options.recipient,
@@ -255,7 +276,11 @@ export class FactionCreditsResource extends BaseResource {
       data.reason = options.reason;
     }
 
-    return this.request<unknown>('POST', `/faction/${options.factionId}/credits`, data);
+    return this.request<CreditTransferResult>(
+      'POST',
+      `/faction/${options.factionId}/credits`,
+      data
+    );
   }
 }
 

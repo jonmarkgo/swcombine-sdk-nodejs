@@ -3,7 +3,7 @@
  */
 
 import { BaseResource } from './BaseResource.js';
-import { Location } from '../types/index.js';
+import { EntityLocation } from '../types/index.js';
 
 /**
  * Location resource for querying entity locations
@@ -21,7 +21,7 @@ export class LocationResource extends BaseResource {
    * const location = await client.location.get({ entityType: 'character', uid: '1:12345' });
    * console.log(location); // access properties directly, not location.data
    */
-  async get(options: { entityType: string; uid: string }): Promise<Location> {
-    return this.request<Location>('GET', `/location/${options.entityType}/${options.uid}`);
+  async get(options: { entityType: string; uid: string }): Promise<EntityLocation> {
+    return this.request<EntityLocation>('GET', `/location/${options.entityType}/${options.uid}`);
   }
 }

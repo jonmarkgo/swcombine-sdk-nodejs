@@ -5,7 +5,7 @@
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
 import { Page } from '../pagination/Page.js';
-import { Vendor, GetVendorOptions } from '../types/index.js';
+import { Vendor, VendorDetail, GetVendorOptions } from '../types/index.js';
 
 /**
  * Market vendors resource
@@ -53,15 +53,15 @@ export class MarketVendorsResource extends BaseResource {
   /**
    * Get a specific vendor by UID.
    *
-   * Returns the `Vendor` object directly — not wrapped in a `Page`.
+   * Returns the vendor directly — not wrapped in a `Page`. `uid` is the numeric vendor id
+   * from `list()` (`attributes.id`).
    *
-   * @returns The `Vendor` entity.
    * @example
-   * const vendor = await client.market.vendors.get({ uid: 'vendor-uid' });
-   * console.log(vendor.name); // access properties directly, not vendor.data
+   * const vendor = await client.market.vendors.get({ uid: '6' });
+   * for (const ware of vendor.wares?.ware ?? []) console.log(ware.type, ware.price);
    */
-  async get(options: GetVendorOptions): Promise<Vendor> {
-    return this.request<Vendor>('GET', `/market/vendors/${options.uid}`);
+  async get(options: GetVendorOptions): Promise<VendorDetail> {
+    return this.request<VendorDetail>('GET', `/market/vendors/${options.uid}`);
   }
 }
 

@@ -28,7 +28,8 @@ describe('Types Resource Integration Tests', () => {
 
       expectArray(response, 1);
       // Should have many entity types (ships, vehicles, etc.)
-      expect((response as any[]).length).toBeGreaterThan(10);
+      expect(response.length).toBeGreaterThan(10);
+      expect(response[0].attributes.name).toBeTypeOf('string');
     });
   });
 

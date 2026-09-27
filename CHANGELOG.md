@@ -8,6 +8,41 @@
   `shieldArcs` (typed as `TypesShipShieldArc[]`), `shieldArcTemplate` and `garrisons`.
   Small ships omit both arc fields. `TypesStationEntity` gains `armour`. Inventory
   entity endpoints are unchanged.
+- `armour` on `TypesVehicleEntity` and `TypesFacilityEntity`; `garrisons` on
+  `TypesFacilityEntity`; `timeFactor` on ship `production`.
+
+### Fixed
+
+Audited against the example responses now published in the API docs, and verified live.
+
+- **`faction.stockholders.list()` always returned no rows.** Holders are read from
+  `characters.character` and `factions.faction`.
+- **`events.list()` never auto-paginated.** The events endpoint reports no `total`, so
+  `hasMore` was always false. It is now true when a full page comes back; `page.total`
+  stays 0 for events.
+- **Return types that did not match the API** (runtime behaviour unchanged):
+  - `faction.credits.get()` returns a `number` (was typed `{ amount }`).
+  - `faction.members.updateMemberInfo()` returns the updated member UID as a `string`.
+  - `character.get()` returns `CharacterMe`; the old `Character` type declared a `handle`
+    the API never sends.
+  - `CharacterMe` gains `XP` / `XPLevel` (the API's casing; `xp` / `xpLevel` are deprecated
+    and were never populated), typed force details, and `"Freelance"` string forms of
+    `faction` / `factions`.
+  - `character.messages.create()` returns `MessageCreateResult`; credit transfers return
+    `CreditTransferResult`.
+  - `events.list()` rows are `{ attributes, time, text }`; `events.get()` returns
+    `EventDetail`.
+  - `market.vendors.list()` rows are keyed by `attributes.id`; `get()` returns
+    `VendorDetail` with `shopkeeper` and `wares`.
+  - `location.get()` returns `EntityLocation`.
+  - Datacard `list()` / `get()` / `create()` / `delete()` return `DatacardListItem`,
+    `Datacard` (with `entity`, `owner`, `assignedlocations`), `DatacardAssignResult` and
+    `DatacardRevokeResult`.
+  - `inventory.get()` returns `InventorySummary`; `updateProperty()` and the tag methods
+    return `InventoryPropertyResult` / `InventoryTagResult`.
+  - `types.listEntityTypes()` entries are `{ attributes: { id, name, href? } }`.
+  - Faction member, budget and stockholder rows match the API; `budgets.list()` rows are
+    `BudgetListItem`. `FactionDetail` gains `status`.
 
 ## 3.5.0
 

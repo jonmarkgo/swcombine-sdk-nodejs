@@ -87,7 +87,8 @@ for (const action of facility.actions?.action ?? []) {
 ### inventory.entities.list()
 
 List entities in inventory (paginated with optional filtering)
-Supports filtering by various entity properties. Filter arrays must have matching lengths.
+Supports filtering via `filters` (see the `InventoryFilter` type for value formats and API quirks).
+Filters are checked against the entity type before the request is sent.
 The `uid` argument accepts either a character UID (e.g. `1:12345`) or a faction UID
 (e.g. `20:123`) — there is no separate `client.faction.entities` accessor; faction-owned
 entities are queried through this method.
@@ -100,16 +101,20 @@ entities are queried through this method.
   Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials'
 </ParamField>
 
-<ParamField path="filter_inclusion" type="**filter\_inclusion**: InventoryFilterInclusion[]">
-  Whether each filter should include or exclude matches. Default: 'includes'
+<ParamField path="~~filter_inclusion?~~" type="**filter\_inclusion**: InventoryFilterInclusion[]" required>
+  Use `filters`. One per entry in `filter_type`. Default: `'includes'`
 </ParamField>
 
-<ParamField path="filter_type" type="**filter\_type**: InventoryFilterType[]">
-  Filter types to apply to the query
+<ParamField path="~~filter_type?~~" type="**filter\_type**: InventoryFilterType[]" required>
+  Use `filters`. Filter types, one per value.
 </ParamField>
 
-<ParamField path="filter_value" type="**filter\_value**: string[]">
-  Values corresponding to each filter type
+<ParamField path="~~filter_value?~~" type="**filter\_value**: string[]" required>
+  Use `filters`. One value per entry in `filter_type`.
+</ParamField>
+
+<ParamField path="filters" type="InventoryFilter[]">
+  Filters to apply. Filters of different types are combined with AND; several values for one type match any of them. Each type may appear once. Cannot be combined with the `filter_type` / `filter_value` / `filter_inclusion` arrays.
 </ParamField>
 
 <ParamField path="item_count" type="**item\_count**: number" default="50">
@@ -125,7 +130,7 @@ entities are queried through this method.
 </ParamField>
 
 <ParamField path="uid" type="string" required>
-  The uid parameter.
+  Whose inventory: a character or faction UID (`1:12345`, `20:123`) or their name.
 </ParamField>
 
 ```typescript
@@ -147,14 +152,23 @@ const moreEntities = await client.inventory.entities.list({ uid: '1:12345', enti
 // Administered planets — note the assign type
 const planets = await client.inventory.entities.list({ uid: '1:12345', entityType: 'planets', assignType: 'pilot' });
 
-// Filter by multiple criteria
-const multiFiltered = await client.inventory.entities.list({
+// Ships of either of two types that are not under construction
+const ships = await client.inventory.entities.list({
   uid: '1:12345',
   entityType: 'ships',
   assignType: 'owner',
-  filter_type: ['class', 'powered'],
-  filter_value: ['Fighter', '1'],
-  filter_inclusion: ['includes', 'includes']
+  filters: [
+    { type: 'type', value: ['2:7', '2:19'] },
+    { type: 'underconstruction', value: false },
+  ],
+});
+
+// Ships not docked in any ship or station ("None" is `null`)
+const undocked = await client.inventory.entities.list({
+  uid: '1:12345',
+  entityType: 'ships',
+  assignType: 'owner',
+  filters: [{ type: 'container', value: null }],
 });
 ```
 

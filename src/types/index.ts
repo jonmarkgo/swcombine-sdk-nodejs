@@ -460,7 +460,21 @@ export interface FactionDetail {
   subfactions: Record<string, unknown>;
   modules: FactionDetailModules;
   images: FactionDetailImages;
-  status?: { bankruptcy: 'true' | 'false'; inactivity: 'true' | 'false' };
+  /** Financial and membership status. Per-asset values use keys like `shipvalue`, `cityvalue`. */
+  status?: {
+    bankruptcy: 'true' | 'false';
+    inactivity: 'true' | 'false';
+    initialvalue?: number;
+    currentvalue?: number;
+    currentcredits?: number;
+    currentcapital?: number;
+    minimumcapital?: number;
+    memberstotal?: number;
+    membersinitial?: number;
+    memberscurrent?: number;
+    membersminimum?: number;
+    [key: string]: string | number | undefined;
+  };
   [key: string]: unknown;
 }
 

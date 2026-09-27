@@ -1130,6 +1130,39 @@ export type InventoryFilterType =
  */
 export type InventoryFilterInclusion = 'includes' | 'excludes';
 
+/** A single inventory filter value. Booleans are sent as `1` / `0`. */
+export type InventoryFilterValue = string | number | boolean;
+
+/**
+ * One inventory filter for `inventory.entities.list({ filters })`.
+ *
+ * Value formats, per the API:
+ * - UIDs (or numeric IDs): `class`, `city`, `planet`, `sector`, `system`, `type`, `id`, `pilot`,
+ *   `deposit`, `cargocontaineritems`, `cargocontainerdroids`, `race`
+ * - UIDs only: `owner`, `commander`, `container`
+ * - Names: `name`, `infotext`, `tags`
+ * - Booleans: `underconstruction`, `protected`, `wreck`, `powered`, `debt`, `working`
+ * - `opento`: `0` none, `1` faction, `2` all. `gender`: `'M'` / `'F'`. `level`: integer.
+ *
+ * Behaviour observed on the live API:
+ * - `excludes` never matches entities that have no value for the field (e.g. ships in
+ *   hyperspace have no system).
+ * - `container` means the containing *entity* (ship, station, facility). Entities sitting
+ *   directly in a system, planet or city count as having no container.
+ * - `powered` only matches power-consuming facilities, and `debt` only facilities with a debt
+ *   record; other facilities match neither value.
+ */
+export interface InventoryFilter {
+  type: InventoryFilterType;
+  /**
+   * One value, or an array to match any of them. `null` (or `''`) matches entities with no
+   * value ("None"); the SDK sends the form the API actually honours for each filter type.
+   */
+  value: InventoryFilterValue | null | (InventoryFilterValue | null)[];
+  /** Default: `'includes'` */
+  inclusion?: InventoryFilterInclusion;
+}
+
 // ============================================================================
 // Inventory Entity Types
 // ============================================================================
@@ -2489,11 +2522,17 @@ export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = In
   item_count?: number;
   /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
   pageDelay?: number;
-  /** Filter types to apply to the query */
+  /**
+   * Filters to apply. Filters of different types are combined with AND; several values for
+   * one type match any of them. Each type may appear once. Cannot be combined with the
+   * `filter_type` / `filter_value` / `filter_inclusion` arrays.
+   */
+  filters?: InventoryFilter[];
+  /** @deprecated Use `filters`. Filter types, one per value. */
   filter_type?: InventoryFilterType[];
-  /** Values corresponding to each filter type */
+  /** @deprecated Use `filters`. One value per entry in `filter_type`. */
   filter_value?: string[];
-  /** Whether each filter should include or exclude matches. Default: 'includes' */
+  /** @deprecated Use `filters`. One per entry in `filter_type`. Default: `'includes'` */
   filter_inclusion?: InventoryFilterInclusion[];
 }
 

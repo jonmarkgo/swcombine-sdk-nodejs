@@ -220,4 +220,40 @@ describe('Inventory Resource Integration Tests', () => {
     expectPageShape(response);
     expect(response.data.length).toBeLessThanOrEqual(10);
   });
+
+  it('should filter by several values of one type, and by None', async () => {
+    if (!hasAuthToken() || !TEST_CONFIG.characterUid) {
+      console.log('⊘ Skipping Inventory Filters: No auth token or character UID');
+      return;
+    }
+
+    const base = {
+      uid: TEST_CONFIG.characterUid,
+      entityType: 'ships' as const,
+      assignType: 'owner' as const,
+      item_count: 200,
+    };
+    const all = await client.inventory.entities.list(base);
+    const types = [...new Set(all.data.map((s) => s.value.type?.attributes.uid).filter((t) => t !== undefined))];
+    if (types.length < 2) {
+      console.log('⊘ Skipping Inventory Filters: need ships of two types');
+      return;
+    }
+    const count = async (filters: Parameters<typeof client.inventory.entities.list>[0]['filters']) =>
+      (await client.inventory.entities.list({ ...base, item_count: 1, filters })).total;
+
+    // Several values for one type match any of them.
+    const [a, b, either] = [
+      await count([{ type: 'type', value: types[0] }]),
+      await count([{ type: 'type', value: types[1] }]),
+      await count([{ type: 'type', value: types.slice(0, 2) }]),
+    ];
+    expect(either).toBe(a + b);
+
+    // container None is sent as 0:0; None and not-None partition the inventory.
+    const none = await count([{ type: 'container', value: null }]);
+    const notNone = await count([{ type: 'container', value: null, inclusion: 'excludes' }]);
+    expect(none + notNone).toBe(all.total);
+    expect(none).toBeLessThan(all.total);
+  });
 });

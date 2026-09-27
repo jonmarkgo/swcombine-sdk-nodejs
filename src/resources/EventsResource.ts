@@ -4,7 +4,7 @@
 
 import { BaseResource } from './BaseResource.js';
 import { Page } from '../pagination/Page.js';
-import { Event, QueryParams } from '../types/index.js';
+import { Event, EventDetail, QueryParams } from '../types/index.js';
 
 /**
  * Events resource for querying events
@@ -16,6 +16,8 @@ export class EventsResource extends BaseResource {
    * List events by type and mode (paginated)
    *
    * **Note:** This endpoint uses 0-based indexing (unlike most other endpoints which use 1-based).
+   * The API reports no total for events, so `page.total` is always 0; `hasMore` is true when a
+   * full page came back.
    *
    * @param options - Event mode, event type, and optional pagination/filtering parameters
    * @param options.eventMode - Event mode: 'personal', 'faction', 'inventory', or 'combat'
@@ -47,10 +49,11 @@ export class EventsResource extends BaseResource {
     /** Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. */
     pageDelay?: number;
   }): Promise<Page<Event>> {
+    const itemCount = options.item_count ?? 50;
     const makeRequest = async (startIndex: number): Promise<Page<Event>> => {
       const params: QueryParams = {
         start_index: startIndex,
-        item_count: options.item_count ?? 50,
+        item_count: itemCount,
       };
 
       if (options.start_time !== undefined) {
@@ -82,6 +85,8 @@ export class EventsResource extends BaseResource {
         data,
         attributes: attrs,
         defaultStart: 0, // 0-based!
+        // Events attributes have no `total`, so a full page is the only signal that more exist.
+        hasMore: attrs.total == null ? data.length >= itemCount : undefined,
         fetcher: makeRequest,
         pageDelay: options.pageDelay,
       });
@@ -100,7 +105,7 @@ export class EventsResource extends BaseResource {
    * const event = await client.events.get({ uid: '5:99001' });
    * console.log(event.type); // access properties directly, not event.data
    */
-  async get(options: { uid: string }): Promise<Event> {
-    return this.request<Event>('GET', `/event/${options.uid}`);
+  async get(options: { uid: string }): Promise<EventDetail> {
+    return this.request<EventDetail>('GET', `/event/${options.uid}`);
   }
 }

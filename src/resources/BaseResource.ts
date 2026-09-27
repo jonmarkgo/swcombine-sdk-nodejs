@@ -48,6 +48,8 @@ export abstract class BaseResource {
     fetcher: (start: number) => Promise<Page<T>>;
     /** Milliseconds to wait before fetching the next page. Default: 0. */
     pageDelay?: number;
+    /** Overrides the computed `hasMore`, for endpoints whose attributes carry no `total`. */
+    hasMore?: boolean;
   }): Page<T> {
     const attrs = options.attributes ?? {};
     const total = attrs.total != null ? Number(attrs.total) : 0;
@@ -58,7 +60,7 @@ export abstract class BaseResource {
     // For 1-based: (1 - 1) + 50 = 50 consumed out of total
     // For 0-based: (0 - 0) + 50 = 50 consumed out of total
     const consumed = start - options.defaultStart + count;
-    const hasMore = consumed < total;
+    const hasMore = options.hasMore ?? consumed < total;
 
     return new Page({
       data: options.data,

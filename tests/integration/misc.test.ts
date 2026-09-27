@@ -68,7 +68,7 @@ describe('Events Resource Integration Tests', () => {
       return;
     }
 
-    const eventUid = (events.data[0] as any).uid || (events.data[0] as any).attributes?.uid;
+    const eventUid = events.data[0].attributes?.uid;
     if (!eventUid) {
       console.log('⊘ Skipping: No event UID found');
       return;
@@ -77,7 +77,7 @@ describe('Events Resource Integration Tests', () => {
     const response = await client.events.get({ uid: eventUid });
     saveResponse('event-get', response);
 
-    expectFields(response, ['uid']);
+    expectFields(response, ['uid', 'receiver', 'time', 'text']);
   });
 });
 
@@ -137,7 +137,7 @@ describe('Datacard Resource Integration Tests', () => {
       return;
     }
 
-    const datacardUid = (datacards.data[0] as any).uid || (datacards.data[0] as any).attributes?.uid;
+    const datacardUid = datacards.data[0].attributes?.uid;
     if (!datacardUid) {
       console.log('⊘ Skipping: No datacard UID found');
       return;

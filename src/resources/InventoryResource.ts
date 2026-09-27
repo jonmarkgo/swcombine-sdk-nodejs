@@ -6,8 +6,10 @@ import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
 import { Page } from '../pagination/Page.js';
 import {
-  Entity,
   GetEntityOptions,
+  InventoryPropertyResult,
+  InventorySummary,
+  InventoryTagResult,
   InventoryEntityDetailMap,
   InventoryEntityType,
   InventoryEntityTypeMap,
@@ -200,7 +202,7 @@ export class InventoryEntitiesResource extends BaseResource {
       | 'crewlist-clear';
     new_value: string;
     reason?: string;
-  }): Promise<Entity> {
+  }): Promise<InventoryPropertyResult> {
     const data: Record<string, string> = {
       new_value: options.new_value,
     };
@@ -208,7 +210,7 @@ export class InventoryEntitiesResource extends BaseResource {
       data.reason = options.reason;
     }
 
-    return this.request<Entity>(
+    return this.request<InventoryPropertyResult>(
       'POST',
       `/inventory/${options.entityType}/${options.uid}/${options.property}/`,
       data
@@ -218,8 +220,12 @@ export class InventoryEntitiesResource extends BaseResource {
   /**
    * Add tag to entity
    */
-  async addTag(options: { entityType: string; uid: string; tag: string }): Promise<void> {
-    return this.request<void>(
+  async addTag(options: {
+    entityType: string;
+    uid: string;
+    tag: string;
+  }): Promise<InventoryTagResult> {
+    return this.request<InventoryTagResult>(
       'PUT',
       `/inventory/${options.entityType}/${options.uid}/tag/${options.tag}`
     );
@@ -228,8 +234,12 @@ export class InventoryEntitiesResource extends BaseResource {
   /**
    * Remove tag from entity
    */
-  async removeTag(options: { entityType: string; uid: string; tag: string }): Promise<void> {
-    return this.request<void>(
+  async removeTag(options: {
+    entityType: string;
+    uid: string;
+    tag: string;
+  }): Promise<InventoryTagResult> {
+    return this.request<InventoryTagResult>(
       'DELETE',
       `/inventory/${options.entityType}/${options.uid}/tag/${options.tag}`
     );
@@ -238,8 +248,11 @@ export class InventoryEntitiesResource extends BaseResource {
   /**
    * Remove all tags from entity
    */
-  async removeAllTags(options: { entityType: string; uid: string }): Promise<void> {
-    return this.request<void>('DELETE', `/inventory/${options.entityType}/${options.uid}/tags`);
+  async removeAllTags(options: { entityType: string; uid: string }): Promise<InventoryTagResult> {
+    return this.request<InventoryTagResult>(
+      'DELETE',
+      `/inventory/${options.entityType}/${options.uid}/tags`
+    );
   }
 }
 
@@ -272,7 +285,7 @@ export class InventoryResource extends BaseResource {
    * const factionOverview = await client.inventory.get({ uid: '20:123' });
    * console.log(factionOverview); // access properties directly, not factionOverview.data
    */
-  async get(options: { uid: string }): Promise<Record<string, unknown>> {
-    return this.request<Record<string, unknown>>('GET', `/inventory/${options.uid}`);
+  async get(options: { uid: string }): Promise<InventorySummary> {
+    return this.request<InventorySummary>('GET', `/inventory/${options.uid}`);
   }
 }

@@ -109,6 +109,9 @@ describe('Faction Resource Integration Tests', () => {
       saveResponse('faction-stockholders', response);
 
       expectPageShape(response);
+      // Holders live under characters.character / factions.faction; an empty page with a
+      // non-zero total means they were not extracted.
+      if (response.total > 0) expect(response.data.length).toBeGreaterThan(0);
     });
 
     it('should get faction credits', async () => {
@@ -120,8 +123,8 @@ describe('Faction Resource Integration Tests', () => {
       const response = await client.faction.credits.get({ factionId: TEST_CONFIG.factionUid });
       saveResponse('faction-credits', response);
 
-      expect(response).toBeDefined();
-      expectFields(response, ['credits']);
+      // The API returns { credits: N }, which the client unwraps to N.
+      expect(typeof response).toBe('number');
     });
 
     it('should list faction credit log', async () => {

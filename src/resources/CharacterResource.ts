@@ -7,11 +7,12 @@ import { SWCError } from '../http/errors.js';
 import { BaseResource } from './BaseResource.js';
 import { Page } from '../pagination/Page.js';
 import {
-  Character,
   CharacterMe,
   Message,
+  MessageCreateResult,
   MessageListItem,
   CreditLogEntry,
+  CreditTransferResult,
   GetCharacterOptions,
   GetCharacterByHandleOptions,
   ListMessagesOptions,
@@ -173,7 +174,7 @@ export class CharacterMessagesResource extends BaseResource {
    * @param options.uid - Character UID sending the message
    * @param options.receivers - Semicolon-separated list of receiver handles (max 25)
    * @param options.communication - Message text content
-   * @returns Message response typed as `Message`
+   * @returns Delivery result; new message UIDs are in `data.successes[].attributes.uid`
    * @example
    * // Valid: handles
    * await client.character.messages.create({
@@ -190,10 +191,10 @@ export class CharacterMessagesResource extends BaseResource {
    *   communication: 'Test'
    * });
    */
-  async create(options: CreateMessageOptions): Promise<Message> {
+  async create(options: CreateMessageOptions): Promise<MessageCreateResult> {
     const receivers = this.normalizeAndValidateReceivers(options.receivers);
 
-    return this.request<Message>('PUT', `/character/${options.uid}/messages`, {
+    return this.request<MessageCreateResult>('PUT', `/character/${options.uid}/messages`, {
       receivers,
       communication: options.communication,
     });
@@ -417,7 +418,7 @@ export class CharacterCreditsResource extends BaseResource {
     amount: number;
     recipient: string;
     reason?: string;
-  }): Promise<unknown> {
+  }): Promise<CreditTransferResult> {
     const data: Record<string, unknown> = {
       amount: options.amount,
       recipient: options.recipient,
@@ -427,7 +428,7 @@ export class CharacterCreditsResource extends BaseResource {
       data.reason = options.reason;
     }
 
-    return this.request<unknown>('POST', `/character/${options.uid}/credits`, data);
+    return this.request<CreditTransferResult>('POST', `/character/${options.uid}/credits`, data);
   }
 }
 
@@ -587,8 +588,8 @@ export class CharacterResource extends BaseResource {
    * const character = await client.character.get({ uid: '1:12345' });
    * console.log(character.name); // access properties directly, not character.data
    */
-  async get(options: GetCharacterOptions): Promise<Character> {
-    return this.request<Character>('GET', `/character/${options.uid}`);
+  async get(options: GetCharacterOptions): Promise<CharacterMe> {
+    return this.request<CharacterMe>('GET', `/character/${options.uid}`);
   }
 
   /**

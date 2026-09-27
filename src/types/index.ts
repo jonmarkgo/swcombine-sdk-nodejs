@@ -200,11 +200,20 @@ export interface CharacterMeLastLogin {
   [key: string]: unknown;
 }
 
+/** Force details. Empty `{}` unless the token has the `character_force` scope. */
 export interface CharacterMeForceInfo {
   attributes?: {
     isAware?: 'true' | 'false';
     [key: string]: unknown;
   };
+  master?: CharacterMeReference | Record<string, never>;
+  student?: CharacterMeReference | Record<string, never>;
+  points?: number;
+  pointsMax?: number;
+  XP?: number;
+  XPlevel?: number;
+  regenRate?: number;
+  forceMeter?: number;
   [key: string]: unknown;
 }
 
@@ -351,16 +360,22 @@ export interface CharacterMe {
   attributes?: Record<string, string>;
   lastlogin?: CharacterMeLastLogin;
   gender?: string;
-  shortdescription?: string;
+  shortdescription?: string | null;
   biography?: string;
   race?: CharacterMeReference;
   health?: number;
   healthMax?: number;
+  XP?: number;
+  XPLevel?: number;
+  /** @deprecated Never returned by the API; use `XP`. */
   xp?: number;
+  /** @deprecated Never returned by the API; use `XPLevel`. */
   xpLevel?: number;
   force?: CharacterMeForceInfo;
-  faction?: CharacterMeReference;
-  factions?: CharacterMeFactionEntry[];
+  /** The plain string `"Freelance"` when the character has no faction. */
+  faction?: CharacterMeReference | string;
+  /** `["Freelance"]` when the character has no faction. */
+  factions?: CharacterMeFactionEntry[] | string[];
   skills?: CharacterMeSkills;
   inventories?: Record<string, unknown>;
   privileges?: CharacterMePrivileges;
@@ -445,6 +460,21 @@ export interface FactionDetail {
   subfactions: Record<string, unknown>;
   modules: FactionDetailModules;
   images: FactionDetailImages;
+  /** Financial and membership status. Per-asset values use keys like `shipvalue`, `cityvalue`. */
+  status?: {
+    bankruptcy: 'true' | 'false';
+    inactivity: 'true' | 'false';
+    initialvalue?: number;
+    currentvalue?: number;
+    currentcredits?: number;
+    currentcapital?: number;
+    minimumcapital?: number;
+    memberstotal?: number;
+    membersinitial?: number;
+    memberscurrent?: number;
+    membersminimum?: number;
+    [key: string]: string | number | undefined;
+  };
   [key: string]: unknown;
 }
 
@@ -568,12 +598,37 @@ export interface Message {
   [key: string]: unknown;
 }
 
+/** Result of `character.messages.create()`: one success per delivered recipient. */
+export interface MessageCreateResult {
+  status: { value: string };
+  data: {
+    /** `attributes.uid` is the new message UID; `value` is the recipient name */
+    successes: { attributes: { uid: string; href?: string }; value: string }[];
+    failures: unknown[];
+    attributes: { totalcreated: number };
+  };
+  [key: string]: unknown;
+}
+
 export interface Skill {
   uid: string;
   name: string;
   level: number;
   experience?: number;
   [key: string]: unknown;
+}
+
+/** Result of `credits.transfer()` (character or faction). */
+export interface CreditTransferResult {
+  transaction: {
+    recipient: CharacterMeReference;
+    sender: CharacterMeReference;
+    amount: number;
+    reason?: string;
+    budget?: CharacterMeReference | Record<string, never>;
+    succeeded: boolean;
+    [key: string]: unknown;
+  }[];
 }
 
 export interface CreditLogEntry {
@@ -892,11 +947,33 @@ export interface Entity {
   [key: string]: unknown;
 }
 
+/** Vendor row from `market.vendors.list()`. Vendors are keyed by numeric `id`, not a UID. */
 export interface Vendor {
-  uid: string;
+  attributes: { id: number; href: string; name: string };
+  owner: FactionDetailReference;
+  [key: string]: unknown;
+}
+
+export interface VendorWare {
   name: string;
-  owner?: Character | Faction | string;
-  location?: Location;
+  /** Entity type name, e.g. "Amban Sniper Rifle" */
+  type: string;
+  quantity: number;
+  price: number;
+  currency: string;
+  images?: EntityImages;
+  [key: string]: unknown;
+}
+
+/** Full vendor from `market.vendors.get()`. */
+export interface VendorDetail {
+  id: number;
+  name: string;
+  description?: string;
+  shopkeeper?: { uid: string; name: string; entitytype: string; images?: EntityImages };
+  owner: FactionDetailReference;
+  location?: EntityLocation;
+  wares?: { ware?: VendorWare[] };
   [key: string]: unknown;
 }
 
@@ -963,11 +1040,21 @@ export interface NewsItem {
  */
 export type NewsGetResponse = NewsItem;
 
+/** Event row from `events.list()`. */
 export interface Event {
+  attributes: { uid: string; type: string; href?: string };
+  time: MessageTime;
+  /** HTML text of the event */
+  text: string;
+  [key: string]: unknown;
+}
+
+/** Single event from `events.get()`. */
+export interface EventDetail {
   uid: string;
-  type: string;
-  timestamp: string;
-  description?: string;
+  receiver: EntityReference;
+  time: MessageTime;
+  text: string;
   [key: string]: unknown;
 }
 
@@ -1067,6 +1154,38 @@ export type InventoryEntityType =
  * Valid assignment types for inventory queries.
  */
 export type InventoryAssignType = 'owner' | 'commander' | 'pilot';
+
+/** One entity type in `inventory.get()`, with a link per assignment type. */
+export interface InventorySummaryEntry {
+  /** Singular entity type, e.g. `"ship"` */
+  attributes: { type: string };
+  owner?: { attributes: { totalentities: number | null; uid: string; href: string } };
+  commander?: { attributes: { totalentities: number | null; uid: string; href: string } };
+  pilot?: { attributes: { totalentities: number | null; uid: string; href: string } };
+  [key: string]: unknown;
+}
+
+/** Response of `inventory.get()`. */
+export interface InventorySummary {
+  inventory: InventorySummaryEntry[];
+}
+
+/** Result of `inventory.entities.updateProperty()`. */
+export interface InventoryPropertyResult {
+  status: { value?: string } | Record<string, never>;
+  data: {
+    succeeded: { entity: { uid: string }[] };
+    failed: { entity: { uid: string; [key: string]: unknown }[] };
+  };
+  [key: string]: unknown;
+}
+
+/** Result of the inventory tag endpoints. `attributes.for` names the tag each message is about. */
+export interface InventoryTagResult {
+  status: { value: string };
+  data: { message: { value: string; attributes?: { for: string } }[] };
+  [key: string]: unknown;
+}
 
 /**
  * Reference to another entity (character, faction, ship, etc.)
@@ -1501,6 +1620,8 @@ export interface TypesShipPrice {
 
 export interface TypesShipProduction {
   modifier?: number | string;
+  /** Ships only */
+  timeFactor?: number;
   recommendedWorkers?: number;
   recyclingXP?: number | string;
   genericSlots?: number;
@@ -1581,6 +1702,7 @@ export interface TypesVehicleEntity {
   length?: TypesShipValueWithUnits;
   hull?: number;
   shield?: number;
+  armour?: number;
   ioniccapacity?: number;
   repulsors?: TypesShipBoolean;
   slotsize?: number;
@@ -2069,12 +2191,14 @@ export interface TypesFacilityEntity {
   volume?: TypesShipValueWithUnits;
   volumecapacity?: TypesShipValueWithUnits;
   maxpassengers?: number;
+  garrisons?: TypesStationGarrisons | Record<string, never>;
   flats?: number;
   jobs?: number;
   sizex?: number;
   sizey?: number;
   hull?: number;
   shield?: number;
+  armour?: number;
   ioniccapacity?: number;
   energy?: number;
   canloadmaterials?: boolean;

@@ -1,0 +1,307 @@
+{
+  "uid": "2:1",
+  "name": "Victory I-class Star Destroyer",
+  "description": "<p>At slightly more than half the length and a quarter the mass of it better known cousin, the Imperial I class Star Destroyer, the Victory I class was rushed into service toward the end of the Clone Wars in order to address the significant deficiency of its predecessor, the Venator class Star Destroyer, in straight-up gunfights against Separatist warships. With a strong emphasis on turbolasers and proton torpedo tubes, the Victory I is more than a match for most contemporary opponents. Built on the same wedge shape as its sisters from Kuat Drive Yards, the Victory I can bring almost all its turbolasers and torpedo tubes to bear simultaneously in the forward arc. Good captains will ensure that the enemy is always in the optimum arc for the ship&rsquo;s weapons.<br />\r\n<br />\r\nBoth troop berths and hangar space were sacrificed in order to mount the additional weapons on the hull, making the Victory-class Star Destroyer a dedicated ship-to-ship combat vessel whereas the Imperial-class is able to serve many more functions in the Imperial Navy.After seizing galactic power after the fall of the Old Republic, the Galactic Empire kept the Victory-class in service and even continued to build the vessel, updating and refitting its secondary systems as necessary. In addition to the Empire, several other governments and even some private citizens are known to have acquired some of the fearsome vessels which made their way out of the Republic Navy during its transition to the Empire.&nbsp;</p>\r\n",
+  "class": {
+    "attributes": {
+      "uid": "301:2",
+      "value": "Capital Ships"
+    }
+  },
+  "speed": {
+    "hyperspace": 3,
+    "sublight": {
+      "value": 10,
+      "attributes": {
+        "units": "mglt"
+      }
+    },
+    "planetary": {
+      "value": 100,
+      "attributes": {
+        "units": "km/h"
+      }
+    }
+  },
+  "manoeuvrability": 2,
+  "sensors": 8,
+  "ecm": 0,
+  "weight": {
+    "value": 1150000,
+    "attributes": {
+      "units": "tonnes"
+    }
+  },
+  "volume": {
+    "value": 23000000,
+    "attributes": {
+      "units": "m³"
+    }
+  },
+  "weightcapacity": {
+    "value": 17000,
+    "attributes": {
+      "units": "tonnes"
+    }
+  },
+  "volumecapacity": {
+    "value": 250000,
+    "attributes": {
+      "units": "m³"
+    }
+  },
+  "maxpassengers": 1600,
+  "length": {
+    "value": "900.0",
+    "attributes": {
+      "units": "metres"
+    }
+  },
+  "hull": 5600,
+  "shield": 4400,
+  "shieldArcs": [
+    {
+      "shield": 660,
+      "arc": "Front 60",
+      "arcFrom": 330,
+      "arcTo": 30
+    },
+    {
+      "shield": 1056,
+      "arc": "Port 120",
+      "arcFrom": 210,
+      "arcTo": 330
+    },
+    {
+      "shield": 1056,
+      "arc": "Starboard 120",
+      "arcFrom": 30,
+      "arcTo": 150
+    },
+    {
+      "shield": 528,
+      "arc": "Rear 60",
+      "arcFrom": 150,
+      "arcTo": 210
+    },
+    {
+      "shield": 1100,
+      "arc": "Omnidirectional",
+      "arcFrom": 0,
+      "arcTo": 360
+    }
+  ],
+  "shieldArcTemplate": 6,
+  "armour": 90,
+  "ioniccapacity": 2800,
+  "escapepods": 11,
+  "garrisons": {
+    "garrison": [
+      {
+        "maxSlots": 24,
+        "maxSquads": 2,
+        "loiterTime": 86400,
+        "rearmTime": 10800,
+        "garrisonType": "Infantry"
+      },
+      {
+        "maxSlots": 12,
+        "maxSquads": 2,
+        "loiterTime": 7200,
+        "rearmTime": 14400,
+        "garrisonType": "Ship"
+      }
+    ]
+  },
+  "repulsors": "no",
+  "slotsize": 12,
+  "medicalrooms": 0,
+  "asteroidprospectingsensors": 0,
+  "asteroidminingpower": 0,
+  "hangarbay": "no",
+  "dockingbay": "yes",
+  "canrecycle": "no",
+  "caninterdict": "no",
+  "weapons": {
+    "weapon": [
+      {
+        "attributes": {
+          "uid": "18:18",
+          "href": "https://www.swcombine.com/ws/v2.0/types/weapons/turbolaser%20battery/",
+          "quantity": 6,
+          "arc": "Port 120",
+          "arcFrom": 210,
+          "arcTo": 330
+        },
+        "value": "Turbolaser Battery"
+      },
+      {
+        "attributes": {
+          "uid": "18:18",
+          "href": "https://www.swcombine.com/ws/v2.0/types/weapons/turbolaser%20battery/",
+          "quantity": 6,
+          "arc": "Starboard 120",
+          "arcFrom": 30,
+          "arcTo": 150
+        },
+        "value": "Turbolaser Battery"
+      },
+      {
+        "attributes": {
+          "uid": "18:18",
+          "href": "https://www.swcombine.com/ws/v2.0/types/weapons/turbolaser%20battery/",
+          "quantity": 3,
+          "arc": "Front 60",
+          "arcFrom": 330,
+          "arcTo": 30
+        },
+        "value": "Turbolaser Battery"
+      },
+      {
+        "attributes": {
+          "uid": "18:4",
+          "href": "https://www.swcombine.com/ws/v2.0/types/weapons/proton%20torpedo%20launchers/",
+          "quantity": 10,
+          "arc": "Port 120",
+          "arcFrom": 210,
+          "arcTo": 330
+        },
+        "value": "Proton Torpedo Launchers"
+      },
+      {
+        "attributes": {
+          "uid": "18:4",
+          "href": "https://www.swcombine.com/ws/v2.0/types/weapons/proton%20torpedo%20launchers/",
+          "quantity": 10,
+          "arc": "Starboard 120",
+          "arcFrom": 30,
+          "arcTo": 150
+        },
+        "value": "Proton Torpedo Launchers"
+      },
+      {
+        "attributes": {
+          "uid": "18:4",
+          "href": "https://www.swcombine.com/ws/v2.0/types/weapons/proton%20torpedo%20launchers/",
+          "quantity": 5,
+          "arc": "Front 60",
+          "arcFrom": 330,
+          "arcTo": 30
+        },
+        "value": "Proton Torpedo Launchers"
+      },
+      {
+        "attributes": {
+          "uid": "18:4",
+          "href": "https://www.swcombine.com/ws/v2.0/types/weapons/proton%20torpedo%20launchers/",
+          "quantity": 5,
+          "arc": "Rear 60",
+          "arcFrom": 150,
+          "arcTo": 210
+        },
+        "value": "Proton Torpedo Launchers"
+      },
+      {
+        "attributes": {
+          "uid": "18:3",
+          "href": "https://www.swcombine.com/ws/v2.0/types/weapons/tractor%20beams/",
+          "quantity": 10,
+          "arc": "Omni",
+          "arcFrom": 0,
+          "arcTo": 360
+        },
+        "value": "Tractor Beams"
+      }
+    ]
+  },
+  "materials": {
+    "material": [
+      {
+        "attributes": {
+          "uid": "16:1",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/quantum/",
+          "quantity": 1600
+        },
+        "value": "quantum"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 16620
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:3",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/ardanium/",
+          "quantity": 1177
+        },
+        "value": "ardanium"
+      },
+      {
+        "attributes": {
+          "uid": "16:4",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/rudic/",
+          "quantity": 3867
+        },
+        "value": "rudic"
+      },
+      {
+        "attributes": {
+          "uid": "16:11",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/tibannagas/",
+          "quantity": 362
+        },
+        "value": "tibannagas"
+      },
+      {
+        "attributes": {
+          "uid": "16:12",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/nova/",
+          "quantity": 46
+        },
+        "value": "nova"
+      },
+      {
+        "attributes": {
+          "uid": "16:14",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/varmigio/",
+          "quantity": 8284
+        },
+        "value": "varmigio"
+      },
+      {
+        "attributes": {
+          "uid": "16:15",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/lommite/",
+          "quantity": 1113
+        },
+        "value": "lommite"
+      },
+      {
+        "attributes": {
+          "uid": "16:17",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/durelium/",
+          "quantity": 2761
+        },
+        "value": "durelium"
+      }
+    ]
+  },
+  "price": {
+    "credits": 11160082
+  },
+  "production": {
+    "modifier": 500,
+    "timeFactor": 2,
+    "recommendedWorkers": 180,
+    "recyclingXP": "20",
+    "genericSlots": 0
+  },
+  "images": {
+    "small": "https://images.swcombine.com//ships/1/main.png",
+    "large": "https://images.swcombine.com//ships/1/large.png"
+  }
+}

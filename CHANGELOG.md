@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Shield arcs and station armour on type endpoints.** `TypesShipEntity` gains
+  `shieldArcs` (typed as `TypesShipShieldArc[]`), `shieldArcTemplate` and `garrisons`.
+  Small ships omit both arc fields. `TypesStationEntity` gains `armour`. Inventory
+  entity endpoints are unchanged.
+
 ## 3.5.0
 
 ### Added

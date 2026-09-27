@@ -1,0 +1,113 @@
+{
+  "uid": "5:1",
+  "name": "Space Colony I",
+  "description": "<p>The Space Colony I is the most basic of space stations, often cramped and uncomfortably small, but typically serves as the first step in inhabiting space. Though often disdained by larger governments and wealthier spacers, the station is often built as the first foray into space by a star system's administration or the first station in the miniature trade empire of a spacer. In aid of this, the galaxy’s designs for the Space Colony I have been refined to reduce required resources to a minimum and make construction as easy as possible.</p><p>Life aboard a Space Colony I can be hard; food and water are conserved with a close eye and internal space is optimized to extremes - often at the expense of the colonists. Days are marked by routine but essential tasks, months are spent waiting and praying for the next supply ship, and years pass by with little change in scenery. Despite this, colonists typically form a very close-knit society where disagreements are settled quickly and friendships last for generations. Celebratory events often involve the entire station, while sorrowful events can elicit many people willing to help ease the pain.</p><p>Despite a Space Colony I's lack of weaponry or any unique features, spacers and administrators continually race to invent new purposes for this simple station. Some spacers will use these stations as rest points, often paying for a bunk and a shower with a few novelties collected throughout their travels. Despite lacking repair equipment, some administrators offer to care for a ship by simply applying a fresh coat of paint and cleaning up the interior. Spacers also occasionally recruit new crewmen from these stations, and administrators will offer open spots to crewmen looking to retire.</p>",
+  "sensors": 1,
+  "ecm": 0,
+  "weight": {
+    "value": 39462,
+    "attributes": {
+      "units": "tonnes"
+    }
+  },
+  "volume": {
+    "value": 43824,
+    "attributes": {
+      "units": "m³"
+    }
+  },
+  "weightcapacity": {
+    "value": 26608,
+    "attributes": {
+      "units": "tonnes"
+    }
+  },
+  "volumecapacity": {
+    "value": 2080,
+    "attributes": {
+      "units": "m³"
+    }
+  },
+  "maxpassengers": 200,
+  "length": {
+    "value": "150.0",
+    "attributes": {
+      "units": "metres"
+    }
+  },
+  "hull": 12000,
+  "shield": 8000,
+  "armour": 160,
+  "ioniccapacity": 6400,
+  "escapepods": 20,
+  "garrisons": {
+    "garrison": [
+      {
+        "maxSlots": 12,
+        "maxSquads": 1,
+        "loiterTime": 86400,
+        "rearmTime": 14400,
+        "garrisonType": "Ship"
+      }
+    ]
+  },
+  "medicalrooms": 0,
+  "hangarbay": "yes",
+  "dockingbay": "yes",
+  "canrecycle": "no",
+  "canproduce": "no",
+  "isasteroidminingdepot": "no",
+  "canrefinealazhi": "no",
+  "caninterdict": "no",
+  "canresearch": "no",
+  "weapons": {},
+  "materials": {
+    "material": [
+      {
+        "attributes": {
+          "uid": "16:1",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/quantum/",
+          "quantity": 3429
+        },
+        "value": "quantum"
+      },
+      {
+        "attributes": {
+          "uid": "16:2",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/meleenium/",
+          "quantity": 11431
+        },
+        "value": "meleenium"
+      },
+      {
+        "attributes": {
+          "uid": "16:4",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/rudic/",
+          "quantity": 777
+        },
+        "value": "rudic"
+      },
+      {
+        "attributes": {
+          "uid": "16:15",
+          "href": "https://www.swcombine.com/ws/v2.0/types/materials/lommite/",
+          "quantity": 160
+        },
+        "value": "lommite"
+      }
+    ]
+  },
+  "price": {
+    "credits": 2734224
+  },
+  "production": {
+    "modifier": 2106,
+    "recommendedWorkers": 25,
+    "recyclingXP": "20",
+    "genericSlots": 0
+  },
+  "images": {
+    "small": "https://images.swcombine.com//stations/1/main.jpg",
+    "large": "https://images.swcombine.com//stations/1/large.jpg"
+  }
+}

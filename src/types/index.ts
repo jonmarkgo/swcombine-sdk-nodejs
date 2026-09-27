@@ -1467,6 +1467,18 @@ export interface TypesShipWeapons {
   [key: string]: unknown;
 }
 
+/**
+ * Per-arc shield allocation on a ship type. Arc names and degrees match
+ * `TypesShipWeapon` arcs; arc `shield` values sum to the ship's total `shield`.
+ */
+export interface TypesShipShieldArc {
+  shield: number;
+  /** e.g. "Front 60", "Port 120", "Omnidirectional" */
+  arc: string;
+  arcFrom: number;
+  arcTo: number;
+}
+
 export interface TypesShipMaterial {
   attributes: {
     uid: string;
@@ -1523,8 +1535,13 @@ export interface TypesShipEntity {
   length?: TypesShipValueWithUnits;
   hull?: number;
   shield?: number;
+  /** Omitted entirely on small ships without arc shields. */
+  shieldArcs?: TypesShipShieldArc[];
+  /** Arc layout template ID; omitted alongside `shieldArcs`. */
+  shieldArcTemplate?: number;
   armour?: number;
   ioniccapacity?: number;
+  garrisons?: TypesStationGarrisons | Record<string, never>;
   repulsors?: TypesShipBoolean;
   slotsize?: number;
   medicalrooms?: number;
@@ -2113,6 +2130,7 @@ export interface TypesStationEntity {
   length?: TypesShipValueWithUnits;
   hull?: number;
   shield?: number;
+  armour?: number;
   ioniccapacity?: number;
   medicalrooms?: number;
   hangarbay?: TypesShipBoolean;

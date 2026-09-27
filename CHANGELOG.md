@@ -1,5 +1,34 @@
 # Changelog
 
+## 3.7.0
+
+### Added
+
+- **`filters` option on `inventory.entities.list()`**: `[{ type, value, inclusion? }]`.
+  - Several values for one type match any of them (sent in the API's keyed form). The old
+    positional arrays could only AND filters, so the same type twice always returned nothing.
+  - `null` (or `''`) means "None". For `container` the SDK sends `0:0`, the only form the API
+    honours; the documented empty string is ignored there.
+  - Booleans are sent as `1` / `0`; `inclusion` defaults to `includes`.
+  - Filters are checked against the entity type before the request, so a mistake throws a
+    `validation` `SWCError` instead of the API's retried 500.
+  - UID filters must be a UID or numeric ID. The API reads any other value as ID 0 ("None"):
+    a character name given to `pilot` returned the ships with _no_ pilot, and to `owner` or
+    `commander` matched nothing. This also applies to the deprecated positional arrays.
+
+### Fixed
+
+- `filter_type` / `filter_value` without `filter_inclusion` returned a 400 from the API, despite
+  being documented as defaulting to `includes`. The default is now sent. These positional
+  arrays are deprecated in favour of `filters`.
+- The `list()` JSDoc example filtered ships by `powered` (a facilities-only filter).
+
+### Documented
+
+- `InventoryFilter` lists each filter's value format and the API behaviour verified live:
+  `excludes` skips entities with no value for the field, `container` means the containing
+  entity, and `powered` / `debt` only match facilities they apply to.
+
 ## 3.6.0
 
 **Upgrading:** runtime behaviour is unchanged apart from the two fixes below, but several

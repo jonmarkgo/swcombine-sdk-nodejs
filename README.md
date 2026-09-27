@@ -155,6 +155,24 @@ for await (const ship of await client.inventory.entities.list({...})) {
 }
 ```
 
+### Filtering inventory
+
+```typescript
+const ships = await client.inventory.entities.list({
+  uid: '1:12345',
+  entityType: 'ships',
+  assignType: 'owner',
+  filters: [
+    { type: 'type', value: ['2:7', '2:19'] },           // either type
+    { type: 'underconstruction', value: false },        // booleans are fine
+    { type: 'container', value: null },                 // null = "None" (not docked)
+    { type: 'tags', value: 'Fleet', inclusion: 'excludes' },
+  ],
+});
+```
+
+Different filter types are combined with AND; several values for one type match any of them. The SDK checks each filter against the entity type before sending (the API answers an inapplicable filter with a 500) and sends "None" in the form the API honours for each filter.
+
 ## OAuth Authentication
 
 ### Quick OAuth Setup

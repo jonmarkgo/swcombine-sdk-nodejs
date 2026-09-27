@@ -5,8 +5,10 @@
 import { HttpClient } from '../http/HttpClient.js';
 import { BaseResource } from './BaseResource.js';
 import { Page } from '../pagination/Page.js';
+import { SWCError } from '../http/errors.js';
 import {
   GetEntityOptions,
+  InventoryFilterType,
   InventoryPropertyResult,
   InventorySummary,
   InventoryTagResult,
@@ -47,6 +49,122 @@ function normalizeSkillValues(entity: unknown): void {
   }
 }
 
+// Filter applicability per the API docs (verified live). A filter that does not apply makes the
+// API answer 500 with its SQL in the message, which HttpClient would also retry.
+const FILTER_ONLY_FOR: Partial<Record<InventoryFilterType, readonly InventoryEntityType[]>> = {
+  underconstruction: ['ships', 'vehicles', 'stations', 'facilities'],
+  opento: ['ships', 'vehicles', 'stations', 'facilities'],
+  wreck: ['ships', 'vehicles', 'stations', 'facilities', 'droids'],
+  powered: ['facilities'],
+  debt: ['facilities'],
+  deposit: ['facilities'],
+  cargocontaineritems: ['items'],
+  cargocontainerdroids: ['items'],
+  gender: ['npcs', 'creatures'],
+  level: ['npcs', 'creatures'],
+  race: ['npcs'],
+};
+const FILTER_NOT_FOR: Partial<Record<InventoryFilterType, readonly InventoryEntityType[]>> = {
+  class: ['cities', 'planets'],
+  type: ['cities'],
+  protected: ['planets'],
+  working: ['planets', 'materials'],
+};
+
+function assertFilterApplies(type: InventoryFilterType, entityType: InventoryEntityType): void {
+  const only = FILTER_ONLY_FOR[type];
+  if ((only && !only.includes(entityType)) || FILTER_NOT_FOR[type]?.includes(entityType)) {
+    throw new SWCError(`Inventory filter "${type}" does not apply to ${entityType}.`, {
+      type: 'validation',
+    });
+  }
+}
+
+// "None" is an empty string for most filters, but the API ignores that for container and only
+// honours the null UID "0:0" (what the website itself sends).
+function toFilterValue(type: InventoryFilterType, value: unknown): string {
+  if (value === null || value === undefined || value === '')
+    return type === 'container' ? '0:0' : '';
+  if (typeof value === 'boolean') return value ? '1' : '0';
+  const str = String(value);
+  // The API reads any non-numeric value for these as ID 0, i.e. "None": a name given to
+  // `pilot` silently returns entities with no pilot, and to `owner` it matches nothing.
+  if (ID_FILTERS.has(type) && !/^\d+(:\d+)?$/.test(str)) {
+    throw new SWCError(
+      `Inventory filter "${type}" needs a UID like "1:12345" (or numeric ID), not "${str}". Use null for "None".`,
+      { type: 'validation' }
+    );
+  }
+  return str;
+}
+
+const ID_FILTERS = new Set<InventoryFilterType>([
+  'class',
+  'city',
+  'planet',
+  'sector',
+  'system',
+  'type',
+  'id',
+  'pilot',
+  'deposit',
+  'cargocontaineritems',
+  'cargocontainerdroids',
+  'race',
+  'owner',
+  'commander',
+  'container',
+]);
+
+/** Builds query params for inventory filters. Throws before any request on invalid input. */
+function buildFilterParams(
+  entityType: InventoryEntityType,
+  options: Pick<
+    ListInventoryEntitiesOptions,
+    'filters' | 'filter_type' | 'filter_value' | 'filter_inclusion'
+  >
+): QueryParams {
+  const { filters, filter_type, filter_value, filter_inclusion } = options;
+  if (filters && filter_type) {
+    throw new SWCError('Use either filters or filter_type/filter_value, not both.', {
+      type: 'validation',
+    });
+  }
+
+  if (filters) {
+    // Keyed form: filter_value[type][]=a&filter_value[type][]=b matches either value.
+    const params: QueryParams = {};
+    const types: string[] = [];
+    for (const filter of filters) {
+      assertFilterApplies(filter.type, entityType);
+      if (types.includes(filter.type)) {
+        throw new SWCError(
+          `Inventory filter "${filter.type}" given twice. Pass one filter with an array of values to match any of them.`,
+          { type: 'validation' }
+        );
+      }
+      types.push(filter.type);
+      const values = Array.isArray(filter.value) ? filter.value : [filter.value];
+      params[`filter_value[${filter.type}]`] = values.map((v) => toFilterValue(filter.type, v));
+      params[`filter_inclusion[${filter.type}]`] = filter.inclusion ?? 'includes';
+    }
+    if (types.length) params.filter_type = types;
+    return params;
+  }
+
+  if (!filter_type?.length) return {};
+  // Legacy positional arrays. The API rejects a missing inclusion with a 400, so default it.
+  if (filter_value?.length !== filter_type.length) {
+    throw new SWCError('filter_value must have one entry per filter_type.', { type: 'validation' });
+  }
+  filter_type.forEach((type) => assertFilterApplies(type, entityType));
+  return {
+    filter_type,
+    filter_value: filter_value.map((v, i) => toFilterValue(filter_type[i], v)),
+    filter_inclusion: filter_type.map((_, i) => filter_inclusion?.[i] ?? 'includes'),
+  };
+}
+
 /**
  * Inventory entities resource
  *
@@ -56,14 +174,15 @@ export class InventoryEntitiesResource extends BaseResource {
   /**
    * List entities in inventory (paginated with optional filtering)
    *
-   * Supports filtering by various entity properties. Filter arrays must have matching lengths.
+   * Supports filtering via `filters` (see the `InventoryFilter` type for value formats and API quirks).
+   * Filters are checked against the entity type before the request is sent.
    *
    * The `uid` argument accepts either a character UID (e.g. `1:12345`) or a faction UID
    * (e.g. `20:123`) — there is no separate `client.faction.entities` accessor; faction-owned
    * entities are queried through this method.
    *
    * @param options - Inventory UID, entity type, assign type, and optional pagination/filtering parameters
-   * @param options.uid - Character or Faction UID
+   * @param options.uid - Whose inventory: a character or faction UID, or their name (e.g. `'kira vane'`)
    * @param options.entityType - Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials'
    * @param options.assignType - Assignment type: 'owner', 'commander', or 'pilot'
    *
@@ -72,9 +191,7 @@ export class InventoryEntitiesResource extends BaseResource {
    *
    * @param options.start_index - Starting position (1-based). Default: 1
    * @param options.item_count - Number of items to retrieve. Default: 50, Max: 200
-   * @param options.filter_type - Array of filter types (e.g., 'class', 'name', 'tags', 'powered')
-   * @param options.filter_value - Array of values corresponding to each filter type
-   * @param options.filter_inclusion - Array specifying 'includes' or 'excludes' for each filter
+   * @param options.filters - Filters to apply; several values for one type match any of them
    * @example
    * // Character-owned ships
    * const myShips = await client.inventory.entities.list({ uid: '1:12345', entityType: 'ships', assignType: 'owner' });
@@ -94,35 +211,35 @@ export class InventoryEntitiesResource extends BaseResource {
    * // Administered planets — note the assign type
    * const planets = await client.inventory.entities.list({ uid: '1:12345', entityType: 'planets', assignType: 'pilot' });
    *
-   * // Filter by multiple criteria
-   * const multiFiltered = await client.inventory.entities.list({
+   * // Ships of either of two types that are not under construction
+   * const ships = await client.inventory.entities.list({
    *   uid: '1:12345',
    *   entityType: 'ships',
    *   assignType: 'owner',
-   *   filter_type: ['class', 'powered'],
-   *   filter_value: ['Fighter', '1'],
-   *   filter_inclusion: ['includes', 'includes']
+   *   filters: [
+   *     { type: 'type', value: ['2:7', '2:19'] },
+   *     { type: 'underconstruction', value: false },
+   *   ],
+   * });
+   *
+   * // Ships not docked in any ship or station ("None" is `null`)
+   * const undocked = await client.inventory.entities.list({
+   *   uid: '1:12345',
+   *   entityType: 'ships',
+   *   assignType: 'owner',
+   *   filters: [{ type: 'container', value: null }],
    * });
    */
   async list<T extends InventoryEntityType>(
     options: ListInventoryEntitiesOptions<T>
   ): Promise<Page<InventoryEntityTypeMap[T]>> {
+    const filterParams = buildFilterParams(options.entityType, options);
     const makeRequest = async (startIndex: number): Promise<Page<InventoryEntityTypeMap[T]>> => {
       const params: QueryParams = {
         start_index: startIndex,
         item_count: options.item_count ?? 50,
+        ...filterParams,
       };
-
-      // Add filtering parameters if provided
-      if (options.filter_type) {
-        params.filter_type = options.filter_type;
-      }
-      if (options.filter_value) {
-        params.filter_value = options.filter_value;
-      }
-      if (options.filter_inclusion) {
-        params.filter_inclusion = options.filter_inclusion;
-      }
 
       const response = await this.http.get<Record<string, unknown>>(
         `/inventory/${options.uid}/${options.entityType}/${options.assignType}`,

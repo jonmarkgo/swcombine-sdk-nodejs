@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 3.6.0
+
+**Upgrading:** runtime behaviour is unchanged apart from the two fixes below, but several
+return types were corrected to match what the API actually sends. Code that read fields
+the API never returned (for example `event.uid` on a list row, `vendor.uid`,
+`credits.amount`, `entityType.name`) will now fail to compile; those reads were always
+`undefined` at runtime.
 
 ### Added
 

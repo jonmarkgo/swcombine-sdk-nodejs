@@ -40,6 +40,8 @@ console.log(event.type); // access properties directly, not event.data
 
 List events by type and mode (paginated)
 **Note:** This endpoint uses 0-based indexing (unlike most other endpoints which use 1-based).
+The API reports no total for events, so `page.total` is always 0; `hasMore` is true when a
+full page came back.
 
 <ParamField path="eventMode" type="string" required>
   Event mode: 'personal', 'faction', 'inventory', or 'combat'

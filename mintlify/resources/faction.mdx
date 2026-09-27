@@ -151,7 +151,6 @@ const manyLogs = await client.faction.creditlog.list({ factionId: '20:123', item
 ### faction.credits.get()
 
 Get faction credit balance.
-Returns the `FactionCredits` object directly — not wrapped in a `Page`.
 
 <ParamField path="factionId" type="string" required>
   The factionId parameter.
@@ -159,7 +158,7 @@ Returns the `FactionCredits` object directly — not wrapped in a `Page`.
 
 ```typescript
 const credits = await client.faction.credits.get({ factionId: '20:123' });
-console.log(credits); // access properties directly, not credits.data
+console.log(credits); // 1467069314
 ```
 
 ### faction.credits.transfer()

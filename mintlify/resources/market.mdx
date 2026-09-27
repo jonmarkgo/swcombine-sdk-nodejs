@@ -22,15 +22,16 @@ The `client.market` resource provides access to NPC vendor listings and marketpl
 ### market.vendors.get()
 
 Get a specific vendor by UID.
-Returns the `Vendor` object directly — not wrapped in a `Page`.
+Returns the vendor directly — not wrapped in a `Page`. `uid` is the numeric vendor id
+from `list()` (`attributes.id`).
 
 <ParamField path="uid" type="string" required>
   The uid parameter.
 </ParamField>
 
 ```typescript
-const vendor = await client.market.vendors.get({ uid: 'vendor-uid' });
-console.log(vendor.name); // access properties directly, not vendor.data
+const vendor = await client.market.vendors.get({ uid: '6' });
+for (const ware of vendor.wares?.ware ?? []) console.log(ware.type, ware.price);
 ```
 
 ### market.vendors.list()

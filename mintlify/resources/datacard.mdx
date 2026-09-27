@@ -52,21 +52,20 @@ Delete datacard assignment
 
 Get a specific datacard by UID.
 Returns the `Datacard` object directly — not wrapped in a `Page`.
-Access properties like `.name` and `.uid` on the result itself.
 
 <ParamField path="uid" type="string" required>
   The uid parameter.
 </ParamField>
 
 ```typescript
-const card = await client.datacard.get({ uid: 'datacard-uid' });
-console.log(card.name); // access properties directly, not card.data
+const card = await client.datacard.get({ uid: '14:6421' });
+console.log(card.entity.value, card.assignedlocations);
 ```
 
 ### datacard.list()
 
 List datacards owned by faction.
-Returns a `Page<Datacard>` — access the array of datacards via `.data`.
+Returns a `Page<DatacardListItem>` — access the array of datacards via `.data`.
 
 <ParamField path="factionId" type="string" required>
   The factionId parameter.
@@ -78,11 +77,11 @@ Returns a `Page<Datacard>` — access the array of datacards via `.data`.
 
 ```typescript
 const page = await client.datacard.list({ factionId: '20:123' });
-console.log(page.data);   // Datacard[] — items on this page
+console.log(page.data);   // DatacardListItem[] — items on this page
 console.log(page.total);  // total datacards across all pages
 
 for await (const card of page) {
-  console.log(card.name); // auto-paginates
+  console.log(card.entity.value); // auto-paginates
 }
 ```
 

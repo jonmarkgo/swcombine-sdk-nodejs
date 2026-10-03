@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.8.0
+
+### Added
+
+- **`inventory.entities.updateProperties()`**: changes one property on up to 100 entities in a
+  single request, via the API's new batch `POST /inventory/entities/{property}/` endpoint.
+  - Entity types may be mixed in `uids`. The result lists which entities succeeded and which
+    failed, with the reason.
+  - An empty `uids` list, or more than 100, throws a `validation` `SWCError` before the request.
+- `InventoryEntityProperty` type for the property names accepted by `updateProperty()` and
+  `updateProperties()`.
+
 ## 3.7.0
 
 ### Added

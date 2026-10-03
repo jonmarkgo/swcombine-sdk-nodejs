@@ -8,6 +8,7 @@ import { Page } from '../pagination/Page.js';
 import { SWCError } from '../http/errors.js';
 import {
   GetEntityOptions,
+  InventoryEntityProperty,
   InventoryFilterType,
   InventoryPropertyResult,
   InventorySummary,
@@ -306,17 +307,7 @@ export class InventoryEntitiesResource extends BaseResource {
   async updateProperty(options: {
     entityType: string;
     uid: string;
-    property:
-      | 'name'
-      | 'open-to'
-      | 'owner'
-      | 'commander'
-      | 'pilot'
-      | 'infotext'
-      | 'action'
-      | 'crewlist-add'
-      | 'crewlist-remove'
-      | 'crewlist-clear';
+    property: InventoryEntityProperty;
     new_value: string;
     reason?: string;
   }): Promise<InventoryPropertyResult> {
@@ -330,6 +321,60 @@ export class InventoryEntitiesResource extends BaseResource {
     return this.request<InventoryPropertyResult>(
       'POST',
       `/inventory/${options.entityType}/${options.uid}/${options.property}/`,
+      data
+    );
+  }
+
+  /**
+   * Update a property on up to 100 entities in one request
+   *
+   * The API rejects the request as a whole if the client or the character lacks the
+   * permission for any of the entities. Otherwise, entities the change could not be applied
+   * to are listed under `data.failed`, with the reason.
+   *
+   * @param options.property - Property to update
+   * @param options.uids - UIDs of the entities to change (1 to 100). Entity types may be mixed
+   * @param options.new_value - New value, applied to every entity:
+   * - `name`: the new name (max 50 characters)
+   * - `open-to`: `public`, `faction` or `none` (any other value is treated as `none`)
+   * - `owner`, `commander`, `pilot`, `crewlist-add`, `crewlist-remove`: the name of the character or faction
+   * - `infotext`: the new text
+   * - `action`: `resume`, `pause` or `abort`
+   * - `crewlist-clear`: ignored, but a value must still be sent
+   * @param options.reason - Optional reason for the change. Only recorded when changing the owner, commander or pilot
+   * @example
+   * const result = await client.inventory.entities.updateProperties({
+   *   property: 'commander',
+   *   uids: ['2:1002', '3:2001'],
+   *   new_value: 'Dax Orin',
+   * });
+   * console.log(result.data.succeeded.entity.map((entity) => entity.uid));
+   * console.log(result.data.failed.entity);
+   */
+  async updateProperties(options: {
+    property: InventoryEntityProperty;
+    uids: string[];
+    new_value: string;
+    reason?: string;
+  }): Promise<InventoryPropertyResult> {
+    if (options.uids.length < 1 || options.uids.length > 100) {
+      throw new SWCError(
+        `updateProperties() needs between 1 and 100 uids, got ${options.uids.length}.`,
+        { type: 'validation' }
+      );
+    }
+
+    const data: Record<string, string | string[]> = {
+      uids: options.uids,
+      new_value: options.new_value,
+    };
+    if (options.reason) {
+      data.reason = options.reason;
+    }
+
+    return this.request<InventoryPropertyResult>(
+      'POST',
+      `/inventory/entities/${options.property}/`,
       data
     );
   }

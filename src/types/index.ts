@@ -1213,7 +1213,23 @@ export interface InventorySummary {
   inventory: InventorySummaryEntry[];
 }
 
-/** Result of `inventory.entities.updateProperty()`. */
+/** Property that `inventory.entities.updateProperty()` and `updateProperties()` can change. */
+export type InventoryEntityProperty =
+  | 'name'
+  | 'open-to'
+  | 'owner'
+  | 'commander'
+  | 'pilot'
+  | 'infotext'
+  | 'action'
+  | 'crewlist-add'
+  | 'crewlist-remove'
+  | 'crewlist-clear';
+
+/**
+ * Result of `inventory.entities.updateProperty()` and `updateProperties()`.
+ * Entities the change could not be applied to are listed under `data.failed`, with the reason.
+ */
 export interface InventoryPropertyResult {
   status: { value?: string } | Record<string, never>;
   data: {

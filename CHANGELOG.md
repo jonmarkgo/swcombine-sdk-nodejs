@@ -12,6 +12,17 @@
 - `InventoryEntityProperty` type for the property names accepted by `updateProperty()` and
   `updateProperties()`.
 
+### Fixed
+
+- `character.privileges.update()` resolved as if it had worked when the API refused the change.
+  The API reports a refusal with HTTP 200 and a `failure` list (for example "Requires powered HQ
+  to change privileges"); the SDK now throws a `validation` `SWCError` with that reason.
+
+### Changed
+
+- A response whose only payload is a `failure` list is returned as `{ failure: [...] }` instead
+  of being unwrapped to a bare array, so it can be told apart from data.
+
 ## 3.7.0
 
 ### Added

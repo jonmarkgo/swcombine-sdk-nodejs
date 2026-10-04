@@ -352,11 +352,16 @@ export class CharacterPrivilegesResource extends BaseResource {
 
   /**
    * Update a specific privilege (grant or revoke)
+   *
+   * Throws a `validation` `SWCError` carrying the API's reason when the change is refused
+   * (for example "Requires powered HQ to change privileges"). The API reports that with
+   * HTTP 200 and a `failure` list rather than an error status.
+   *
    * @param options.uid - Character UID
    * @param options.privilegeGroup - Privilege group name
    * @param options.privilege - Privilege name
    * @param options.revoke - Set to true to revoke the privilege, false/undefined to grant it
-   * @param options.faction_id - Optional faction ID to view privileges for (defaults to token owner's primary faction)
+   * @param options.faction_id - Optional ID of the faction the privilege is granted or revoked in (defaults to token owner's primary faction; required if the token owner is a freelancer)
    */
   async update(options: {
     uid: string;
@@ -377,11 +382,21 @@ export class CharacterPrivilegesResource extends BaseResource {
       params.faction_id = options.faction_id;
     }
 
-    return this.http.post<unknown>(
+    const response = await this.http.post<unknown>(
       `/character/${options.uid}/privileges/${options.privilegeGroup}/${options.privilege}`,
       data,
       { params }
     );
+
+    const failure = (response as { failure?: unknown } | null)?.failure;
+    if (Array.isArray(failure) && failure.length > 0) {
+      throw new SWCError(failure.join(' '), {
+        type: 'validation',
+        statusCode: 200,
+        response: { failure },
+      });
+    }
+    return response;
   }
 }
 

@@ -88,7 +88,8 @@ for (const action of facility.actions?.action ?? []) {
 
 List entities in inventory (paginated with optional filtering)
 Supports filtering via `filters` (see the `InventoryFilter` type for value formats and API quirks).
-Filters are checked against the entity type before the request is sent.
+Filters are checked against the entity type before the request is sent. They are sent in a POST
+body, so a long list (for example hundreds of entity IDs) is not capped by the server's URL limit.
 The `uid` argument accepts either a character UID (e.g. `1:12345`) or a faction UID
 (e.g. `20:123`) — there is no separate `client.faction.entities` accessor; faction-owned
 entities are queried through this method.
@@ -114,7 +115,7 @@ entities are queried through this method.
 </ParamField>
 
 <ParamField path="filters" type="InventoryFilter[]">
-  Filters to apply. Filters of different types are combined with AND; several values for one type match any of them. Each type may appear once. Cannot be combined with the `filter_type` / `filter_value` / `filter_inclusion` arrays.
+  Filters to apply. Filters of different types are combined with AND; several values for one type match any of them. Each type may appear once. Cannot be combined with the `filter_type` / `filter_value` / `filter_inclusion` arrays. Sent in a POST body, so the list is not limited by URL length.
 </ParamField>
 
 <ParamField path="item_count" type="**item\_count**: number" default="50">
@@ -200,6 +201,39 @@ Remove tag from entity
   The uid parameter.
 </ParamField>
 
+### inventory.entities.updateProperties()
+
+Update a property on up to 100 entities in one request
+The API rejects the request as a whole if the client or the character lacks the
+permission for any of the entities. Otherwise, entities the change could not be applied
+to are listed under `data.failed`, with the reason.
+
+<ParamField path="new_value" type="string" required>
+  New value, applied to every entity: - `name`: the new name (max 50 characters) - `open-to`: `public`, `faction` or `none` (any other value is treated as `none`) - `owner`, `commander`, `pilot`, `crewlist-add`, `crewlist-remove`: the name of the character or faction - `infotext`: the new text - `action`: `resume`, `pause` or `abort` - `crewlist-clear`: ignored, but a value must still be sent
+</ParamField>
+
+<ParamField path="property" type="InventoryEntityProperty" required>
+  Property to update
+</ParamField>
+
+<ParamField path="reason" type="string">
+  Optional reason for the change. Only recorded when changing the owner, commander or pilot
+</ParamField>
+
+<ParamField path="uids" type="string[]" required>
+  UIDs of the entities to change (1 to 100). Entity types may be mixed
+</ParamField>
+
+```typescript
+const result = await client.inventory.entities.updateProperties({
+  property: 'commander',
+  uids: ['2:1002', '3:2001'],
+  new_value: 'Dax Orin',
+});
+console.log(result.data.succeeded.entity.map((entity) => entity.uid));
+console.log(result.data.failed.entity);
+```
+
 ### inventory.entities.updateProperty()
 
 Update entity property
@@ -212,7 +246,7 @@ Update entity property
   New value for the property
 </ParamField>
 
-<ParamField path="property" type="'name' \| 'owner' \| 'commander' \| 'pilot' \| 'infotext' \| 'open-to' \| 'action' \| 'crewlist-add' \| 'crewlist-remove' \| 'crewlist-clear'" required>
+<ParamField path="property" type="InventoryEntityProperty" required>
   Property to update
 </ParamField>
 

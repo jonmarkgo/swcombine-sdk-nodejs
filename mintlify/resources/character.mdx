@@ -355,9 +355,12 @@ privs.privilegegroup.forEach(g => {
 ### character.privileges.update()
 
 Update a specific privilege (grant or revoke)
+Throws a `validation` `SWCError` carrying the API's reason when the change is refused
+(for example "Requires powered HQ to change privileges"). The API reports that with
+HTTP 200 and a `failure` list rather than an error status.
 
 <ParamField path="faction_id" type="number">
-  Optional faction ID to view privileges for (defaults to token owner's primary faction)
+  Optional ID of the faction the privilege is granted or revoked in (defaults to token owner's primary faction; required if the token owner is a freelancer)
 </ParamField>
 
 <ParamField path="privilege" type="string" required>

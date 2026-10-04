@@ -7,9 +7,9 @@ import type { ListInventoryEntitiesOptions } from '../../../src/types/index.js';
 
 function setup() {
   const http = createMockHttpClient();
-  http.get.mockResolvedValue({
-    entities: { attributes: { start: 1, total: 0, count: 0 }, entity: [] },
-  });
+  const empty = { entities: { attributes: { start: 1, total: 0, count: 0 }, entity: [] } };
+  http.get.mockResolvedValue(empty);
+  http.post.mockResolvedValue(empty);
   const inventory = new InventoryResource(http as unknown as HttpClient);
   const list = (opts: Partial<ListInventoryEntitiesOptions>) =>
     inventory.entities.list({
@@ -19,31 +19,32 @@ function setup() {
       ...opts,
     } as ListInventoryEntitiesOptions);
   const sentParams = () => http.get.mock.calls[0][1].params;
-  return { http, list, sentParams };
+  // `filters` travel as a JSON array in the POST body.
+  const sentFilters = (call = 0) => JSON.parse(http.post.mock.calls[call][1].filters);
+  return { http, list, sentParams, sentFilters };
 }
 
 describe('inventory.entities.list() filters', () => {
-  it('sends several values for one type in keyed form (matches any of them)', async () => {
-    const { list, sentParams } = setup();
+  it('sends filters as a JSON array in a POST body, with pagination in the query', async () => {
+    const { http, list, sentFilters } = setup();
     await list({
       filters: [
         { type: 'type', value: ['2:7', '2:19'] },
         { type: 'protected', value: true, inclusion: 'excludes' },
       ],
     });
-    expect(sentParams()).toEqual({
-      start_index: 1,
-      item_count: 50,
-      filter_type: ['type', 'protected'],
-      'filter_value[type]': ['2:7', '2:19'],
-      'filter_inclusion[type]': 'includes',
-      'filter_value[protected]': ['1'],
-      'filter_inclusion[protected]': 'excludes',
-    });
+
+    expect(http.get).not.toHaveBeenCalled();
+    expect(http.post.mock.calls[0][0]).toBe('/inventory/1:1/ships/owner');
+    expect(sentFilters()).toEqual([
+      { type: 'type', value: ['2:7', '2:19'], inclusion: 'includes' },
+      { type: 'protected', value: ['1'], inclusion: 'excludes' },
+    ]);
+    expect(http.post.mock.calls[0][2]).toEqual({ params: { start_index: 1, item_count: 50 } });
   });
 
   it('translates None: 0:0 for container (the only form the API honours), empty string otherwise', async () => {
-    const { list, sentParams } = setup();
+    const { list, sentFilters } = setup();
     await list({
       filters: [
         { type: 'container', value: null },
@@ -51,38 +52,46 @@ describe('inventory.entities.list() filters', () => {
         { type: 'infotext', value: '' },
       ],
     });
-    expect(sentParams()).toMatchObject({
-      'filter_value[container]': ['0:0'],
-      'filter_value[city]': [''],
-      'filter_value[infotext]': [''],
-    });
+    expect(sentFilters()).toEqual([
+      { type: 'container', value: ['0:0'], inclusion: 'includes' },
+      { type: 'city', value: [''], inclusion: 'includes' },
+      { type: 'infotext', value: [''], inclusion: 'includes' },
+    ]);
   });
 
   it('sends booleans as 1/0 and numbers as strings', async () => {
-    const { list, sentParams } = setup();
+    const { list, sentFilters } = setup();
     await list({
       filters: [
         { type: 'underconstruction', value: false },
         { type: 'opento', value: [0, 2] },
       ],
     });
-    expect(sentParams()).toMatchObject({
-      'filter_value[underconstruction]': ['0'],
-      'filter_value[opento]': ['0', '2'],
-    });
+    expect(sentFilters()).toEqual([
+      { type: 'underconstruction', value: ['0'], inclusion: 'includes' },
+      { type: 'opento', value: ['0', '2'], inclusion: 'includes' },
+    ]);
   });
 
   it('keeps filters when fetching the next page', async () => {
-    const { http, list } = setup();
-    http.get.mockResolvedValue({
+    const { http, list, sentFilters } = setup();
+    http.post.mockResolvedValue({
       entities: { attributes: { start: 1, total: 4, count: 2 }, entity: [{}, {}] },
     });
     const page = await list({ item_count: 2, filters: [{ type: 'type', value: ['2:7', '2:19'] }] });
     await page.getNextPage();
-    expect(http.get.mock.calls[1][1].params).toMatchObject({
-      start_index: 3,
-      'filter_value[type]': ['2:7', '2:19'],
-    });
+
+    expect(sentFilters(1)).toEqual([
+      { type: 'type', value: ['2:7', '2:19'], inclusion: 'includes' },
+    ]);
+    expect(http.post.mock.calls[1][2]).toEqual({ params: { start_index: 3, item_count: 2 } });
+  });
+
+  it('lists without filters as a plain GET', async () => {
+    const { http, list, sentParams } = setup();
+    await list({ filters: [] });
+    expect(http.post).not.toHaveBeenCalled();
+    expect(sentParams()).toEqual({ start_index: 1, item_count: 50 });
   });
 
   it('defaults legacy filter_inclusion to includes (the API 400s without it)', async () => {
@@ -139,6 +148,7 @@ describe('inventory.entities.list() filters', () => {
       (e) => e instanceof SWCError && e.type === 'validation'
     );
     expect(http.get).not.toHaveBeenCalled();
+    expect(http.post).not.toHaveBeenCalled();
   });
 
   it('allows filters that apply to the entity type', async () => {

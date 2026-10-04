@@ -146,6 +146,18 @@ describe('HttpClient', () => {
       expect(result.data).toEqual({ character: { name: 'Luke' }, meta: {} });
     });
 
+    it('keeps the key of a lone failure list so it cannot be mistaken for data', () => {
+      new HttpClient({});
+      const { onFulfilled } = getResponseInterceptors();
+
+      const response = {
+        data: { swcapi: { failure: ['Cannot change privileges: Requires powered HQ.'] } },
+        headers: {},
+      };
+      const result = onFulfilled(response);
+      expect(result.data).toEqual({ failure: ['Cannot change privileges: Requires powered HQ.'] });
+    });
+
     it('passes through non-swcapi responses', () => {
       new HttpClient({});
       const { onFulfilled } = getResponseInterceptors();

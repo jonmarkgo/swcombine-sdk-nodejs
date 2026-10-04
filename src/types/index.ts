@@ -1213,7 +1213,23 @@ export interface InventorySummary {
   inventory: InventorySummaryEntry[];
 }
 
-/** Result of `inventory.entities.updateProperty()`. */
+/** Property that `inventory.entities.updateProperty()` and `updateProperties()` can change. */
+export type InventoryEntityProperty =
+  | 'name'
+  | 'open-to'
+  | 'owner'
+  | 'commander'
+  | 'pilot'
+  | 'infotext'
+  | 'action'
+  | 'crewlist-add'
+  | 'crewlist-remove'
+  | 'crewlist-clear';
+
+/**
+ * Result of `inventory.entities.updateProperty()` and `updateProperties()`.
+ * Entities the change could not be applied to are listed under `data.failed`, with the reason.
+ */
 export interface InventoryPropertyResult {
   status: { value?: string } | Record<string, never>;
   data: {
@@ -2537,6 +2553,8 @@ export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = In
    * Filters to apply. Filters of different types are combined with AND; several values for
    * one type match any of them. Each type may appear once. Cannot be combined with the
    * `filter_type` / `filter_value` / `filter_inclusion` arrays.
+   *
+   * Sent in a POST body, so the list is not limited by URL length.
    */
   filters?: InventoryFilter[];
   /** @deprecated Use `filters`. Filter types, one per value. */

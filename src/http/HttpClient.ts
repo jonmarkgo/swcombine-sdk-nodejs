@@ -146,7 +146,9 @@ export class HttpClient {
           const swcapiData = response.data.swcapi;
           // Get the first key's value (e.g., swcapi.character -> character data)
           const keys = Object.keys(swcapiData);
-          if (keys.length === 1) {
+          // A lone `failure` list keeps its key: unwrapped to a bare array it could not be
+          // told apart from data (the API reports some refused changes this way, with a 200).
+          if (keys.length === 1 && keys[0] !== 'failure') {
             response.data = swcapiData[keys[0]];
           } else {
             // If multiple keys or no keys, return the swcapi object itself

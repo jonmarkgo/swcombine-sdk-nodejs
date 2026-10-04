@@ -8,6 +8,7 @@ import { Page } from '../pagination/Page.js';
 import { SWCError } from '../http/errors.js';
 import {
   GetEntityOptions,
+  InventoryEntityProperty,
   InventoryFilterType,
   InventoryPropertyResult,
   InventorySummary,
@@ -116,14 +117,19 @@ const ID_FILTERS = new Set<InventoryFilterType>([
   'container',
 ]);
 
-/** Builds query params for inventory filters. Throws before any request on invalid input. */
-function buildFilterParams(
+/**
+ * Builds the filter part of a list request. `filters` go in a POST body as a JSON array, which
+ * returns the same rows as the GET (verified live) without the server's 8 KB URL limit: a GET
+ * with a few hundred filter values is rejected with a 414. The deprecated positional arrays stay
+ * query params. Throws before any request on invalid input.
+ */
+function buildFilterRequest(
   entityType: InventoryEntityType,
   options: Pick<
     ListInventoryEntitiesOptions,
     'filters' | 'filter_type' | 'filter_value' | 'filter_inclusion'
   >
-): QueryParams {
+): { params: QueryParams; body?: { filters: string } } {
   const { filters, filter_type, filter_value, filter_inclusion } = options;
   if (filters && filter_type) {
     throw new SWCError('Use either filters or filter_type/filter_value, not both.', {
@@ -131,11 +137,9 @@ function buildFilterParams(
     });
   }
 
-  if (filters) {
-    // Keyed form: filter_value[type][]=a&filter_value[type][]=b matches either value.
-    const params: QueryParams = {};
+  if (filters?.length) {
     const types: string[] = [];
-    for (const filter of filters) {
+    const inBody = filters.map((filter) => {
       assertFilterApplies(filter.type, entityType);
       if (types.includes(filter.type)) {
         throw new SWCError(
@@ -145,23 +149,27 @@ function buildFilterParams(
       }
       types.push(filter.type);
       const values = Array.isArray(filter.value) ? filter.value : [filter.value];
-      params[`filter_value[${filter.type}]`] = values.map((v) => toFilterValue(filter.type, v));
-      params[`filter_inclusion[${filter.type}]`] = filter.inclusion ?? 'includes';
-    }
-    if (types.length) params.filter_type = types;
-    return params;
+      return {
+        type: filter.type,
+        value: values.map((v) => toFilterValue(filter.type, v)),
+        inclusion: filter.inclusion ?? 'includes',
+      };
+    });
+    return { params: {}, body: { filters: JSON.stringify(inBody) } };
   }
 
-  if (!filter_type?.length) return {};
+  if (!filter_type?.length) return { params: {} };
   // Legacy positional arrays. The API rejects a missing inclusion with a 400, so default it.
   if (filter_value?.length !== filter_type.length) {
     throw new SWCError('filter_value must have one entry per filter_type.', { type: 'validation' });
   }
   filter_type.forEach((type) => assertFilterApplies(type, entityType));
   return {
-    filter_type,
-    filter_value: filter_value.map((v, i) => toFilterValue(filter_type[i], v)),
-    filter_inclusion: filter_type.map((_, i) => filter_inclusion?.[i] ?? 'includes'),
+    params: {
+      filter_type,
+      filter_value: filter_value.map((v, i) => toFilterValue(filter_type[i], v)),
+      filter_inclusion: filter_type.map((_, i) => filter_inclusion?.[i] ?? 'includes'),
+    },
   };
 }
 
@@ -175,7 +183,8 @@ export class InventoryEntitiesResource extends BaseResource {
    * List entities in inventory (paginated with optional filtering)
    *
    * Supports filtering via `filters` (see the `InventoryFilter` type for value formats and API quirks).
-   * Filters are checked against the entity type before the request is sent.
+   * Filters are checked against the entity type before the request is sent. They are sent in a POST
+   * body, so a long list (for example hundreds of entity IDs) is not capped by the server's URL limit.
    *
    * The `uid` argument accepts either a character UID (e.g. `1:12345`) or a faction UID
    * (e.g. `20:123`) — there is no separate `client.faction.entities` accessor; faction-owned
@@ -233,7 +242,8 @@ export class InventoryEntitiesResource extends BaseResource {
   async list<T extends InventoryEntityType>(
     options: ListInventoryEntitiesOptions<T>
   ): Promise<Page<InventoryEntityTypeMap[T]>> {
-    const filterParams = buildFilterParams(options.entityType, options);
+    const { params: filterParams, body } = buildFilterRequest(options.entityType, options);
+    const path = `/inventory/${options.uid}/${options.entityType}/${options.assignType}`;
     const makeRequest = async (startIndex: number): Promise<Page<InventoryEntityTypeMap[T]>> => {
       const params: QueryParams = {
         start_index: startIndex,
@@ -241,10 +251,9 @@ export class InventoryEntitiesResource extends BaseResource {
         ...filterParams,
       };
 
-      const response = await this.http.get<Record<string, unknown>>(
-        `/inventory/${options.uid}/${options.entityType}/${options.assignType}`,
-        { params }
-      );
+      const response = body
+        ? await this.http.post<Record<string, unknown>>(path, body, { params })
+        : await this.http.get<Record<string, unknown>>(path, { params });
 
       // API returns { filters: {...}, entities: { attributes: {...}, entity: [...] } }
       const entities = response.entities as Record<string, unknown> | undefined;
@@ -306,17 +315,7 @@ export class InventoryEntitiesResource extends BaseResource {
   async updateProperty(options: {
     entityType: string;
     uid: string;
-    property:
-      | 'name'
-      | 'open-to'
-      | 'owner'
-      | 'commander'
-      | 'pilot'
-      | 'infotext'
-      | 'action'
-      | 'crewlist-add'
-      | 'crewlist-remove'
-      | 'crewlist-clear';
+    property: InventoryEntityProperty;
     new_value: string;
     reason?: string;
   }): Promise<InventoryPropertyResult> {
@@ -330,6 +329,60 @@ export class InventoryEntitiesResource extends BaseResource {
     return this.request<InventoryPropertyResult>(
       'POST',
       `/inventory/${options.entityType}/${options.uid}/${options.property}/`,
+      data
+    );
+  }
+
+  /**
+   * Update a property on up to 100 entities in one request
+   *
+   * The API rejects the request as a whole if the client or the character lacks the
+   * permission for any of the entities. Otherwise, entities the change could not be applied
+   * to are listed under `data.failed`, with the reason.
+   *
+   * @param options.property - Property to update
+   * @param options.uids - UIDs of the entities to change (1 to 100). Entity types may be mixed
+   * @param options.new_value - New value, applied to every entity:
+   * - `name`: the new name (max 50 characters)
+   * - `open-to`: `public`, `faction` or `none` (any other value is treated as `none`)
+   * - `owner`, `commander`, `pilot`, `crewlist-add`, `crewlist-remove`: the name of the character or faction
+   * - `infotext`: the new text
+   * - `action`: `resume`, `pause` or `abort`
+   * - `crewlist-clear`: ignored, but a value must still be sent
+   * @param options.reason - Optional reason for the change. Only recorded when changing the owner, commander or pilot
+   * @example
+   * const result = await client.inventory.entities.updateProperties({
+   *   property: 'commander',
+   *   uids: ['2:1002', '3:2001'],
+   *   new_value: 'Dax Orin',
+   * });
+   * console.log(result.data.succeeded.entity.map((entity) => entity.uid));
+   * console.log(result.data.failed.entity);
+   */
+  async updateProperties(options: {
+    property: InventoryEntityProperty;
+    uids: string[];
+    new_value: string;
+    reason?: string;
+  }): Promise<InventoryPropertyResult> {
+    if (options.uids.length < 1 || options.uids.length > 100) {
+      throw new SWCError(
+        `updateProperties() needs between 1 and 100 uids, got ${options.uids.length}.`,
+        { type: 'validation' }
+      );
+    }
+
+    const data: Record<string, string | string[]> = {
+      uids: options.uids,
+      new_value: options.new_value,
+    };
+    if (options.reason) {
+      data.reason = options.reason;
+    }
+
+    return this.request<InventoryPropertyResult>(
+      'POST',
+      `/inventory/entities/${options.property}/`,
       data
     );
   }

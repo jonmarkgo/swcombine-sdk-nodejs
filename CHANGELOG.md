@@ -14,6 +14,10 @@
 
 ### Fixed
 
+- `inventory.entities.list()` failed with a 414 once `filters` held a few hundred values (for
+  example a long list of entity IDs): the server rejects URLs over 8 KB. `filters` are now sent
+  in a POST body, using the API's new POST form of the endpoint, which returns the same results
+  (verified live). The deprecated positional arrays are still sent as a GET.
 - `character.privileges.update()` resolved as if it had worked when the API refused the change.
   The API reports a refusal with HTTP 200 and a `failure` list (for example "Requires powered HQ
   to change privileges"); the SDK now throws a `validation` `SWCError` with that reason.

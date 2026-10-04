@@ -2553,6 +2553,8 @@ export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = In
    * Filters to apply. Filters of different types are combined with AND; several values for
    * one type match any of them. Each type may appear once. Cannot be combined with the
    * `filter_type` / `filter_value` / `filter_inclusion` arrays.
+   *
+   * Sent in a POST body, so the list is not limited by URL length.
    */
   filters?: InventoryFilter[];
   /** @deprecated Use `filters`. Filter types, one per value. */

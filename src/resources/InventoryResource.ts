@@ -117,14 +117,19 @@ const ID_FILTERS = new Set<InventoryFilterType>([
   'container',
 ]);
 
-/** Builds query params for inventory filters. Throws before any request on invalid input. */
-function buildFilterParams(
+/**
+ * Builds the filter part of a list request. `filters` go in a POST body as a JSON array, which
+ * returns the same rows as the GET (verified live) without the server's 8 KB URL limit: a GET
+ * with a few hundred filter values is rejected with a 414. The deprecated positional arrays stay
+ * query params. Throws before any request on invalid input.
+ */
+function buildFilterRequest(
   entityType: InventoryEntityType,
   options: Pick<
     ListInventoryEntitiesOptions,
     'filters' | 'filter_type' | 'filter_value' | 'filter_inclusion'
   >
-): QueryParams {
+): { params: QueryParams; body?: { filters: string } } {
   const { filters, filter_type, filter_value, filter_inclusion } = options;
   if (filters && filter_type) {
     throw new SWCError('Use either filters or filter_type/filter_value, not both.', {
@@ -132,11 +137,9 @@ function buildFilterParams(
     });
   }
 
-  if (filters) {
-    // Keyed form: filter_value[type][]=a&filter_value[type][]=b matches either value.
-    const params: QueryParams = {};
+  if (filters?.length) {
     const types: string[] = [];
-    for (const filter of filters) {
+    const inBody = filters.map((filter) => {
       assertFilterApplies(filter.type, entityType);
       if (types.includes(filter.type)) {
         throw new SWCError(
@@ -146,23 +149,27 @@ function buildFilterParams(
       }
       types.push(filter.type);
       const values = Array.isArray(filter.value) ? filter.value : [filter.value];
-      params[`filter_value[${filter.type}]`] = values.map((v) => toFilterValue(filter.type, v));
-      params[`filter_inclusion[${filter.type}]`] = filter.inclusion ?? 'includes';
-    }
-    if (types.length) params.filter_type = types;
-    return params;
+      return {
+        type: filter.type,
+        value: values.map((v) => toFilterValue(filter.type, v)),
+        inclusion: filter.inclusion ?? 'includes',
+      };
+    });
+    return { params: {}, body: { filters: JSON.stringify(inBody) } };
   }
 
-  if (!filter_type?.length) return {};
+  if (!filter_type?.length) return { params: {} };
   // Legacy positional arrays. The API rejects a missing inclusion with a 400, so default it.
   if (filter_value?.length !== filter_type.length) {
     throw new SWCError('filter_value must have one entry per filter_type.', { type: 'validation' });
   }
   filter_type.forEach((type) => assertFilterApplies(type, entityType));
   return {
-    filter_type,
-    filter_value: filter_value.map((v, i) => toFilterValue(filter_type[i], v)),
-    filter_inclusion: filter_type.map((_, i) => filter_inclusion?.[i] ?? 'includes'),
+    params: {
+      filter_type,
+      filter_value: filter_value.map((v, i) => toFilterValue(filter_type[i], v)),
+      filter_inclusion: filter_type.map((_, i) => filter_inclusion?.[i] ?? 'includes'),
+    },
   };
 }
 
@@ -176,7 +183,8 @@ export class InventoryEntitiesResource extends BaseResource {
    * List entities in inventory (paginated with optional filtering)
    *
    * Supports filtering via `filters` (see the `InventoryFilter` type for value formats and API quirks).
-   * Filters are checked against the entity type before the request is sent.
+   * Filters are checked against the entity type before the request is sent. They are sent in a POST
+   * body, so a long list (for example hundreds of entity IDs) is not capped by the server's URL limit.
    *
    * The `uid` argument accepts either a character UID (e.g. `1:12345`) or a faction UID
    * (e.g. `20:123`) — there is no separate `client.faction.entities` accessor; faction-owned
@@ -234,7 +242,8 @@ export class InventoryEntitiesResource extends BaseResource {
   async list<T extends InventoryEntityType>(
     options: ListInventoryEntitiesOptions<T>
   ): Promise<Page<InventoryEntityTypeMap[T]>> {
-    const filterParams = buildFilterParams(options.entityType, options);
+    const { params: filterParams, body } = buildFilterRequest(options.entityType, options);
+    const path = `/inventory/${options.uid}/${options.entityType}/${options.assignType}`;
     const makeRequest = async (startIndex: number): Promise<Page<InventoryEntityTypeMap[T]>> => {
       const params: QueryParams = {
         start_index: startIndex,
@@ -242,10 +251,9 @@ export class InventoryEntitiesResource extends BaseResource {
         ...filterParams,
       };
 
-      const response = await this.http.get<Record<string, unknown>>(
-        `/inventory/${options.uid}/${options.entityType}/${options.assignType}`,
-        { params }
-      );
+      const response = body
+        ? await this.http.post<Record<string, unknown>>(path, body, { params })
+        : await this.http.get<Record<string, unknown>>(path, { params });
 
       // API returns { filters: {...}, entities: { attributes: {...}, entity: [...] } }
       const entities = response.entities as Record<string, unknown> | undefined;

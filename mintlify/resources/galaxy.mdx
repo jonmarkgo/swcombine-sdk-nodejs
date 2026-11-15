@@ -17,7 +17,11 @@ keywords:
 {/* AUTO-GENERATED from JSDoc via TypeDoc. Do not edit by hand. */}
 {/* Run `npm run docs:mintlify` to regenerate. */}
 
-The `client.galaxy` resource provides read access to the physical map of the Star Wars Combine galaxy. Every sub-resource — systems, planets, sectors, stations, and cities — returns a `Page<T>` and supports the standard `start_index` / `item_count` pagination parameters and `for await...of` auto-pagination.
+The `client.galaxy` resource provides read access to the physical map of the Star Wars Combine galaxy. Every sub-resource — systems, planets, sectors, stations, and cities — returns a `Page<T>` and supports `item_count` and `for await...of` auto-pagination. All but stations take the standard `start_index`; stations page by `start_id` instead.
+
+<Note>
+  `galaxy.stations.list()` pages by `start_id` (the lowest station id to include), not `start_index`, which the API rejects with a `400`. Use `getNextPage()` or `for await...of` to follow the API's `next_page` link.
+</Note>
 
 <Note>
   Some galaxy sub-resources (notably sectors) return a `404` if you omit pagination parameters entirely. Always pass explicit `start_index` and `item_count` values when calling these endpoints.
@@ -164,6 +168,9 @@ console.log(station.name); // access properties directly, not station.data
 ### galaxy.stations.list()
 
 List all stations in named systems with no ECM (paginated)
+Unlike other list endpoints, stations page by `start_id` (the lowest station id to include),
+not `start_index`: the API rejects `start_index` with a 400. `getNextPage()` and
+`for await...of` follow the API's `next_page` link, and `page.start` is the `start_id` used.
 
 <ParamField path="item_count" type="number">
   The item_count parameter.
@@ -173,13 +180,13 @@ List all stations in named systems with no ECM (paginated)
   The pageDelay parameter.
 </ParamField>
 
-<ParamField path="start_index" type="number">
-  The start_index parameter.
+<ParamField path="start_id" type="number" default="0">
+  Lowest station id to include. Default: 0 (no minimum).
 </ParamField>
 
 ```typescript
 const stations = await client.galaxy.stations.list();
-const moreStations = await client.galaxy.stations.list({ start_index: 51, item_count: 50 });
+const next = await stations.getNextPage();
 ```
 
 ## Star Systems

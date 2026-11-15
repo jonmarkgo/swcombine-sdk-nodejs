@@ -74,7 +74,7 @@ const RESOURCES: ResourceConfig[] = [
       'CHARACTER_READ',
     ],
     intro:
-      'The `client.character` resource gives you access to the core player identity in the Star Wars Combine universe. You can look up characters by UID or handle, read the authenticated user\'s own profile, exchange in-game messages, transfer credits, and inspect the fine-grained privilege and permission system.',
+      "The `client.character` resource gives you access to the core player identity in the Star Wars Combine universe. You can look up characters by UID or handle, read the authenticated user's own profile, exchange in-game messages, transfer credits, and inspect the fine-grained privilege and permission system.",
     accessor: 'client.character',
     mainClass: 'CharacterResource',
     subResources: {
@@ -86,10 +86,30 @@ const RESOURCES: ResourceConfig[] = [
       CharacterPermissionsResource: { label: 'Permissions', accessor: 'character.permissions' },
     },
     related: [
-      { title: 'Faction', icon: 'flag', href: '/resources/faction', description: 'Access faction membership, budgets, and credit logs.' },
-      { title: 'Inventory', icon: 'box', href: '/resources/inventory', description: 'List and manage entities owned or piloted by a character.' },
-      { title: 'Events', icon: 'bolt', href: '/resources/events', description: 'Query the event log for character activity.' },
-      { title: 'Authentication scopes', icon: 'lock', href: '/authentication/scopes', description: 'See the full list of OAuth scopes and what they unlock.' },
+      {
+        title: 'Faction',
+        icon: 'flag',
+        href: '/resources/faction',
+        description: 'Access faction membership, budgets, and credit logs.',
+      },
+      {
+        title: 'Inventory',
+        icon: 'box',
+        href: '/resources/inventory',
+        description: 'List and manage entities owned or piloted by a character.',
+      },
+      {
+        title: 'Events',
+        icon: 'bolt',
+        href: '/resources/events',
+        description: 'Query the event log for character activity.',
+      },
+      {
+        title: 'Authentication scopes',
+        icon: 'lock',
+        href: '/authentication/scopes',
+        description: 'See the full list of OAuth scopes and what they unlock.',
+      },
     ],
   },
   {
@@ -98,7 +118,15 @@ const RESOURCES: ResourceConfig[] = [
     title: 'Faction',
     description:
       'Use client.faction to retrieve faction details, list members, manage budgets and stockholders, and query credit logs.',
-    keywords: ['swcombine sdk', 'faction', 'members', 'budgets', 'stockholders', 'credits', 'FACTION_READ'],
+    keywords: [
+      'swcombine sdk',
+      'faction',
+      'members',
+      'budgets',
+      'stockholders',
+      'credits',
+      'FACTION_READ',
+    ],
     intro:
       'The `client.faction` resource provides access to faction data including membership rosters, budgets, stockholder lists, and credit transaction history.',
     accessor: 'client.faction',
@@ -116,21 +144,21 @@ const RESOURCES: ResourceConfig[] = [
       'Ships, vehicles, facilities, stations, cities, and other entities owned by a faction are listed through the [Inventory resource](/resources/inventory) — there is no `client.faction.entities` accessor. Pass the faction UID as the `uid` argument:',
       '',
       '```typescript',
-      "// All ships owned by faction 20:123",
-      "const ships = await client.inventory.entities.list({",
+      '// All ships owned by faction 20:123',
+      'const ships = await client.inventory.entities.list({',
       "  uid: '20:123',",
       "  entityType: 'ships',",
       "  assignType: 'owner',",
-      "});",
+      '});',
       '',
-      "// All facilities owned by the faction",
-      "const facilities = await client.inventory.entities.list({",
+      '// All facilities owned by the faction',
+      'const facilities = await client.inventory.entities.list({',
       "  uid: '20:123',",
       "  entityType: 'facilities',",
       "  assignType: 'owner',",
-      "});",
+      '});',
       '',
-      "// Faction inventory summary",
+      '// Faction inventory summary',
       "const summary = await client.inventory.get({ uid: '20:123' });",
       '```',
       '',
@@ -138,8 +166,18 @@ const RESOURCES: ResourceConfig[] = [
       '',
     ].join('\n'),
     related: [
-      { title: 'Character', icon: 'user', href: '/resources/character', description: 'Access character profiles and their faction associations.' },
-      { title: 'Inventory', icon: 'box', href: '/resources/inventory', description: 'List ships, facilities, and other entities owned by a faction.' },
+      {
+        title: 'Character',
+        icon: 'user',
+        href: '/resources/character',
+        description: 'Access character profiles and their faction associations.',
+      },
+      {
+        title: 'Inventory',
+        icon: 'box',
+        href: '/resources/inventory',
+        description: 'List ships, facilities, and other entities owned by a faction.',
+      },
     ],
   },
   {
@@ -148,10 +186,20 @@ const RESOURCES: ResourceConfig[] = [
     title: 'Galaxy',
     description:
       'Use client.galaxy to paginate through all star systems, planets, sectors, stations, and cities in the Star Wars Combine galaxy map.',
-    keywords: ['swcombine sdk', 'galaxy', 'systems', 'planets', 'sectors', 'stations', 'cities', 'galaxy map'],
+    keywords: [
+      'swcombine sdk',
+      'galaxy',
+      'systems',
+      'planets',
+      'sectors',
+      'stations',
+      'cities',
+      'galaxy map',
+    ],
     intro:
-      'The `client.galaxy` resource provides read access to the physical map of the Star Wars Combine galaxy. Every sub-resource — systems, planets, sectors, stations, and cities — returns a `Page<T>` and supports the standard `start_index` / `item_count` pagination parameters and `for await...of` auto-pagination.',
+      'The `client.galaxy` resource provides read access to the physical map of the Star Wars Combine galaxy. Every sub-resource — systems, planets, sectors, stations, and cities — returns a `Page<T>` and supports `item_count` and `for await...of` auto-pagination. All but stations take the standard `start_index`; stations page by `start_id` instead.',
     notes: [
+      "`galaxy.stations.list()` pages by `start_id` (the lowest station id to include), not `start_index`, which the API rejects with a `400`. Use `getNextPage()` or `for await...of` to follow the API's `next_page` link.",
       'Some galaxy sub-resources (notably sectors) return a `404` if you omit pagination parameters entirely. Always pass explicit `start_index` and `item_count` values when calling these endpoints.',
     ],
     accessor: 'client.galaxy',
@@ -164,8 +212,18 @@ const RESOURCES: ResourceConfig[] = [
       GalaxyCitiesResource: { label: 'Cities', accessor: 'galaxy.cities' },
     },
     related: [
-      { title: 'Location', icon: 'location-dot', href: '/resources/location', description: 'Look up the current location of any entity.' },
-      { title: 'Inventory', icon: 'box', href: '/resources/inventory', description: 'List entities at a given location.' },
+      {
+        title: 'Location',
+        icon: 'location-dot',
+        href: '/resources/location',
+        description: 'Look up the current location of any entity.',
+      },
+      {
+        title: 'Inventory',
+        icon: 'box',
+        href: '/resources/inventory',
+        description: 'List entities at a given location.',
+      },
     ],
   },
   {
@@ -174,7 +232,16 @@ const RESOURCES: ResourceConfig[] = [
     title: 'Inventory',
     description:
       'Use client.inventory to list and manage entities (ships, vehicles, facilities, etc.) owned or assigned to characters and factions.',
-    keywords: ['swcombine sdk', 'inventory', 'entities', 'ships', 'vehicles', 'facilities', 'items', 'faction inventory'],
+    keywords: [
+      'swcombine sdk',
+      'inventory',
+      'entities',
+      'ships',
+      'vehicles',
+      'facilities',
+      'items',
+      'faction inventory',
+    ],
     intro:
       'The `client.inventory` resource lets you list and inspect entities — ships, vehicles, facilities, items, NPCs, and more — that belong to a character or a faction. The `uid` parameter on every method accepts either a character UID (e.g. `1:12345`) or a faction UID (e.g. `20:123`); the SDK does not have a separate `client.faction.entities` accessor — faction-owned entities are queried through this resource.',
     accessor: 'client.inventory',
@@ -183,10 +250,30 @@ const RESOURCES: ResourceConfig[] = [
       InventoryEntitiesResource: { label: 'Entities', accessor: 'inventory.entities' },
     },
     related: [
-      { title: 'Character', icon: 'user', href: '/resources/character', description: 'Access the character who owns or pilots these entities.' },
-      { title: 'Faction', icon: 'flag', href: '/resources/faction', description: 'Access the faction whose entities you are listing.' },
-      { title: 'Types', icon: 'tags', href: '/resources/types', description: 'Look up entity type details and stats.' },
-      { title: 'Location', icon: 'location-dot', href: '/resources/location', description: 'Look up entity locations.' },
+      {
+        title: 'Character',
+        icon: 'user',
+        href: '/resources/character',
+        description: 'Access the character who owns or pilots these entities.',
+      },
+      {
+        title: 'Faction',
+        icon: 'flag',
+        href: '/resources/faction',
+        description: 'Access the faction whose entities you are listing.',
+      },
+      {
+        title: 'Types',
+        icon: 'tags',
+        href: '/resources/types',
+        description: 'Look up entity type details and stats.',
+      },
+      {
+        title: 'Location',
+        icon: 'location-dot',
+        href: '/resources/location',
+        description: 'Look up entity locations.',
+      },
     ],
   },
   {
@@ -204,8 +291,18 @@ const RESOURCES: ResourceConfig[] = [
       MarketVendorsResource: { label: 'Vendors', accessor: 'market.vendors' },
     },
     related: [
-      { title: 'Types', icon: 'tags', href: '/resources/types', description: 'Look up entity type details for items on sale.' },
-      { title: 'Inventory', icon: 'box', href: '/resources/inventory', description: 'Manage purchased entities.' },
+      {
+        title: 'Types',
+        icon: 'tags',
+        href: '/resources/types',
+        description: 'Look up entity type details for items on sale.',
+      },
+      {
+        title: 'Inventory',
+        icon: 'box',
+        href: '/resources/inventory',
+        description: 'Manage purchased entities.',
+      },
     ],
   },
   {
@@ -224,7 +321,12 @@ const RESOURCES: ResourceConfig[] = [
       SimNewsResource: { label: 'Sim News', accessor: 'news.simNews' },
     },
     related: [
-      { title: 'Events', icon: 'bolt', href: '/resources/events', description: 'Query personal and faction event logs.' },
+      {
+        title: 'Events',
+        icon: 'bolt',
+        href: '/resources/events',
+        description: 'Query personal and faction event logs.',
+      },
     ],
   },
   {
@@ -233,7 +335,15 @@ const RESOURCES: ResourceConfig[] = [
     title: 'Events',
     description:
       'Use client.events to query personal, faction, inventory, and combat event logs with filtering and pagination.',
-    keywords: ['swcombine sdk', 'events', 'event log', 'personal', 'faction', 'combat', 'inventory'],
+    keywords: [
+      'swcombine sdk',
+      'events',
+      'event log',
+      'personal',
+      'faction',
+      'combat',
+      'inventory',
+    ],
     intro:
       'The `client.events` resource lets you query the event log for personal, faction, inventory, and combat events.',
     notes: [
@@ -242,8 +352,18 @@ const RESOURCES: ResourceConfig[] = [
     accessor: 'client.events',
     mainClass: 'EventsResource',
     related: [
-      { title: 'Character', icon: 'user', href: '/resources/character', description: 'Access the character whose events you are querying.' },
-      { title: 'Faction', icon: 'flag', href: '/resources/faction', description: 'Access faction details for faction events.' },
+      {
+        title: 'Character',
+        icon: 'user',
+        href: '/resources/character',
+        description: 'Access the character whose events you are querying.',
+      },
+      {
+        title: 'Faction',
+        icon: 'flag',
+        href: '/resources/faction',
+        description: 'Access faction details for faction events.',
+      },
     ],
   },
   {
@@ -252,7 +372,16 @@ const RESOURCES: ResourceConfig[] = [
     title: 'Types',
     description:
       'Use client.types to browse entity types, classes, and detailed type information across all entity categories.',
-    keywords: ['swcombine sdk', 'types', 'entity types', 'classes', 'ships', 'vehicles', 'facilities', 'items'],
+    keywords: [
+      'swcombine sdk',
+      'types',
+      'entity types',
+      'classes',
+      'ships',
+      'vehicles',
+      'facilities',
+      'items',
+    ],
     intro:
       'The `client.types` resource provides access to the Star Wars Combine entity type system — categories, classes, and detailed type information for ships, vehicles, facilities, items, and more.',
     accessor: 'client.types',
@@ -262,8 +391,18 @@ const RESOURCES: ResourceConfig[] = [
       TypesEntitiesResource: { label: 'Entity Types', accessor: 'types.entities' },
     },
     related: [
-      { title: 'Inventory', icon: 'box', href: '/resources/inventory', description: 'List entities of a given type.' },
-      { title: 'Market', icon: 'shop', href: '/resources/market', description: 'Find vendors selling a given type.' },
+      {
+        title: 'Inventory',
+        icon: 'box',
+        href: '/resources/inventory',
+        description: 'List entities of a given type.',
+      },
+      {
+        title: 'Market',
+        icon: 'shop',
+        href: '/resources/market',
+        description: 'Find vendors selling a given type.',
+      },
     ],
   },
   {
@@ -278,8 +417,18 @@ const RESOURCES: ResourceConfig[] = [
     accessor: 'client.location',
     mainClass: 'LocationResource',
     related: [
-      { title: 'Galaxy', icon: 'earth-americas', href: '/resources/galaxy', description: 'Browse systems, planets, and sectors.' },
-      { title: 'Inventory', icon: 'box', href: '/resources/inventory', description: 'List entities to find their UIDs.' },
+      {
+        title: 'Galaxy',
+        icon: 'earth-americas',
+        href: '/resources/galaxy',
+        description: 'Browse systems, planets, and sectors.',
+      },
+      {
+        title: 'Inventory',
+        icon: 'box',
+        href: '/resources/inventory',
+        description: 'List entities to find their UIDs.',
+      },
     ],
   },
   {
@@ -294,8 +443,18 @@ const RESOURCES: ResourceConfig[] = [
     accessor: 'client.datacard',
     mainClass: 'DatacardResource',
     related: [
-      { title: 'Types', icon: 'tags', href: '/resources/types', description: 'Look up entity type details for datacards.' },
-      { title: 'Faction', icon: 'flag', href: '/resources/faction', description: 'Access faction details for datacard ownership.' },
+      {
+        title: 'Types',
+        icon: 'tags',
+        href: '/resources/types',
+        description: 'Look up entity type details for datacards.',
+      },
+      {
+        title: 'Faction',
+        icon: 'flag',
+        href: '/resources/faction',
+        description: 'Access faction details for datacard ownership.',
+      },
     ],
   },
 ];
@@ -479,7 +638,11 @@ function parseMethod(
   i++;
 
   // Skip signature line (starts with >)
-  while (i < lines.length && !lines[i].trim().startsWith('## ') && !lines[i].trim().startsWith('#### ')) {
+  while (
+    i < lines.length &&
+    !lines[i].trim().startsWith('## ') &&
+    !lines[i].trim().startsWith('#### ')
+  ) {
     i++;
   }
 
@@ -505,7 +668,12 @@ function parseMethod(
   }
 
   let descEnd = descStart;
-  while (descEnd < lines.length && !lines[descEnd].trim().startsWith('####') && !lines[descEnd].trim().startsWith('### ') && !lines[descEnd].trim().startsWith('***')) {
+  while (
+    descEnd < lines.length &&
+    !lines[descEnd].trim().startsWith('####') &&
+    !lines[descEnd].trim().startsWith('### ') &&
+    !lines[descEnd].trim().startsWith('***')
+  ) {
     descEnd++;
   }
 
@@ -621,7 +789,13 @@ function parseParameters(
 
       while (i < lines.length) {
         const l = lines[i].trim();
-        if (l.startsWith('##### ') || (l.startsWith('#### ') && !l.startsWith('##### ')) || l.startsWith('### ') || l === '***') break;
+        if (
+          l.startsWith('##### ') ||
+          (l.startsWith('#### ') && !l.startsWith('##### ')) ||
+          l.startsWith('### ') ||
+          l === '***'
+        )
+          break;
 
         if (l.startsWith('###### ')) {
           // Inline sub-field
@@ -639,7 +813,13 @@ function parseParameters(
               i++;
               while (i < lines.length) {
                 const skip = lines[i].trim();
-                if (skip.startsWith('#####') || skip.startsWith('####') || skip.startsWith('### ') || skip === '***') break;
+                if (
+                  skip.startsWith('#####') ||
+                  skip.startsWith('####') ||
+                  skip.startsWith('### ') ||
+                  skip === '***'
+                )
+                  break;
                 i++;
               }
               break;
@@ -662,7 +842,7 @@ function parseParameters(
 
       if (subParams.length > 0) {
         params.push(...subParams);
-      } else if (!params.some(p => p.name === paramName) && paramName !== 'options') {
+      } else if (!params.some((p) => p.name === paramName) && paramName !== 'options') {
         // Only add if we haven't already resolved from interface
         params.push({
           name: paramName,
@@ -695,7 +875,14 @@ function parseSubField(
 
   while (i < lines.length) {
     const l = lines[i].trim();
-    if (l.startsWith('######') || l.startsWith('#####') || l.startsWith('####') || l.startsWith('### ') || l === '***') break;
+    if (
+      l.startsWith('######') ||
+      l.startsWith('#####') ||
+      l.startsWith('####') ||
+      l.startsWith('### ') ||
+      l === '***'
+    )
+      break;
 
     if ((l.startsWith('`') || l.startsWith('[`')) && !type) {
       type = cleanType(l);
@@ -787,7 +974,9 @@ function generateResourceMdx(config: ResourceConfig): string {
 
   // Find main class and sub-resources
   const mainClass = classes.find((c) => c.name === config.mainClass);
-  const subClasses = classes.filter((c) => c.name !== config.mainClass && c.name !== 'BaseResource');
+  const subClasses = classes.filter(
+    (c) => c.name !== config.mainClass && c.name !== 'BaseResource'
+  );
 
   // Build MDX
   const parts: string[] = [];
@@ -798,9 +987,7 @@ function generateResourceMdx(config: ResourceConfig): string {
   parts.push(`description: '${config.description.replace(/'/g, "''")}'`);
   parts.push('keywords:');
   parts.push('  [');
-  parts.push(
-    config.keywords.map((k) => `    '${k}'`).join(',\n') + ','
-  );
+  parts.push(config.keywords.map((k) => `    '${k}'`).join(',\n') + ',');
   parts.push('  ]');
   parts.push('---');
   parts.push('');

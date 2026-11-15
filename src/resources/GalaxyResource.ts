@@ -194,37 +194,43 @@ export class GalaxySystemsResource extends BaseResource {
 export class GalaxyStationsResource extends BaseResource {
   /**
    * List all stations in named systems with no ECM (paginated)
+   *
+   * Unlike other list endpoints, stations page by `start_id` (the lowest station id to include),
+   * not `start_index`: the API rejects `start_index` with a 400. `getNextPage()` and
+   * `for await...of` follow the API's `next_page` link, and `page.start` is the `start_id` used.
+   *
    * @param options - Optional pagination parameters
    * @example
    * const stations = await client.galaxy.stations.list();
-   * const moreStations = await client.galaxy.stations.list({ start_index: 51, item_count: 50 });
+   * const next = await stations.getNextPage();
    */
   async list(options?: {
-    start_index?: number;
+    /** Lowest station id to include. Default: 0 (no minimum). */
+    start_id?: number;
     item_count?: number;
     pageDelay?: number;
   }): Promise<Page<GalaxyStationListItem>> {
-    const makeRequest = async (startIndex: number): Promise<Page<GalaxyStationListItem>> => {
-      const params = {
-        start_index: startIndex,
-        item_count: options?.item_count ?? 50,
-      };
+    const makeRequest = async (startId: number): Promise<Page<GalaxyStationListItem>> => {
       const response = await this.http.get<Record<string, unknown>>('/galaxy/stations/', {
-        params,
+        params: { start_id: startId, item_count: options?.item_count ?? 50 },
       });
       const data = (response.station || []) as GalaxyStationListItem[];
       const attrs = (response.attributes || {}) as Record<string, unknown>;
+      const next = attrs.next_page
+        ? new URL(String(attrs.next_page)).searchParams.get('start_id')
+        : null;
 
       return this.createPage({
         data,
         attributes: attrs,
-        defaultStart: 1,
-        fetcher: makeRequest,
+        defaultStart: startId,
+        fetcher: () => makeRequest(Number(next)),
         pageDelay: options?.pageDelay,
+        hasMore: next !== null,
       });
     };
 
-    return makeRequest(options?.start_index ?? 1);
+    return makeRequest(options?.start_id ?? 0);
   }
 
   /**

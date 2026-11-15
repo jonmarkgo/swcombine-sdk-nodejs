@@ -162,13 +162,14 @@ app.get('/', (req, res) => {
           <a href="/login" class="button">🔐 Authorize App</a>
 
           <h2>Scopes Requested:</h2>
-          ${customScopes
-            ? `<p><strong>Custom scope list (${REQUESTED_SCOPES.length}):</strong></p>
+          ${
+            customScopes
+              ? `<p><strong>Custom scope list (${REQUESTED_SCOPES.length}):</strong></p>
                <ul>
                  ${REQUESTED_SCOPES.map((s) => `<li><code>${s}</code></li>`).join('\n')}
                </ul>
                <p><em>Override via <code>SWC_SCOPES</code> env var. Unset it to request all scopes.</em></p>`
-            : `<p><strong>All comprehensive access scopes for full testing:</strong></p>
+              : `<p><strong>All comprehensive access scopes for full testing:</strong></p>
                <ul>
                  <li><code>CHARACTER_ALL</code> - All character permissions</li>
                  <li><code>MESSAGES_ALL</code> - All message permissions</li>
@@ -177,7 +178,8 @@ app.get('/', (req, res) => {
                  <li><code>FACTION_INV_*_ALL</code> - All faction inventory permissions</li>
                </ul>
                <p><em>This grants full read/write access to all resources for comprehensive SDK testing.</em></p>
-               <p><em>To test with a restricted scope set, run with <code>SWC_SCOPES=character_read npm run get-token</code></em></p>`}
+               <p><em>To test with a restricted scope set, run with <code>SWC_SCOPES=character_read npm run get-token</code></em></p>`
+          }
         </div>
       </body>
     </html>
@@ -333,10 +335,14 @@ app.get('/callback', async (req, res) => {
               <div class="info-label">Expires:</div>
               <div>${new Date(token.expiresAt).toLocaleString()}</div>
 
-              ${token.refreshToken ? `
+              ${
+                token.refreshToken
+                  ? `
                 <div class="info-label">Refresh Token:</div>
                 <div style="word-break: break-all; font-family: monospace;">${token.refreshToken}</div>
-              ` : ''}
+              `
+                  : ''
+              }
             </div>
 
             <div class="instructions">
@@ -373,7 +379,6 @@ console.log(await client.character.me());</div>
         </body>
       </html>
     `);
-
   } catch (error: any) {
     console.error('❌ OAuth error:', error.message);
 

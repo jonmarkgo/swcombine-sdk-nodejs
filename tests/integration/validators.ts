@@ -106,7 +106,10 @@ export function validateCharacter(character: any, context: string = 'Character')
   const expectedFields = ['uid', 'handle', 'name', 'race', 'faction', 'credits', 'location'];
   const unexpectedFields = allFields.filter((f) => !expectedFields.includes(f));
   if (unexpectedFields.length > 0) {
-    console.log(`ℹ️  ${context} has additional fields we didn't type:`, unexpectedFields.join(', '));
+    console.log(
+      `ℹ️  ${context} has additional fields we didn't type:`,
+      unexpectedFields.join(', ')
+    );
   }
 }
 

@@ -105,7 +105,9 @@ describe('Faction Resource Integration Tests', () => {
         return;
       }
 
-      const response = await client.faction.stockholders.list({ factionId: TEST_CONFIG.factionUid });
+      const response = await client.faction.stockholders.list({
+        factionId: TEST_CONFIG.factionUid,
+      });
       saveResponse('faction-stockholders', response);
 
       expectPageShape(response);

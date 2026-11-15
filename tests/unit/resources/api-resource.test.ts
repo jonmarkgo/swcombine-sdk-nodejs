@@ -34,9 +34,7 @@ describe('ApiResource', () => {
 
   describe('permissions()', () => {
     it('unwraps permission array from response', async () => {
-      const perms = [
-        { attributes: { name: 'read', description: 'Read access', inherits: '' } },
-      ];
+      const perms = [{ attributes: { name: 'read', description: 'Read access', inherits: '' } }];
       const { resource, mockHttp } = createResource();
       mockHttp.get.mockResolvedValue({ permission: perms, attributes: {} });
 

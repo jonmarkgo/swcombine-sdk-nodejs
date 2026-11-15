@@ -5,11 +5,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import {
-  createTestClient,
-  saveResponse,
-  expectFields,
-} from './setup.js';
+import { createTestClient, saveResponse, expectFields } from './setup.js';
 
 function expectPageShape(response: unknown): void {
   expect(response).toBeDefined();

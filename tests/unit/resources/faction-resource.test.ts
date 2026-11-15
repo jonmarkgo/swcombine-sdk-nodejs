@@ -82,7 +82,11 @@ describe('FactionResource', () => {
       expect(mockHttp.get).toHaveBeenNthCalledWith(2, '/factions', {
         params: { start_index: 3, item_count: 2 },
       });
-      expect(result.map((faction) => faction.attributes.uid)).toEqual(['20:445', '20:446', '20:448']);
+      expect(result.map((faction) => faction.attributes.uid)).toEqual([
+        '20:445',
+        '20:446',
+        '20:448',
+      ]);
       expect(result[0].secondincommand).toEqual({});
     });
 

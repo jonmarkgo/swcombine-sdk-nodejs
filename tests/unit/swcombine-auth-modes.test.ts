@@ -52,10 +52,12 @@ describe('SWCombine auth modes', () => {
   it('throws SWCError when token-only client calls auth.handleCallback()', async () => {
     const client = new SWCombine({ token: 'access-token' });
 
-    await expect(client.auth.handleCallback({ code: 'abc123', state: 'test-state' })).rejects.toBeInstanceOf(
-      SWCError
-    );
-    await expect(client.auth.handleCallback({ code: 'abc123', state: 'test-state' })).rejects.toMatchObject({
+    await expect(
+      client.auth.handleCallback({ code: 'abc123', state: 'test-state' })
+    ).rejects.toBeInstanceOf(SWCError);
+    await expect(
+      client.auth.handleCallback({ code: 'abc123', state: 'test-state' })
+    ).rejects.toMatchObject({
       type: 'auth',
     });
   });

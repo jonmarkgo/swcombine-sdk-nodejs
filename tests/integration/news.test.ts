@@ -5,11 +5,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import {
-  createTestClient,
-  saveResponse,
-  expectFields,
-} from './setup.js';
+import { createTestClient, saveResponse, expectFields } from './setup.js';
 
 function expectPageShape(response: unknown): void {
   expect(response).toBeDefined();
@@ -70,7 +66,11 @@ describe('News Resource Integration Tests', () => {
       expectPageShape(response);
       // SimNews may be empty
       if (response.data.length > 0) {
-        expectFields(response.data[0].attributes as unknown as Record<string, unknown>, ['id', 'href', 'title']);
+        expectFields(response.data[0].attributes as unknown as Record<string, unknown>, [
+          'id',
+          'href',
+          'title',
+        ]);
       }
     });
 

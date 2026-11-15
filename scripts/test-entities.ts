@@ -39,7 +39,10 @@ function getErrorMessage(error: unknown): string {
   }
 }
 
-async function testEntityType(client: SWCombine, entityType: TypesEntityType): Promise<EntityTestResult> {
+async function testEntityType(
+  client: SWCombine,
+  entityType: TypesEntityType
+): Promise<EntityTestResult> {
   try {
     const entities = await client.types.entities.list({
       entityType,
@@ -120,7 +123,9 @@ async function run(): Promise<void> {
   const emptyCount = results.filter((result) => result.status === 'empty').length;
   const errorCount = results.filter((result) => result.status === 'error').length;
 
-  console.log(`Summary: ok=${okCount} empty=${emptyCount} error=${errorCount} total=${results.length}`);
+  console.log(
+    `Summary: ok=${okCount} empty=${emptyCount} error=${errorCount} total=${results.length}`
+  );
 
   if (errorCount > 0) {
     process.exitCode = 1;

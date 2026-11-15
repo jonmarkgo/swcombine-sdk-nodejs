@@ -173,12 +173,22 @@ describe('OAuth scope catalog', () => {
   });
 
   it('exposes generated inventory scopes with exact property typing', () => {
-    expectTypeOf(PersonalInventoryScopes.SHIPS.TAGS_READ).toEqualTypeOf<'personal_inv_ships_tags_read'>();
+    expectTypeOf(
+      PersonalInventoryScopes.SHIPS.TAGS_READ
+    ).toEqualTypeOf<'personal_inv_ships_tags_read'>();
     expectTypeOf(PersonalInventoryScopes.SHIPS.RENAME).toEqualTypeOf<'personal_inv_ships_rename'>();
-    expectTypeOf(PersonalInventoryScopes.PLANETS.ASSIGN).toEqualTypeOf<'personal_inv_planets_assign'>();
-    expectTypeOf(FactionInventoryScopes.SHIPS.TAGS_READ).toEqualTypeOf<'faction_inv_ships_tags_read'>();
-    expectTypeOf(FactionInventoryScopes.PLANETS.ASSIGN).toEqualTypeOf<'faction_inv_planets_assign'>();
-    expectTypeOf(Scopes.PersonalInventory.SHIPS.TAGS_READ).toEqualTypeOf<'personal_inv_ships_tags_read'>();
+    expectTypeOf(
+      PersonalInventoryScopes.PLANETS.ASSIGN
+    ).toEqualTypeOf<'personal_inv_planets_assign'>();
+    expectTypeOf(
+      FactionInventoryScopes.SHIPS.TAGS_READ
+    ).toEqualTypeOf<'faction_inv_ships_tags_read'>();
+    expectTypeOf(
+      FactionInventoryScopes.PLANETS.ASSIGN
+    ).toEqualTypeOf<'faction_inv_planets_assign'>();
+    expectTypeOf(
+      Scopes.PersonalInventory.SHIPS.TAGS_READ
+    ).toEqualTypeOf<'personal_inv_ships_tags_read'>();
   });
 
   it('helpers return narrowed scope unions rather than widened string arrays', () => {
@@ -208,8 +218,12 @@ describe('OAuth scope catalog', () => {
     expect(getAllCharacterScopes()).toEqual(Object.values(expectedCharacterScopes));
     expect(getAllMessageScopes()).toEqual(Object.values(expectedMessageScopes));
     expect(getAllFactionScopes()).toEqual(Object.values(expectedFactionScopes));
-    expect(getAllPersonalInventoryScopes()).toEqual(flattenInventoryScopes(expectedPersonalInventoryScopes));
-    expect(getAllFactionInventoryScopes()).toEqual(flattenInventoryScopes(expectedFactionInventoryScopes));
+    expect(getAllPersonalInventoryScopes()).toEqual(
+      flattenInventoryScopes(expectedPersonalInventoryScopes)
+    );
+    expect(getAllFactionInventoryScopes()).toEqual(
+      flattenInventoryScopes(expectedFactionInventoryScopes)
+    );
 
     expect(getAllScopes()).toEqual([
       ...Object.values(expectedCharacterScopes),

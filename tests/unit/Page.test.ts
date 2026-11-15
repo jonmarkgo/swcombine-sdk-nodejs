@@ -19,7 +19,7 @@ function makePage<T>(overrides: {
     total,
     start,
     count,
-    hasMore: overrides.hasMore ?? (start + count < total),
+    hasMore: overrides.hasMore ?? start + count < total,
     fetcher: overrides.fetcher ?? vi.fn(),
   });
 }

@@ -18,7 +18,10 @@ async function main() {
 
   try {
     const sectors = await client.galaxy.sectors.list();
-    console.log('✅ Success! Retrieved sectors:', (sectors as any).sector?.length || sectors.length);
+    console.log(
+      '✅ Success! Retrieved sectors:',
+      (sectors as any).sector?.length || sectors.length
+    );
     console.log('\nFirst sector:', (sectors as any).sector?.[0] || sectors[0]);
   } catch (error: any) {
     console.error('❌ Error:', error.message);

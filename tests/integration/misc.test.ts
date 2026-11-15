@@ -234,13 +234,16 @@ describe('Inventory Resource Integration Tests', () => {
       item_count: 200,
     };
     const all = await client.inventory.entities.list(base);
-    const types = [...new Set(all.data.map((s) => s.value.type?.attributes.uid).filter((t) => t !== undefined))];
+    const types = [
+      ...new Set(all.data.map((s) => s.value.type?.attributes.uid).filter((t) => t !== undefined)),
+    ];
     if (types.length < 2) {
       console.log('⊘ Skipping Inventory Filters: need ships of two types');
       return;
     }
-    const count = async (filters: Parameters<typeof client.inventory.entities.list>[0]['filters']) =>
-      (await client.inventory.entities.list({ ...base, item_count: 1, filters })).total;
+    const count = async (
+      filters: Parameters<typeof client.inventory.entities.list>[0]['filters']
+    ) => (await client.inventory.entities.list({ ...base, item_count: 1, filters })).total;
 
     // Several values for one type match any of them.
     const [a, b, either] = [

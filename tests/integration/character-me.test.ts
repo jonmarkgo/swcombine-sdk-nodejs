@@ -5,13 +5,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { SWCombine } from '../../src/index.js';
-import {
-  createTestClient,
-  saveResponse,
-  hasAuthToken,
-  expectFields,
-  expectUid,
-} from './setup.js';
+import { createTestClient, saveResponse, hasAuthToken, expectFields, expectUid } from './setup.js';
 
 describe('Character Me Integration Test', () => {
   let client: SWCombine;

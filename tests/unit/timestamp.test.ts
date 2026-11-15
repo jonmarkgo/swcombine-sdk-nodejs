@@ -33,7 +33,9 @@ describe('Timestamp utility', () => {
     const swcStartSec = Date.UTC(1998, 11, 3, 7, 0, 0) / 1000;
 
     expect(() => Timestamp.fromUnixTimestamp(swcStartSec - 1)).toThrow(RangeError);
-    expect(() => Timestamp.fromDate(new Date(Date.UTC(1998, 11, 3, 6, 59, 59)))).toThrow(RangeError);
+    expect(() => Timestamp.fromDate(new Date(Date.UTC(1998, 11, 3, 6, 59, 59)))).toThrow(
+      RangeError
+    );
   });
 
   it('auto-detects unix seconds vs milliseconds', () => {

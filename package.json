@@ -1,6 +1,6 @@
 {
   "name": "swcombine-sdk",
-  "version": "3.8.0",
+  "version": "3.9.0",
   "description": "Comprehensive TypeScript SDK for Star Wars Combine API v2.0",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -36,8 +36,8 @@
     "test:integration:types": "vitest run --config vitest.integration.config.ts tests/integration/types.test.ts",
     "test:integration:misc": "vitest run --config vitest.integration.config.ts tests/integration/misc.test.ts",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\"",
+    "format": "prettier --write \"{src,scripts,tests}/**/*.ts\"",
+    "format:check": "prettier --check \"{src,scripts,tests}/**/*.ts\"",
     "docs": "typedoc && tsx scripts/generate-mintlify.ts",
     "docs:watch": "typedoc --watch",
     "get-token": "tsx scripts/get-oauth-token.ts",

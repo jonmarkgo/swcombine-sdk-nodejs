@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.9.0
+
+### Fixed
+
+- `galaxy.stations.list()` failed on every call: the API now pages stations only by `start_id`
+  and returns a 400 for `start_index`. `list()` takes `start_id` (the lowest station id to
+  include, default 0) instead of `start_index`, and `getNextPage()` / `for await...of` follow the
+  API's `next_page` link. `page.start` is the `start_id` used.
+  - **Type change:** the `start_index` option is removed. Code passing it now fails to compile
+    rather than failing at runtime with a 400.
+
 ## 3.8.0
 
 ### Added

@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.10.0
+
+### Added
+
+- **`events.getCombatReport({ reportId })`**: fetches a combat report sent to the character
+  (`GET /events/combat/report/{report_id}`). Needs the `character_events` and
+  `character_combat_reports` scopes.
+- **`events.getFactionCombatReport({ reportId })`**: fetches a combat report sent to one of the
+  character's factions (`GET /events/faction/report/{report_id}`). Needs the `character_events`
+  and `faction_combat_reports` scopes.
+- `CombatReport` type (plus `CombatReportWeapon`, `CombatReportType`, `CombatReportSide`,
+  `CombatReportParticipant`, `CombatReportAction`, `CombatReportStats`).
+- `CharacterScopes.COMBAT_REPORTS` (`character_combat_reports`) and
+  `FactionScopes.COMBAT_REPORTS` (`faction_combat_reports`).
+
 ## 3.9.0
 
 ### Fixed

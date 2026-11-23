@@ -4,7 +4,7 @@
 
 import { BaseResource } from './BaseResource.js';
 import { Page } from '../pagination/Page.js';
-import { Event, EventDetail, QueryParams } from '../types/index.js';
+import { CombatReport, Event, EventDetail, QueryParams } from '../types/index.js';
 
 /**
  * Events resource for querying events
@@ -107,5 +107,35 @@ export class EventsResource extends BaseResource {
    */
   async get(options: { uid: string }): Promise<EventDetail> {
     return this.request<EventDetail>('GET', `/event/${options.uid}`);
+  }
+
+  /**
+   * Get a combat report sent to the authenticated character.
+   *
+   * Requires the `character_events` and `character_combat_reports` scopes. 404s if the report
+   * does not exist, is too old to have data, or was not sent to the character.
+   *
+   * @param options.reportId - Id of the combat report
+   * @example
+   * const report = await client.events.getCombatReport({ reportId: 1001 });
+   * console.log(report.title, report.sides.side.length);
+   */
+  async getCombatReport(options: { reportId: number }): Promise<CombatReport> {
+    return this.request<CombatReport>('GET', `/events/combat/report/${options.reportId}`);
+  }
+
+  /**
+   * Get a combat report sent to one of the authenticated character's factions.
+   *
+   * Requires the `character_events` and `faction_combat_reports` scopes. 404s if the report
+   * does not exist, is too old to have data, or was not sent to a faction whose combat events
+   * the character can see.
+   *
+   * @param options.reportId - Id of the combat report
+   * @example
+   * const report = await client.events.getFactionCombatReport({ reportId: 1001 });
+   */
+  async getFactionCombatReport(options: { reportId: number }): Promise<CombatReport> {
+    return this.request<CombatReport>('GET', `/events/faction/report/${options.reportId}`);
   }
 }

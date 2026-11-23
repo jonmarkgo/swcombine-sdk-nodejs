@@ -80,6 +80,7 @@ describe('OAuth scope catalog', () => {
     FORCE: 'character_force',
     LOCATION: 'character_location',
     EVENTS: 'character_events',
+    COMBAT_REPORTS: 'character_combat_reports',
     ALL: 'character_all',
   };
 
@@ -122,6 +123,7 @@ describe('OAuth scope catalog', () => {
     BUDGETS_WRITE: 'faction_budgets_write',
     DATACARDS_READ: 'faction_datacards_read',
     DATACARDS_WRITE: 'faction_datacards_write',
+    COMBAT_REPORTS: 'faction_combat_reports',
     ALL: 'faction_all',
   };
 

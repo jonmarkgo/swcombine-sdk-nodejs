@@ -32,6 +32,8 @@ export const CharacterScopes = {
   LOCATION: 'character_location',
   /** Read the characters' events */
   EVENTS: 'character_events',
+  /** Read the combat reports linked from the character's combat events */
+  COMBAT_REPORTS: 'character_combat_reports',
   /** Access all character information */
   ALL: 'character_all',
 } as const;
@@ -270,6 +272,8 @@ export const FactionScopes = {
   DATACARDS_READ: 'faction_datacards_read',
   /** Assign or revoke your faction's datacard assignments */
   DATACARDS_WRITE: 'faction_datacards_write',
+  /** Read the combat reports linked from your faction's combat events */
+  COMBAT_REPORTS: 'faction_combat_reports',
   /** Access and change anything in your faction */
   ALL: 'faction_all',
 } as const;

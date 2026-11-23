@@ -1058,6 +1058,114 @@ export interface EventDetail {
   [key: string]: unknown;
 }
 
+/** Weapon definition in a combat report; `loadout` and `actions` refer to it by `key`. */
+export interface CombatReportWeapon {
+  key: string;
+  typeId: number;
+  name: string;
+  damageType: string;
+  firepower: number;
+  rageModifier: number;
+  maxHits: number;
+  optimum: number;
+  kind: string;
+  image: string;
+  minDamage: number;
+  maxDamage: number;
+  dropOff: number;
+  tracking: number;
+  melee: boolean;
+  nonLethal: boolean;
+  [key: string]: unknown;
+}
+
+/** Entity type in a combat report; participants refer to it by `key`. */
+export interface CombatReportType {
+  key: string;
+  entityType: number | null;
+  typeId: number | null;
+  name: string;
+  image: string | null;
+  largeImage: string | null;
+  avatar: boolean;
+  character: boolean;
+  creature: boolean;
+  facility: boolean;
+  [key: string]: unknown;
+}
+
+/** Stat values keyed by stat name: `hp` for ground combat; `hull`, `shield`, `ionic` for space. */
+export type CombatReportStats = Record<string, number>;
+
+export interface CombatReportParticipant {
+  uid: string;
+  name: string;
+  /** Key into `report.types.type` */
+  type: string;
+  gender: string | null;
+  status: string | null;
+  protected: boolean;
+  /** e.g. 'player', 'unmanned' */
+  control: string;
+  hostile: boolean;
+  before: CombatReportStats;
+  after: CombatReportStats;
+  max: CombatReportStats;
+  /** `weapon` is a key into `report.weapons.weapon` */
+  loadout: Array<{ weapon: string; quantity: number; arc: string; group: number }>;
+  leader: boolean;
+  totals: { dealt: CombatReportStats; taken: CombatReportStats; recovered: number };
+  [key: string]: unknown;
+}
+
+export interface CombatReportSide {
+  /** e.g. 'attacker' */
+  role: string;
+  scalePercent: number;
+  party: Array<{ extended: boolean; participant: CombatReportParticipant[] }>;
+  [key: string]: unknown;
+}
+
+export interface CombatReportAction {
+  side: string;
+  /** Participant uid */
+  attacker: string;
+  /** Key into `report.weapons.weapon` */
+  weapon: string;
+  attempts: number;
+  /** Each outcome carries `result`, `count`, and the stat damage dealt (e.g. `hp` or `hull`). */
+  target: Array<{
+    uid: string;
+    outcome: Array<{ result: string; count: number; [stat: string]: string | number }>;
+  }>;
+  [key: string]: unknown;
+}
+
+/** Combat report from `events.getCombatReport()` / `events.getFactionCombatReport()`. */
+export interface CombatReport {
+  version: number;
+  title: string;
+  detail: string;
+  location: {
+    title: string;
+    detail: string;
+    places: Array<{ uid: string; name: string; href: string }>;
+  };
+  range: number;
+  showdown: boolean;
+  /** e.g. 'ground', 'space' */
+  combat: string;
+  weapons: { weapon: CombatReportWeapon[] };
+  types: { type: CombatReportType[] };
+  sides: { side: CombatReportSide[] };
+  positioning: unknown;
+  actions: { action: CombatReportAction[] };
+  loot: { item: unknown[] };
+  /** Unix timestamp */
+  date: number;
+  [key: string]: unknown;
+}
+
 // ============================================================================
 // Rate Limit Types
 // ============================================================================

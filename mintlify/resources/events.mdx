@@ -36,6 +36,36 @@ const event = await client.events.get({ uid: '5:99001' });
 console.log(event.type); // access properties directly, not event.data
 ```
 
+### events.getCombatReport()
+
+Get a combat report sent to the authenticated character.
+Requires the `character_events` and `character_combat_reports` scopes. 404s if the report
+does not exist, is too old to have data, or was not sent to the character.
+
+<ParamField path="reportId" type="number" required>
+  Id of the combat report
+</ParamField>
+
+```typescript
+const report = await client.events.getCombatReport({ reportId: 1001 });
+console.log(report.title, report.sides.side.length);
+```
+
+### events.getFactionCombatReport()
+
+Get a combat report sent to one of the authenticated character's factions.
+Requires the `character_events` and `faction_combat_reports` scopes. 404s if the report
+does not exist, is too old to have data, or was not sent to a faction whose combat events
+the character can see.
+
+<ParamField path="reportId" type="number" required>
+  Id of the combat report
+</ParamField>
+
+```typescript
+const report = await client.events.getFactionCombatReport({ reportId: 1001 });
+```
+
 ### events.list()
 
 List events by type and mode (paginated)

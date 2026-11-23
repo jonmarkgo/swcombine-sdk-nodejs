@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.10.1
+
+### Security
+
+- Requires `axios` `^1.20.0` (was `^1.15.0`) and updates the lockfile to axios 1.21.1,
+  follow-redirects 1.16.3 and form-data 4.0.6. axios before 1.20.0 has high-severity advisories
+  (redirect-based SSRF in the fetch adapter, ReDoS via a redirect `Location` header,
+  prototype-pollution gadgets), and follow-redirects 1.16.0–1.16.1 can leak credential headers
+  on cross-origin redirects. `npm audit --omit=dev` now reports no vulnerabilities.
+- Updates vulnerable dev dependencies (vite, vitest, typescript-eslint, esbuild and others).
+
 ## 3.10.0
 
 ### Added

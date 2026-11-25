@@ -102,32 +102,36 @@ entities are queried through this method.
   Entity type: 'ships', 'vehicles', 'stations', 'cities', 'facilities', 'planets', 'items', 'npcs', 'droids', 'creatures', or 'materials'
 </ParamField>
 
-<ParamField path="~~filter_inclusion?~~" type="**filter\_inclusion**: InventoryFilterInclusion[]" required>
+<ParamField path="~~filter_inclusion?~~" type="**filter\_inclusion?**: InventoryFilterInclusion[]" required>
   Use `filters`. One per entry in `filter_type`. Default: `'includes'`
 </ParamField>
 
-<ParamField path="~~filter_type?~~" type="**filter\_type**: InventoryFilterType[]" required>
+<ParamField path="~~filter_type?~~" type="**filter\_type?**: InventoryFilterType[]" required>
   Use `filters`. Filter types, one per value.
 </ParamField>
 
-<ParamField path="~~filter_value?~~" type="**filter\_value**: string[]" required>
+<ParamField path="~~filter_value?~~" type="**filter\_value?**: string[]" required>
   Use `filters`. One value per entry in `filter_type`.
 </ParamField>
 
-<ParamField path="filters" type="InventoryFilter[]">
+<ParamField path="filters" type="**filters?**: InventoryFilter[]">
   Filters to apply. Filters of different types are combined with AND; several values for one type match any of them. Each type may appear once. Cannot be combined with the `filter_type` / `filter_value` / `filter_inclusion` arrays. Sent in a POST body, so the list is not limited by URL length.
 </ParamField>
 
-<ParamField path="item_count" type="**item\_count**: number" default="50">
+<ParamField path="item_count" type="**item\_count?**: number" default="50">
   Number of items to retrieve. Default: 50, Max: 200
 </ParamField>
 
-<ParamField path="pageDelay" type="number">
+<ParamField path="pageDelay" type="**pageDelay?**: number">
   Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
 </ParamField>
 
-<ParamField path="start_index" type="**start\_index**: number" default="1">
-  Starting position for pagination (1-based). Default: 1
+<ParamField path="start_id" type="**start\_id?**: number" default="0">
+  Lowest entity id to include. Entities are listed in id order. Default: 0 (no minimum)
+</ParamField>
+
+<ParamField path="~~start_index?~~" type="**start\_index?**: number" required>
+  Use `start_id` (the API asks callers to page by id). Starting position (1-based). Only used when passed without `start_id`.
 </ParamField>
 
 <ParamField path="uid" type="string" required>
@@ -148,7 +152,7 @@ const factionFacilities = await client.inventory.entities.list({ uid: '20:123', 
 const pilotedVehicles = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot' });
 
 // Fetch up to 200 entities at once
-const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot', start_index: 1, item_count: 200 });
+const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot', item_count: 200 });
 
 // Administered planets — note the assign type
 const planets = await client.inventory.entities.list({ uid: '1:12345', entityType: 'planets', assignType: 'pilot' });

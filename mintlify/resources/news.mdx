@@ -45,43 +45,43 @@ or `for await (const item of page)` to iterate through all pages automatically.
 
 **Requires:** Authentication
 
-<ParamField path="author" type="string">
+<ParamField path="author" type="**author?**: string">
   Author name to filter by [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`author`](ListNewsOptionsBase.md#author)
 </ParamField>
 
-<ParamField path="category" type="string">
+<ParamField path="category" type="**category?**: string">
   News category to filter by [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`category`](ListNewsOptionsBase.md#category)
 </ParamField>
 
-<ParamField path="end_date" type="**end\_date**: number">
+<ParamField path="end_date" type="**end\_date?**: number">
   Filter news up to this Unix timestamp [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`end_date`](ListNewsOptionsBase.md#end_date)
 </ParamField>
 
-<ParamField path="faction" type="string">
+<ParamField path="faction" type="**faction?**: string">
   Faction name to filter by (GNS only)
 </ParamField>
 
-<ParamField path="faction_type" type="**faction\_type**: string">
+<ParamField path="faction_type" type="**faction\_type?**: string">
   Faction type to filter by (GNS only)
 </ParamField>
 
-<ParamField path="item_count" type="**item\_count**: number" default="50">
+<ParamField path="item_count" type="**item\_count?**: number" default="50">
   Number of items to retrieve. Default: 50, Max: 50 [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`item_count`](ListNewsOptionsBase.md#item_count)
 </ParamField>
 
-<ParamField path="pageDelay" type="number">
+<ParamField path="pageDelay" type="**pageDelay?**: number">
   Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination. [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`pageDelay`](ListNewsOptionsBase.md#pagedelay)
 </ParamField>
 
-<ParamField path="search" type="string">
+<ParamField path="search" type="**search?**: string">
   Search term to filter by [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`search`](ListNewsOptionsBase.md#search)
 </ParamField>
 
-<ParamField path="start_date" type="**start\_date**: number">
+<ParamField path="start_date" type="**start\_date?**: number">
   Filter news starting from this Unix timestamp [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`start_date`](ListNewsOptionsBase.md#start_date)
 </ParamField>
 
-<ParamField path="start_index" type="**start\_index**: number" default="1">
+<ParamField path="start_index" type="**start\_index?**: number" default="1">
   Starting position (1-based). Default: 1 [`ListNewsOptionsBase`](ListNewsOptionsBase.md).[`start_index`](ListNewsOptionsBase.md#start_index)
 </ParamField>
 
@@ -124,35 +124,35 @@ or `for await (const item of page)` to iterate through all pages automatically.
 
 **Requires:** Authentication
 
-<ParamField path="author" type="string">
+<ParamField path="author" type="**author?**: string">
   Author name to filter by
 </ParamField>
 
-<ParamField path="category" type="string">
+<ParamField path="category" type="**category?**: string">
   News category to filter by
 </ParamField>
 
-<ParamField path="end_date" type="**end\_date**: number">
+<ParamField path="end_date" type="**end\_date?**: number">
   Filter news up to this Unix timestamp
 </ParamField>
 
-<ParamField path="item_count" type="**item\_count**: number" default="50">
+<ParamField path="item_count" type="**item\_count?**: number" default="50">
   Number of items to retrieve. Default: 50, Max: 50
 </ParamField>
 
-<ParamField path="pageDelay" type="number">
+<ParamField path="pageDelay" type="**pageDelay?**: number">
   Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
 </ParamField>
 
-<ParamField path="search" type="string">
+<ParamField path="search" type="**search?**: string">
   Search term to filter by
 </ParamField>
 
-<ParamField path="start_date" type="**start\_date**: number">
+<ParamField path="start_date" type="**start\_date?**: number">
   Filter news starting from this Unix timestamp
 </ParamField>
 
-<ParamField path="start_index" type="**start\_index**: number" default="1">
+<ParamField path="start_index" type="**start\_index?**: number" default="1">
   Starting position (1-based). Default: 1
 </ParamField>
 

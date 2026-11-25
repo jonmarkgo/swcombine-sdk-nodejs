@@ -91,19 +91,19 @@ Get character's credit log (paginated)
 
 **Requires:** `CHARACTER_CREDITS`
 
-<ParamField path="item_count" type="**item\_count**: number" default="50">
+<ParamField path="item_count" type="**item\_count?**: number" default="50">
   Number of items to retrieve. Default: 50, Max: 1000
 </ParamField>
 
-<ParamField path="pageDelay" type="number">
+<ParamField path="pageDelay" type="**pageDelay?**: number">
   Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
 </ParamField>
 
-<ParamField path="start_id" type="**start\_id**: number">
+<ParamField path="start_id" type="**start\_id?**: number">
   Oldest transaction ID threshold (1 = oldest 1000, 0/default = newest 1000)
 </ParamField>
 
-<ParamField path="start_index" type="**start\_index**: number" default="1">
+<ParamField path="start_index" type="**start\_index?**: number" default="1">
   Starting position for pagination (1-based). Default: 1
 </ParamField>
 
@@ -247,19 +247,19 @@ guarantee a `communication` field. Use `get()` for full message content.
 
 **Requires:** `MESSAGES_READ`
 
-<ParamField path="item_count" type="**item\_count**: number">
+<ParamField path="item_count" type="**item\_count?**: number">
   The item_count parameter.
 </ParamField>
 
-<ParamField path="mode" type="MessageMode">
+<ParamField path="mode" type="**mode?**: MessageMode">
   Message mode: `MessageMode.Sent` or `MessageMode.Received`. If omitted, returns both sent and received messages.
 </ParamField>
 
-<ParamField path="pageDelay" type="number">
+<ParamField path="pageDelay" type="**pageDelay?**: number">
   Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
 </ParamField>
 
-<ParamField path="start_index" type="**start\_index**: number">
+<ParamField path="start_index" type="**start\_index?**: number">
   The start_index parameter.
 </ParamField>
 

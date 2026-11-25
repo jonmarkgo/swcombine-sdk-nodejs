@@ -77,7 +77,7 @@ console.log(shipType.name); // access properties directly, not shipType.data
 
 Get all entities of a type (paginated)
 
-<ParamField path="class" type="string">
+<ParamField path="class" type="**class?**: string">
   Filter by class. Accepts a class name (e.g. `'fighter'`) or a numeric class id. **Class ids were renumbered by the SW Combine API.** The numeric identifiers for ship and vehicle classes shifted with a server-side sync — ship classes by +1 (e.g. Super Capital `0 → 1`, Capital Ship `1 → 2`, Frigate `2 → 3`) and vehicle classes by +21 (e.g. Ground Vehicles `0 → 21`, Speeders `1 → 22`, Barges `2 → 23`). This SDK passes the value through unchanged, so if you previously stored numeric class ids, update them to the new numbering. Filtering by class name is unaffected.
 </ParamField>
 
@@ -85,15 +85,15 @@ Get all entities of a type (paginated)
   The entityType parameter.
 </ParamField>
 
-<ParamField path="item_count" type="**item\_count**: number">
+<ParamField path="item_count" type="**item\_count?**: number">
   The item_count parameter.
 </ParamField>
 
-<ParamField path="pageDelay" type="number">
+<ParamField path="pageDelay" type="**pageDelay?**: number">
   Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
 </ParamField>
 
-<ParamField path="start_index" type="**start\_index**: number">
+<ParamField path="start_index" type="**start\_index?**: number">
   The start_index parameter.
 </ParamField>
 

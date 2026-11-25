@@ -25,7 +25,7 @@ Returns the `FactionDetail` object directly — not wrapped in a `Page`.
 
 **Requires:** `FACTION_READ`
 
-<ParamField path="uid" type="string">
+<ParamField path="uid" type="**uid?**: string">
   Faction UID. If omitted, defaults to the authenticated user's primary faction.
 </ParamField>
 
@@ -44,15 +44,15 @@ List all factions (paginated)
 
 **Requires:** Authentication
 
-<ParamField path="item_count" type="**item\_count**: number" default="50">
+<ParamField path="item_count" type="**item\_count?**: number" default="50">
   Number of items to retrieve. Default: 50
 </ParamField>
 
-<ParamField path="pageDelay" type="number">
+<ParamField path="pageDelay" type="**pageDelay?**: number">
   Milliseconds to wait before fetching each subsequent page. Helps avoid rate limits during auto-pagination.
 </ParamField>
 
-<ParamField path="start_index" type="**start\_index**: number" default="1">
+<ParamField path="start_index" type="**start\_index?**: number" default="1">
   Starting position for pagination (1-based). Default: 1
 </ParamField>
 
@@ -169,7 +169,7 @@ Transfer faction credits
   The amount parameter.
 </ParamField>
 
-<ParamField path="budget" type="string">
+<ParamField path="budget" type="**budget?**: string">
   The budget parameter.
 </ParamField>
 
@@ -177,7 +177,7 @@ Transfer faction credits
   The factionId parameter.
 </ParamField>
 
-<ParamField path="reason" type="string">
+<ParamField path="reason" type="**reason?**: string">
   The reason parameter.
 </ParamField>
 

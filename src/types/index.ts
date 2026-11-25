@@ -505,9 +505,9 @@ export interface FactionListItem {
  * Used by both sender and receiver objects.
  */
 export interface MessageParticipantAttributes {
-  /** Character UID (for example: `1:1467702`) */
+  /** Participant UID: a character (`1:1467702`) or, for non-character senders, another entity type */
   uid: string;
-  /** API URL for the referenced character */
+  /** API URL for the referenced participant */
   href?: string;
 }
 
@@ -2651,7 +2651,12 @@ export interface ListInventoryEntitiesOptions<T extends InventoryEntityType = In
   entityType: T;
   /** Assignment type: 'owner', 'commander', or 'pilot' */
   assignType: InventoryAssignType;
-  /** Starting position for pagination (1-based). Default: 1 */
+  /** Lowest entity id to include. Entities are listed in id order. Default: 0 (no minimum) */
+  start_id?: number;
+  /**
+   * @deprecated Use `start_id` (the API asks callers to page by id). Starting position (1-based).
+   * Only used when passed without `start_id`.
+   */
   start_index?: number;
   /** Number of items to retrieve. Default: 50, Max: 200 */
   item_count?: number;

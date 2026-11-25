@@ -40,7 +40,7 @@ describe('inventory.entities.list() filters', () => {
       { type: 'type', value: ['2:7', '2:19'], inclusion: 'includes' },
       { type: 'protected', value: ['1'], inclusion: 'excludes' },
     ]);
-    expect(http.post.mock.calls[0][2]).toEqual({ params: { start_index: 1, item_count: 50 } });
+    expect(http.post.mock.calls[0][2]).toEqual({ params: { start_id: 0, item_count: 50 } });
   });
 
   it('translates None: 0:0 for container (the only form the API honours), empty string otherwise', async () => {
@@ -76,7 +76,17 @@ describe('inventory.entities.list() filters', () => {
   it('keeps filters when fetching the next page', async () => {
     const { http, list, sentFilters } = setup();
     http.post.mockResolvedValue({
-      entities: { attributes: { start: 1, total: 4, count: 2 }, entity: [{}, {}] },
+      entities: {
+        attributes: {
+          start: 1,
+          start_id: 0,
+          total: 4,
+          count: 2,
+          next_page:
+            'https://www.swcombine.com/ws/v2.0/inventory/1:1/ships/owner/?start_id=1003&item_count=2',
+        },
+        entity: [{}, {}],
+      },
     });
     const page = await list({ item_count: 2, filters: [{ type: 'type', value: ['2:7', '2:19'] }] });
     await page.getNextPage();
@@ -84,14 +94,59 @@ describe('inventory.entities.list() filters', () => {
     expect(sentFilters(1)).toEqual([
       { type: 'type', value: ['2:7', '2:19'], inclusion: 'includes' },
     ]);
-    expect(http.post.mock.calls[1][2]).toEqual({ params: { start_index: 3, item_count: 2 } });
+    expect(http.post.mock.calls[1][2]).toEqual({ params: { start_id: 1003, item_count: 2 } });
   });
 
   it('lists without filters as a plain GET', async () => {
     const { http, list, sentParams } = setup();
     await list({ filters: [] });
     expect(http.post).not.toHaveBeenCalled();
-    expect(sentParams()).toEqual({ start_index: 1, item_count: 50 });
+    expect(sentParams()).toEqual({ start_id: 0, item_count: 50 });
+  });
+
+  it('pages by start_id from next_page and stops when next_page is absent', async () => {
+    const { http, list } = setup();
+    const ship = (uid: string) => ({ value: { uid } });
+    http.get
+      .mockResolvedValueOnce({
+        entities: {
+          attributes: {
+            start: 1,
+            start_id: 0,
+            total: 2,
+            count: 1,
+            next_page:
+              'https://www.swcombine.com/ws/v2.0/inventory/1:1/ships/owner/?start_id=1002&item_count=1',
+          },
+          entity: [ship('2:1001')],
+        },
+      })
+      .mockResolvedValueOnce({
+        entities: {
+          attributes: { start: 1, start_id: 1002, total: 2, count: 1 },
+          entity: [ship('2:1002')],
+        },
+      });
+
+    const uids: string[] = [];
+    for await (const e of await list({ item_count: 1 })) uids.push((e as any).value.uid);
+
+    expect(uids).toEqual(['2:1001', '2:1002']);
+    expect(http.get.mock.calls.map((c) => c[1].params)).toEqual([
+      { start_id: 0, item_count: 1 },
+      { start_id: 1002, item_count: 1 },
+    ]);
+  });
+
+  it('still pages by index when only the deprecated start_index is passed', async () => {
+    const { http, list, sentParams } = setup();
+    http.get.mockResolvedValue({
+      entities: { attributes: { start: 1, total: 4, count: 2 }, entity: [{}, {}] },
+    });
+    const page = await list({ start_index: 1, item_count: 2 });
+    await page.getNextPage();
+    expect(sentParams()).toEqual({ start_index: 1, item_count: 2 });
+    expect(http.get.mock.calls[1][1].params).toEqual({ start_index: 3, item_count: 2 });
   });
 
   it('defaults legacy filter_inclusion to includes (the API 400s without it)', async () => {

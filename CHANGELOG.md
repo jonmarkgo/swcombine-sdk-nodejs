@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.11.0
+
+### Changed
+
+- `inventory.entities.list()` now pages by `start_id`, as the API asks callers to: entities come
+  back in id order, `getNextPage()` / `for await...of` follow the API's `next_page` link
+  (re-sending any filters), and `page.start` is the `start_id` used. New `start_id` option
+  (lowest entity id to include, default 0).
+  - `start_index` still works but is deprecated. It is used only when passed without `start_id`.
+
+### Fixed
+
+- `MessageParticipantAttributes.uid` docs no longer claim every message sender is a character.
+  The API now returns messages from non-character senders instead of crashing.
+
 ## 3.10.1
 
 ### Security

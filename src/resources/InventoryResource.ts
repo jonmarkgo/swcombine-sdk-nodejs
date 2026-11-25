@@ -198,7 +198,12 @@ export class InventoryEntitiesResource extends BaseResource {
    * **Quirk:** planets a character administers are returned under `assignType: 'pilot'`.
    * Both `'owner'` and `'commander'` return 0 for them.
    *
-   * @param options.start_index - Starting position (1-based). Default: 1
+   * Pages by `start_id` (the lowest entity id to include; entities come back in id order).
+   * `getNextPage()` and `for await...of` follow the API's `next_page` link, re-sending any filters,
+   * and `page.start` is the `start_id` used.
+   *
+   * @param options.start_id - Lowest entity id to include. Default: 0 (no minimum)
+   * @param options.start_index - Deprecated: index paging (1-based). Only used when passed without `start_id`
    * @param options.item_count - Number of items to retrieve. Default: 50, Max: 200
    * @param options.filters - Filters to apply; several values for one type match any of them
    * @example
@@ -215,7 +220,7 @@ export class InventoryEntitiesResource extends BaseResource {
    * const pilotedVehicles = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot' });
    *
    * // Fetch up to 200 entities at once
-   * const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot', start_index: 1, item_count: 200 });
+   * const moreEntities = await client.inventory.entities.list({ uid: '1:12345', entityType: 'vehicles', assignType: 'pilot', item_count: 200 });
    *
    * // Administered planets — note the assign type
    * const planets = await client.inventory.entities.list({ uid: '1:12345', entityType: 'planets', assignType: 'pilot' });
@@ -244,9 +249,11 @@ export class InventoryEntitiesResource extends BaseResource {
   ): Promise<Page<InventoryEntityTypeMap[T]>> {
     const { params: filterParams, body } = buildFilterRequest(options.entityType, options);
     const path = `/inventory/${options.uid}/${options.entityType}/${options.assignType}`;
-    const makeRequest = async (startIndex: number): Promise<Page<InventoryEntityTypeMap[T]>> => {
+    // The API asks callers to page by start_id; start_index is kept only when explicitly passed.
+    const byIndex = options.start_index != null && options.start_id == null;
+    const makeRequest = async (start: number): Promise<Page<InventoryEntityTypeMap[T]>> => {
       const params: QueryParams = {
-        start_index: startIndex,
+        ...(byIndex ? { start_index: start } : { start_id: start }),
         item_count: options.item_count ?? 50,
         ...filterParams,
       };
@@ -262,16 +269,30 @@ export class InventoryEntitiesResource extends BaseResource {
       ) as InventoryEntityTypeMap[T][];
       const attrs = (entities?.attributes || {}) as Record<string, unknown>;
 
+      if (byIndex) {
+        return this.createPage({
+          data,
+          attributes: attrs,
+          defaultStart: 1,
+          fetcher: makeRequest,
+          pageDelay: options.pageDelay,
+        });
+      }
+
+      const next = attrs.next_page
+        ? new URL(String(attrs.next_page)).searchParams.get('start_id')
+        : null;
       return this.createPage({
         data,
-        attributes: attrs,
-        defaultStart: 1,
-        fetcher: makeRequest,
+        attributes: { ...attrs, start: start },
+        defaultStart: start,
+        fetcher: () => makeRequest(Number(next)),
         pageDelay: options.pageDelay,
+        hasMore: next !== null,
       });
     };
 
-    return makeRequest(options.start_index ?? 1);
+    return makeRequest(byIndex ? options.start_index! : (options.start_id ?? 0));
   }
 
   /**
